@@ -1,5 +1,3 @@
-import { OpenmrsObject } from './OpenmrsObject'
+import { OpenmrsObject } from "./OpenmrsObject";
 
-export interface BaseOpenmrsObject extends OpenmrsObject {
-}
-
+export interface BaseOpenmrsObject extends OpenmrsObject {}

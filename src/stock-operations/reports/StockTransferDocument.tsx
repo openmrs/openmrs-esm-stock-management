@@ -1,13 +1,18 @@
-import { CLOSE_PRINT_AFTER_PRINT, STOCK_OPERATION_PRINT_DISABLE_COSTS } from '../../constants';
-import { formatDisplayDate } from '../../core/utils/datetimeUtils';
-import { GetHeaderSection, GetPrintTemplate } from '../../print/PrintTemplate';
-import { printDocument } from '../../print/printUtils';
-import { StockOperationPrintData } from './StockOperationReport';
+import {
+  CLOSE_PRINT_AFTER_PRINT,
+  STOCK_OPERATION_PRINT_DISABLE_COSTS,
+} from "../../constants";
+import { formatDisplayDate } from "../../core/utils/datetimeUtils";
+import { GetHeaderSection, GetPrintTemplate } from "../../print/PrintTemplate";
+import { printDocument } from "../../print/printUtils";
+import { StockOperationPrintData } from "./StockOperationReport";
 
-export const FormatTransferDocument = async (data: StockOperationPrintData): Promise<string> => {
-    let emptyRowCount: number = Math.max(0, 25 - (data?.items?.length ?? 0));
-    let headerSection = await GetHeaderSection();
-    return `
+export const FormatTransferDocument = async (
+  data: StockOperationPrintData
+): Promise<string> => {
+  let emptyRowCount: number = Math.max(0, 25 - (data?.items?.length ?? 0));
+  let headerSection = await GetHeaderSection();
+  return `
     <div>
         ${headerSection}
         <div class="heading text center" style="text-transform: uppercase;font-size: 20pt;">
@@ -40,7 +45,9 @@ export const FormatTransferDocument = async (data: StockOperationPrintData): Pro
                     </td>
                     <td style="text-align: right;">                    
                         <span>Date: </span>
-                        <b><span>${formatDisplayDate(data?.operationDate)}</span></b>
+                        <b><span>${formatDisplayDate(
+                          data?.operationDate
+                        )}</span></b>
                     </td>
                 </tr>
             </table>
@@ -55,20 +62,49 @@ export const FormatTransferDocument = async (data: StockOperationPrintData): Pro
                 <th valign="middle" style="border-top:solid black 1.0pt;"><b>Unit Cost</b></th>
                 <th valign="middle" style="border-top:solid black 1.0pt;"><b>Total Cost</b></th>
             </tr>            
-            ${data?.items ? data?.items.map(p => {
-        return `
+            ${
+              data?.items
+                ? data?.items
+                    .map((p) => {
+                      return `
                 <tr class="data-row">
                     <td valign="middle">${p.itemCode ?? ""}</td>
-                    <td valign="middle">${p.itemDescription ?? ""}</td>                    
-                    <td valign="middle" class="center">${p.batchNumber ?? ""}</td>                    
-                    <td valign="middle" class="center">${formatDisplayDate(p.expiryDate)}</td>                    
-                    <td valign="middle" class="center">${p.quantityRequired?.toLocaleString() ?? ""} ${p.quantityRequiredUoM ?? ""}</td>
-                    <td valign="middle" class="center">${STOCK_OPERATION_PRINT_DISABLE_COSTS ? "" : `${p.unitCost?.toLocaleString() ?? ""}${p.unitCostUoM ? `/${p.unitCostUoM}` : ""}`}</td>
-                    <td valign="middle" class="center">${STOCK_OPERATION_PRINT_DISABLE_COSTS ? "" : `${p.totalCost?.toLocaleString() ?? ""}`}</td>
+                    <td valign="middle">${
+                      p.itemDescription ?? ""
+                    }</td>                    
+                    <td valign="middle" class="center">${
+                      p.batchNumber ?? ""
+                    }</td>                    
+                    <td valign="middle" class="center">${formatDisplayDate(
+                      p.expiryDate
+                    )}</td>                    
+                    <td valign="middle" class="center">${
+                      p.quantityRequired?.toLocaleString() ?? ""
+                    } ${p.quantityRequiredUoM ?? ""}</td>
+                    <td valign="middle" class="center">${
+                      STOCK_OPERATION_PRINT_DISABLE_COSTS
+                        ? ""
+                        : `${p.unitCost?.toLocaleString() ?? ""}${
+                            p.unitCostUoM ? `/${p.unitCostUoM}` : ""
+                          }`
+                    }</td>
+                    <td valign="middle" class="center">${
+                      STOCK_OPERATION_PRINT_DISABLE_COSTS
+                        ? ""
+                        : `${p.totalCost?.toLocaleString() ?? ""}`
+                    }</td>
                 </tr> 
                 `;
-    }).join("") : ""}
-            ${emptyRowCount > 0 ? Array(emptyRowCount).fill(0).map(p => `
+                    })
+                    .join("")
+                : ""
+            }
+            ${
+              emptyRowCount > 0
+                ? Array(emptyRowCount)
+                    .fill(0)
+                    .map(
+                      (p) => `
         <tr class="data-row">
             <td valign="middle">&nbsp;</td>
             <td valign="middle">&nbsp;</td>
@@ -77,7 +113,11 @@ export const FormatTransferDocument = async (data: StockOperationPrintData): Pro
             <td valign="middle" class="center">&nbsp;</td>
             <td valign="middle" class="center">&nbsp;</td>
             <td valign="middle" class="center">&nbsp;</td>
-        </tr>`).join("") : ""}    
+        </tr>`
+                    )
+                    .join("")
+                : ""
+            }    
             <tr class="footer-field">
                 <td valign="middle" colspan="7" style="border:0;padding-top: 15pt;">
                     Remarks:<br/>
@@ -100,10 +140,19 @@ export const FormatTransferDocument = async (data: StockOperationPrintData): Pro
             </tr>        
         </table>        
     </div>
-    `}
+    `;
+};
 
-
-export const PrintTransferOutStockOperation = async (data: StockOperationPrintData) => {
-    let printData = await FormatTransferDocument(data);
-    printDocument(GetPrintTemplate(printData, data?.documentTitle, true, CLOSE_PRINT_AFTER_PRINT));
-}
+export const PrintTransferOutStockOperation = async (
+  data: StockOperationPrintData
+) => {
+  let printData = await FormatTransferDocument(data);
+  printDocument(
+    GetPrintTemplate(
+      printData,
+      data?.documentTitle,
+      true,
+      CLOSE_PRINT_AFTER_PRINT
+    )
+  );
+};

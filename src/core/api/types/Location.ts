@@ -1,18 +1,16 @@
-
-
 export interface OpenMRSLocation {
-    id: number,
-    uuid: string;
-    name: string;
-    display: string;
-    parentLocation: any;
-    description: string;
-    tags: OpenMRSLocationTag[];
-    childLocations: OpenMRSLocation[];
+  id: number;
+  uuid: string;
+  name: string;
+  display: string;
+  parentLocation: any;
+  description: string;
+  tags: OpenMRSLocationTag[];
+  childLocations: OpenMRSLocation[];
 }
 
 export interface OpenMRSLocationTag {
-    uuid: string;
-    name: string;
-    display: string;
+  uuid: string;
+  name: string;
+  display: string;
 }

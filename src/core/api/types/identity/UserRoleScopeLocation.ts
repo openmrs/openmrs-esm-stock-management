@@ -1,8 +1,7 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData'
+import { BaseOpenmrsData } from "../BaseOpenmrsData";
 
 export interface UserRoleScopeLocation extends BaseOpenmrsData {
-    locationUuid: string;
-    locationName: string;
-    enableDescendants: boolean;
+  locationUuid: string;
+  locationName: string;
+  enableDescendants: boolean;
 }
-

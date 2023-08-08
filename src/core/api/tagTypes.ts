@@ -1,4 +1,3 @@
-
 export const SessionTag = "Session";
 export const UserRoleScopesTag = "UserRoleScopes";
 export const StockItemsTag = "StockItems";
@@ -23,28 +22,27 @@ export const ReportsTag = "Reports";
 export const DrugsTag = "Drugs";
 export const LIST_ID = "LIST";
 export const ALL = [
-    UserRoleScopesTag,
-    StockItemsTag,
-    StockOperationsTag,
-    ConceptsTag,
-    StockSourcesTag,
-    RolesTag,
-    SessionTag,
-    LocationsTag,
-    UsersTag,
-    StockOperationTypesTag,
-    LIST_ID,
-    UserRoleScopesTag,
-    PartyTag,
-    StockItemPackagingUOMTag,
-    StockOperationLinksTag,
-    DrugsTag,
-    StockItemTransactionsTag,
-    StockRulesTag,
-    LocationTagsTag,
-    LocationWithIdTag,
-    BatchJobsTag,
-    ReportsTag,
-    PatientsTag
+  UserRoleScopesTag,
+  StockItemsTag,
+  StockOperationsTag,
+  ConceptsTag,
+  StockSourcesTag,
+  RolesTag,
+  SessionTag,
+  LocationsTag,
+  UsersTag,
+  StockOperationTypesTag,
+  LIST_ID,
+  UserRoleScopesTag,
+  PartyTag,
+  StockItemPackagingUOMTag,
+  StockOperationLinksTag,
+  DrugsTag,
+  StockItemTransactionsTag,
+  StockRulesTag,
+  LocationTagsTag,
+  LocationWithIdTag,
+  BatchJobsTag,
+  ReportsTag,
+  PatientsTag,
 ];
-

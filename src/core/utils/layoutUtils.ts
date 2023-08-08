@@ -6,53 +6,58 @@ Remove when upgraded to esm and use the esm framework provided tools
 */
 import { useEffect, useState } from "react";
 export const Breakpoint = {
-    PHONE_MIN: 0,
-    PHONE_MAX: 600,
-    TABLET_MIN: 601,
-    TABLET_MAX: 1023,
-    SMALL_DESKTOP_MIN: 1024,
-    SMALL_DESKTOP_MAX: 1439,
-    LARGE_DESKTOP_MIN: 1440,
-    LARGE_DESKTOP_MAX: Number.MAX_SAFE_INTEGER,
-  } as const;
-  
-  function setBodyCssClasses() {
-    document.body.classList.toggle(
-      "stockmgmt-lt-tablet",
-      window.innerWidth < Breakpoint.TABLET_MIN
-    );
-    document.body.classList.toggle(
-      "stockmgmt-gt-phone",
-      window.innerWidth > Breakpoint.PHONE_MAX
-    );
-    document.body.classList.toggle(
-      "stockmgmt-gt-tablet",
-      window.innerWidth > Breakpoint.TABLET_MAX
-    );
-    document.body.classList.toggle(
-      "stockmgmt-lt-desktop",
-      window.innerWidth < Breakpoint.SMALL_DESKTOP_MIN
-    );
-    document.body.classList.toggle(
-      "stockmgmt-lt-small-desktop",
-      window.innerWidth < Breakpoint.SMALL_DESKTOP_MIN
-    );
-    document.body.classList.toggle(
-      "stockmgmt-lt-large-desktop",
-      window.innerWidth < Breakpoint.LARGE_DESKTOP_MIN
-    );
-    document.body.classList.toggle(
-      "stockmgmt-gt-small-desktop",
-      window.innerWidth > Breakpoint.SMALL_DESKTOP_MAX
-    );
-  }
+  PHONE_MIN: 0,
+  PHONE_MAX: 600,
+  TABLET_MIN: 601,
+  TABLET_MAX: 1023,
+  SMALL_DESKTOP_MIN: 1024,
+  SMALL_DESKTOP_MAX: 1439,
+  LARGE_DESKTOP_MIN: 1440,
+  LARGE_DESKTOP_MAX: Number.MAX_SAFE_INTEGER,
+} as const;
 
-  export function integrateBreakpoints() {
-    window.addEventListener("resize", setBodyCssClasses);    
-    setBodyCssClasses();    
-  }
+function setBodyCssClasses() {
+  document.body.classList.toggle(
+    "stockmgmt-lt-tablet",
+    window.innerWidth < Breakpoint.TABLET_MIN
+  );
+  document.body.classList.toggle(
+    "stockmgmt-gt-phone",
+    window.innerWidth > Breakpoint.PHONE_MAX
+  );
+  document.body.classList.toggle(
+    "stockmgmt-gt-tablet",
+    window.innerWidth > Breakpoint.TABLET_MAX
+  );
+  document.body.classList.toggle(
+    "stockmgmt-lt-desktop",
+    window.innerWidth < Breakpoint.SMALL_DESKTOP_MIN
+  );
+  document.body.classList.toggle(
+    "stockmgmt-lt-small-desktop",
+    window.innerWidth < Breakpoint.SMALL_DESKTOP_MIN
+  );
+  document.body.classList.toggle(
+    "stockmgmt-lt-large-desktop",
+    window.innerWidth < Breakpoint.LARGE_DESKTOP_MIN
+  );
+  document.body.classList.toggle(
+    "stockmgmt-gt-small-desktop",
+    window.innerWidth > Breakpoint.SMALL_DESKTOP_MAX
+  );
+}
 
-  export enum LayoutType { phone="phone" , tablet="tablet" , small_desktop = "small-desktop" , large_desktop="large-desktop" };
+export function integrateBreakpoints() {
+  window.addEventListener("resize", setBodyCssClasses);
+  setBodyCssClasses();
+}
+
+export enum LayoutType {
+  phone = "phone",
+  tablet = "tablet",
+  small_desktop = "small-desktop",
+  large_desktop = "large-desktop",
+}
 
 function getLayout() {
   let layout: LayoutType = LayoutType.large_desktop;
@@ -88,6 +93,5 @@ export function useLayoutType() {
   return type;
 }
 
-export const isDesktopLayout = (layout: LayoutType) => layout === LayoutType.small_desktop || layout === LayoutType.large_desktop;
-
-  
+export const isDesktopLayout = (layout: LayoutType) =>
+  layout === LayoutType.small_desktop || layout === LayoutType.large_desktop;

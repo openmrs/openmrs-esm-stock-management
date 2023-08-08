@@ -1,6 +1,4 @@
-
-export interface Role  {
-    role: string
-    display: string
+export interface Role {
+  role: string;
+  display: string;
 }
-

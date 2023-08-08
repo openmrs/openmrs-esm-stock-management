@@ -1,6 +1,5 @@
-import { BaseOpenmrsMetadata } from '../BaseOpenmrsMetadata'
+import { BaseOpenmrsMetadata } from "../BaseOpenmrsMetadata";
 
 export interface Privilege extends BaseOpenmrsMetadata {
-    privilege: string;
+  privilege: string;
 }
-

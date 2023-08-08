@@ -1,5 +1,3 @@
-import { Person } from './Person'
+import { Person } from "./Person";
 
-export interface Patient extends Person {
-}
-
+export interface Patient extends Person {}

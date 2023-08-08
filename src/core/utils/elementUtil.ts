@@ -1,3 +1,3 @@
-export function ClickElement(selector: any){
-    (window as any)["jQuery"]?.(selector)?.click();
+export function ClickElement(selector: any) {
+  (window as any)["jQuery"]?.(selector)?.click();
 }

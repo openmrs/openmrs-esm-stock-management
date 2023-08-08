@@ -1,13 +1,15 @@
-import { CLOSE_PRINT_AFTER_PRINT } from '../../constants';
-import { formatDisplayDate } from '../../core/utils/datetimeUtils';
-import { GetHeaderSection, GetPrintTemplate } from '../../print/PrintTemplate';
-import { printDocument } from '../../print/printUtils';
-import { StockOperationPrintData } from './StockOperationReport';
+import { CLOSE_PRINT_AFTER_PRINT } from "../../constants";
+import { formatDisplayDate } from "../../core/utils/datetimeUtils";
+import { GetHeaderSection, GetPrintTemplate } from "../../print/PrintTemplate";
+import { printDocument } from "../../print/printUtils";
+import { StockOperationPrintData } from "./StockOperationReport";
 
-export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData): Promise<string> => {
-    let emptyRowCount: number = Math.max(0, 25 - (data?.items?.length ?? 0));
-    let headerSection = await GetHeaderSection();
-    return `
+export const FormatGoodsReceivedDocument = async (
+  data: StockOperationPrintData
+): Promise<string> => {
+  let emptyRowCount: number = Math.max(0, 25 - (data?.items?.length ?? 0));
+  let headerSection = await GetHeaderSection();
+  return `
     <div>
         ${headerSection}
         <div class="heading text center" style="text-transform: uppercase;font-size: 20pt;">
@@ -40,7 +42,9 @@ export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData)
                     </td>
                     <td style="text-align: right;">                    
                         <span>Date: </span>
-                        <b><span>${formatDisplayDate(data?.operationDate)}</span></b>
+                        <b><span>${formatDisplayDate(
+                          data?.operationDate
+                        )}</span></b>
                     </td>
                 </tr>
             </table>
@@ -54,19 +58,40 @@ export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData)
                 <th valign="middle" style="border-top:solid black 1.0pt;"><b>Quantity</b></th>                
                 <th valign="middle" style="border-top:solid black 1.0pt;"><b>Purchase Price</b></th>
             </tr>            
-            ${data?.items ? data?.items.map(p => {
-        return `
+            ${
+              data?.items
+                ? data?.items
+                    .map((p) => {
+                      return `
                 <tr class="data-row">
                     <td valign="middle">${p.itemCode ?? ""}</td>
-                    <td valign="middle">${p.itemDescription ?? ""}</td>                    
-                    <td valign="middle" class="center">${p.batchNumber ?? ""}</td>                    
-                    <td valign="middle" class="center">${formatDisplayDate(p.expiryDate)}</td>                    
-                    <td valign="middle" class="center">${p.quantityRequired?.toLocaleString() ?? ""} ${p.quantityRequiredUoM ?? ""}</td>
-                    <td valign="middle" class="center">${p.purchasePrice?.toLocaleString() ?? ""}</td>
+                    <td valign="middle">${
+                      p.itemDescription ?? ""
+                    }</td>                    
+                    <td valign="middle" class="center">${
+                      p.batchNumber ?? ""
+                    }</td>                    
+                    <td valign="middle" class="center">${formatDisplayDate(
+                      p.expiryDate
+                    )}</td>                    
+                    <td valign="middle" class="center">${
+                      p.quantityRequired?.toLocaleString() ?? ""
+                    } ${p.quantityRequiredUoM ?? ""}</td>
+                    <td valign="middle" class="center">${
+                      p.purchasePrice?.toLocaleString() ?? ""
+                    }</td>
                 </tr> 
                 `;
-    }).join("") : ""}
-            ${emptyRowCount > 0 ? Array(emptyRowCount).fill(0).map(p => `
+                    })
+                    .join("")
+                : ""
+            }
+            ${
+              emptyRowCount > 0
+                ? Array(emptyRowCount)
+                    .fill(0)
+                    .map(
+                      (p) => `
         <tr class="data-row">
             <td valign="middle">&nbsp;</td>
             <td valign="middle">&nbsp;</td>
@@ -74,7 +99,11 @@ export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData)
             <td valign="middle" class="center">&nbsp;</td>
             <td valign="middle" class="center">&nbsp;</td>
             <td valign="middle" class="center">&nbsp;</td>
-        </tr>`).join("") : ""}    
+        </tr>`
+                    )
+                    .join("")
+                : ""
+            }    
             <tr class="footer-field">
                 <td valign="middle" colspan="6" style="border:0;padding-top: 15pt;">
                     Remarks:<br/>
@@ -97,10 +126,19 @@ export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData)
             </tr>        
         </table>        
     </div>
-    `}
+    `;
+};
 
-
-export const PrintGoodsReceivedNoteStockOperation = async (data: StockOperationPrintData) => {
-    let printData = await FormatGoodsReceivedDocument(data);
-    printDocument(GetPrintTemplate(printData, data?.documentTitle, true, CLOSE_PRINT_AFTER_PRINT));
-}
+export const PrintGoodsReceivedNoteStockOperation = async (
+  data: StockOperationPrintData
+) => {
+  let printData = await FormatGoodsReceivedDocument(data);
+  printDocument(
+    GetPrintTemplate(
+      printData,
+      data?.documentTitle,
+      true,
+      CLOSE_PRINT_AFTER_PRINT
+    )
+  );
+};

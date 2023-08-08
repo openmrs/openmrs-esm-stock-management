@@ -1,11 +1,10 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { SWRConfig } from 'swr';
-import { spaBasePath } from './constants';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { SWRConfig } from "swr";
+import { spaBasePath } from "./constants";
 import StockHome from "./stock-home.component";
 import StockItems from "./stock-items/stock-items.component";
 import StockReports from "./stock-reports/stock-reports.component";
-
 
 const swrConfiguration = {
   // Maximum number of retries when the backend returns an error
