@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-template-app",
+  "name": "@ugandaemr/esm-ugandaemr-commodity",
   "version": "3.0.0",
   "license": "MPL-2.0",
   "description": "An OpenMRS seed application for building microfrontends",
-  "browser": "dist/openmrs-esm-template-app.js",
+  "browser": "dist/esm-ugandaemr-commodity.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
@@ -34,14 +34,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openmrs/openmrs-esm-template-app.git"
+    "url": "git+https://github.com/METS-Programme/esm-ugandaemr-commodity.git"
   },
-  "homepage": "https://github.com/openmrs/openmrs-esm-template-app#readme",
+  "homepage": "https://github.com/METS-Programme/esm-ugandaemr-commodity#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/openmrs/openmrs-esm-template-app/issues"
+    "url": "https://github.com/METS-Programme/esm-ugandaemr-commodity/issues"
   },
   "dependencies": {
     "@carbon/react": "^1.33.1",
@@ -86,7 +86,7 @@
     "jest": "^28.1.3",
     "jest-cli": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
-    "openmrs": "next",
+    "openmrs": "4.3.1-pre.632",
     "prettier": "^2.8.8",
     "pretty-quick": "^3.1.3",
     "react": "^18.2.0",

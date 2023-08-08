@@ -1,66 +1,39 @@
-/**
- * This is the entrypoint file of the application. It communicates the
- * important features of this microfrontend to the app shell. It
- * connects the app shell to the React application(s) that make up this
- * microfrontend.
- */
-import { getAsyncLifecycle, defineConfigSchema } from "@openmrs/esm-framework";
+import { defineConfigSchema, provide } from "@openmrs/esm-framework";
 import { configSchema } from "./config-schema";
+import ugandaEmrConfig from "./ugandaemr-config";
+import ugandaEmrOverrides from "./ugandaemr-configuration-overrrides.json";
+
+declare var __VERSION__: string;
+// __VERSION__ is replaced by Webpack with the version from package.json
+const version = __VERSION__;
 
 const moduleName = "@openmrs/esm-template-app";
 
-const options = {
-  featureName: "root-world",
-  moduleName,
-};
-
-/**
- * This tells the app shell how to obtain translation files: that they
- * are JSON files in the directory `../translations` (which you should
- * see in the directory structure).
- */
-export const importTranslation = require.context(
+const importTranslation = require.context(
   "../translations",
   false,
   /.json$/,
   "lazy"
 );
 
-/**
- * This function performs any setup that should happen at microfrontend
- * load-time (such as defining the config schema) and then returns an
- * object which describes how the React application(s) should be
- * rendered.
- */
-export function startupApp() {
+const options = {
+  featureName: "Uganda Emr commodity",
+  moduleName,
+};
+
+const backendDependencies = {
+  fhir2: "^1.2.0",
+  "webservices.rest": "^2.2.0",
+};
+
+function setupOpenMRS() {
   defineConfigSchema(moduleName, configSchema);
+  provide(ugandaEmrOverrides);
+  provide(ugandaEmrConfig);
+  return {
+    pages: [],
+    extensions: [{}],
+  };
 }
 
-/**
- * This named export tells the app shell that the default export of `root.component.tsx`
- * should be rendered when the route matches `root`. The full route
- * will be `openmrsSpaBase() + 'root'`, which is usually
- * `/openmrs/spa/root`.
- */
-export const root = getAsyncLifecycle(
-  () => import("./root.component"),
-  options
-);
-
-/**
- * The following are named exports for the extensions defined in this frontend modules. See the `routes.json` file to see how these are used.
- */
-export const redBox = getAsyncLifecycle(
-  () => import("./boxes/extensions/red-box.component"),
-  options
-);
-
-export const blueBox = getAsyncLifecycle(
-  () => import("./boxes/extensions/blue-box.component"),
-  options
-);
-
-export const brandBox = getAsyncLifecycle(
-  () => import("./boxes/extensions/brand-box.component"),
-  options
-);
+export { backendDependencies, importTranslation, setupOpenMRS, version };
