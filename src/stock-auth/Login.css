@@ -1,0 +1,20 @@
+ul.dev-accounts {
+    list-style-type: none;
+    text-align: left;
+    max-width: 300px;
+    display: block;
+}
+
+ul.dev-accounts li {
+    cursor: pointer;
+    display: inline-block;
+    
+    padding: 5px 5px;
+}
+
+ul.dev-accounts li:hover {
+    background-color:black;
+    color:white;
+    
+}
+

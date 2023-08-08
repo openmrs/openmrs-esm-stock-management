@@ -1,0 +1,27 @@
+@import "../../root.module.scss";
+
+.overflowMenu {
+  width: auto;
+  height: auto;
+
+}
+.menuOptions{
+  padding:0;
+  &::after{  
+    background-color: transparent !important;
+    content: '';
+  }  
+}
+
+.overflowMenuButton {
+  width: auto;
+  height: auto;
+  padding: 0.95rem;
+  background-color: #0f62fe;
+  background-image: none;
+  color: #ffffff;
+  &:hover {
+    color: $text-04 !important;
+    background-color: #0353e9;
+  }
+}
