@@ -16,7 +16,7 @@ import {
   TableRow,
   TableToolbar,
   TableToolbarContent,
-} from "carbon-components-react";
+} from "@carbon/react";
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../root.module.scss";

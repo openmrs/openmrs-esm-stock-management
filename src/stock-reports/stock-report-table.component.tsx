@@ -14,10 +14,8 @@ import {
   DataTableSkeleton,
   DatePicker,
   DatePickerInput,
-  DenormalizedRow,
   Modal,
   Pagination,
-  SearchProps,
   Select,
   SelectItem,
   Table,
@@ -37,7 +35,7 @@ import {
   TableToolbarAction,
   TableToolbarContent,
   TableToolbarMenu,
-} from "carbon-components-react";
+} from "@carbon/react";
 import React, {
   CSSProperties,
   ChangeEvent,
@@ -97,7 +95,6 @@ interface ReportTableProps {
     onSearch(searchTerm: string): any;
     refetch(): void;
     currentSearchTerm?: string | null;
-    otherSearchProps?: SearchProps;
     onLocationScopeChange: (locationScope: string) => void;
     onStatusChange: (status: string) => void;
     onDateCreatedChange: (
@@ -701,15 +698,15 @@ const ReportTable: React.FC<ReportTableProps> = ({
     ]
   );
 
-  function cancelSelectedRows(
-    event: React.MouseEvent<HTMLButtonElement>,
-    selectedRows: readonly DenormalizedRow[]
-  ) {
-    if (selectedRows?.length > 0) {
-      setSelectedCancel(selectedRows.map((p) => p.id));
-      setOpenCancelConfirm(true);
-    }
-  }
+  // function cancelSelectedRows(
+  //   event: React.MouseEvent<HTMLButtonElement>,
+  //   selectedRows: readonly DenormalizedRow[]
+  // ) {
+  //   if (selectedRows?.length > 0) {
+  //     setSelectedCancel(selectedRows.map((p) => p.id));
+  //     setOpenCancelConfirm(true);
+  //   }
+  // }
 
   const handleRefresh = () => {
     search.refetch();
@@ -816,7 +813,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
                       iconDescription={t(
                         "stockmanagement.report.list.cancelselectedrows"
                       )}
-                      onClick={(e) => cancelSelectedRows(e, selectedRows)}
+                      // onClick={(e) => cancelSelectedRows(e, selectedRows)}
                     >
                       {t("stockmanagement.report.cancelreport")}
                     </TableBatchAction>

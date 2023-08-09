@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Navigate } from "react-router-dom";
-import { URL_ACCESS_DENIED } from "../config";
+import { URL_ACCESS_DENIED } from "../constants";
 import { UserContextState } from "../core/api/types/identity/UserContextState";
 import {
   hasEveryPrivilegeScope,

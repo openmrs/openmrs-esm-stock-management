@@ -1,4 +1,4 @@
-import { Modal } from "carbon-components-react";
+import { Modal } from "@carbon/react";
 import React, { useMemo, useState } from "react";
 import { Splash } from "../components/spinner/Splash";
 import { useCreateOrUpdateStockSourceMutation } from "../core/api/stockSource";

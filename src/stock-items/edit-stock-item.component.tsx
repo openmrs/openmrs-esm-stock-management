@@ -7,13 +7,12 @@ import {
   NumberInput,
   RadioButton,
   RadioButtonGroup,
-  RadioButtonValue,
   Select,
   SelectItem,
   SelectSkeleton,
   TextInput,
   ToastNotification,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import { produce } from "immer";
 import { debounce } from "lodash-es";
@@ -44,10 +43,6 @@ import { StockItemDTO } from "../core/api/types/stockItem/StockItem";
 import { StockItemPackagingUOMDTO } from "../core/api/types/stockItem/StockItemPackagingUOM";
 import { StockSource } from "../core/api/types/stockOperation/StockSource";
 import useTranslation from "../core/utils/translation";
-import {
-  createValidationSchema,
-  editValidationSchema,
-} from "./validationSchema";
 
 export interface EditStockItemProps {
   model: StockItemDTO;
@@ -235,47 +230,47 @@ export const EditStockItem: React.FC<EditStockItemProps> = ({
     }
   };
 
-  const onIsDrugChange = (
-    selection: RadioButtonValue,
-    name: string,
-    evt: ChangeEvent<HTMLInputElement>
-  ) => {
-    setShowItemExists(false);
-    var isDrug = selection === "true";
-    setModel(
-      produce((draft) => {
-        draft.isDrug = isDrug;
-        if (isDrug) {
-          draft.conceptUuid = null;
-          draft.conceptName = null;
-        } else {
-          draft.drugUuid = null;
-          draft.drugName = null;
-          draft.dispensingUnitUuid = null;
-        }
-      })
-    );
-    formikRef?.current?.setFieldValue("isDrug", isDrug);
-    if (isDrug) {
-      formikRef?.current?.setFieldValue("conceptUuid", null);
-    } else {
-      formikRef?.current?.setFieldValue("drugUuid", null);
-      formikRef?.current?.setFieldValue("dispensingUnitUuid", null);
-    }
-  };
+  // const onIsDrugChange = (
+  //   selection: RadioButtonValue,
+  //   name: string,
+  //   evt: ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setShowItemExists(false);
+  //   var isDrug = selection === "true";
+  //   setModel(
+  //     produce((draft) => {
+  //       draft.isDrug = isDrug;
+  //       if (isDrug) {
+  //         draft.conceptUuid = null;
+  //         draft.conceptName = null;
+  //       } else {
+  //         draft.drugUuid = null;
+  //         draft.drugName = null;
+  //         draft.dispensingUnitUuid = null;
+  //       }
+  //     })
+  //   );
+  //   formikRef?.current?.setFieldValue("isDrug", isDrug);
+  //   if (isDrug) {
+  //     formikRef?.current?.setFieldValue("conceptUuid", null);
+  //   } else {
+  //     formikRef?.current?.setFieldValue("drugUuid", null);
+  //     formikRef?.current?.setFieldValue("dispensingUnitUuid", null);
+  //   }
+  // };
 
-  const onHasExpirationChanged = (
-    selection: RadioButtonValue,
-    name: string,
-    evt: ChangeEvent<HTMLInputElement>
-  ) => {
-    setModel(
-      produce((draft) => {
-        draft.hasExpiration = selection === "true";
-      })
-    );
-    formikRef?.current?.setFieldValue("hasExpiration", selection === "true");
-  };
+  // const onHasExpirationChanged = (
+  //   selection: RadioButtonValue,
+  //   name: string,
+  //   evt: ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setModel(
+  //     produce((draft) => {
+  //       draft.hasExpiration = selection === "true";
+  //     })
+  //   );
+  //   formikRef?.current?.setFieldValue("hasExpiration", selection === "true");
+  // };
 
   const onCommonNameChanged = (evt: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = evt.target.value;
@@ -492,7 +487,6 @@ export const EditStockItem: React.FC<EditStockItemProps> = ({
   return (
     <Formik
       innerRef={formikRef}
-      validationSchema={isNew ? createValidationSchema : editValidationSchema}
       initialValues={{
         isDrug: isNew
           ? model.drugUuid || model.conceptUuid
@@ -544,7 +538,6 @@ export const EditStockItem: React.FC<EditStockItemProps> = ({
                   <RadioButtonGroup
                     name="isDrug"
                     legendText=""
-                    onChange={onIsDrugChange}
                   >
                     <RadioButton
                       value="true"
@@ -665,7 +658,6 @@ export const EditStockItem: React.FC<EditStockItemProps> = ({
                           : model.hasExpiration.toString().toLowerCase()
                       }
                       legendText=""
-                      onChange={onHasExpirationChanged}
                     >
                       <RadioButton
                         value="true"

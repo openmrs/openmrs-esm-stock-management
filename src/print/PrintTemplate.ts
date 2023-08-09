@@ -32,7 +32,7 @@ export const GetLogoSection = async () => {
     try {
       printLogoData = await GetPrintLogo();
     } catch (e) {
-      console.log(e);
+      /* empty */
     }
   }
   return printLogoData || PRINT_LOGO_TEXT
@@ -56,7 +56,7 @@ export const GetLogoSection = async () => {
 };
 
 export const GetHeaderSection = async () => {
-  let logoSection = await GetLogoSection();
+  const logoSection = await GetLogoSection();
   return `
 <div class="logo-row right">
 ${logoSection}

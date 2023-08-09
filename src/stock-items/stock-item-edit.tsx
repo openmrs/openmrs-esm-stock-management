@@ -1,4 +1,4 @@
-import { AccordionSkeleton, Tab, Tabs } from "carbon-components-react";
+import { AccordionSkeleton, Tab, Tabs } from "@carbon/react";
 import { produce } from "immer";
 import { cloneDeep } from "lodash-es";
 import React, { useCallback, useEffect, useMemo, useState } from "react";

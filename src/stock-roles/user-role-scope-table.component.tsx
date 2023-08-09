@@ -8,10 +8,8 @@ import {
   Button,
   DataTable,
   DataTableSkeleton,
-  DenormalizedRow,
   Modal,
   Pagination,
-  SearchProps,
   Table,
   TableBatchAction,
   TableBatchActions,
@@ -27,7 +25,7 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-} from "carbon-components-react";
+} from "@carbon/react";
 import debounce from "lodash-es/debounce";
 import React, { CSSProperties, useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -58,7 +56,6 @@ interface UserRoleScopeTableProps {
     onSearch(searchTerm: string): any;
     refetch(): void;
     currentSearchTerm?: string;
-    otherSearchProps?: SearchProps;
   };
   createUserRoleScope(): void;
   editUserRoleScope(uuid: string): void;
@@ -226,15 +223,15 @@ const UserRoleScopeTable: React.FC<UserRoleScopeTableProps> = ({
     [search]
   );
 
-  function deleteSelectedRows(
-    event: React.MouseEvent<HTMLButtonElement>,
-    selectedRows: readonly DenormalizedRow[]
-  ) {
-    if (selectedRows?.length > 0) {
-      setSelectedDelete(selectedRows.map((p) => p.id));
-      setOpenDeleteConfirm(true);
-    }
-  }
+  // function deleteSelectedRows(
+  //   event: React.MouseEvent<HTMLButtonElement>,
+  //   selectedRows: readonly DenormalizedRow[]
+  // ) {
+  //   if (selectedRows?.length > 0) {
+  //     setSelectedDelete(selectedRows.map((p) => p.id));
+  //     setOpenDeleteConfirm(true);
+  //   }
+  // }
 
   function deleteUserRoleScopeOnCancel() {
     setSelectedDelete(null);
@@ -332,7 +329,7 @@ const UserRoleScopeTable: React.FC<UserRoleScopeTableProps> = ({
                       iconDescription={t(
                         "stockmanagement.userrolescope.list.deleteselectedrows"
                       )}
-                      onClick={(e) => deleteSelectedRows(e, selectedRows)}
+                      // onClick={(e) => deleteSelectedRows(e, selectedRows)}
                     >
                       {t("stockmanagement.delete")}
                     </TableBatchAction>

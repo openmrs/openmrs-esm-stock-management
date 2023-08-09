@@ -12,7 +12,7 @@ import {
   TableRow,
   TableToolbar,
   TableToolbarContent,
-} from "carbon-components-react";
+} from "@carbon/react";
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import styles from "../../root.module.scss";
 import { ResourceRepresentation } from "../core/api/api";

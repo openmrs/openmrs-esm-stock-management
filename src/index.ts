@@ -1,15 +1,15 @@
-import { defineConfigSchema, provide } from "@openmrs/esm-framework";
+import {
+  defineConfigSchema,
+  getAsyncLifecycle,
+  provide,
+} from "@openmrs/esm-framework";
 import { configSchema } from "./config-schema";
 import ugandaEmrConfig from "./ugandaemr-config";
 import ugandaEmrOverrides from "./ugandaemr-configuration-overrrides.json";
 
-declare var __VERSION__: string;
-// __VERSION__ is replaced by Webpack with the version from package.json
-const version = __VERSION__;
+const moduleName = "@ugandaemr/esm-ugandaemr-commodity";
 
-const moduleName = "@openmrs/esm-template-app";
-
-const importTranslation = require.context(
+export const importTranslation = require.context(
   "../translations",
   false,
   /.json$/,
@@ -21,19 +21,13 @@ const options = {
   moduleName,
 };
 
-const backendDependencies = {
-  fhir2: "^1.2.0",
-  "webservices.rest": "^2.2.0",
-};
-
-function setupOpenMRS() {
+export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
   provide(ugandaEmrOverrides);
   provide(ugandaEmrConfig);
-  return {
-    pages: [],
-    extensions: [{}],
-  };
 }
 
-export { backendDependencies, importTranslation, setupOpenMRS, version };
+export const root = getAsyncLifecycle(
+  () => import("./root.component"),
+  options
+);

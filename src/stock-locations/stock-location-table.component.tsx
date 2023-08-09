@@ -5,7 +5,6 @@ import {
   DataTableSkeleton,
   Modal,
   Pagination,
-  SearchProps,
   Select,
   SelectItem,
   Table,
@@ -20,7 +19,7 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-} from "carbon-components-react";
+} from "@carbon/react";
 import debounce from "lodash-es/debounce";
 import React, {
   CSSProperties,
@@ -66,7 +65,7 @@ interface LocationTableProps {
     onSearch(searchTerm: string): any;
     refetch(): void;
     currentSearchTerm?: string | null;
-    otherSearchProps?: SearchProps;
+    // otherSearchProps?: SearchProps;
   };
   pagination: {
     usePagination: boolean;

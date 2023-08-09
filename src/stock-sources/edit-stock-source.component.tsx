@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectSkeleton,
   TextInput,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../constants";

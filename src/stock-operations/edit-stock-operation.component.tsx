@@ -10,7 +10,7 @@ import {
   SelectSkeleton,
   TextArea,
   TextInput,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import { debounce } from "lodash-es";
 import React, { ChangeEvent, useEffect, useMemo, useRef } from "react";

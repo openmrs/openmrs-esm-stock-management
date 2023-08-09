@@ -7,7 +7,7 @@ interface CustomOverflowMenuComponentProps {
 
 const CustomOverflowMenuComponent: React.FC<
   CustomOverflowMenuComponentProps
-> = ({ menuTitle, children }) => {
+> = ({ menuTitle }) => {
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const toggleShowMenu = () => setShowMenu((state) => !state);
@@ -63,7 +63,7 @@ const CustomOverflowMenuComponent: React.FC<
           display: showMenu ? "block" : "none",
         }}
       >
-        <ul className="bx--overflow-menu-options__content">{children}</ul>
+        <ul className="bx--overflow-menu-options__content"></ul>
         <span />
       </div>
     </div>

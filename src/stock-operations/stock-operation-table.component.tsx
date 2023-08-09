@@ -26,11 +26,10 @@ import {
   TableRow,
   TableToolbarAction,
   TableToolbarMenu,
-} from "carbon-components-react";
+} from "@carbon/react";
 import debounce from "lodash-es/debounce";
 import React, { CSSProperties, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useHasPreviledge } from "../../features/auth/AccessControl";
 import styles from "../../root.module.scss";
 import {
   URL_STOCK_OPERATION,
@@ -59,6 +58,7 @@ import {
 import { isDesktopLayout, useLayoutType } from "../core/utils/layoutUtils";
 import useTranslation from "../core/utils/translation";
 import { resolveRouterPath } from "../core/utils/urlUtils";
+import { useHasPreviledge } from "../stock-auth/AccessControl";
 
 interface StockOperationTableProps {
   stockOperations: PageableResult<StockOperationDTO>;

@@ -5,28 +5,28 @@ const validationSchema = {
     "stockmanagement.userrolescope.validation.rolerequired"
   ),
   isPermanent: Yup.boolean(),
-  activeFrom: Yup.date()
-    .when("isPermanent", {
-      is: false,
-      then: Yup.date()
-        .required("stockmanagement.userrolescope.validation.activefromrequired")
-        .min(
-          Date(),
-          "stockmanagement.userrolescope.validation.activefromnotinthepast"
-        ),
-    })
-    .nullable(),
-  activeTo: Yup.date()
-    .when("isPermanent", {
-      is: false,
-      then: Yup.date()
-        .required("stockmanagement.userrolescope.validation.activetorequired")
-        .min(
-          Yup.ref("activeFrom"),
-          "stockmanagement.userrolescope.validation.activetonotbeforeactivefrom"
-        ),
-    })
-    .nullable(),
+  // activeFrom: Yup.date()
+  //   .when("isPermanent", {
+  //     is: false,
+  //     then: Yup.date()
+  //       .required("stockmanagement.userrolescope.validation.activefromrequired")
+  //       .min(
+  //         Date(),
+  //         "stockmanagement.userrolescope.validation.activefromnotinthepast"
+  //       ),
+  //   })
+  //   .nullable(),
+  // activeTo: Yup.date()
+  //   .when("isPermanent", {
+  //     is: false,
+  //     then: Yup.date()
+  //       .required("stockmanagement.userrolescope.validation.activetorequired")   
+  //       .min(
+  //         Yup.ref("activeFrom"),
+  //         "stockmanagement.userrolescope.validation.activetonotbeforeactivefrom"
+  //       ),
+  //   })
+  //   .nullable(),
   operationType: Yup.array()
     .min(1, "stockmanagement.userrolescope.validation.operationtyperequired")
     .of(Yup.string().required())

@@ -6,7 +6,7 @@ import {
   Form,
   Modal,
   SelectSkeleton,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import { produce } from "immer";
 import React, {

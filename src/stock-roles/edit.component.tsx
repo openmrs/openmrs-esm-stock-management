@@ -1,5 +1,5 @@
 import { Save24, Undo24 } from "@carbon/icons-react";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Splash } from "../components/spinner/Splash";

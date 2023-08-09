@@ -1,4 +1,4 @@
-import { Modal, TextArea } from "carbon-components-react";
+import { Modal, TextArea } from "@carbon/react";
 import React, { useEffect, useState } from "react";
 import useTranslation from "../../core/utils/translation";
 

@@ -1,4 +1,4 @@
-import { AccordionSkeleton } from "carbon-components-react";
+import { AccordionSkeleton } from "@carbon/react";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { URL_STOCK_ITEM, URL_STOCK_ITEMS } from "../constants";

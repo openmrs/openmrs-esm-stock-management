@@ -1,10 +1,9 @@
-import { ComboBox } from "carbon-components-react";
+import { ComboBox } from "@carbon/react";
 import { debounce } from "lodash-es";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../root.module.scss";
 import { useAppSelector } from "../app/hooks";
-import { selectPrivilegeScopes } from "../auth/authSlice";
 import {
   ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION,
   STOCK_SOURCE_TYPE_CODED_CONCEPT_ID,
@@ -44,6 +43,7 @@ import { errorAlert } from "../core/utils/alert";
 import { BreadCrumbs } from "../core/utils/breadCrumbs";
 import { toErrorMessage } from "../core/utils/stringUtils";
 import useTranslation from "../core/utils/translation";
+import { selectPrivilegeScopes } from "../stock-auth/authSlice";
 import StockOperationListTable from "./stock-operation-table.component";
 
 const InitialResults: PageableResult<StockOperationDTO> = {

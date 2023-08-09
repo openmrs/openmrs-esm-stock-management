@@ -9,8 +9,8 @@ import {
   Printer24,
   Repeat24,
 } from "@carbon/icons-react";
-import { AccordionSkeleton, Button, Tab, Tabs } from "carbon-components-react";
-import produce from "immer";
+import { AccordionSkeleton, Button, Tab, Tabs } from "@carbon/react";
+import { produce } from "immer";
 import { cloneDeep } from "lodash-es";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";

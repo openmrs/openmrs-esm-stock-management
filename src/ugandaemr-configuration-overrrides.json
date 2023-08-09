@@ -52,12 +52,10 @@
     "@openmrs/esm-home-app":{
       "extensionSlots":{
         "homepage-dashboard-slot":{
-          "add":[
-            "clinical-appointments-dashboard-link"
-          ],
           "remove": [
             "patient-lists-dashboard-link",
-            "home-widget-db-link"
+            "home-widget-db-link",
+            "clinical-appointments-dashboard-link"
           ]
         },
        "homepage-widgets-slot": {

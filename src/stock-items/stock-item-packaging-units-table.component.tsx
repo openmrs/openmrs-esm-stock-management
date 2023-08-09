@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { produce } from "immer";
 import React, { useEffect, useState } from "react";
 import styles from "../../root.module.scss";

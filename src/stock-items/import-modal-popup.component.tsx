@@ -4,9 +4,8 @@ import {
   Modal,
   RadioButton,
   RadioButtonGroup,
-  RadioButtonValue,
-} from "carbon-components-react";
-import React, { ChangeEvent, useEffect, useState } from "react";
+} from "@carbon/react";
+import React, { useEffect, useState } from "react";
 import { Splash } from "../components/spinner/Splash";
 import { URL_IMPORT_ERROR_FILE, URL_IMPORT_TEMPLATE_FILE } from "../constants";
 import { useImportStockItemMutation } from "../core/api/stockItem";
@@ -36,7 +35,7 @@ export const ImportModalPopup: React.FC<ImportModalPopupProps> = ({
   const [displayErrors, setDisplayErrors] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let fileUploader: FileUploader | null;
+  // let fileUploader: FileUploader | null;
 
   useEffect(() => {
     setOpenModal(showModal);
@@ -71,13 +70,13 @@ export const ImportModalPopup: React.FC<ImportModalPopupProps> = ({
     onClose?.(false);
   }
 
-  const onHasHeaderChanged = (
-    selection: RadioButtonValue,
-    name: string,
-    evt: ChangeEvent<HTMLInputElement>
-  ) => {
-    setHasHeader(selection === "true");
-  };
+  // const onHasHeaderChanged = (
+  //   selection: RadioButtonValue,
+  //   name: string,
+  //   evt: ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setHasHeader(selection === "true");
+  // };
 
   const onFileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayErrors(false);
@@ -154,7 +153,6 @@ export const ImportModalPopup: React.FC<ImportModalPopupProps> = ({
             filenameStatus="edit"
             labelTitle=""
             size="small"
-            ref={(node) => (fileUploader = node)}
             onChange={onFileChanged}
             onDelete={onFileDeleted}
           />
@@ -167,7 +165,6 @@ export const ImportModalPopup: React.FC<ImportModalPopupProps> = ({
               name="hasHeader"
               defaultSelected={"true"}
               legendText=""
-              onChange={onHasHeaderChanged}
             >
               <RadioButton
                 value="true"

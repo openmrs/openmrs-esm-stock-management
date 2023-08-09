@@ -25,7 +25,7 @@
             "message": "Import specific methods from `lodash-es`. e.g. `import { map } from 'lodash-es'`"
           },
           {
-            "name": "carbon-components-react",
+            "name": "@carbon/react",
             "message": "Import from `@carbon/react` directly. e.g. `import { Toggle } from '@carbon/react'`"
           },
           {

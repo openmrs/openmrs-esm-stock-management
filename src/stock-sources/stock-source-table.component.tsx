@@ -3,10 +3,8 @@ import {
   Button,
   DataTable,
   DataTableSkeleton,
-  DenormalizedRow,
   Modal,
   Pagination,
-  SearchProps,
   Select,
   SelectItem,
   Table,
@@ -24,7 +22,7 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-} from "carbon-components-react";
+} from "@carbon/react";
 import debounce from "lodash-es/debounce";
 import React, {
   CSSProperties,
@@ -64,7 +62,7 @@ interface StockSourceTableProps {
     >;
     currentSearchTerm?: string | null;
     currentSourceType?: string | null;
-    otherSearchProps?: SearchProps;
+    // otherSearchProps?: SearchProps;
   };
   createStockSource(): void;
   editStockSource(uuid: string): void;
@@ -158,15 +156,15 @@ const StockSourceTable: React.FC<StockSourceTableProps> = ({
     [search]
   );
 
-  function deleteSelectedRows(
-    event: React.MouseEvent<HTMLButtonElement>,
-    selectedRows: readonly DenormalizedRow[]
-  ) {
-    if (selectedRows?.length > 0) {
-      setSelectedDelete(selectedRows.map((p) => p.id));
-      setOpenDeleteConfirm(true);
-    }
-  }
+  // function deleteSelectedRows(
+  //   event: React.MouseEvent<HTMLButtonElement>,
+  //   selectedRows: readonly DenormalizedRow[]
+  // ) {
+  //   if (selectedRows?.length > 0) {
+  //     setSelectedDelete(selectedRows.map((p) => p.id));
+  //     setOpenDeleteConfirm(true);
+  //   }
+  // }
 
   function deleteStockSourceOnCancel() {
     setSelectedDelete(null);
@@ -266,7 +264,7 @@ const StockSourceTable: React.FC<StockSourceTableProps> = ({
                       iconDescription={t(
                         "stockmanagement.stocksource.list.deleteselectedrows"
                       )}
-                      onClick={(e) => deleteSelectedRows(e, selectedRows)}
+                      // onClick={(e) => deleteSelectedRows(e, selectedRows)}
                     >
                       {t("stockmanagement.delete")}
                     </TableBatchAction>

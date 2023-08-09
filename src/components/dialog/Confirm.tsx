@@ -1,4 +1,4 @@
-import { ModalWrapper } from "carbon-components-react";
+import { ModalWrapper } from "@carbon/react";
 import React, { ReactNode } from "react";
 
 export const ShowModal = (

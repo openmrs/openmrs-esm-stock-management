@@ -1,7 +1,7 @@
 import React from "react";
-import { Login } from "../features/auth/Login";
 import { Navigate, Route } from "react-router-dom";
-import { URL_SIGN_IN, URL_WILDCARD } from "../config";
+import { URL_SIGN_IN, URL_WILDCARD } from "../constants";
+import { Login } from "../stock-auth/Login";
 
 export const publicRoutes = [
   <Route key="sign-in-route" path={URL_SIGN_IN} element={<Login />} />,

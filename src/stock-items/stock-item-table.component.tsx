@@ -20,7 +20,7 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-} from "carbon-components-react";
+} from "@carbon/react";
 import debounce from "lodash-es/debounce";
 import React, { CSSProperties, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

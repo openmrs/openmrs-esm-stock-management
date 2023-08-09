@@ -10,10 +10,8 @@ import {
   FormGroup,
   RadioButton,
   RadioButtonGroup,
-  RadioButtonValue,
   TextInput,
-} from "carbon-components-react";
-import { produce } from "immer";
+} from "@carbon/react";
 import React, { ChangeEvent } from "react";
 import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
@@ -48,15 +46,15 @@ export const SubmitApproval: React.FC<SubmitApprovalProps> = ({
 }) => {
   const { t } = useTranslation();
   const onApprovalRequiredChange = (
-    selection: RadioButtonValue,
+    // selection: RadioButtonValue,
     name: string,
     evt: ChangeEvent<HTMLInputElement>
   ) => {
-    setModel(
-      produce((draft) => {
-        draft.approvalRequired = selection === "true";
-      })
-    );
+    // setModel(
+    //   produce((draft) => {
+    //     draft.approvalRequired = selection === "true";
+    //   })
+    // );
   };
   return (
     <div className="smt-form">

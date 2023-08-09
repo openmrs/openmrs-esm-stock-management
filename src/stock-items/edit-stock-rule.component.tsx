@@ -5,7 +5,7 @@ import {
   Modal,
   NumberInput,
   TextInput,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import { produce } from "immer";
 import React, { useCallback, useRef } from "react";
@@ -68,7 +68,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
   const [updateStockRule] = useUpdateStockRuleMutation();
 
   const onLocationChanged = (data: { selectedItem: any }) => {
-    let newValue = data.selectedItem?.locationUuid ?? data.selectedItem?.uuid;
+    const newValue = data.selectedItem?.locationUuid ?? data.selectedItem?.uuid;
     setModel(
       produce((draft) => {
         draft.locationName =
@@ -80,7 +80,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
   };
 
   const onPackagingUnitChanged = (data: { selectedItem: any }) => {
-    let newValue =
+    const newValue =
       data.selectedItem?.uuid ?? data.selectedItem?.stockItemPackagingUOMUuid;
     setModel(
       produce((draft) => {
@@ -107,6 +107,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
       );
       formikRef?.current?.setFieldValue("quantity", qtyValue);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
     }
   };
@@ -126,6 +127,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
       );
       formikRef?.current?.setFieldValue("evaluationFrequency", qtyValue);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
     }
   };
@@ -145,12 +147,13 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
       );
       formikRef?.current?.setFieldValue("actionFrequency", qtyValue);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
     }
   };
 
   const onNameChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    let newValue = evt.target.value;
+    const newValue = evt.target.value;
     setModel(
       produce((draft) => {
         draft.name = newValue;
@@ -160,7 +163,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
   };
 
   const onAlertRoleChanged = (data: { selectedItem: any }) => {
-    let newValue = data.selectedItem?.display ?? data.selectedItem?.role;
+    const newValue = data.selectedItem?.display ?? data.selectedItem?.role;
     setModel(
       produce((draft) => {
         draft.alertRole = newValue;
@@ -171,7 +174,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
   };
 
   const onMailRoleChanged = (data: { selectedItem: any }) => {
-    let newValue = data.selectedItem?.display ?? data.selectedItem?.role;
+    const newValue = data.selectedItem?.display ?? data.selectedItem?.role;
     setModel(
       produce((draft) => {
         draft.mailRole = newValue;
@@ -184,7 +187,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
     cvt: React.ChangeEvent<HTMLInputElement>,
     data: { checked: boolean; id: string }
   ): void => {
-    let newValue = !model.enabled;
+    const newValue = !model.enabled;
     setModel(
       produce((draft) => {
         draft.enabled = newValue;
@@ -197,7 +200,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
     cvt: React.ChangeEvent<HTMLInputElement>,
     data: { checked: boolean; id: string }
   ): void => {
-    let newValue = !model.enableDescendants;
+    const newValue = !model.enableDescendants;
     setModel(
       produce((draft) => {
         draft.enableDescendants = newValue;
@@ -231,6 +234,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
         }
       }
     } finally {
+      /* empty */
     }
   };
 
@@ -239,7 +243,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
       let hideSplash = true;
       try {
         if (!stockRule.uuid && stockRule.locationUuid == null) return;
-        let newItem = {
+        const newItem = {
           name: stockRule.name,
           description: stockRule.description,
           quantity: stockRule.quantity,
@@ -263,7 +267,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
           .unwrap()
           .then((payload: any) => {
             if ((payload as any).error) {
-              var errorToken = toErrorMessage(payload);
+              const errorToken = toErrorMessage(payload);
               errorAlert(
                 `${t(
                   !model.uuid
@@ -285,7 +289,7 @@ export const EditStockRule: React.FC<EditStockRuleProps> = ({
             }
           })
           .catch((error) => {
-            var errorToken = toErrorMessage(error);
+            const errorToken = toErrorMessage(error);
             errorAlert(
               `${t(
                 !model.uuid

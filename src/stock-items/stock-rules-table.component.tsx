@@ -19,7 +19,7 @@ import {
   TableToolbarAction,
   TableToolbarContent,
   TableToolbarMenu,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { produce } from "immer";
 import { cloneDeep } from "lodash-es";
 import React, {

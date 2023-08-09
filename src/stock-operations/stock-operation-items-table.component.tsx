@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
   TextInput,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { produce } from "immer";
 import debounce from "lodash-es/debounce";
 import React, { useCallback, useMemo, useState } from "react";

@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "carbon-components-react";
+} from "@carbon/react";
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "../../root.module.scss";

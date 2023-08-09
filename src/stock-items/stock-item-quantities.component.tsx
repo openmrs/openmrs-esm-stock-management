@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "carbon-components-react";
+} from "@carbon/react";
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "../../root.module.scss";
 import { ResourceRepresentation } from "../core/api/api";

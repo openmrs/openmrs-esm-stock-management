@@ -11,18 +11,18 @@ const validationSchema = {
       "stockmanagement.stockoperation.validation.operationdatenotinthefuture"
     )
     .nullable(),
-  sourceUuid: Yup.string()
-    .when("hasSource", {
-      is: true,
-      then: Yup.string().required("stockmanagement.field.required"),
-    })
-    .nullable(),
-  destinationUuid: Yup.string()
-    .when("hasDestination", {
-      is: true,
-      then: Yup.string().required("stockmanagement.field.required"),
-    })
-    .nullable(),
+  // sourceUuid: Yup.string()
+  //   .when("hasSource", {
+  //     is: true,
+  //     then: Yup.string().required("stockmanagement.field.required"),
+  //   })
+  //   .nullable(),
+  // destinationUuid: Yup.string()
+  //   .when("hasDestination", {
+  //     is: true,
+  //     then: Yup.string().required("stockmanagement.field.required"),
+  //   })
+  //   .nullable(),
   responsiblePersonUuid: Yup.string().required(
     "stockmanagement.field.required"
   ),
@@ -39,12 +39,12 @@ const validationSchema = {
       }
     )
     .nullable(),
-  reasonUuid: Yup.string()
-    .when("hasReason", {
-      is: true,
-      then: Yup.string().required("stockmanagement.field.required"),
-    })
-    .nullable(),
+  // reasonUuid: Yup.string()
+  //   .when("hasReason", {
+  //     is: true,
+  //     then: Yup.string().required("stockmanagement.field.required"),
+  //   })
+  //   .nullable(),
   remarks: Yup.string()
     .nullable()
     .max(255, "stockmanagement.field.noexceed255"),

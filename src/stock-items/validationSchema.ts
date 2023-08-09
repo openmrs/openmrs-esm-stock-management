@@ -11,114 +11,113 @@ const commonValidationSchema = {
   hasExpiration: Yup.boolean().required("stockmanagement.field.required"),
   preferredVendorUuid: Yup.string().nullable(),
   categoryUuid: Yup.string().nullable(),
-  dispensingUnitUuid: Yup.string()
-    .when("isDrug", {
-      is: true,
-      then: Yup.string().required("stockmanagement.field.required").nullable(),
-    })
-    .nullable(),
-  expiryNotice: Yup.number()
-    .when("hasExpiration", {
-      is: true,
-      then: Yup.number()
-        .min(0, "stockmanagement.field.greaterthanorequaltozero")
-        .nullable(),
-    })
-    .nullable(),
+  // dispensingUnitUuid: Yup.string().when("isDrug", {
+  //     is: true,
+  //     then: Yup.string().required("stockmanagement.field.required").nullable(),
+  //   })
+  //   .nullable(),
+  // expiryNotice: Yup.number()
+  //   .when("hasExpiration", {
+  //     is: true,
+  //     then: Yup.number()
+  //       .min(0, "stockmanagement.field.greaterthanorequaltozero")
+  //       .nullable(),
+  //   })
+  //   .nullable(),
 };
 
-const createOnlyValidationSchema = {
-  drugUuid: Yup.string()
-    .when("isDrug", {
-      is: true,
-      then: Yup.string().required("stockmanagement.field.required").nullable(),
-    })
-    .nullable(),
-  conceptUuid: Yup.string()
-    .when("isDrug", {
-      is: false,
-      then: Yup.string().required("stockmanagement.field.required").nullable(),
-    })
-    .nullable(),
-};
-const editOnlyValidationSchema = {
-  hasPurchasePrice: Yup.boolean(),
-  hasPackagingUnits: Yup.boolean(),
-  hasReorderLevel: Yup.boolean(),
-  purchasePrice: Yup.number()
-    .when("hasPurchasePrice", {
-      is: true,
-      then: Yup.number()
-        .when("hasPackagingUnits", {
-          is: true,
-          then: Yup.number()
-            .required("stockmanagement.field.required")
-            .nullable(),
-        })
-        .nullable(),
-    })
-    .min(0.00005, "stockmanagement.field.greaterthanzero")
-    .nullable(),
-  purchasePriceUoMUuid: Yup.string()
-    .when("hasPurchasePrice", {
-      is: true,
-      then: Yup.string()
-        .when("hasPackagingUnits", {
-          is: true,
-          then: Yup.string()
-            .required("stockmanagement.field.required")
-            .nullable(),
-        })
-        .nullable(),
-    })
-    .nullable(),
-  dispensingUnitUuid: Yup.string()
-    .when("isDrug", {
-      is: true,
-      then: Yup.string().required("stockmanagement.field.required").nullable(),
-    })
-    .nullable(),
-  dispensingUnitPackagingUoMUuid: Yup.string()
-    .when("isDrug", {
-      is: true,
-      then: Yup.string()
-        .when("hasPackagingUnits", {
-          is: true,
-          then: Yup.string()
-            .required("stockmanagement.field.required")
-            .nullable(),
-        })
-        .nullable(),
-    })
-    .nullable(),
-  reorderLevel: Yup.number()
-    .when("hasReorderLevel", {
-      is: true,
-      then: Yup.number()
-        .when("hasPackagingUnits", {
-          is: true,
-          then: Yup.number()
-            .required("stockmanagement.field.required")
-            .nullable(),
-        })
-        .nullable(),
-    })
-    .min(0, "stockmanagement.field.greaterthanorequaltozero")
-    .nullable(),
-  reorderLevelUoMUuid: Yup.string()
-    .when("hasReorderLevel", {
-      is: true,
-      then: Yup.string()
-        .when("hasPackagingUnits", {
-          is: true,
-          then: Yup.string()
-            .required("stockmanagement.field.required")
-            .nullable(),
-        })
-        .nullable(),
-    })
-    .nullable(),
-};
+// const createOnlyValidationSchema = {
+//   drugUuid: Yup.string()
+//     .when("isDrug", {
+//       is: true,
+//       then: Yup.string().required("stockmanagement.field.required").nullable(),
+//     })
+//     .nullable(),
+//   conceptUuid: Yup.string()
+//     .when("isDrug", {
+//       is: false,
+//       then: Yup.string().required("stockmanagement.field.required").nullable(),
+//     })
+//     .nullable(),
+// };
+// const editOnlyValidationSchema = {
+//   hasPurchasePrice: Yup.boolean(),
+//   hasPackagingUnits: Yup.boolean(),
+//   hasReorderLevel: Yup.boolean(),
+//   purchasePrice: Yup.number()
+//     .when("hasPurchasePrice", {
+//       is: true,
+//       then: Yup.number()
+//         .when("hasPackagingUnits", {
+//           is: true,
+//           then: Yup.number()
+//             .required("stockmanagement.field.required")
+//             .nullable(),
+//         })
+//         .nullable(),
+//     })
+//     .min(0.00005, "stockmanagement.field.greaterthanzero")
+//     .nullable(),
+//   purchasePriceUoMUuid: Yup.string()
+//     .when("hasPurchasePrice", {
+//       is: true,
+//       then: Yup.string()
+//         .when("hasPackagingUnits", {
+//           is: true,
+//           then: Yup.string()
+//             .required("stockmanagement.field.required")
+//             .nullable(),
+//         })
+//         .nullable(),
+//     })
+//     .nullable(),
+//   dispensingUnitUuid: Yup.string()
+//     .when("isDrug", {
+//       is: true,
+//       then: Yup.string().required("stockmanagement.field.required").nullable(),
+//     })
+//     .nullable(),
+//   dispensingUnitPackagingUoMUuid: Yup.string()
+//     .when("isDrug", {
+//       is: true,
+//       then: Yup.string()
+//         .when("hasPackagingUnits", {
+//           is: true,
+//           then: Yup.string()
+//             .required("stockmanagement.field.required")
+//             .nullable(),
+//         })
+//         .nullable(),
+//     })
+//     .nullable(),
+//   reorderLevel: Yup.number()
+//     .when("hasReorderLevel", {
+//       is: true,
+//       then: Yup.number()
+//         .when("hasPackagingUnits", {
+//           is: true,
+//           then: Yup.number()
+//             .required("stockmanagement.field.required")
+//             .nullable(),
+//         })
+//         .nullable(),
+//     })
+//     .min(0, "stockmanagement.field.greaterthanorequaltozero")
+//     .nullable(),
+//   reorderLevelUoMUuid: Yup.string()
+//     .when("hasReorderLevel", {
+//       is: true,
+//       then: Yup.string()
+//         .when("hasPackagingUnits", {
+//           is: true,
+//           then: Yup.string()
+//             .required("stockmanagement.field.required")
+//             .nullable(),
+//         })
+//         .nullable(),
+//     })
+//     .nullable(),
+// };
 
 const stockRulesCommonValidationSchema = {
   name: Yup.string()
@@ -145,12 +144,12 @@ const stockRulesCreateOnlyValidationSchema = {
   locationUuid: Yup.string().required("stockmanagement.field.required"),
 };
 
-export const editValidationSchema = Yup.object(
-  Object.assign({}, commonValidationSchema, editOnlyValidationSchema)
-);
-export const createValidationSchema = Yup.object(
-  Object.assign({}, commonValidationSchema, createOnlyValidationSchema)
-);
+// export const editValidationSchema = Yup.object(
+//   Object.assign({}, commonValidationSchema, editOnlyValidationSchema)
+// );
+// export const createValidationSchema = Yup.object(
+//   Object.assign({}, commonValidationSchema, createOnlyValidationSchema)
+// );
 export const stockRulesEditValidationSchema = Yup.object(
   Object.assign({}, stockRulesCommonValidationSchema)
 );

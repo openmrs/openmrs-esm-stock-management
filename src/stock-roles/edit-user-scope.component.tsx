@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectSkeleton,
   ToggleSmall,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import { cloneDeep, debounce } from "lodash-es";
 import React, {

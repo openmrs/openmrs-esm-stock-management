@@ -9,11 +9,10 @@ import {
   NumberInput,
   RadioButton,
   RadioButtonGroup,
-  RadioButtonValue,
   Select,
   SelectItem,
   SelectSkeleton,
-} from "carbon-components-react";
+} from "@carbon/react";
 import { Formik, FormikProps, FormikValues } from "formik";
 import { produce } from "immer";
 import { debounce } from "lodash-es";
@@ -408,24 +407,24 @@ export const EditReport: React.FC<EditReportProps> = ({
     formikRef?.current?.setFieldValue("inventoryGroupBy", newValue);
   };
 
-  const onMostLeastMovingChange = (
-    selection: RadioButtonValue,
-    name: string,
-    evt: ChangeEvent<HTMLInputElement>
-  ) => {
-    setModel(
-      produce((draft) => {
-        draft.mostLeastMoving = selection ? selection.toString() : "";
-        draft.mostLeastMovingName =
-          selection === "MostMoving"
-            ? t("stockmanagement.report.mostmoving")
-            : selection === "LeastMoving"
-            ? t("stockmanagement.report.leastmoving")
-            : undefined;
-      })
-    );
-    formikRef?.current?.setFieldValue("mostLeastMoving", selection);
-  };
+  // const onMostLeastMovingChange = (
+  //   selection: RadioButtonValue,
+  //   name: string,
+  //   evt: ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setModel(
+  //     produce((draft) => {
+  //       draft.mostLeastMoving = selection ? selection.toString() : "";
+  //       draft.mostLeastMovingName =
+  //         selection === "MostMoving"
+  //           ? t("stockmanagement.report.mostmoving")
+  //           : selection === "LeastMoving"
+  //           ? t("stockmanagement.report.leastmoving")
+  //           : undefined;
+  //     })
+  //   );
+  //   formikRef?.current?.setFieldValue("mostLeastMoving", selection);
+  // };
 
   const onChildLocationsChanged = (
     cvt: React.ChangeEvent<HTMLInputElement>,
@@ -1371,7 +1370,7 @@ export const EditReport: React.FC<EditReportProps> = ({
                               : model.mostLeastMoving
                           }
                           legendText=""
-                          onChange={onMostLeastMovingChange}
+                          // onChange={onMostLeastMovingChange}
                         >
                           <RadioButton
                             value="MostMoving"
