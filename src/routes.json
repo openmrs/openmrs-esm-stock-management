@@ -5,22 +5,28 @@
     "webservices.rest": "^2.24.0"
   },
   "extensions": [
-    {
-      "name": "stock-items-ext",
-      "component": "stockItemExt"
-    },
+
     {
       "name": "stock-management-link",
       "slot": "app-menu-slot",
       "component": "stockManagementLink",
       "online": true,
       "offline": true
+    },
+    {
+      "name": "stock-management-dashboard",
+      "slot": "stock-management-dashboard-slot",
+      "component": "stockManagementDashboard",
+      "online": true,
+      "offline": true
     }
   ],
   "pages": [
     {
-      "component": "root",
-      "route": "root"
+      "component": "stockManagement",
+      "route": "commodity",
+      "online": true,
+      "offline": true
     }
   ]
 }

@@ -1,11 +1,5 @@
-import {
-  getAsyncLifecycle,
-  defineConfigSchema,
-  getSyncLifecycle,
-} from "@openmrs/esm-framework";
+import { getAsyncLifecycle, defineConfigSchema } from "@openmrs/esm-framework";
 import { configSchema } from "./config-schema";
-import { createDashboardLink } from "./createDashboardLink";
-import { dashboardMeta } from "./dashboard.meta";
 
 const moduleName = "@openmrs/esm-template-app";
 
@@ -21,27 +15,21 @@ export const importTranslation = require.context(
   "lazy"
 );
 
-export function startupApp() {
-  defineConfigSchema(moduleName, configSchema);
-}
-
-export const root = getAsyncLifecycle(
-  () => import("./root.component"),
+export const stockManagement = getAsyncLifecycle(
+  () => import("./stock-management.component"),
   options
-);
-
-export const stockItemExt = getAsyncLifecycle(
-  () => import("./stock-items/stock-items.component"),
-  {
-    featureName: "stock-items",
-    moduleName,
-  }
 );
 
 export const stockManagementLink = getAsyncLifecycle(
   () => import("./stock-management-link.commodity"),
-  {
-    featureName: "stock-management-link",
-    moduleName,
-  }
+  options
 );
+
+export const stockManagementDashboard = getAsyncLifecycle(
+  () => import("./dashbooard/stock-management-dashboard.component"),
+  options
+);
+
+export function startupApp() {
+  defineConfigSchema(moduleName, configSchema);
+}
