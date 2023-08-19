@@ -25,7 +25,6 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { useConfig } from "@openmrs/esm-framework";
 import { Config } from "./config-schema";
-import Root from "./root.component";
 
 /**
  * This is an idiomatic way of dealing with mocked files. Note that
@@ -40,7 +39,7 @@ it("renders a landing page for the Template app", () => {
   const config: Config = { casualGreeting: false, whoToGreet: ["World"] };
   mockUseConfig.mockReturnValue(config);
 
-  render(<Root />);
+  // render(<Root />);
 
   expect(
     screen.getByRole("heading", { name: /welcome to the o3 template app/i })

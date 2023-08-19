@@ -6,19 +6,15 @@
   },
   "extensions": [
     {
-      "name": "Red box",
-      "component": "redBox",
-      "slot": "Boxes"
+      "name": "stock-items-ext",
+      "component": "stockItemExt"
     },
     {
-      "name": "Blue box",
-      "component": "blueBox",
-      "slot": "Boxes"
-    },
-        {
-      "name": "Brand box",
-      "component": "blueBox",
-      "slot": "Boxes"
+      "name": "stock-management-link",
+      "slot": "app-menu-slot",
+      "component": "stockManagementLink",
+      "online": true,
+      "offline": true
     }
   ],
   "pages": [

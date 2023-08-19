@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-template-app",
+  "name": "@ugandaemr/esm-stock-management-app",
   "version": "3.0.0",
   "license": "MPL-2.0",
   "description": "An OpenMRS seed application for building microfrontends",
-  "browser": "dist/openmrs-esm-template-app.js",
+  "browser": "dist/esm-stock-management-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
@@ -46,7 +46,8 @@
   "dependencies": {
     "@carbon/react": "^1.33.1",
     "lodash-es": "^4.17.21",
-    "react-image-annotate": "^1.8.0"
+    "react-image-annotate": "^1.8.0",
+    "swr": "^2.2.1"
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "*",
@@ -75,6 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "css-loader": "^6.8.1",
+    "dayjs": "^1.11.9",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-ts-react-important-stuff": "^3.0.0",
