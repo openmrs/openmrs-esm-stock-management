@@ -5,26 +5,28 @@
     "webservices.rest": "^2.24.0"
   },
   "extensions": [
+
     {
-      "name": "Red box",
-      "component": "redBox",
-      "slot": "Boxes"
+      "name": "stock-management-link",
+      "slot": "app-menu-slot",
+      "component": "stockManagementLink",
+      "online": true,
+      "offline": true
     },
     {
-      "name": "Blue box",
-      "component": "blueBox",
-      "slot": "Boxes"
-    },
-        {
-      "name": "Brand box",
-      "component": "blueBox",
-      "slot": "Boxes"
+      "name": "stock-management-dashboard",
+      "slot": "stock-management-dashboard-slot",
+      "component": "stockManagementDashboard",
+      "online": true,
+      "offline": true
     }
   ],
   "pages": [
     {
-      "component": "root",
-      "route": "root"
+      "component": "stockManagement",
+      "route": "commodity",
+      "online": true,
+      "offline": true
     }
   ]
 }
