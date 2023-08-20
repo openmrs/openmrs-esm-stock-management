@@ -28,7 +28,7 @@ function StockSourcesItems() {
   const { t } = useTranslation();
 
   // get sources
-  const { isLoading, isError, items } = useStockSources({});
+  const { items, isLoading } = useStockSources({});
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -62,7 +62,7 @@ function StockSourcesItems() {
         key: "sourceType",
       },
     ],
-    []
+    [t]
   );
 
   const tableRows = useMemo(() => {
@@ -82,87 +82,89 @@ function StockSourcesItems() {
   }
 
   if (paginatedItems?.length) {
-    <DataTable
-      data-floating-menu-container
-      headers={tableHeaders}
-      isSortable
-      size="xs"
-      rows={tableRows}
-      useZebraStyles
-    >
-      {({
-        rows,
-        headers,
-        getHeaderProps,
-        getTableProps,
-        getRowProps,
-        onInputChange,
-      }) => (
-        <TableContainer>
-          <TableToolbar
-            style={{
-              position: "static",
-              height: "3rem",
-              overflow: "visible",
-              backgroundColor: "color",
-            }}
-          >
-            <TableToolbarContent>
-              <Layer>
-                <TableToolbarSearch
-                  onChange={onInputChange}
-                  placeholder={t("searchThisList", "Search this list")}
-                  size="sm"
-                />
-              </Layer>
-            </TableToolbarContent>
-          </TableToolbar>
-          <Table {...getTableProps()}>
-            <TableHead>
-              <TableRow>
-                <TableExpandHeader />
-                {headers.map((header) => (
-                  <TableHeader {...getHeaderProps({ header })}>
-                    {header.header}
-                  </TableHeader>
-                ))}
-                <TableExpandHeader />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => {
-                return (
-                  <React.Fragment key={row.id}>
-                    <TableRow {...getRowProps({ row })}>
-                      {row.cells.map((cell) => (
-                        <TableCell key={cell.id}>{cell.value}</TableCell>
-                      ))}
-                    </TableRow>
-                  </React.Fragment>
-                );
-              })}
-            </TableBody>
-          </Table>
-          <Pagination
-            forwardText="Next page"
-            backwardText="Previous page"
-            page={currentPage}
-            pageSize={currentPageSize}
-            pageSizes={pageSizes}
-            totalItems={items?.results.length}
-            className={styles.pagination}
-            onChange={({ pageSize, page }) => {
-              if (pageSize !== currentPageSize) {
-                setPageSize(pageSize);
-              }
-              if (page !== currentPage) {
-                goTo(page);
-              }
-            }}
-          />
-        </TableContainer>
-      )}
-    </DataTable>;
+    return (
+      <DataTable
+        data-floating-menu-container
+        headers={tableHeaders}
+        isSortable
+        size="xs"
+        rows={tableRows}
+        useZebraStyles
+      >
+        {({
+          rows,
+          headers,
+          getHeaderProps,
+          getTableProps,
+          getRowProps,
+          onInputChange,
+        }) => (
+          <TableContainer>
+            <TableToolbar
+              style={{
+                position: "static",
+                height: "3rem",
+                overflow: "visible",
+                backgroundColor: "color",
+              }}
+            >
+              <TableToolbarContent>
+                <Layer>
+                  <TableToolbarSearch
+                    onChange={onInputChange}
+                    placeholder={t("searchThisList", "Search this list")}
+                    size="sm"
+                  />
+                </Layer>
+              </TableToolbarContent>
+            </TableToolbar>
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  <TableExpandHeader />
+                  {headers.map((header) => (
+                    <TableHeader {...getHeaderProps({ header })}>
+                      {header.header}
+                    </TableHeader>
+                  ))}
+                  <TableExpandHeader />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => {
+                  return (
+                    <React.Fragment key={row.id}>
+                      <TableRow {...getRowProps({ row })}>
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
+                      </TableRow>
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            <Pagination
+              forwardText="Next page"
+              backwardText="Previous page"
+              page={currentPage}
+              pageSize={currentPageSize}
+              pageSizes={pageSizes}
+              totalItems={items?.results.length}
+              className={styles.pagination}
+              onChange={({ pageSize, page }) => {
+                if (pageSize !== currentPageSize) {
+                  setPageSize(pageSize);
+                }
+                if (page !== currentPage) {
+                  goTo(page);
+                }
+              }}
+            />
+          </TableContainer>
+        )}
+      </DataTable>
+    );
   }
 
   return (
