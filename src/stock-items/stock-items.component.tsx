@@ -1,7 +1,8 @@
 import React from "react";
+import StockItemsTableComponent from "./table/stock-items-table.component";
 
 const StockItems = () => {
-  return <> We are testing</>;
+  return <StockItemsTableComponent />;
 };
 
 export default StockItems;
