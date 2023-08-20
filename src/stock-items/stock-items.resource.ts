@@ -64,7 +64,9 @@ export interface StockRuleFilter extends ResourceFilterCriteria {
 
 // getStockItems
 export function useStockItems(filter: StockItemFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem${toQueryParams(filter)}`;
+  const apiUrl = `ws/rest/v1/stockmanagement/stockitem${toQueryParams(
+    filter
+  )}?v=full`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<StockItemDTO>;
