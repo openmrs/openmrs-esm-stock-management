@@ -12,7 +12,7 @@ export interface StockSourceFilter extends ResourceFilterCriteria {
 export function useStockSources(filter: StockSourceFilter) {
   const apiUrl = `ws/rest/v1/stockmanagement/stocksource${toQueryParams(
     filter
-  )}`;
+  )}?v=full`;
 
   const { data, error, isLoading } = useSWR<
     { data: PageableResult<StockSource> },
@@ -20,7 +20,7 @@ export function useStockSources(filter: StockSourceFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockSource>>{},
     isLoading,
     isError: error,
   };

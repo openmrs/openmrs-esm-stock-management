@@ -2,6 +2,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
 import React from "react";
 import styles from "./commodity-tabs.scss";
 import StockItems from "../stock-items/stock-items.component";
+import StockSources from "../stock-sources/stock-sources.component";
 
 const StockCommodityTabs: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const StockCommodityTabs: React.FC = () => {
           <Tab> Stock Items</Tab>
           <Tab> Stock Operations</Tab>
           <Tab> Stock User Role Scopes</Tab>
+          <Tab> Stock Sources</Tab>
           <Tab> Stock Locations</Tab>
           <Tab> Stock Reports</Tab>
           <Tab> Stock Settings</Tab>
@@ -21,19 +23,19 @@ const StockCommodityTabs: React.FC = () => {
           </TabPanel>
           <TabPanel>
             <StockItems />
-          </TabPanel>{" "}
+          </TabPanel>
           <TabPanel>
             <StockItems />
-          </TabPanel>{" "}
+          </TabPanel>
+          <TabPanel>
+            <StockSources />
+          </TabPanel>
+          <TabPanel>
+            <StockSources />
+          </TabPanel>
           <TabPanel>
             <StockItems />
-          </TabPanel>{" "}
-          <TabPanel>
-            <StockItems />
-          </TabPanel>{" "}
-          <TabPanel>
-            <StockItems />
-          </TabPanel>{" "}
+          </TabPanel>
           <TabPanel>
             <StockItems />
           </TabPanel>
