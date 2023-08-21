@@ -16,7 +16,7 @@ export function useUserRoleScopes(filter: UserRoleScopeFilter) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<UserRoleScope>>{},
     isLoading,
     isError: error,
   };

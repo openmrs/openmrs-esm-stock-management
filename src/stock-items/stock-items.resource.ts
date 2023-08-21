@@ -71,7 +71,7 @@ export function useStockItems(filter: StockItemFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockItemDTO>>{},
     isLoading,
     isError: error,
   };

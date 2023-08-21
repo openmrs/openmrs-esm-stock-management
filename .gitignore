@@ -1,5 +1,8 @@
 # OS files
 .DS_Store
+# intell 
+vcs.xml
+workspace.xml
 
 # Logs
 logs

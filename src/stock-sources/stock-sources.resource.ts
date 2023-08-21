@@ -20,7 +20,7 @@ export function useStockSources(filter: StockSourceFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockSource>>{},
     isLoading,
     isError: error,
   };

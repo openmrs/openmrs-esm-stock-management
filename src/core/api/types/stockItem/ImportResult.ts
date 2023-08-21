@@ -5,6 +5,5 @@ export interface ImportResult {
   hasErrorFile: boolean;
   success: boolean;
   errors: string[];
-  exception: any;
   notChangedCount: number;
 }
