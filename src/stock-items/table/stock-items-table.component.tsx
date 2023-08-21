@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  useLocations,
   usePagination,
   isDesktop,
   useLayoutType,
@@ -12,7 +11,6 @@ import rootStyles from "../../root.module.scss";
 import {
   DataTable,
   DataTableSkeleton,
-  Layer,
   Link,
   Table,
   TableBody,
@@ -27,8 +25,6 @@ import {
   Tile,
   Pagination,
   TableBatchActions,
-  RadioButtonGroup,
-  RadioButton,
 } from "@carbon/react";
 
 interface StockItemsTableProps {
@@ -38,29 +34,14 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const locations = useLocations();
-
   const desktop = isDesktop(useLayoutType());
 
   const { items, isLoading, isError } = useStockItems({});
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
-  const [overlayHeader, setOverlayTitle] = useState("");
 
   // Search
-  const [isDrug, setIsDrug] = useState("");
-  const [searchString, setSearchString] = useState(null);
-
-  const handleSearch = useCallback((str: string) => {
-    setPageSize(1);
-    setSearchString(str);
-  }, []);
-
-  const handleItemTypeChange = useCallback((isDrug: string) => {
-    setPageSize(1);
-    setIsDrug(isDrug);
-  }, []);
 
   const {
     goTo,
@@ -137,7 +118,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             }`
           : "",
     }));
-  }, [items, t]);
+  }, [paginatedQueueEntries, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -251,7 +232,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row, index) => {
+                  {rows.map((row) => {
                     return (
                       <React.Fragment key={row.id}>
                         <TableRow
