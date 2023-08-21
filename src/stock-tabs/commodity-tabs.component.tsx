@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./commodity-tabs.scss";
 import StockItems from "../stock-items/stock-items.component";
 import StockSources from "../stock-sources/stock-sources.component";
+import StockUserScopes from "../stock-user-role-scopes/stock-user-role-scopes.component";
 
 const StockCommodityTabs: React.FC = () => {
   return (
@@ -24,7 +25,7 @@ const StockCommodityTabs: React.FC = () => {
             <StockItems />
           </TabPanel>
           <TabPanel>
-            <StockItems />
+            <StockUserScopes />
           </TabPanel>
           <TabPanel>
             <StockSources />
