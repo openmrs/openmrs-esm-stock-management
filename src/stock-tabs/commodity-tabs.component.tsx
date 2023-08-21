@@ -11,7 +11,7 @@ const StockCommodityTabs: React.FC = () => {
   return (
     <div className={styles.tabContainer}>
       <Tabs>
-        <TabList contained>
+        <TabList contained fullWidth>
           <Tab> Stock Items</Tab>
           <Tab> Stock Operations</Tab>
           <Tab> Stock User Role Scopes</Tab>

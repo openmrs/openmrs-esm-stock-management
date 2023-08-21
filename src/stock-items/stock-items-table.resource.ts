@@ -2,11 +2,10 @@ import { StockOperationFilter } from "../stock-operations/stock-operations.resou
 import { useStockItems } from "./stock-items.resource";
 import { useMemo, useState } from "react";
 import { usePagination } from "@openmrs/esm-framework";
-import { Link } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 
 export function useStockItemsPages(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useStockItems({});
+  const { items, isLoading, isError } = useStockItems(filter);
   const { t } = useTranslation();
 
   const pageSizes = [10, 20, 30, 40, 50];

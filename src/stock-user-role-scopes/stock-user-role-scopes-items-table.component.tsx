@@ -1,153 +1,72 @@
-import { useTranslation } from "react-i18next";
-import React from "react";
-import { isDesktop, useLayoutType } from "@openmrs/esm-framework";
-import {
-  Button,
-  DataTable,
-  DataTableSkeleton,
-  Pagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableExpandHeader,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableToolbar,
-  TableToolbarContent,
-  TableToolbarSearch,
-  Tile,
-} from "@carbon/react";
+import React, { useMemo } from "react";
+import { Button, DataTableSkeleton, Link, Tile } from "@carbon/react";
 import { Add } from "@carbon/react/icons";
 import styles from "./stock-user-role-scopes.scss";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
+import DataList from "../core/components/table/table.component";
+import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
+import { useTranslation } from "react-i18next";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
-
-  const layout = useLayoutType();
-
   // get sources
-  const {
-    isLoading,
-    paginatedItems,
-    tableHeaders,
-    tableRows,
-    currentPage,
-    currentPageSize,
-    goTo,
-    pageSizes,
-    items,
-    setPageSize,
-  } = useStockUserRoleScopesPage({ v: ResourceRepresentation.Full });
+  const { isLoading, tableHeaders, items } = useStockUserRoleScopesPage({
+    v: ResourceRepresentation.Full,
+  });
+
+  const tableRows = useMemo(() => {
+    return items?.map((userRoleScope) => {
+      return {
+        ...userRoleScope,
+        id: userRoleScope?.uuid,
+        key: `key-${userRoleScope?.uuid}`,
+        uuid: `${userRoleScope?.uuid}`,
+        user: (
+          <Link
+            to={URL_USER_ROLE_SCOPE(userRoleScope?.uuid)}
+          >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
+        ),
+        roleName: userRoleScope?.role,
+        locations: userRoleScope?.locations?.map((location) => {
+          const key = `loc-${userRoleScope?.uuid}-${location.locationUuid}`;
+          return <span key={key}>{location?.locationName}</span>;
+          //return
+        }),
+        stockOperations: userRoleScope?.operationTypes
+          ?.map((operation) => {
+            return operation?.operationTypeName;
+          })
+          ?.join(", "),
+        permanent: userRoleScope?.permanent
+          ? t("stockmanagement.yes", "Yes")
+          : t("stockmanagement.no", "No"),
+        // activeFrom: formatDisplayDate(userRoleScope?.activeFrom),
+        // activeTo: formatDisplayDate(userRoleScope?.activeTo),
+        enabled: userRoleScope?.enabled
+          ? t("stockmanagement.yes", "Yes")
+          : t("stockmanagement.no", "No"),
+        // actions: (
+        //   <Button
+        //     type="button"
+        //     size="sm"
+        //     className="submitButton clear-padding-margin"
+        //     iconDescription={"View"}
+        //     kind="ghost"
+        //     renderIcon={Edit16}
+        //     onClick={(e) => onViewItem(userRoleScope?.uuid, e)}
+        //   />
+        // ),
+      };
+    });
+  }, [items]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (paginatedItems?.length) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.headerBtnContainer}></div>
-        <div className={styles.headerContainer}>
-          <div
-            className={
-              !isDesktop(layout) ? styles.tabletHeading : styles.desktopHeading
-            }
-          >
-            <span className={styles.heading}>{`Stock Sources`}</span>
-          </div>
-        </div>
-        <DataTable
-          data-floating-menu-container
-          headers={tableHeaders}
-          size="xs"
-          isSortable
-          rows={tableRows}
-          useZebraStyles
-          overflowMenuOnHover={isDesktop(layout)}
-        >
-          {({
-            rows,
-            headers,
-            getHeaderProps,
-            getTableProps,
-            getRowProps,
-            onInputChange,
-          }) => (
-            <TableContainer className={styles.tableContainer}>
-              <TableToolbar
-                style={{
-                  position: "static",
-                  height: "3rem",
-                  overflow: "visible",
-                  backgroundColor: "color",
-                }}
-              >
-                <TableToolbarContent className={styles.toolbarContent}>
-                  <TableToolbarSearch
-                    className={styles.search}
-                    onChange={onInputChange}
-                    placeholder={t("searchThisList", "Search this list")}
-                    size="sm"
-                  />
-                  <div className={styles.headerButtons}>
-                    <Button>Add Source</Button>
-                  </div>
-                </TableToolbarContent>
-              </TableToolbar>
-              <Table {...getTableProps()} className={styles.stockSourcesTable}>
-                <TableHead>
-                  <TableRow>
-                    <TableExpandHeader />
-                    {headers.map((header) => (
-                      <TableHeader
-                        {...getHeaderProps({ header })}
-                        key={`${header.key}`}
-                      >
-                        {header.header}
-                      </TableHeader>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => {
-                    return (
-                      <React.Fragment key={row.uuid}>
-                        <TableRow {...getRowProps({ row })}>
-                          {row.cells.map((cell) => (
-                            <TableCell key={cell.id}>{cell.value}</TableCell>
-                          ))}
-                        </TableRow>
-                      </React.Fragment>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-              <Pagination
-                forwardText="Next page"
-                backwardText="Previous page"
-                page={currentPage}
-                pageSize={currentPageSize}
-                pageSizes={pageSizes}
-                totalItems={items?.length}
-                className={styles.pagination}
-                onChange={({ pageSize, page }) => {
-                  if (pageSize !== currentPageSize) {
-                    setPageSize(pageSize);
-                  }
-                  if (page !== currentPage) {
-                    goTo(page);
-                  }
-                }}
-              />
-            </TableContainer>
-          )}
-        </DataTable>
-      </div>
-    );
+  if (items?.length) {
+    return <DataList columns={tableHeaders} data={tableRows} />;
   }
 
   return (

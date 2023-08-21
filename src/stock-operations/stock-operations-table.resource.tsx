@@ -56,36 +56,6 @@ export function useStockOperationPages(filter: StockOperationFilter) {
     [t]
   );
 
-  // const tableRows = useMemo(() => {
-  //   return paginatedQueueEntries?.map((stockOperation) => ({
-  //     ...stockOperation,
-  //     id: stockOperation?.uuid,
-  //     key: `key-${stockOperation?.uuid}`,
-  //     uuid: `${stockOperation?.uuid}`,
-  //     type: stockOperation?.drugUuid
-  //       ? t("stockmanagement.drug", "Drug")
-  //       : t("stockmanagement.other", "Other"),
-  //     genericName: (
-  //       <Link to={URL_STOCK_ITEM(stockOperation?.uuid || "")}>{`${
-  //         stockOperation?.drugName ?? stockOperation.conceptName
-  //       }`}</Link>
-  //     ),
-  //     commonName: stockOperation?.commonName,
-  //     tradeName: stockOperation?.drugUuid ? stockOperation?.conceptName : "",
-  //     preferredVendorName: stockOperation?.preferredVendorName,
-  //     dispensingUoM: stockOperation?.defaultStockOperationsUoMName,
-  //     dispensingUnitName: stockOperation?.dispensingUnitName,
-  //     defaultStockOperationsUoMName:
-  //       stockOperation?.defaultStockOperationsUoMName,
-  //     reorderLevel:
-  //       stockOperation?.reorderLevelUoMName && stockOperation?.reorderLevel
-  //         ? `${stockOperation?.reorderLevel?.toLocaleString()} ${
-  //             stockOperation?.reorderLevelUoMName
-  //           }`
-  //         : "",
-  //   }));
-  // }, [items, t]);
-
   return {
     items: items.results,
     currentPage,
@@ -96,6 +66,5 @@ export function useStockOperationPages(filter: StockOperationFilter) {
     isError,
     setPageSize,
     tableHeaders,
-    // tableRows,
   };
 }
