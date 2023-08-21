@@ -46,13 +46,6 @@
   margin: 0.25rem 0;
 }
 
-.priorityTag {
-  @extend .tag;
-  @include type.type-style('label-01');
-  color: #943d00;
-  background-color: #ffc9a3;
-}
-
 .backgroundDataFetchingIndicator {
   align-items: center;
   display: flex;
@@ -97,34 +90,12 @@
   align-items: center;
 }
 
-.activeVisitsTable tr:last-of-type {
+.stockSourcesTable tr:last-of-type {
   td {
     border-bottom: none;
   }
 }
 
-.expandedActiveVisitRow {
-  :global(.cds--tab-content) {
-    padding: 0.5rem 0;
-  }
-
-  td {
-    padding: 0.5rem;
-
-    > div {
-      max-height: max-content !important;
-      background-color: $ui-02;
-    }
-  }
-
-  th[colspan] td[colspan] > div:first-child {
-    padding: 0 1rem;
-  }
-}
-
-.hiddenRow {
-  display: none;
-}
 
 .content {
   @include type.type-style('heading-compact-02');

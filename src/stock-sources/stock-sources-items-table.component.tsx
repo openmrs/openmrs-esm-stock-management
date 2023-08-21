@@ -19,13 +19,20 @@ import {
   Button,
   TableCell,
   Pagination,
+  Dropdown,
 } from "@carbon/react";
 import styles from "./stock-sources.scss";
 import { Add } from "@carbon/react/icons";
-import { usePagination } from "@openmrs/esm-framework";
+import {
+  isDesktop,
+  useLayoutType,
+  usePagination,
+} from "@openmrs/esm-framework";
 
 function StockSourcesItems() {
   const { t } = useTranslation();
+
+  const layout = useLayoutType();
 
   // get sources
   const { items, isLoading } = useStockSources({});
@@ -69,6 +76,8 @@ function StockSourcesItems() {
     return paginatedItems?.map((entry) => {
       return {
         ...entry,
+        id: entry?.uuid,
+        key: `key-${entry?.uuid}`,
         uuid: entry?.uuid,
         name: entry?.name,
         acronym: entry?.acronym,
@@ -83,87 +92,104 @@ function StockSourcesItems() {
 
   if (paginatedItems?.length) {
     return (
-      <DataTable
-        data-floating-menu-container
-        headers={tableHeaders}
-        isSortable
-        size="xs"
-        rows={tableRows}
-        useZebraStyles
-      >
-        {({
-          rows,
-          headers,
-          getHeaderProps,
-          getTableProps,
-          getRowProps,
-          onInputChange,
-        }) => (
-          <TableContainer>
-            <TableToolbar
-              style={{
-                position: "static",
-                height: "3rem",
-                overflow: "visible",
-                backgroundColor: "color",
-              }}
-            >
-              <TableToolbarContent>
-                <Layer>
+      <div className={styles.container}>
+        <div className={styles.headerBtnContainer}></div>
+        <div className={styles.headerContainer}>
+          <div
+            className={
+              !isDesktop(layout) ? styles.tabletHeading : styles.desktopHeading
+            }
+          >
+            <span className={styles.heading}>{`Stock Sources`}</span>
+          </div>
+        </div>
+        <DataTable
+          data-floating-menu-container
+          headers={tableHeaders}
+          size="xs"
+          isSortable
+          rows={tableRows}
+          useZebraStyles
+          overflowMenuOnHover={isDesktop(layout)}
+        >
+          {({
+            rows,
+            headers,
+            getHeaderProps,
+            getTableProps,
+            getRowProps,
+            onInputChange,
+          }) => (
+            <TableContainer className={styles.tableContainer}>
+              <TableToolbar
+                style={{
+                  position: "static",
+                  height: "3rem",
+                  overflow: "visible",
+                  backgroundColor: "color",
+                }}
+              >
+                <TableToolbarContent className={styles.toolbarContent}>
                   <TableToolbarSearch
+                    className={styles.search}
                     onChange={onInputChange}
                     placeholder={t("searchThisList", "Search this list")}
                     size="sm"
                   />
-                </Layer>
-              </TableToolbarContent>
-            </TableToolbar>
-            <Table {...getTableProps()}>
-              <TableHead>
-                <TableRow>
-                  <TableExpandHeader />
-                  {headers.map((header) => (
-                    <TableHeader {...getHeaderProps({ header })}>
-                      {header.header}
-                    </TableHeader>
-                  ))}
-                  <TableExpandHeader />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => {
-                  return (
-                    <React.Fragment key={row.id}>
-                      <TableRow {...getRowProps({ row })}>
-                        {row.cells.map((cell) => (
-                          <TableCell key={cell.id}>{cell.value}</TableCell>
-                        ))}
-                      </TableRow>
-                    </React.Fragment>
-                  );
-                })}
-              </TableBody>
-            </Table>
-            <Pagination
-              forwardText="Next page"
-              backwardText="Previous page"
-              page={currentPage}
-              pageSize={currentPageSize}
-              pageSizes={pageSizes}
-              totalItems={items?.results.length}
-              className={styles.pagination}
-              onChange={({ pageSize, page }) => {
-                if (pageSize !== currentPageSize) {
-                  setPageSize(pageSize);
-                }
-                if (page !== currentPage) {
-                  goTo(page);
-                }
-              }}
-            />
-          </TableContainer>
-        )}
-      </DataTable>
+                  <div className={styles.headerButtons}>
+                    <Button>Add Source</Button>
+                  </div>
+                </TableToolbarContent>
+              </TableToolbar>
+              <Table {...getTableProps()} className={styles.stockSourcesTable}>
+                <TableHead>
+                  <TableRow>
+                    <TableExpandHeader />
+                    {headers.map((header) => (
+                      <TableHeader
+                        {...getHeaderProps({ header })}
+                        key={`${header.key}`}
+                      >
+                        {header.header}
+                      </TableHeader>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => {
+                    return (
+                      <React.Fragment key={row.uuid}>
+                        <TableRow {...getRowProps({ row })}>
+                          {row.cells.map((cell) => (
+                            <TableCell key={cell.id}>{cell.value}</TableCell>
+                          ))}
+                        </TableRow>
+                      </React.Fragment>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+              <Pagination
+                forwardText="Next page"
+                backwardText="Previous page"
+                page={currentPage}
+                pageSize={currentPageSize}
+                pageSizes={pageSizes}
+                totalItems={items?.results.length}
+                className={styles.pagination}
+                onChange={({ pageSize, page }) => {
+                  if (pageSize !== currentPageSize) {
+                    setPageSize(pageSize);
+                  }
+                  if (page !== currentPage) {
+                    goTo(page);
+                  }
+                }}
+              />
+            </TableContainer>
+          )}
+        </DataTable>
+      </div>
     );
   }
 

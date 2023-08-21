@@ -15,7 +15,6 @@ const StockCommodityTabs: React.FC = () => {
           <Tab> Stock Sources</Tab>
           <Tab> Stock Locations</Tab>
           <Tab> Stock Reports</Tab>
-          <Tab> Stock Settings</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -32,9 +31,6 @@ const StockCommodityTabs: React.FC = () => {
           </TabPanel>
           <TabPanel>
             <StockSources />
-          </TabPanel>
-          <TabPanel>
-            <StockItems />
           </TabPanel>
           <TabPanel>
             <StockItems />
