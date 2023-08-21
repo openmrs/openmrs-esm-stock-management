@@ -1,8 +1,14 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocations, usePagination } from "@openmrs/esm-framework";
+import {
+  useLocations,
+  usePagination,
+  isDesktop,
+  useLayoutType,
+} from "@openmrs/esm-framework";
 import { useStockItems } from "../stock-items.resource";
 import styles from "./stock-items-table.scss";
+import rootStyles from "../../root.module.scss";
 import {
   DataTable,
   DataTableSkeleton,
@@ -20,6 +26,9 @@ import {
   TableToolbarSearch,
   Tile,
   Pagination,
+  TableBatchActions,
+  RadioButtonGroup,
+  RadioButton,
 } from "@carbon/react";
 
 interface StockItemsTableProps {
@@ -31,11 +40,27 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   const locations = useLocations();
 
+  const desktop = isDesktop(useLayoutType());
+
   const { items, isLoading, isError } = useStockItems({});
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
   const [overlayHeader, setOverlayTitle] = useState("");
+
+  // Search
+  const [isDrug, setIsDrug] = useState("");
+  const [searchString, setSearchString] = useState(null);
+
+  const handleSearch = useCallback((str: string) => {
+    setPageSize(1);
+    setSearchString(str);
+  }, []);
+
+  const handleItemTypeChange = useCallback((isDrug: string) => {
+    setPageSize(1);
+    setIsDrug(isDrug);
+  }, []);
 
   const {
     goTo,
@@ -80,7 +105,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         header: t("reorderLevel", "Reorder Level"),
         key: "reorderLevel",
       },
-      { key: "details", header: "" },
+      // { key: "details", header: "" },
     ],
     [t]
   );
@@ -142,6 +167,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             getTableProps,
             getRowProps,
             onInputChange,
+            getBatchActionProps,
           }) => (
             <TableContainer className={styles.tableContainer}>
               <TableToolbar
@@ -152,15 +178,50 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   backgroundColor: "color",
                 }}
               >
-                <TableToolbarContent className={styles.toolbarContent}>
-                  <Layer>
-                    <TableToolbarSearch
-                      className={styles.search}
-                      onChange={onInputChange}
-                      placeholder={t("searchThisList", "Search this list")}
-                      size="sm"
-                    />
-                  </Layer>
+                <TableBatchActions
+                  {...getBatchActionProps()}
+                ></TableBatchActions>
+                <TableToolbarContent>
+                  <TableToolbarSearch
+                    className={styles.search}
+                    onChange={onInputChange}
+                    placeholder={t("searchThisList", "Search this list")}
+                    size="sm"
+                  />
+                  {/*<RadioButtonGroup*/}
+                  {/*  className="stkpg-datable-rbl"*/}
+                  {/*  defaultSelected={isDrug}*/}
+                  {/*  name="is-drug"*/}
+                  {/*  onChange={handleItemTypeChange}*/}
+                  {/*>*/}
+                  {/*  <RadioButton*/}
+                  {/*    value=""*/}
+                  {/*    labelText={t(*/}
+                  {/*      "stockmanagement.stockitem.list.search.isdrug.all",*/}
+                  {/*      "All Items"*/}
+                  {/*    )}*/}
+                  {/*    id="is-drug-all"*/}
+                  {/*  />*/}
+                  {/*  <RadioButton*/}
+                  {/*    value="true"*/}
+                  {/*    labelText={t(*/}
+                  {/*      "stockmanagement.stockitem.list.search.isdrug.drugs",*/}
+                  {/*      "Drugs"*/}
+                  {/*    )}*/}
+                  {/*    id="is-drug-drug"*/}
+                  {/*  />*/}
+                  {/*  <RadioButton*/}
+                  {/*    value="false"*/}
+                  {/*    labelText={t(*/}
+                  {/*      "stockmanagement.stockitem.list.search.isdrug.other",*/}
+                  {/*      "Other"*/}
+                  {/*    )}*/}
+                  {/*    id="is-drug-other"*/}
+                  {/*  />*/}
+                  {/*</RadioButtonGroup>*/}
+                  {/*<Layer>*/}
+
+                  {/*</Layer>*/}
                 </TableToolbarContent>
               </TableToolbar>
               <Table {...getTableProps()} className={styles.activeVisitsTable}>
@@ -174,8 +235,16 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                               header,
                               isSortable: true,
                             })}
+                            className={[
+                              desktop
+                                ? rootStyles.desktopHeader
+                                : rootStyles.tabletHeader,
+                              rootStyles.boldHeader,
+                            ]}
+                            key={`${header.key}`}
+                            isSortable={header.key !== "name"}
                           >
-                            {header.header}
+                            {header.header?.content ?? header.header}
                           </TableHeader>
                         )
                     )}
@@ -185,7 +254,15 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   {rows.map((row, index) => {
                     return (
                       <React.Fragment key={row.id}>
-                        <TableRow {...getRowProps({ row })}>
+                        <TableRow
+                          className={
+                            desktop
+                              ? rootStyles.desktopRow
+                              : rootStyles.tabletRow
+                          }
+                          {...getRowProps({ row })}
+                          key={row.id}
+                        >
                           {row.cells.map((cell) => (
                             <TableCell key={cell.id}>
                               {cell.value?.content ?? cell.value}
