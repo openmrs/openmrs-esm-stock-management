@@ -3,6 +3,7 @@ import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import { UserRoleScope } from "../core/api/types/identity/UserRoleScope";
 import { openmrsFetch } from "@openmrs/esm-framework";
+import { StockSource } from "../core/api/types/stockOperation/StockSource";
 
 export type UserRoleScopeFilter = ResourceFilterCriteria;
 
