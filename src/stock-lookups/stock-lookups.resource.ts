@@ -32,11 +32,12 @@ export function useLocations(filter: LocationFilterCriteria) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<OpenMRSLocation>>{},
     isLoading,
     isError: error,
   };
 }
+
 // getLocationWithIdByUuid
 export function useLocationWithIdByUuid(id: string) {
   const apiUrl = `ws/rest/v1/stockmanagement/location/${id}`;
