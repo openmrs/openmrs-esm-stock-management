@@ -17,14 +17,8 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
   const tableHeaders = useMemo(
     () => [
       {
-        id: 0,
-        header: "uuid",
-        key: "uuid",
-      },
-
-      {
         id: 1,
-        header: "name",
+        header: "Name",
         key: "name",
       },
       {
@@ -42,7 +36,7 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
   );
 
   const tableRows = useMemo(() => {
-    return paginatedItems?.map((entry) => {
+    return items.results?.map((entry) => {
       return {
         ...entry,
         id: entry?.uuid,
@@ -53,7 +47,7 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
         sourceType: entry?.sourceType?.display,
       };
     });
-  }, [paginatedItems]);
+  }, [items.results]);
 
   return {
     items: items.results,

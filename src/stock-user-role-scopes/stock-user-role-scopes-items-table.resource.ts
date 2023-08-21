@@ -63,14 +63,6 @@ export default function useStockUserRoleScopesPage(
     []
   );
 
-  const tableRows = useMemo(() => {
-    return paginatedItems?.map((entry) => {
-      return {
-        ...entry,
-      };
-    });
-  }, [paginatedItems]);
-
   return {
     items: items.results,
     currentPage,
@@ -82,6 +74,5 @@ export default function useStockUserRoleScopesPage(
     isError,
     setPageSize,
     tableHeaders,
-    tableRows,
   };
 }

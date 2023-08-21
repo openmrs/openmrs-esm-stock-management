@@ -45,7 +45,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
   );
 
   const tableRows = useMemo(() => {
-    return paginatedQueueEntries?.map((location) => ({
+    return items?.results?.map((location) => ({
       id: location?.uuid,
       key: `key-${location?.uuid}`,
       uuid: `${location?.uuid}`,
@@ -54,7 +54,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
       childLocations:
         location?.childLocations?.map((p) => p.display)?.join(", ") ?? "",
     }));
-  }, [items, t]);
+  }, [items?.results, t]);
 
   return {
     items: items.results,
