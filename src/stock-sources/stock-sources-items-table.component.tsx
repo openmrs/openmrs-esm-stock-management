@@ -5,7 +5,6 @@ import {
   DataTable,
   DataTableSkeleton,
   TableContainer,
-  Layer,
   TableToolbarContent,
   TableToolbarSearch,
   TableToolbar,
@@ -19,7 +18,6 @@ import {
   Button,
   TableCell,
   Pagination,
-  Dropdown,
 } from "@carbon/react";
 import styles from "./stock-sources.scss";
 import { Add } from "@carbon/react/icons";
@@ -69,7 +67,7 @@ function StockSourcesItems() {
         key: "sourceType",
       },
     ],
-    [t]
+    []
   );
 
   const tableRows = useMemo(() => {
