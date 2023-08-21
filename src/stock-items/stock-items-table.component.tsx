@@ -31,6 +31,8 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
+  const locations = useLocations();
+
   const desktop = isDesktop(useLayoutType());
 
   const {
