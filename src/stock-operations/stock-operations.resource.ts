@@ -16,6 +16,7 @@ export interface StockOperationFilter extends ResourceFilterCriteria {
   operationDateMax?: string | null | undefined;
   sourceTypeUuid?: string | null | undefined;
 }
+
 // getStockOperations
 export function useStockOperations(filter: StockOperationFilter) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockoperation${toQueryParams(
@@ -27,7 +28,7 @@ export function useStockOperations(filter: StockOperationFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockOperationDTO>>{},
     isLoading,
     isError: error,
   };
@@ -95,6 +96,7 @@ export function deleteStockOperations(ids: string[]) {
     signal: abortController.signal,
   });
 }
+
 // deleteStockOperationItem
 export function deleteStockOperationItem(id: string) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockoperationitem/${id}`;

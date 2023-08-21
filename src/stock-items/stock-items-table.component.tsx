@@ -1,18 +1,15 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  usePagination,
-  isDesktop,
-  useLayoutType,
-} from "@openmrs/esm-framework";
-import { useStockItems } from "../stock-items.resource";
+import { isDesktop, useLayoutType, useLocations } from "@openmrs/esm-framework";
 import styles from "./stock-items-table.scss";
-import rootStyles from "../../root.module.scss";
+import rootStyles from "../root.module.scss";
 import {
   DataTable,
   DataTableSkeleton,
   Link,
+  Pagination,
   Table,
+  TableBatchActions,
   TableBody,
   TableCell,
   TableContainer,
@@ -23,9 +20,9 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  Pagination,
-  TableBatchActions,
 } from "@carbon/react";
+import { ResourceRepresentation } from "../core/api/api";
+import { useStockItemsPages } from "./stock-items-table.resource";
 
 interface StockItemsTableProps {
   from?: string;
@@ -36,60 +33,17 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   const desktop = isDesktop(useLayoutType());
 
-  const { items, isLoading, isError } = useStockItems({});
-
-  const pageSizes = [10, 20, 30, 40, 50];
-  const [currentPageSize, setPageSize] = useState(10);
-
-  // Search
-
   const {
-    goTo,
-    results: paginatedQueueEntries,
+    isLoading,
+    paginatedQueueEntries,
+    tableHeaders,
     currentPage,
-  } = usePagination(items.results, currentPageSize);
-
-  const tableHeaders = useMemo(
-    () => [
-      {
-        id: 0,
-        header: t("type", "Type"),
-        key: "type",
-      },
-      {
-        id: 1,
-        header: t("genericName", "Generic Name"),
-        key: "genericName",
-      },
-      {
-        id: 2,
-        header: t("commonName", "Common Name"),
-        key: "commonName",
-      },
-      {
-        id: 3,
-        header: t("tradeName", "Trade Name"),
-        key: "tradeName",
-      },
-      {
-        id: 4,
-        header: t("dispensingUnitName", "Dispensing UoM"),
-        key: "dispensingUnitName",
-      },
-      {
-        id: 5,
-        header: t("defaultStockOperationsUoMName", "Bulk Packaging"),
-        key: "defaultStockOperationsUoMName",
-      },
-      {
-        id: 6,
-        header: t("reorderLevel", "Reorder Level"),
-        key: "reorderLevel",
-      },
-      // { key: "details", header: "" },
-    ],
-    [t]
-  );
+    currentPageSize,
+    goTo,
+    pageSizes,
+    items,
+    setPageSize,
+  } = useStockItemsPages({ v: ResourceRepresentation.Full });
 
   const tableRows = useMemo(() => {
     return paginatedQueueEntries?.map((stockItem) => ({
@@ -101,9 +55,10 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         ? t("stockmanagement.drug", "Drug")
         : t("stockmanagement.other", "Other"),
       genericName: (
-        <Link to={URL_STOCK_ITEM(stockItem?.uuid || "")}>{`${
-          stockItem?.drugName ?? stockItem.conceptName
-        }`}</Link>
+        <Link to={URL_STOCK_ITEM(stockItem?.uuid || "")}>
+          {" "}
+          {`${stockItem?.drugName ?? stockItem.conceptName}`}
+        </Link>
       ),
       commonName: stockItem?.commonName,
       tradeName: stockItem?.drugUuid ? stockItem?.conceptName : "",
@@ -118,7 +73,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             }`
           : "",
     }));
-  }, [paginatedQueueEntries, t]);
+  }, [items, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -127,12 +82,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   if (paginatedQueueEntries?.length) {
     return (
       <div>
-        {/*<div className={styles.headerBtnContainer}></div>*/}
-        {/* <div className={styles.headerContainer}>
-          <div className={!isDesktop(layout) ? styles.tabletHeading : styles.desktopHeading}>
-            <span className={styles.heading}>{`Patients in ${userLocation} queue`}</span>
-          </div>
-        </div> */}
         <DataTable
           data-floating-menu-container
           headers={tableHeaders}
@@ -169,40 +118,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                     placeholder={t("searchThisList", "Search this list")}
                     size="sm"
                   />
-                  {/*<RadioButtonGroup*/}
-                  {/*  className="stkpg-datable-rbl"*/}
-                  {/*  defaultSelected={isDrug}*/}
-                  {/*  name="is-drug"*/}
-                  {/*  onChange={handleItemTypeChange}*/}
-                  {/*>*/}
-                  {/*  <RadioButton*/}
-                  {/*    value=""*/}
-                  {/*    labelText={t(*/}
-                  {/*      "stockmanagement.stockitem.list.search.isdrug.all",*/}
-                  {/*      "All Items"*/}
-                  {/*    )}*/}
-                  {/*    id="is-drug-all"*/}
-                  {/*  />*/}
-                  {/*  <RadioButton*/}
-                  {/*    value="true"*/}
-                  {/*    labelText={t(*/}
-                  {/*      "stockmanagement.stockitem.list.search.isdrug.drugs",*/}
-                  {/*      "Drugs"*/}
-                  {/*    )}*/}
-                  {/*    id="is-drug-drug"*/}
-                  {/*  />*/}
-                  {/*  <RadioButton*/}
-                  {/*    value="false"*/}
-                  {/*    labelText={t(*/}
-                  {/*      "stockmanagement.stockitem.list.search.isdrug.other",*/}
-                  {/*      "Other"*/}
-                  {/*    )}*/}
-                  {/*    id="is-drug-other"*/}
-                  {/*  />*/}
-                  {/*</RadioButtonGroup>*/}
-                  {/*<Layer>*/}
-
-                  {/*</Layer>*/}
                 </TableToolbarContent>
               </TableToolbar>
               <Table {...getTableProps()} className={styles.activeVisitsTable}>
@@ -266,15 +181,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                         {t("checkFilters", "Check the filters above")}
                       </p>
                     </div>
-                    <p className={styles.separator}>{t("or", "or")}</p>
-                    {/*<Button*/}
-                    {/*  kind="ghost"*/}
-                    {/*  size="sm"*/}
-                    {/*  renderIcon={(props) => <Add size={16} {...props} />}*/}
-                    {/*  onClick={() => setShowOverlay(true)}*/}
-                    {/*>*/}
-                    {/*  {t("addPatientToList", "Add patient to list")}*/}
-                    {/*</Button>*/}
                   </Tile>
                 </div>
               ) : null}
@@ -284,7 +190,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                 page={currentPage}
                 pageSize={currentPageSize}
                 pageSizes={pageSizes}
-                totalItems={items?.results?.length}
+                totalItems={items?.length}
                 className={styles.pagination}
                 onChange={({ pageSize, page }) => {
                   if (pageSize !== currentPageSize) {
@@ -298,16 +204,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             </TableContainer>
           )}
         </DataTable>
-        {/*{showOverlay && (*/}
-        {/*  <PatientSearch*/}
-        {/*    view={view}*/}
-        {/*    closePanel={() => setShowOverlay(false)}*/}
-        {/*    viewState={{*/}
-        {/*      selectedPatientUuid: viewState.selectedPatientUuid,*/}
-        {/*    }}*/}
-        {/*    headerTitle={overlayHeader}*/}
-        {/*  />*/}
-        {/*)}*/}
       </div>
     );
   }
@@ -315,10 +211,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>
-          No stock items to display
-          {/*{t("noStockItemsToDisplay", "No stock items to display")}*/}
-        </p>
+        <p className={styles.content}>No stock items to display</p>
       </Tile>
     </div>
   );

@@ -1,31 +1,28 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { useStockSources } from "./stock-sources.resource";
 import {
+  Button,
   DataTable,
   DataTableSkeleton,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
   TableContainer,
+  TableExpandHeader,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  TableToolbar,
-  Table,
-  TableHead,
-  TableRow,
-  TableExpandHeader,
-  TableHeader,
-  TableBody,
   Tile,
-  Button,
-  TableCell,
-  Pagination,
 } from "@carbon/react";
 import styles from "./stock-sources.scss";
 import { Add } from "@carbon/react/icons";
-import {
-  isDesktop,
-  useLayoutType,
-  usePagination,
-} from "@openmrs/esm-framework";
+import { isDesktop, useLayoutType } from "@openmrs/esm-framework";
+import useStockSourcesPage from "./stock-sources-itesm-table.resource";
+import { ResourceRepresentation } from "../core/api/api";
 
 function StockSourcesItems() {
   const { t } = useTranslation();
@@ -33,56 +30,18 @@ function StockSourcesItems() {
   const layout = useLayoutType();
 
   // get sources
-  const { items, isLoading } = useStockSources({});
-
-  const pageSizes = [10, 20, 30, 40, 50];
-  const [currentPageSize, setPageSize] = useState(10);
   const {
-    goTo,
-    results: paginatedItems,
+    isLoading,
+    paginatedItems,
+    tableHeaders,
+    tableRows,
     currentPage,
-  } = usePagination(items.results, currentPageSize);
-
-  const tableHeaders = useMemo(
-    () => [
-      {
-        id: 0,
-        header: "uuid",
-        key: "uuid",
-      },
-
-      {
-        id: 1,
-        header: "name",
-        key: "name",
-      },
-      {
-        id: 2,
-        header: "Acronym",
-        key: "acronym",
-      },
-      {
-        id: 3,
-        header: "Source Type",
-        key: "sourceType",
-      },
-    ],
-    []
-  );
-
-  const tableRows = useMemo(() => {
-    return paginatedItems?.map((entry) => {
-      return {
-        ...entry,
-        id: entry?.uuid,
-        key: `key-${entry?.uuid}`,
-        uuid: entry?.uuid,
-        name: entry?.name,
-        acronym: entry?.acronym,
-        sourceType: entry?.sourceType?.display,
-      };
-    });
-  }, [paginatedItems]);
+    currentPageSize,
+    goTo,
+    pageSizes,
+    items,
+    setPageSize,
+  } = useStockSourcesPage({ v: ResourceRepresentation.Full });
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -173,7 +132,7 @@ function StockSourcesItems() {
                 page={currentPage}
                 pageSize={currentPageSize}
                 pageSizes={pageSizes}
-                totalItems={items?.results.length}
+                totalItems={items?.length}
                 className={styles.pagination}
                 onChange={({ pageSize, page }) => {
                   if (pageSize !== currentPageSize) {

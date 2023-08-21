@@ -1,31 +1,28 @@
 import { useTranslation } from "react-i18next";
-import { useUserRoleScopes } from "./stock-user-role-scopes.resource";
-import React, { useMemo, useState } from "react";
+import React from "react";
+import { isDesktop, useLayoutType } from "@openmrs/esm-framework";
 import {
-  isDesktop,
-  useLayoutType,
-  usePagination,
-} from "@openmrs/esm-framework";
-import {
-  DataTableSkeleton,
+  Button,
   DataTable,
+  DataTableSkeleton,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
   TableContainer,
+  TableExpandHeader,
+  TableHead,
+  TableHeader,
+  TableRow,
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  Table,
-  TableHead,
-  TableRow,
-  Button,
-  TableExpandHeader,
-  TableBody,
-  TableCell,
-  TableHeader,
-  Pagination,
   Tile,
 } from "@carbon/react";
 import { Add } from "@carbon/react/icons";
 import styles from "./stock-user-role-scopes.scss";
+import { ResourceRepresentation } from "../core/api/api";
+import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
@@ -33,70 +30,18 @@ function StockUserRoleScopesItems() {
   const layout = useLayoutType();
 
   // get sources
-  const { items, isLoading } = useUserRoleScopes({});
-
-  const pageSizes = [10, 20, 30, 40, 50];
-  const [currentPageSize, setPageSize] = useState(10);
   const {
-    goTo,
-    results: paginatedItems,
+    isLoading,
+    paginatedItems,
+    tableHeaders,
+    tableRows,
     currentPage,
-  } = usePagination(items.results, currentPageSize);
-
-  const tableHeaders = useMemo(
-    () => [
-      {
-        id: 0,
-        header: "User",
-        key: "user",
-      },
-
-      {
-        id: 1,
-        header: "Role",
-        key: "role",
-      },
-      {
-        id: 2,
-        header: "Location(s)",
-        key: "location",
-      },
-      {
-        id: 3,
-        header: "Stock Operations",
-        key: "stockOperations",
-      },
-      {
-        id: 4,
-        header: "Permanent ?",
-        key: "permanent",
-      },
-      {
-        id: 5,
-        header: "Active From ",
-        key: "from",
-      },
-      {
-        id: 6,
-        header: "Active To",
-        key: "permanent",
-      },
-      {
-        id: 7,
-        header: "Enabled ?",
-        key: "enabled",
-      },
-    ],
-    []
-  );
-
-  const tableRows = useMemo(() => {
-    return paginatedItems?.map((entry) => {
-      return {
-        ...entry,
-      };
-    });
-  }, [paginatedItems]);
+    currentPageSize,
+    goTo,
+    pageSizes,
+    items,
+    setPageSize,
+  } = useStockUserRoleScopesPage({ v: ResourceRepresentation.Full });
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -187,7 +132,7 @@ function StockUserRoleScopesItems() {
                 page={currentPage}
                 pageSize={currentPageSize}
                 pageSizes={pageSizes}
-                totalItems={items?.results.length}
+                totalItems={items?.length}
                 className={styles.pagination}
                 onChange={({ pageSize, page }) => {
                   if (pageSize !== currentPageSize) {
