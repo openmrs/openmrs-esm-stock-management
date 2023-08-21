@@ -3,6 +3,7 @@ import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import { UserRoleScope } from "../core/api/types/identity/UserRoleScope";
 import { openmrsFetch } from "@openmrs/esm-framework";
+import { StockSource } from "../core/api/types/stockOperation/StockSource";
 
 export type UserRoleScopeFilter = ResourceFilterCriteria;
 
@@ -16,7 +17,7 @@ export function useUserRoleScopes(filter: UserRoleScopeFilter) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<UserRoleScope>>{},
     isLoading,
     isError: error,
   };
