@@ -1,10 +1,21 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./stock-items-table.scss";
-import { DataTableSkeleton, Link, Tile } from "@carbon/react";
+import {
+  DataTableSkeleton,
+  Link,
+  TableToolbarSearch,
+  Tile,
+  RadioButtonGroup,
+  RadioButton,
+  Button,
+  TableToolbarAction,
+  TableToolbarMenu,
+} from "@carbon/react";
 import { ResourceRepresentation } from "../core/api/api";
 import { useStockItemsPages } from "./stock-items-table.resource";
 import DataList from "../core/components/table/table.component";
+import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
 
 interface StockItemsTableProps {
   from?: string;
@@ -13,11 +24,23 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { isLoading, items, paginatedQueueEntries, tableHeaders } =
-    useStockItemsPages({ v: ResourceRepresentation.Full });
+  const { isLoading, items, tableHeaders, setSearchString, setDrug, isDrug } =
+    useStockItemsPages();
+
+  const handleImport = () => {
+    // setShowImport(true);
+  };
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
+
+  const createStockItem = () => {
+    // search.refetch()
+  };
 
   const tableRows = useMemo(() => {
-    return paginatedQueueEntries?.map((stockItem) => ({
+    return items?.map((stockItem) => ({
       ...stockItem,
       id: stockItem?.uuid,
       key: `key-${stockItem?.uuid}`,
@@ -44,14 +67,45 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             }`
           : "",
     }));
-  }, [paginatedQueueEntries, t]);
+  }, [items, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
   if (items?.length) {
-    return <DataList columns={tableHeaders} data={tableRows} />;
+    return (
+      <DataList columns={tableHeaders} data={tableRows}>
+        {({ onInputChange }) => (
+          <>
+            <TableToolbarSearch persistent onChange={onInputChange} />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <FilterStockItems
+                filterType={isDrug}
+                changeFilterType={setDrug}
+              />
+            </div>
+            <Button onClick={handleImport} size="sm" kind="ghost">
+              {t("stockmanagement.import", "Import")}
+            </Button>
+            <TableToolbarMenu>
+              <TableToolbarAction onClick={handleRefresh}>
+                Refresh
+              </TableToolbarAction>
+            </TableToolbarMenu>
+            <Button onClick={createStockItem} size="md" kind="primary">
+              {t("stockmanagement.addnew", "Add New")}
+            </Button>
+          </>
+        )}
+      </DataList>
+    );
   }
 
   return (

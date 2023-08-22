@@ -21,7 +21,7 @@ export function useStockItemsPages() {
   // Drug filter type
   const [isDrug, setDrug] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setPageCount] = useState(1);
 
   useEffect(() => {
     setStockItemFilter({
@@ -80,10 +80,9 @@ export function useStockItemsPages() {
 
   return {
     items: items.results,
-    totalCount: items.totalCount,
     currentPage,
     currentPageSize,
-    setCurrentPage,
+    setPageCount,
     setPageSize,
     pageSizes,
     isLoading,
