@@ -10,6 +10,7 @@ import {
 import useStockSourcesPage from "./stock-sources-itesm-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import DataList from "../core/components/table/table.component";
+import AddStockSourceActionButton from "./add-stock-source-button.component";
 
 function StockSourcesItems() {
   const { t } = useTranslation();
@@ -27,10 +28,6 @@ function StockSourcesItems() {
     // search.refetch()
   };
 
-  const createStockItem = () => {
-    // search.refetch()
-  };
-
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
@@ -45,9 +42,7 @@ function StockSourcesItems() {
               Refresh
             </TableToolbarAction>
           </TableToolbarMenu>
-          <Button onClick={createStockItem} size="md" kind="primary">
-            {t("stockmanagement.addnewsource", "Add New Source")}
-          </Button>
+          <AddStockSourceActionButton />
         </>
       )}
     </DataList>

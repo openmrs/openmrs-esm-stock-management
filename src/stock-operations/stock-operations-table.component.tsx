@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
@@ -15,6 +15,7 @@ import { ArrowRight } from "@carbon/react/icons";
 import DataList from "../core/components/table/table.component";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
+import AddStockOperationActionButton from "./add-stock-operation-button.component";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -85,9 +86,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 Refresh
               </TableToolbarAction>
             </TableToolbarMenu>
-            <Button onClick={createStockItem} size="md" kind="primary">
-              {t("stockmanagement.addnewoperation", "Add Stock Operation")}
-            </Button>
+            <AddStockOperationActionButton />
           </>
         )}
       </DataList>
