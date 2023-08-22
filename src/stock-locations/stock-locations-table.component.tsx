@@ -1,6 +1,6 @@
 import React from "react";
 import { useStockLocationPages } from "./stock-locations-table.resource";
-import { DataTableSkeleton, Tile } from "@carbon/react";
+import { DataTableSkeleton, TableToolbarSearch, Tile } from "@carbon/react";
 import styles from "../stock-items/stock-items-table.scss";
 import { ResourceRepresentation } from "../core/api/api";
 import DataList from "../core/components/table/table.component";
@@ -19,7 +19,11 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
   }
 
   if (items?.length) {
-    return <DataList columns={tableHeaders} data={tableRows} />;
+    return (
+      <DataList columns={tableHeaders} data={tableRows}>
+        {({ onInputChange }) => <TableToolbarSearch onChange={onInputChange} />}
+      </DataList>
+    );
   }
 
   return (

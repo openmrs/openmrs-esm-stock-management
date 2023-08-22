@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./table.component.scss";
 import { saveAs } from "file-saver";
+import { DataTableRenderProps } from "./types";
 
 type FilterProps = {
   rowIds: Array<string>;
@@ -37,9 +38,10 @@ type FilterProps = {
 interface ListProps {
   columns: any;
   data: any;
+  children?: (renderProps: DataTableRenderProps) => React.ReactElement;
 }
 
-const DataList: React.FC<ListProps> = ({ columns, data }) => {
+const DataList: React.FC<ListProps> = ({ columns, data, children }) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const [allRows, setAllRows] = useState([]);
@@ -123,33 +125,41 @@ const DataList: React.FC<ListProps> = ({ columns, data }) => {
                 }}
               >
                 <TableToolbarContent className={styles.toolbarContent}>
-                  <OverflowMenu
-                    size="sm"
-                    kind="tertiary"
-                    renderIcon={DocumentDownload}
-                    iconDescription="Download As"
-                    focusTrap={false}
-                  >
-                    <OverflowMenuItem
-                      itemText="Download As CSV"
-                      onClick={handleExport}
-                    />
-                    <OverflowMenuItem
-                      itemText="Download As PDF"
-                      onClick={handleExport}
-                    />
-                    <OverflowMenuItem
-                      itemText="Download As Json"
-                      onClick={handleExport}
-                    />
-                  </OverflowMenu>
-                  <TableToolbarSearch
-                    className={styles.patientListSearch}
-                    expanded
-                    onChange={onInputChange}
-                    placeholder={t("searchThisList", "Search this list")}
-                    size="sm"
-                  />
+                  {children ? (
+                    children({
+                      onInputChange,
+                    })
+                  ) : (
+                    <>
+                      <OverflowMenu
+                        size="sm"
+                        kind="tertiary"
+                        renderIcon={DocumentDownload}
+                        iconDescription="Download As"
+                        focusTrap={false}
+                      >
+                        <OverflowMenuItem
+                          itemText="Download As CSV"
+                          onClick={handleExport}
+                        />
+                        <OverflowMenuItem
+                          itemText="Download As PDF"
+                          onClick={handleExport}
+                        />
+                        <OverflowMenuItem
+                          itemText="Download As Json"
+                          onClick={handleExport}
+                        />
+                      </OverflowMenu>
+                      <TableToolbarSearch
+                        className={styles.patientListSearch}
+                        expanded
+                        onChange={onInputChange}
+                        placeholder={t("searchThisList", "Search this list")}
+                        size="sm"
+                      />
+                    </>
+                  )}
                 </TableToolbarContent>
               </TableToolbar>
               <Table {...getTableProps()}>

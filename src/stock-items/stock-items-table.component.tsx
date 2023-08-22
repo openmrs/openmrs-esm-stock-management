@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { isDesktop, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-items-table.scss";
 import { DataTableSkeleton, Link, Tile } from "@carbon/react";
 import { ResourceRepresentation } from "../core/api/api";
