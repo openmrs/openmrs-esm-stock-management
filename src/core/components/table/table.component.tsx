@@ -39,9 +39,17 @@ interface ListProps {
   columns: any;
   data: any;
   children?: (renderProps: DataTableRenderProps) => React.ReactElement;
+  totalItems?: number;
+  goToPage?: (page: number) => void;
 }
 
-const DataList: React.FC<ListProps> = ({ columns, data, children }) => {
+const DataList: React.FC<ListProps> = ({
+  columns,
+  data,
+  children,
+  totalItems,
+  goToPage,
+}) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const [allRows, setAllRows] = useState([]);
@@ -198,13 +206,17 @@ const DataList: React.FC<ListProps> = ({ columns, data, children }) => {
                 page={currentPage}
                 pageSize={currentPageSize}
                 pageSizes={pageSizes}
-                totalItems={list?.length}
+                totalItems={totalItems || list?.length}
                 className={styles.pagination}
                 onChange={({ pageSize, page }) => {
                   if (pageSize !== currentPageSize) {
                     setPageSize(pageSize);
                   }
                   if (page !== currentPage) {
+                    if (goToPage) {
+                      goToPage(page);
+                      return;
+                    }
                     goTo(page);
                   }
                 }}

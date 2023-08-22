@@ -1,242 +1,299 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import addStockStyles from "../add-stock-item.scss";
-import styles from "./stock-item-details.scss";
-import { Save } from "@carbon/react/icons";
-
-import { Button, FormGroup, InlineLoading, RadioButton } from "@carbon/react";
-import { StockItemDTO } from "../../../core/api/types/stockItem/StockItem";
-import DrugSelector from "../drug-selector/drug-selector.component";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocations } from "@openmrs/esm-framework";
 import {
-  stockItemDetailsSchema,
-  StockItemFormData,
-} from "../../validationSchema";
-import ControlledRadioButtonGroup from "../../../core/components/carbon/controlled-radio-button-group/controlled-radio-button-group.component";
-import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
-import ControlledTextInput from "../../../core/components/carbon/controlled-text-input/controlled-text-input.component";
-import DispensingUnitSelector from "../dispensing-unit-selector/dispensing-unit-selector.component";
-import PreferredVendorSelector from "../preferred-vendor-selector/preferred-vendor-selector.component";
-import StockItemCategorySelector from "../stock-item-category-selector/stock-item-category-selector.component";
-import StockItemUnitsEdit from "../stock-item-units-edit/stock-item-units-edit.component";
-import { SaveStockItem } from "../../types";
-import ConceptsSelector from "../concepts-selector/concepts-selector.component";
+  Column,
+  ComboBox,
+  Form,
+  FormGroup,
+  Grid,
+  NumberInput,
+  RadioButton,
+  RadioButtonGroup,
+  TextInput,
+} from "@carbon/react";
+import {
+  useConceptById,
+  useDrugs,
+} from "../../../stock-lookups/stock-lookups.resource";
+import { StockItemDTO } from "../../../core/api/types/stockItem/StockItem";
+import { ResourceRepresentation } from "../../../core/api/api";
+import { useStockSources } from "../../../stock-sources/stock-sources.resource";
+import { StockSource } from "../../../core/api/types/stockOperation/StockSource";
+import { STOCK_ITEM_CATEGORY_CONCEPT_ID } from "../../../constants";
+import { Concept } from "../../../core/api/types/concept/Concept";
 
 interface StockItemDetailsProps {
-  model: StockItemDTO;
-  onSave: SaveStockItem;
-  isEditing?: boolean;
+  state?: string;
 }
 
-const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
-  ({ model, onSave, isEditing }, ref) => {
-    const { t } = useTranslation();
-    const { handleSubmit, control, formState } = useForm<StockItemFormData>({
-      defaultValues: model,
-      mode: "all",
-      resolver: zodResolver(stockItemDetailsSchema),
+const StockItemDetails: React.FC<StockItemDetailsProps> = () => {
+  const { t } = useTranslation();
+
+  const { items: drugList } = useDrugs({
+    v: ResourceRepresentation.Default,
+  });
+
+  const { items: stockSourceList, isLoading: stockSourceListIsLoading } =
+    useStockSources({
+      v: ResourceRepresentation.Default,
     });
 
-    const { errors } = formState;
+  const { items: categories, isLoading: isFetchingCategories } = useConceptById(
+    STOCK_ITEM_CATEGORY_CONCEPT_ID
+  );
 
-    const handleSave = async (item: StockItemDTO) => {
-      try {
-        setIsSaving(true);
+  const onHasExpirationChanged = (hasChanged: boolean) => {
+    // TODO: Handle expiration change
+  };
+  const onPreferredVendorChange = (change: StockSource) => {
+    // TODO: Handle stock source changed
+  };
+  const onDrugChanged = (data: { selectedItem: any }) => {
+    // handle new drug
+  };
 
-        // Restore uuid
-        item.uuid = model.uuid;
-        await onSave(item);
-      } catch (e) {
-        // Show notification
-      } finally {
-        setIsSaving(false);
-      }
-    };
+  const onCategoryChange = (data: { selectedItem: Concept }) => {
+    // TODO: Handle category change
+  };
+  // const handleDrugSearch = useMemo(
+  //   () =>
+  //     debounce((searchTerm) => {
+  //       getDrugs({
+  //         v: ResourceRepresentation.Default,
+  //         q: searchTerm,
+  //         startIndex: 0,
+  //         limit: 10,
+  //       } as any as DrugFilterCriteria);
+  //     }, 300),
+  //   [getDrugs]
+  // );
 
-    const [isSaving, setIsSaving] = useState(false);
-    const [isDrug, setIsDrug] = useState<boolean | null>();
-    const [hasExpiration, setHasExpiration] = useState<boolean | null>();
+  const model: StockItemDTO = {
+    uuid: undefined,
+    isDrug: undefined,
+    drugUuid: undefined,
+    drugName: undefined,
+    conceptUuid: undefined,
+    commonName: undefined,
+    acronym: undefined,
+    conceptName: undefined,
+    hasExpiration: undefined,
+    preferredVendorUuid: undefined,
+    preferredVendorName: undefined,
+    purchasePrice: undefined,
+    purchasePriceUoMUuid: undefined,
+    purchasePriceUoMName: undefined,
+    dispensingUnitName: undefined,
+    dispensingUnitUuid: undefined,
+    dispensingUnitPackagingUoMUuid: undefined,
+    dispensingUnitPackagingUoMName: undefined,
+    defaultStockOperationsUoMUuid: undefined,
+    defaultStockOperationsUoMName: undefined,
+    reorderLevel: undefined,
+    reorderLevelUoMUuid: undefined,
+    reorderLevelUoMName: undefined,
+    dateCreated: undefined,
+    creatorGivenName: undefined,
+    creatorFamilyName: undefined,
+    voided: undefined,
+    packagingUnits: undefined,
+    permission: undefined,
+    categoryUuid: undefined,
+    categoryName: undefined,
+    expiryNotice: undefined,
+  };
 
-    useEffect(() => {
-      setIsDrug(model.isDrug);
-      setHasExpiration(model.hasExpiration);
-    }, [model.hasExpiration, model.isDrug]);
+  const locations = useLocations();
 
-    return (
-      <form className={`${addStockStyles.formContainer} ${styles.form}`}>
-        <FormGroup
-          className="clear-margin-bottom"
-          legendText={t("itemType", "Item Type")}
-          title={t("itemType", "Item Type")}
-        >
-          <ControlledRadioButtonGroup
-            control={control}
-            controllerName="isDrug"
-            legendText=""
-            invalid={!!errors.isDrug}
-            invalidText={errors.isDrug && errors?.isDrug?.message}
-            onChange={(selection: boolean) => {
-              setIsDrug(selection);
-            }}
-            name="isDrug"
-          >
-            <RadioButton value={true} id="isDrug-true" labelText="Drug" />
-            <RadioButton value={false} id="isDrug-false" labelText="Other" />
-          </ControlledRadioButtonGroup>
-        </FormGroup>
-        {isDrug && (
-          <DrugSelector
-            name="drugUuid"
-            controllerName="drugUuid"
-            control={control}
-            title={t("pleaseSpecify", "Please specify:")}
-            invalid={!!errors.drugUuid}
-            invalidText={errors.drugUuid && errors?.drugUuid?.message}
+  return (
+    <Form
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "column",
+      }}
+    >
+      <FormGroup
+        className="clear-margin-bottom"
+        legendText={t("stockmanagement.stockitem.edit.itemtype", "Item Type")}
+        title={t("stockmanagement.stockitem.edit.itemtype", "Item Type")}
+      >
+        <RadioButtonGroup name="isDrug" legendText="">
+          <RadioButton
+            value="true"
+            id="isDrug-true"
+            labelText={t("stockmanagement.drug", "Drug")}
           />
-        )}
-        {isDrug != undefined && !isDrug && (
-          <ConceptsSelector
-            name="conceptUuid"
-            controllerName="conceptUuid"
-            control={control}
-            title={t("pleaseSpecify", "Please specify:")}
-            placeholder={t("chooseAnItem", "Choose an item")}
-            invalid={!!errors.drugUuid}
-            invalidText={errors.drugUuid && errors?.drugUuid?.message}
+          <RadioButton
+            value="false"
+            id="isDrug-false"
+            labelText={t("stockmanagement.other", "Other")}
           />
+        </RadioButtonGroup>
+      </FormGroup>
+      <ComboBox
+        titleText={t("stockmanagement.pleasespecify", "Please specify:")}
+        name="drugUuid"
+        className="select-field"
+        id="drugUuid"
+        size={"md"}
+        items={drugList?.results ? drugList?.results : []}
+        onChange={onDrugChanged}
+        initialSelectedItem={
+          drugList?.results?.find((p) => p.uuid === model.drugUuid) ?? ""
+        }
+        itemToString={(item) =>
+          item
+            ? `${item.name}${item.concept ? ` (${item.concept.display})` : ""}`
+            : ""
+        }
+        placeholder={t(
+          "stockmanagement.stockitem.edit.drugholder",
+          "Choose a drug"
         )}
-        <ControlledTextInput
-          id="commonName"
-          name="commonName"
-          control={control}
-          controllerName="commonName"
-          maxLength={255}
-          size={"md"}
-          value={`${model?.commonName ?? ""}`}
-          labelText={t("commonName", "Common name:")}
-          invalid={!!errors.commonName}
-          invalidText={errors.commonName && errors?.commonName?.message}
-        />
-        <ControlledTextInput
-          id="acronym"
-          maxLength={255}
-          name="acronym"
-          control={control}
-          controllerName="acronym"
-          size={"md"}
-          labelText={t("abbreviation", "Abbreviation:")}
-          invalid={!!errors.acronym}
-          invalidText={errors.acronym && errors?.acronym?.message}
-        />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            justifyContent: "center",
-          }}
-        >
+      />
+      {/*<ComboBox titleText={t('stockmanagement.pleasespecify')}*/}
+      {/*          invalid={touched.conceptUuid && !!errors.conceptUuid} invalidText={t2(errors.conceptUuid)}*/}
+      {/*          name='conceptUuid' className='select-field' id="conceptUuid"*/}
+      {/*          items={(conceptsList?.results ?? []) as any}*/}
+      {/*          onChange={onConceptChanged}*/}
+      {/*          onInputChange={handleConceptSearch}*/}
+      {/*          initialSelectedItem={conceptsList?.results?.find(p => p.uuid === model.conceptUuid) ?? ""}*/}
+      {/*          itemToString={item => item ? `${item.display}` : ""}*/}
+      {/*          placeholder={t("stockmanagement.stockitem.edit.conceptholder")} />*/}
+      <TextInput
+        id="commonName"
+        maxLength={255}
+        name="commonName"
+        size={"md"}
+        value={`${model?.commonName ?? ""}`}
+        labelText={t(
+          "stockmanagement.stockitem.edit.commonname",
+          "Common name:"
+        )}
+      />
+      <TextInput
+        id="acronym"
+        maxLength={255}
+        name="acronym"
+        size={"md"}
+        value={`${model?.acronym ?? ""}`}
+        labelText={t(
+          "stockmanagement.stockitem.edit.abbreviation",
+          "Abbreviation:"
+        )}
+      />
+      <Grid>
+        <Column sm={6} lg={6} md={6}>
           <FormGroup
             className="clear-margin-bottom"
-            legendText={t("hasExpiration", "Does the item expire?")}
-            title={t("hasExpiration", "Does the item expire?")}
+            legendText={t(
+              "stockmanagement.stockitem.edit.hasexpiration",
+              "Does the item expire?"
+            )}
+            title={t(
+              "stockmanagement.stockitem.edit.hasexpiration",
+              "Does the item expire?"
+            )}
           >
-            <ControlledRadioButtonGroup
+            <RadioButtonGroup
               name="hasExpiration"
-              controllerName="hasExpiration"
-              control={control}
-              legendText=""
-              invalid={!!errors.hasExpiration}
-              invalidText={
-                errors.hasExpiration && errors?.hasExpiration?.message
+              defaultSelected={
+                model.hasExpiration == null
+                  ? ""
+                  : model.hasExpiration.toString().toLowerCase()
               }
-              onChange={(selection: boolean) => {
-                setHasExpiration(selection);
-              }}
+              legendText=""
+              onChange={onHasExpirationChanged}
             >
               <RadioButton
-                value={true}
+                value="true"
                 id="hasExpiration-true"
-                labelText={t("yes", "Yes")}
+                labelText={t("stockmanagement.yes", "Yes")}
               />
               <RadioButton
-                value={false}
+                value="false"
                 id="hasExpiration-false"
-                labelText={t("no", "No")}
+                labelText={t("stockmanagement.no", "No")}
               />
-            </ControlledRadioButtonGroup>
+            </RadioButtonGroup>
           </FormGroup>
-
-          {hasExpiration && (
-            <ControlledNumberInput
-              id="expiryNotice"
-              name="expiryNotice"
-              control={control}
-              controllerName="expiryNotice"
-              size={"md"}
-              allowEmpty={true}
-              label={t("expiryNoticeDays", "Expiration Notice (days)")}
-              invalid={!!errors.expiryNotice}
-              invalidText={errors.expiryNotice && errors?.expiryNotice?.message}
-            />
-          )}
-        </div>
-        <PreferredVendorSelector
-          name="preferredVendorUuid"
-          controllerName="preferredVendorUuid"
-          control={control}
-          title={t("whoIsThePreferredVendor", "Who is the preferred vendor?")}
-          placeholder={t("chooseVendor", "Choose vendor")}
-          invalid={!!errors.preferredVendorUuid}
-          invalidText={
-            errors.preferredVendorUuid && errors?.preferredVendorUuid?.message
-          }
-        />
-        <StockItemCategorySelector
-          name="categoryUuid"
-          controllerName="categoryUuid"
-          control={control}
-          title={t("category:", "Category:")}
-          placeholder={t("chooseACategory", "Choose a category")}
-          invalid={!!errors.categoryUuid}
-          invalidText={errors.categoryUuid && errors?.categoryUuid?.message}
-        />
-        {isDrug && (
-          <DispensingUnitSelector
-            name="dispensingUnitUuid"
-            controllerName="dispensingUnitUuid"
-            control={control}
-            title={t("dispensingUnit", "Dispensing Unit:")}
-            placeholder={t("dispensingUnitHolder", "Choose a dispensing unit")}
-            invalid={!!errors.dispensingUnitUuid}
-            invalidText={
-              errors.dispensingUnitUuid && errors?.dispensingUnitUuid?.message
-            }
+        </Column>
+        <Column sm={6} lg={6} md={6}>
+          {/*<TextInput*/}
+          {/*  id="drugLbl"*/}
+          {/*  value={t(*/}
+          {/*    model.hasExpiration ? "stockmanagement.yes" : "stockmanagement.no"*/}
+          {/*  )}*/}
+          {/*  readOnly={true}*/}
+          {/*  labelText={t("stockmanagement.stockitem.edit.hasexpiration")}*/}
+          {/*/>*/}
+          <NumberInput
+            id="expiryNotice"
+            name="expiryNotice"
+            size={"md"}
+            allowEmpty={true}
+            value={model.expiryNotice ?? ""}
+            label={t(
+              "stockmanagement.stockitem.edit.expirynotice",
+              "Expiration Notice (days)"
+            )}
           />
+        </Column>
+      </Grid>
+      <ComboBox
+        titleText={t(
+          "stockmanagement.stockitem.edit.preferredvendor",
+          "Who is the preferred vendor?"
         )}
-        {isDrug && isEditing && (
-          <StockItemUnitsEdit
-            control={control}
-            formState={formState}
-            stockItemUuid={model.uuid}
-          />
+        name="preferredVendorUuid"
+        size={"md"}
+        className="select-field"
+        id="preferredVendorUuid"
+        items={
+          (stockSourceList?.results?.filter((x) => x.uuid != null) ?? []) as any
+        }
+        onChange={onPreferredVendorChange}
+        initialSelectedItem={stockSourceList?.results?.find(
+          (p) => p.uuid === model.preferredVendorUuid
         )}
-
-        <div style={{ display: "flex", flexDirection: "row-reverse" }}>
-          <Button
-            name="save"
-            type="button"
-            className="submitButton"
-            onClick={handleSubmit(handleSave)}
-            kind="primary"
-            renderIcon={Save}
-          >
-            {isSaving ? <InlineLoading /> : t("save", "Save")}
-          </Button>
-        </div>
-      </form>
-    );
-  }
-);
+        itemToString={(item) => (item ? `${item?.name}` : "")}
+        shouldFilterItem={(data) => true}
+        placeholder={t(
+          "stockmanagement.stockitem.edit.vendorholder",
+          "Choose vendor"
+        )}
+      />
+      <ComboBox
+        titleText={t("stockmanagement.stockitem.edit.category", "Category:")}
+        name="categoryUuid"
+        size={"md"}
+        className="select-field"
+        id="categoryUuid"
+        items={
+          ((categories?.answers && categories?.answers.length > 0
+            ? categories?.answers
+            : categories?.setMembers) as any) ?? []
+        }
+        onChange={onCategoryChange}
+        initialSelectedItem={
+          (categories?.answers && categories?.answers.length > 0
+            ? categories?.answers
+            : categories?.setMembers
+          )?.find((p) => p.uuid === model.categoryUuid) ?? ({} as any)
+        }
+        itemToString={(item) =>
+          item && item?.display ? `${item?.display}` : ""
+        }
+        shouldFilterItem={(data) => true}
+        placeholder={t(
+          "stockmanagement.stockitem.edit.categoryholder",
+          "Choose a category"
+        )}
+      />
+    </Form>
+  );
+};
 
 export default StockItemDetails;

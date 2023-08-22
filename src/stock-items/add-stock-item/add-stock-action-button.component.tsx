@@ -1,14 +1,14 @@
 import { Button } from "@carbon/react";
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { initialValues } from "./add-stock-item.resource";
-import { launchAddOrEditDialog } from "../stock-item.utils";
+import { launchOverlay } from "../../core/components/overlay/hook";
+import AddStockItem from "./add-stock-item.component";
 
 const AddStockItemActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchAddOrEditDialog(initialValues, false);
+    launchOverlay("Add Stock Item", <AddStockItem />);
   }, []);
 
   return (
