@@ -1,21 +1,40 @@
-import { StockOperationFilter } from "../stock-operations/stock-operations.resource";
-import { useStockItems } from "./stock-items.resource";
-import { useMemo, useState } from "react";
-import { usePagination } from "@openmrs/esm-framework";
+import { StockItemFilter, useStockItems } from "./stock-items.resource";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ResourceRepresentation } from "../core/api/api";
 
-export function useStockItemsPages(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useStockItems(filter);
+export function useStockItemsPages() {
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
+    startIndex: 0,
+    v: ResourceRepresentation.Default,
+    limit: 10,
+    q: null,
+    totalCount: true,
+  });
+
   const { t } = useTranslation();
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
+  const [searchString, setSearchString] = useState(null);
 
-  const {
-    goTo,
-    results: paginatedQueueEntries,
-    currentPage,
-  } = usePagination(items.results, currentPageSize);
+  // Drug filter type
+  const [isDrug, setDrug] = useState("");
+
+  const [currentPage, setPageCount] = useState(1);
+
+  useEffect(() => {
+    setStockItemFilter({
+      startIndex: currentPage - 1,
+      v: ResourceRepresentation.Default,
+      limit: currentPageSize,
+      q: searchString,
+      totalCount: true,
+      isDrug: isDrug,
+    });
+  }, [searchString, currentPage, currentPageSize, isDrug]);
+
+  const { items, isLoading, isError } = useStockItems(stockItemFilter);
 
   const tableHeaders = useMemo(
     () => [
@@ -63,12 +82,14 @@ export function useStockItemsPages(filter: StockOperationFilter) {
     items: items.results,
     currentPage,
     currentPageSize,
-    paginatedQueueEntries,
-    goTo,
+    setPageCount,
+    setPageSize,
     pageSizes,
     isLoading,
     isError,
-    setPageSize,
+    isDrug,
+    setDrug,
+    setSearchString,
     tableHeaders,
   };
 }

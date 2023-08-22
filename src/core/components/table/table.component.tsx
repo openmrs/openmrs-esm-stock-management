@@ -110,7 +110,7 @@ const DataList: React.FC<ListProps> = ({ columns, data, children }) => {
         headers={columns}
         filterRows={handleFilter}
         overflowMenuOnHover={isDesktop(layout)}
-        size={isTablet ? "lg" : "sm"}
+        size={isTablet ? "lg" : "md"}
         useZebraStyles
       >
         {({ rows, headers, getHeaderProps, getTableProps, onInputChange }) => (
@@ -119,7 +119,6 @@ const DataList: React.FC<ListProps> = ({ columns, data, children }) => {
               <TableToolbar
                 style={{
                   position: "static",
-                  height: "3rem",
                   overflow: "visible",
                   backgroundColor: "color",
                 }}
