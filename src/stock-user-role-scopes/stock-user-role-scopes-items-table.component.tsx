@@ -15,7 +15,6 @@ import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import DataList from "../core/components/table/table.component";
 import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
-import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
@@ -98,7 +97,9 @@ function StockUserRoleScopesItems() {
                 Refresh
               </TableToolbarAction>
             </TableToolbarMenu>
-            <AddStockUserRoleScopeActionButton />
+            <Button onClick={createStockItem} size="md" kind="primary">
+              {t("stockmanagement.addnewuserrolescope", "Add Stock User Role")}
+            </Button>
           </>
         )}
       </DataList>
@@ -110,10 +111,10 @@ function StockUserRoleScopesItems() {
       <Tile className={styles.tile}>
         <div className={styles.tileContent}>
           <p className={styles.content}>
-            {t("noUserRoleScopes", "No user scopes to display")}
+            {t("noUserRoleScopes", "No User Scopes to display")}
           </p>
           <p className={styles.helper}>
-            {t("checkFilters", "Check the filters above")}
+            {t("noUserRoleScopes", "Check the filters above")}
           </p>
         </div>
         <p className={styles.separator}>{t("or", "or")}</p>
@@ -122,7 +123,7 @@ function StockUserRoleScopesItems() {
           size="sm"
           renderIcon={(props) => <Add size={16} {...props} />}
         >
-          {t("addScopesTolist", "Add scopes to list")}
+          {t("addScopestolist", "Add Scopes to list")}
         </Button>
       </Tile>
     </div>
