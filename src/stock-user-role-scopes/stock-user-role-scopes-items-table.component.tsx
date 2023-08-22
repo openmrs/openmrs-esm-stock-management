@@ -15,6 +15,7 @@ import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import DataList from "../core/components/table/table.component";
 import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
+import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
@@ -97,9 +98,7 @@ function StockUserRoleScopesItems() {
                 Refresh
               </TableToolbarAction>
             </TableToolbarMenu>
-            <Button onClick={createStockItem} size="md" kind="primary">
-              {t("stockmanagement.addnewuserrolescope", "Add Stock User Role")}
-            </Button>
+            <AddStockUserRoleScopeActionButton />
           </>
         )}
       </DataList>

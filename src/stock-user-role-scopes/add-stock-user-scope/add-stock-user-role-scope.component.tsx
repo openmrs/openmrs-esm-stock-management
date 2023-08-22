@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "@carbon/react";
 import React from "react";
-import styles from "./stock-sources-add-or-create-dialog.scss";
+import styles from "./add-stock-user-role-scope.scss";
 import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
 import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
 
@@ -18,7 +18,7 @@ interface StockSourcesAddOrCreateDialogProps {
   closeModal: () => void;
 }
 
-const StockSourcesAddOrCreate: React.FC = () => {
+const AddStockUserRoleScope: React.FC = () => {
   // get stock sources
   const { items, isLoading, isError } = useConceptById(
     STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
@@ -36,7 +36,6 @@ const StockSourcesAddOrCreate: React.FC = () => {
               labelText="FullName"
               size="md"
               placeholder="e.g National Medical Stores"
-              helperText="Optional help text"
             />
           </section>
           <section className={styles.section}>
@@ -46,7 +45,6 @@ const StockSourcesAddOrCreate: React.FC = () => {
               size="md"
               placeholder="e.g NMS"
               labelText="Acronym/Code"
-              helperText="Optional help text"
             />
           </section>
           <section className={styles.section}>
@@ -55,7 +53,6 @@ const StockSourcesAddOrCreate: React.FC = () => {
               type="text"
               size="md"
               labelText="Source type"
-              helperText="Optional help text"
             />
           </section>
         </ModalBody>
@@ -68,4 +65,4 @@ const StockSourcesAddOrCreate: React.FC = () => {
   );
 };
 
-export default StockSourcesAddOrCreate;
+export default AddStockUserRoleScope;
