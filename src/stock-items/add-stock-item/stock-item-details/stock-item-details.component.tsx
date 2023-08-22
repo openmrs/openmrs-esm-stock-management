@@ -22,6 +22,7 @@ import { useStockSources } from "../../../stock-sources/stock-sources.resource";
 import { StockSource } from "../../../core/api/types/stockOperation/StockSource";
 import { STOCK_ITEM_CATEGORY_CONCEPT_ID } from "../../../constants";
 import { Concept } from "../../../core/api/types/concept/Concept";
+import rootStyles from "../../../root.scss";
 
 interface StockItemDetailsProps {
   state?: string;
@@ -115,7 +116,7 @@ const StockItemDetails: React.FC<StockItemDetailsProps> = () => {
       }}
     >
       <FormGroup
-        className="clear-margin-bottom"
+        className={rootStyles.section}
         legendText={t("stockmanagement.stockitem.edit.itemtype", "Item Type")}
         title={t("stockmanagement.stockitem.edit.itemtype", "Item Type")}
       >
@@ -132,6 +133,7 @@ const StockItemDetails: React.FC<StockItemDetailsProps> = () => {
           />
         </RadioButtonGroup>
       </FormGroup>
+
       <ComboBox
         titleText={t("stockmanagement.pleasespecify", "Please specify:")}
         name="drugUuid"
