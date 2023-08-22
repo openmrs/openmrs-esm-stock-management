@@ -117,7 +117,7 @@ nav :global(.bx--accordion__content) {
 nav :global(.bx--accordion__content) > a {
   background-color: #cecece !important;
   color: #161616 !important;
-  border-left-color: var(--brand-01)  !important;
+  border-left-color: var(--brand-01) !important;
 }
 
 .container {
@@ -131,4 +131,17 @@ nav :global(.bx--accordion__content) > a {
 
 .explainer {
   margin-bottom: 2rem;
+}
+
+.noMargin {
+  margin: 0 !important;
+}
+
+.noPadding {
+  margin: 0 !important;
+}
+
+.noSpacing {
+  margin: 0 !important;
+  padding: 0 !important;
 }

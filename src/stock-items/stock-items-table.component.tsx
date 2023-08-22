@@ -1,21 +1,19 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./stock-items-table.scss";
 import {
+  Button,
   DataTableSkeleton,
   Link,
-  TableToolbarSearch,
-  Tile,
-  RadioButtonGroup,
-  RadioButton,
-  Button,
   TableToolbarAction,
   TableToolbarMenu,
+  TableToolbarSearch,
+  Tile,
 } from "@carbon/react";
-import { ResourceRepresentation } from "../core/api/api";
 import { useStockItemsPages } from "./stock-items-table.resource";
 import DataList from "../core/components/table/table.component";
 import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
+import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
 
 interface StockItemsTableProps {
   from?: string;
@@ -24,8 +22,16 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { isLoading, items, tableHeaders, setSearchString, setDrug, isDrug } =
-    useStockItemsPages();
+  const {
+    isLoading,
+    items,
+    tableHeaders,
+    setSearchString,
+    setDrug,
+    isDrug,
+    totalCount,
+    setCurrentPage,
+  } = useStockItemsPages();
 
   const handleImport = () => {
     // setShowImport(true);
@@ -75,7 +81,12 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   if (items?.length) {
     return (
-      <DataList columns={tableHeaders} data={tableRows}>
+      <DataList
+        columns={tableHeaders}
+        data={tableRows}
+        totalItems={totalCount}
+        goToPage={setCurrentPage}
+      >
         {({ onInputChange }) => (
           <>
             <TableToolbarSearch persistent onChange={onInputChange} />
@@ -99,9 +110,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                 Refresh
               </TableToolbarAction>
             </TableToolbarMenu>
-            <Button onClick={createStockItem} size="md" kind="primary">
-              {t("stockmanagement.addnew", "Add New")}
-            </Button>
+            <AddStockItemActionButton />
           </>
         )}
       </DataList>
