@@ -13,18 +13,13 @@ interface StockSourcesDeleteDialogProps {
   closeModal: () => void;
 }
 
-const StockSourcesDelete: React.FC<StockSourcesDeleteDialogProps> = ({
-  source,
-  closeModal,
-}) => {
+const StockSourcesDelete: React.FC = () => {
   return (
     <div>
       <Form>
-        <ModalHeader closeModal={closeModal} title={`Delete ${source.name}`} />
+        <ModalHeader />
         <ModalFooter>
-          <Button kind="secondary" onClick={closeModal}>
-            Cancel
-          </Button>
+          <Button kind="secondary">Cancel</Button>
           <Button kind="danger" type="submit">
             Delete
           </Button>

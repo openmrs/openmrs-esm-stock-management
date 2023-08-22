@@ -18,11 +18,7 @@ interface StockSourcesAddOrCreateDialogProps {
   closeModal: () => void;
 }
 
-const StockSourcesAddOrCreate: React.FC<StockSourcesAddOrCreateDialogProps> = ({
-  title,
-  source,
-  closeModal,
-}) => {
+const StockSourcesAddOrCreate: React.FC = () => {
   // get stock sources
   const { items, isLoading, isError } = useConceptById(
     STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
@@ -31,7 +27,7 @@ const StockSourcesAddOrCreate: React.FC<StockSourcesAddOrCreateDialogProps> = ({
   return (
     <div>
       <Form>
-        <ModalHeader closeModal={closeModal} title={title} />
+        <ModalHeader />
         <ModalBody>
           <section className={styles.section}>
             <TextInput
@@ -64,9 +60,7 @@ const StockSourcesAddOrCreate: React.FC<StockSourcesAddOrCreateDialogProps> = ({
           </section>
         </ModalBody>
         <ModalFooter>
-          <Button kind="secondary" onClick={closeModal}>
-            Cancel
-          </Button>
+          <Button kind="secondary">Cancel</Button>
           <Button type="submit">Save</Button>
         </ModalFooter>
       </Form>
