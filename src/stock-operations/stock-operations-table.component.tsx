@@ -1,8 +1,16 @@
 import React, { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import { URL_STOCK_OPERATION } from "../stock-items/stock-items-table.component";
-import { Link, Tile } from "@carbon/react";
+import {
+  Link,
+  Tile,
+  TableToolbarSearch,
+  TableToolbarMenu,
+  TableToolbarAction,
+  Button,
+} from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 import DataList from "../core/components/table/table.component";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -13,9 +21,23 @@ interface StockOperationsTableProps {
 }
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
+  const { t } = useTranslation();
+
   const { items, tableHeaders } = useStockOperationPages({
     v: ResourceRepresentation.Default,
   });
+
+  const handleImport = () => {
+    // setShowImport(true);
+  };
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
+
+  const createStockItem = () => {
+    // search.refetch()
+  };
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation) => ({
@@ -53,7 +75,23 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   }, [items]);
 
   if (items?.length) {
-    return <DataList columns={tableHeaders} data={tableRows} />;
+    return (
+      <DataList columns={tableHeaders} data={tableRows}>
+        {({ onInputChange }) => (
+          <>
+            <TableToolbarSearch persistent onChange={onInputChange} />
+            <TableToolbarMenu>
+              <TableToolbarAction onClick={handleRefresh}>
+                Refresh
+              </TableToolbarAction>
+            </TableToolbarMenu>
+            <Button onClick={createStockItem} size="md" kind="primary">
+              {t("stockmanagement.addnewoperation", "Add Stock Operation")}
+            </Button>
+          </>
+        )}
+      </DataList>
+    );
   }
 
   return (

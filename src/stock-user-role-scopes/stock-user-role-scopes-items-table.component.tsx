@@ -1,15 +1,36 @@
 import React, { useMemo } from "react";
-import { Button, DataTableSkeleton, Link, Tile } from "@carbon/react";
+import { useTranslation } from "react-i18next";
+import {
+  DataTableSkeleton,
+  TableToolbarSearch,
+  Button,
+  TableToolbarMenu,
+  TableToolbarAction,
+  Tile,
+  Link,
+} from "@carbon/react";
 import { Add } from "@carbon/react/icons";
 import styles from "./stock-user-role-scopes.scss";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import DataList from "../core/components/table/table.component";
 import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
-import { useTranslation } from "react-i18next";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
+
+  const handleImport = () => {
+    // setShowImport(true);
+  };
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
+
+  const createStockItem = () => {
+    // search.refetch()
+  };
+
   // get sources
   const { isLoading, tableHeaders, items } = useStockUserRoleScopesPage({
     v: ResourceRepresentation.Full,
@@ -66,7 +87,23 @@ function StockUserRoleScopesItems() {
   }
 
   if (items?.length) {
-    return <DataList columns={tableHeaders} data={tableRows} />;
+    return (
+      <DataList columns={tableHeaders} data={tableRows}>
+        {({ onInputChange }) => (
+          <>
+            <TableToolbarSearch persistent onChange={onInputChange} />
+            <TableToolbarMenu>
+              <TableToolbarAction onClick={handleRefresh}>
+                Refresh
+              </TableToolbarAction>
+            </TableToolbarMenu>
+            <Button onClick={createStockItem} size="md" kind="primary">
+              {t("stockmanagement.addnewuserrolescope", "Add Stock User Role")}
+            </Button>
+          </>
+        )}
+      </DataList>
+    );
   }
 
   return (

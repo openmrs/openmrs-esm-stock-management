@@ -1,16 +1,35 @@
 import React from "react";
-import { DataTableSkeleton } from "@carbon/react";
+import { useTranslation } from "react-i18next";
+import {
+  DataTableSkeleton,
+  TableToolbarSearch,
+  Button,
+  TableToolbarMenu,
+  TableToolbarAction,
+} from "@carbon/react";
 import useStockSourcesPage from "./stock-sources-itesm-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import DataList from "../core/components/table/table.component";
-import StockSourcesDelete from "./stock-sources-delete-dialog/stock-sources-delete-dialog.component";
-import StockSourcesAddOrCreate from "./stock-sources-add-or-create-dialog/stock-sources-add-or-create-dialog.component";
 
 function StockSourcesItems() {
+  const { t } = useTranslation();
+
   // get sources
   const { isLoading, tableHeaders, tableRows } = useStockSourcesPage({
     v: ResourceRepresentation.Full,
   });
+
+  const handleImport = () => {
+    // setShowImport(true);
+  };
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
+
+  const createStockItem = () => {
+    // search.refetch()
+  };
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -20,8 +39,15 @@ function StockSourcesItems() {
     <DataList columns={tableHeaders} data={tableRows}>
       {({ onInputChange }) => (
         <>
-          <StockSourcesDelete />
-          <StockSourcesAddOrCreate />
+          <TableToolbarSearch persistent onChange={onInputChange} />
+          <TableToolbarMenu>
+            <TableToolbarAction onClick={handleRefresh}>
+              Refresh
+            </TableToolbarAction>
+          </TableToolbarMenu>
+          <Button onClick={createStockItem} size="md" kind="primary">
+            {t("stockmanagement.addnewsource", "Add New Source")}
+          </Button>
         </>
       )}
     </DataList>

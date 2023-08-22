@@ -145,7 +145,7 @@ export function useConceptById(id: string) {
     openmrsFetch
   );
   return {
-    items: data.data ? data.data : {},
+    items: data?.data || <Concept>{},
     isLoading,
     isError: error,
   };
