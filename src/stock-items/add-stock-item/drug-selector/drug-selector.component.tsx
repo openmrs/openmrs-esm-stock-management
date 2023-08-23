@@ -1,67 +1,54 @@
-import React, { ReactNode } from "react";
-import { ComboBox, InlineLoading } from "@carbon/react";
+import React, { forwardRef, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { ComboBox, TextInputSkeleton } from "@carbon/react";
+import { useDrugs } from "../../../stock-lookups/stock-lookups.resource";
+import { ResourceRepresentation } from "../../../core/api/api";
 import { Drug } from "../../../core/api/types/concept/Drug";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { useDrugsHook } from "./drug-selector.resource";
 
-interface DrugSelectorProps<T> {
-  placeholder?: string;
+interface DrugSelectorProps {
+  name?: string;
   drugUuid?: string;
   onDrugChanged?: (drug: Drug) => void;
   title?: string;
   invalid?: boolean;
   invalidText?: ReactNode;
-
-  // Control
-  controllerName: string;
-  name: string;
-  control: Control<FieldValues, T>;
 }
 
-const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
-  const { isLoading, drugList, setSearchString } = useDrugsHook();
+const DrugSelector = forwardRef<never, DrugSelectorProps>(
+  ({ drugUuid, onDrugChanged, title, invalid, invalidText, name }, ref) => {
+    const { t } = useTranslation();
 
-  return (
-    <div>
-      <Controller
-        name={props.controllerName}
-        control={props.control}
-        render={({ field: { onChange, value, ref } }) => (
-          <ComboBox
-            titleText={props.title}
-            name={props.name}
-            control={props.control}
-            controllerName={props.controllerName}
-            id={props.name}
-            size={"md"}
-            items={drugList || []}
-            onChange={(data: { selectedItem: Drug }) => {
-              props.onDrugChanged?.(data.selectedItem);
-              onChange(data.selectedItem.uuid);
-            }}
-            initialSelectedItem={
-              drugList?.find((p) => p.uuid === props.drugUuid) ?? ""
-            }
-            itemToString={drugName}
-            value={drugList?.find((p) => p.uuid === value)?.display ?? ""}
-            onInputChange={setSearchString}
-            placeholder={props.placeholder}
-            invalid={props.invalid}
-            invalidText={props.invalidText}
-            ref={ref}
-          />
+    const {
+      items: { results: drugList },
+      isLoading,
+    } = useDrugs({
+      v: ResourceRepresentation.Default,
+    });
+
+    if (isLoading) return <TextInputSkeleton />;
+
+    return (
+      <ComboBox
+        titleText={title}
+        name={name}
+        className="select-field"
+        id="drugUuid"
+        size={"md"}
+        items={drugList || []}
+        onChange={onDrugChanged}
+        initialSelectedItem={drugList?.find((p) => p.uuid === drugUuid) ?? ""}
+        itemToString={drugName}
+        placeholder={t(
+          "stockmanagement.stockitem.edit.drugholder",
+          "Choose a drug"
         )}
+        invalid={invalid}
+        invalidText={invalidText}
+        ref={ref}
       />
-      {isLoading && (
-        <InlineLoading
-          status="active"
-          iconDescription="Searching"
-          description="Searching..."
-        />
-      )}
-    </div>
-  );
-};
+    );
+  }
+);
 
 function drugName(item: Drug): string {
   return item
