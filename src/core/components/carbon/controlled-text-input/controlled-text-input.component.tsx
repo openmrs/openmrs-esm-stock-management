@@ -4,7 +4,7 @@ import { TextInput } from "@carbon/react";
 import { TextInputProps } from "@carbon/react/lib/components/TextInput/TextInput";
 
 interface ControlledTextInputProps<T> extends TextInputProps {
-  controllerName: string;
+  ctrlName: string;
   name: string;
   control: Control<FieldValues, T>;
 }
@@ -12,7 +12,7 @@ interface ControlledTextInputProps<T> extends TextInputProps {
 const ControlledTextInput = <T,>(props: ControlledTextInputProps<T>) => {
   return (
     <Controller
-      name={props.controllerName}
+      name={props.ctrlName}
       control={props.control}
       render={({ field: { onChange, value, ref } }) => (
         <TextInput
