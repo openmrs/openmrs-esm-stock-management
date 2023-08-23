@@ -54,8 +54,7 @@ export function useStockOperationPages(filter: StockOperationFilter) {
       },
       {
         id: 6,
-        header: t("actions", "Actions"),
-        key: "actions",
+        header: "actions",
       },
     ],
     [t]

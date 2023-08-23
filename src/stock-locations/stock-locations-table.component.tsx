@@ -21,7 +21,7 @@ interface StockLocationsTableProps {
 const StockLocations: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { isLoading, tableHeaders, tableRows, items } = useStockLocationPages({
+  const { tableHeaders, tableRows, items } = useStockLocationPages({
     v: ResourceRepresentation.Full,
   });
 
@@ -37,9 +37,9 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
     // search.refetch()
   };
 
-  if (isLoading) {
-    return <DataTableSkeleton role="progressbar" />;
-  }
+  // if (isLoading) {
+  //   return <DataTableSkeleton role="progressbar" />;
+  // }
 
   if (items?.length) {
     return (

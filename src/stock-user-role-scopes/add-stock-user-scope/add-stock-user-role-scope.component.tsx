@@ -1,4 +1,3 @@
-import { StockSource } from "../../core/api/types/stockOperation/StockSource";
 import {
   ModalHeader,
   ModalBody,
@@ -6,23 +5,38 @@ import {
   Button,
   Form,
   TextInput,
+  Checkbox,
+  DropdownSkeleton,
+  CheckboxGroup,
 } from "@carbon/react";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./add-stock-user-role-scope.scss";
-import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
-import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
-
-interface StockSourcesAddOrCreateDialogProps {
-  title: string;
-  source: StockSource;
-  closeModal: () => void;
-}
+import {
+  LocationFilterCriteria,
+  useStockLocations,
+  useStockOperationTypes,
+} from "../../stock-lookups/stock-lookups.resource";
+import { ResourceRepresentation } from "../../core/api/api";
 
 const AddStockUserRoleScope: React.FC = () => {
   // get stock sources
-  const { items, isLoading, isError } = useConceptById(
-    STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
-  );
+  // operation types
+  const {
+    types: { results: stockOperations },
+    isLoading,
+    isError,
+  } = useStockOperationTypes();
+
+  //locations
+  const {
+    locations: { results: locations },
+    isLoadingLocations,
+    isErrorLocation,
+  } = useStockLocations({ v: ResourceRepresentation.Default });
+
+  if (isLoading || isError) {
+    return <DropdownSkeleton />;
+  }
 
   return (
     <div>
@@ -31,30 +45,60 @@ const AddStockUserRoleScope: React.FC = () => {
         <ModalBody>
           <section className={styles.section}>
             <TextInput
-              id="fullname"
+              id="userName"
               type="text"
-              labelText="FullName"
+              labelText="User"
               size="md"
-              placeholder="e.g National Medical Stores"
+              placeholder="Filter"
             />
           </section>
           <section className={styles.section}>
             <TextInput
-              id="acronym"
+              id="userRole"
               type="text"
+              labelText="Role"
               size="md"
-              placeholder="e.g NMS"
-              labelText="Acronym/Code"
+              placeholder="Choose a role"
             />
           </section>
           <section className={styles.section}>
-            <TextInput
-              id="sourceType"
-              type="text"
-              size="md"
-              labelText="Source type"
-            />
+            <Checkbox labelText={`Enabled`} id="userEnabled" />
+            <Checkbox labelText={`Permanent`} id="userPermanent" />
           </section>
+
+          <section className={styles.section}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span> Stock Operations</span>
+              <span>
+                The role will be applicable to only selected stock operations.
+              </span>
+            </div>
+          </section>
+          <section className={styles.section}>
+            {stockOperations.length > 0 &&
+              stockOperations.map((type) => {
+                return (
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <Checkbox labelText={type.name} id="operationType" />
+                  </div>
+                );
+              })}
+          </section>
+          <section className={styles.section}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span> Locations</span>
+              <span>
+                Use the toggle to apply this scope to the locations under the
+                selected location.
+              </span>
+            </div>
+          </section>
+          <CheckboxGroup className={styles.section}>
+            {locations?.length > 0 &&
+              locations.map((type) => {
+                return <Checkbox labelText={type.name} id="locations" />;
+              })}
+          </CheckboxGroup>
         </ModalBody>
         <ModalFooter>
           <Button kind="secondary">Cancel</Button>
