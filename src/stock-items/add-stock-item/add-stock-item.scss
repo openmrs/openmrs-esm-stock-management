@@ -1,3 +1,9 @@
+.formContainer {
+  max-height: calc(100vh - 100px);
+  overflow: scroll;
+  padding: 0 1rem;
+}
+
 .noSpacing {
   margin: 0 !important;
   padding: 0 !important;
