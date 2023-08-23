@@ -2,64 +2,38 @@ import { z } from "zod";
 
 const nullableString = z.string().max(255).optional();
 
-export const stockItemDetailsSchema = z.object({
-  isDrug: z.boolean(),
-  commonName: nullableString,
-  acronym: nullableString,
-  hasExpiration: z.boolean(),
-  expiryNotice: z.number().optional(),
-  preferredVendorUuid: z.string().optional(),
-  categoryUuid: z.string().optional(),
-  dispensingUnitUuid: z.string().optional(),
-  drugUuid: z.string().optional(),
-});
-// .refine(
-//   ({ isDrug, dispensingUnitUuid }) => {
-//     return isDrug && dispensingUnitUuid && dispensingUnitUuid.length == 0;
-//   },
-//   {
-//     message: "Dispensing Unit required",
-//     path: ["dispensingUnitUuid"],
-//   }
-// )
-// .refine(
-//   ({ isDrug, drugUuid }) => {
-//     return isDrug && drugUuid && drugUuid.length == 0;
-//   },
-//   {
-//     message: "Drug required",
-//     path: ["drugUuid"],
-//   }
-// );
+export const stockItemDetailsSchema = z
+  .object({
+    isDrug: z.boolean().optional(),
+    commonName: nullableString,
+    acronym: nullableString,
+    hasExpiration: z.boolean(),
+    expiryNotice: z.number(),
+    preferredVendorUuid: z.string(),
+    categoryUuid: z.string(),
+    dispensingUnitUuid: z.string(),
+    drugUuid: z.string(),
+  })
+  .refine(
+    ({ isDrug, dispensingUnitUuid }) => {
+      return isDrug && dispensingUnitUuid && dispensingUnitUuid.length == 0;
+    },
+    {
+      message: "Dispensing Unit required",
+      path: ["dispensingUnitUuid"],
+    }
+  )
+  .refine(
+    ({ isDrug, drugUuid }) => {
+      return isDrug && drugUuid && drugUuid.length == 0;
+    },
+    {
+      message: "Drug required",
+      path: ["drugUuid"],
+    }
+  );
+export type StockItemFormData = z.infer<typeof stockItemDetailsSchema>;
 
-// import * as Yup from "yup";
-//
-// const commonValidationSchema = {
-//   isDrug: Yup.boolean().required("stockmanagement.field.required").nullable(),
-//   commonName: Yup.string()
-//     .nullable()
-//     .max(255, "stockmanagement.field.noexceed255"),
-//   acronym: Yup.string()
-//     .nullable()
-//     .max(255, "stockmanagement.field.noexceed255"),
-//   hasExpiration: Yup.boolean().required("stockmanagement.field.required"),
-//   preferredVendorUuid: Yup.string().nullable(),
-//   categoryUuid: Yup.string().nullable(),
-//   dispensingUnitUuid: Yup.string()
-//     .when("isDrug", {
-//       is: true,
-//       then: Yup.string().required("stockmanagement.field.required").nullable(),
-//     })
-//     .nullable(),
-//   expiryNotice: Yup.number()
-//     .when("hasExpiration", {
-//       is: true,
-//       then: Yup.number()
-//         .min(0, "stockmanagement.field.greaterthanorequaltozero")
-//         .nullable(),
-//     })
-//     .nullable(),
-// };
 //
 // const createOnlyValidationSchema = {
 //   drugUuid: Yup.string()
