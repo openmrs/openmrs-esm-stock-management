@@ -52,6 +52,10 @@ export function useStockOperationPages(filter: StockOperationFilter) {
         header: t("date", "Date"),
         key: "Date",
       },
+      {
+        id: 6,
+        header: "actions",
+      },
     ],
     [t]
   );

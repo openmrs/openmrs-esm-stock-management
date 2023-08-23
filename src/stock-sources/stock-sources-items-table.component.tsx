@@ -7,10 +7,11 @@ import {
   TableToolbarMenu,
   TableToolbarAction,
 } from "@carbon/react";
-import useStockSourcesPage from "./stock-sources-itesm-table.resource";
+import useStockSourcesPage from "./stock-sources-items-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import DataList from "../core/components/table/table.component";
 import AddStockSourceActionButton from "./add-stock-source-button.component";
+import StockSourcesFilter from "./stock-sources-filter/stock-sources-filter.component";
 
 function StockSourcesItems() {
   const { t } = useTranslation();
@@ -37,6 +38,14 @@ function StockSourcesItems() {
       {({ onInputChange }) => (
         <>
           <TableToolbarSearch persistent onChange={onInputChange} />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <StockSourcesFilter />
+          </div>
           <TableToolbarMenu>
             <TableToolbarAction onClick={handleRefresh}>
               Refresh

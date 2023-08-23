@@ -25,7 +25,7 @@ export type ConceptFilterCriteria = ResourceFilterCriteria;
 export type LocationFilterCriteria = ResourceFilterCriteria;
 
 // getLocations
-export function useLocations(filter: LocationFilterCriteria) {
+export function useStockLocations(filter: LocationFilterCriteria) {
   const apiUrl = `ws/rest/v1/location${toQueryParams(filter, false)}`;
   const { data, error, isLoading } = useSWR<
     {
@@ -34,9 +34,9 @@ export function useLocations(filter: LocationFilterCriteria) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data?.data || <PageableResult<OpenMRSLocation>>{},
-    isLoading,
-    isError: error,
+    locations: data?.data || <PageableResult<OpenMRSLocation>>{},
+    isErrorLocation: error,
+    isLoadingLocations: isLoading,
   };
 }
 
@@ -106,14 +106,14 @@ export function useRoles(filter: ResourceFilterCriteria) {
 // getStockOperationTypes
 export function useStockOperationTypes() {
   const apiUrl = `ws/rest/v1/stockmanagement/stockoperationtype?v=default`;
-  const { data, error, isLoading } = useSWR<
+  const { data, isLoading, error } = useSWR<
     {
       data: PageableResult<StockOperationType>;
     },
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    types: data?.data || <PageableResult<StockOperationType>>{},
     isLoading,
     isError: error,
   };

@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { formatDisplayDate } from "./core/utils/datetimeUtils";
 
 export const moduleName = "@ugandaemr/esm-stock-management-app";
 
@@ -9,6 +10,19 @@ export const startOfDay = dayjs(new Date().setUTCHours(0, 0, 0, 0)).format(
   omrsDateFormat
 );
 export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+export const DATE_PICKER_FORMAT = "DD/MM/YYYY";
+
+export const DATE_PICKER_CONTROL_FORMAT = "d/m/Y";
+
+export const formatForDatePicker = (date: Date | null | undefined) => {
+  return formatDisplayDate(date, DATE_PICKER_FORMAT);
+};
+
+export const today = () => {
+  const date = new Date();
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
 
 // privileges
 /** @type {string}: App: stockmanagement.dashboard, Able to view stock management application dashboard*/

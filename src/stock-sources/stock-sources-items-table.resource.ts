@@ -31,6 +31,10 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
         header: "Source Type",
         key: "sourceType",
       },
+      {
+        id: 4,
+        header: "actions",
+      },
     ],
     []
   );
