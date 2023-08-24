@@ -15,18 +15,20 @@ import { initialValues } from "./add-stock-item.resource";
 interface AddStockItemProps {
   isEditing?: boolean;
   model?: StockItemDTO;
+  onSave?: (item: StockItemDTO) => Promise<void>;
 }
 
 const AddEditStockItem: React.FC<AddStockItemProps> = ({
   isEditing,
   model,
+  onSave,
 }) => {
   const { t } = useTranslation();
 
   const tabs: TabItem[] = [
     {
       name: t("stockItemDetails", "Stock Item Details"),
-      component: <StockItemDetails model={model} />,
+      component: <StockItemDetails model={model} onSave={onSave} />,
     },
     {
       name: t("packagingUnits", "Packaging Units"),

@@ -1,14 +1,11 @@
 import React, { forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import addStockStyles from "../add-stock-item.scss";
+import styles from "./stock-item-details.scss";
 import { Save } from "@carbon/react/icons";
 
-import { Button, FormGroup, RadioButton } from "@carbon/react";
-import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
+import { Button, FormGroup, RadioButton, InlineLoading } from "@carbon/react";
 import { StockItemDTO } from "../../../core/api/types/stockItem/StockItem";
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useStockSources } from "../../../stock-sources/stock-sources.resource";
-import { STOCK_ITEM_CATEGORY_CONCEPT_ID } from "../../../constants";
 import DrugSelector from "../drug-selector/drug-selector.component";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,17 +16,22 @@ import {
 import ControlledRadioButtonGroup from "../../../core/components/carbon/controlled-radio-button-group/controlled-radio-button-group.component";
 import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
 import ControlledTextInput from "../../../core/components/carbon/controlled-text-input/controlled-text-input.component";
+import DispensingUnitSelector from "../dispensing-unit-selector/dispensing-unit-selector.component";
+import PreferredVendorSelector from "../preferred-vendor-selector/preferred-vendor-selector.component";
+import StockItemCategorySelector from "../stock-item-category-selector/stock-item-category-selector.component";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
+  onSave: (item: StockItemDTO) => Promise<void>;
 }
 
 const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
-  ({ model }, ref) => {
+  ({ model, onSave }, ref) => {
     const { t } = useTranslation();
     const {
       handleSubmit,
       control,
+      setValue,
       formState: { errors },
     } = useForm<StockItemFormData>({
       defaultValues: model,
@@ -37,60 +39,27 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
       resolver: zodResolver(stockItemDetailsSchema),
     });
 
-    const { items: stockSourceList, isLoading: stockSourceListIsLoading } =
-      useStockSources({
-        v: ResourceRepresentation.Default,
-      });
-
-    const { items: categories, isLoading: isFetchingCategories } =
-      useConceptById(STOCK_ITEM_CATEGORY_CONCEPT_ID);
-
-    // // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // const onPreferredVendorChange = (change: StockSource) => {};
-    //
-    // const onDrugChanged = (data: Drug) => {};
-    //
-    // const onDispensingUnitChange = (data: Concept) => {};
-    //
-    // const onExpiryNoticeChange = (data: ChangeEvent<HTMLInputElement>) => {};
-    const handleSave = (model: StockItemDTO) => {
-      // handle new drug
-      alert(JSON.stringify(model));
+    const handleSave = async (model: StockItemDTO) => {
+      try {
+        setIsSaving(true);
+        await onSave(model);
+      } catch (e) {
+        // Show notification
+      } finally {
+        setIsSaving(false);
+      }
     };
 
-    const onError = (err) => {
-      alert(JSON.stringify(err));
-    };
-
-    // const onCategoryChange = (data: Concept) => {};
-
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // const handleExpiration = (expiration: boolean) => {};
-    //
-    // const handleIsDrugChange = (isDrug: boolean) => {};
-    //
-    // // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // const handleCommonNameChange = (e: ChangeEvent<HTMLInputElement>) => {};
-    //
-    // // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // const handleAbbrChange = (e: ChangeEvent<HTMLInputElement>) => {};
-
+    const [isSaving, setIsSaving] = useState(false);
     const [isDrug, setIsDrug] = useState<boolean | null>();
     const [hasExpiration, setHasExpiration] = useState<boolean | null>();
 
     return (
-      <form
-        style={{
-          display: "grid",
-          gap: "1.5rem",
-          paddingTop: "1rem",
-        }}
-        className={addStockStyles.formContainer}
-      >
+      <form className={`${addStockStyles.formContainer} ${styles.form}`}>
         <FormGroup
           className="clear-margin-bottom"
-          legendText={t("stockmanagement.stockitem.edit.itemtype", "Item Type")}
-          title={t("stockmanagement.stockitem.edit.itemtype", "Item Type")}
+          legendText={t("itemType", "Item Type")}
+          title={t("itemType", "Item Type")}
         >
           <ControlledRadioButtonGroup
             control={control}
@@ -98,6 +67,9 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             legendText=""
             invalid={!!errors.isDrug}
             invalidText={errors.isDrug && errors?.isDrug?.message}
+            onChange={(selection: boolean) => {
+              setIsDrug(selection);
+            }}
             name="isDrug"
           >
             <RadioButton value={true} id="isDrug-true" labelText="Drug" />
@@ -107,10 +79,9 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         {isDrug && (
           <DrugSelector
             name="drugUuid"
-            title={t("stockmanagement.pleasespecify", "Please specify:")}
-            onDrugChanged={(e) => {
-              //
-            }}
+            controllerName="drugUuid"
+            control={control}
+            title={t("pleaseSpecify", "Please specify:")}
             invalid={!!errors.drugUuid}
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
           />
@@ -124,31 +95,26 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         {/*          initialSelectedItem={conceptsList?.results?.find(p => p.uuid === model.conceptUuid) ?? ""}*/}
         {/*          itemToString={item => item ? `${item.display}` : ""}*/}
         {/*          placeholder={t("stockmanagement.stockitem.edit.conceptholder")} />*/}
-        {/*<TextInput*/}
-        {/*  id="commonName"*/}
-        {/*  maxLength={255}*/}
-        {/*  name="commonName"*/}
-        {/*  size={"md"}*/}
-        {/*  value={`${model?.commonName ?? ""}`}*/}
-        {/*  labelText={t(*/}
-        {/*    "stockmanagement.stockitem.edit.commonname",*/}
-        {/*    "Common name:"*/}
-        {/*  )}*/}
-        {/*  onChange={handleCommonNameChange}*/}
-        {/*  invalid={errors.commonName}*/}
-        {/*  invalidText={errors.commonName && errors?.commonName?.message}*/}
-        {/*/>*/}
         <ControlledTextInput
-          id="acronym1"
+          id="commonName"
+          name="commonName"
+          control={control}
+          controllerName="commonName"
           maxLength={255}
-          name="acronym2"
+          size={"md"}
+          value={`${model?.commonName ?? ""}`}
+          labelText={t("commonName", "Common name:")}
+          invalid={!!errors.commonName}
+          invalidText={errors.commonName && errors?.commonName?.message}
+        />
+        <ControlledTextInput
+          id="acronym"
+          maxLength={255}
+          name="acronym"
           control={control}
           controllerName="acronym"
           size={"md"}
-          labelText={t(
-            "stockmanagement.stockitem.edit.abbreviation",
-            "Abbreviation:"
-          )}
+          labelText={t("abbreviation", "Abbreviation:")}
           invalid={!!errors.acronym}
           invalidText={errors.acronym && errors?.acronym?.message}
         />
@@ -161,14 +127,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         >
           <FormGroup
             className="clear-margin-bottom"
-            legendText={t(
-              "stockmanagement.stockitem.edit.hasexpiration",
-              "Does the item expire?"
-            )}
-            title={t(
-              "stockmanagement.stockitem.edit.hasexpiration",
-              "Does the item expire?"
-            )}
+            legendText={t("hasExpiration", "Does the item expire?")}
+            title={t("hasExpiration", "Does the item expire?")}
           >
             <ControlledRadioButtonGroup
               name="hasExpiration"
@@ -179,16 +139,19 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               invalidText={
                 errors.hasExpiration && errors?.hasExpiration?.message
               }
+              onChange={(selection: boolean) => {
+                setHasExpiration(selection);
+              }}
             >
               <RadioButton
                 value={true}
                 id="hasExpiration-true"
-                labelText={t("stockmanagement.yes", "Yes")}
+                labelText={t("yes", "Yes")}
               />
               <RadioButton
                 value={false}
                 id="hasExpiration-false"
-                labelText={t("stockmanagement.no", "No")}
+                labelText={t("no", "No")}
               />
             </ControlledRadioButtonGroup>
           </FormGroup>
@@ -201,105 +164,57 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               controllerName="expiryNotice"
               size={"md"}
               allowEmpty={true}
-              label={t(
-                "stockmanagement.stockitem.edit.expirynotice",
-                "Expiration Notice (days)"
-              )}
+              label={t("expiryNoticeDays", "Expiration Notice (days)")}
               invalid={!!errors.expiryNotice}
               invalidText={errors.expiryNotice && errors?.expiryNotice?.message}
             />
           )}
         </div>
-        {/*<ControlledComboBox*/}
-        {/*  id="preferredVendorUuid"*/}
-        {/*  name="preferredVendorUuid"*/}
-        {/*  control={control}*/}
-        {/*  controllerName="preferredVendorUuid"*/}
-        {/*  titleText={t(*/}
-        {/*    "stockmanagement.stockitem.edit.preferredvendor",*/}
-        {/*    "Who is the preferred vendor?"*/}
-        {/*  )}*/}
-        {/*  size={"md"}*/}
-        {/*  className="select-field"*/}
-        {/*  items={*/}
-        {/*    (stockSourceList?.results?.filter((x) => x.uuid != null) ??*/}
-        {/*      []) as any*/}
-        {/*  }*/}
-        {/*  initialSelectedItem={stockSourceList?.results?.find(*/}
-        {/*    (p) => p.uuid === model.preferredVendorUuid*/}
-        {/*  )}*/}
-        {/*  itemToString={(item) => (item ? `${item?.name}` : "")}*/}
-        {/*  shouldFilterItem={(data) => true}*/}
-        {/*  placeholder="Choose vendor"*/}
-        {/*  onChange={(e) => {*/}
-        {/*    //*/}
-        {/*  }}*/}
-        {/*/>*/}
-        {/*<ComboBox*/}
-        {/*  titleText={t("stockmanagement.stockitem.edit.category", "Category:")}*/}
-        {/*  name="categoryUuid"*/}
-        {/*  size={"md"}*/}
-        {/*  className="select-field"*/}
-        {/*  id="categoryUuid"*/}
-        {/*  items={*/}
-        {/*    ((categories?.answers && categories?.answers.length > 0*/}
-        {/*      ? categories?.answers*/}
-        {/*      : categories?.setMembers) as any) ?? []*/}
-        {/*  }*/}
-        {/*  onChange={onCategoryChange}*/}
-        {/*  initialSelectedItem={*/}
-        {/*    (categories?.answers && categories?.answers.length > 0*/}
-        {/*      ? categories?.answers*/}
-        {/*      : categories?.setMembers*/}
-        {/*    )?.find((p) => p.uuid === model.categoryUuid) ?? ({} as any)*/}
-        {/*  }*/}
-        {/*  itemToString={(item) =>*/}
-        {/*    item && item?.display ? `${item?.display}` : ""*/}
-        {/*  }*/}
-        {/*  shouldFilterItem={(data) => true}*/}
-        {/*  placeholder={t(*/}
-        {/*    "stockmanagement.stockitem.edit.categoryholder",*/}
-        {/*    "Choose a category"*/}
-        {/*  )}*/}
-        {/*/>*/}
-        {/*{isDrug && (*/}
-        {/*  <DispensingUnitSelector*/}
-        {/*    onDispensingUnitChange={onDispensingUnitChange}*/}
-        {/*    title={t(*/}
-        {/*      "stockmanagement.stockitem.edit.dispensingunit",*/}
-        {/*      "Dispensing Unit:"*/}
-        {/*    )}*/}
-        {/*    placeholder={t(*/}
-        {/*      "stockmanagement.stockitem.edit.dispensingunitholder",*/}
-        {/*      "Choose a dispensing unit"*/}
-        {/*    )}*/}
-        {/*    invalid={!!errors.dispensingUnitUuid}*/}
-        {/*    invalidText={*/}
-        {/*      errors.dispensingUnitUuid && errors?.dispensingUnitUuid?.message*/}
-        {/*    }*/}
-        {/*  />*/}
-        {/*)}*/}
+        <PreferredVendorSelector
+          name="preferredVendorUuid"
+          controllerName="preferredVendorUuid"
+          control={control}
+          title={t("whoIsThePreferredVendor", "Who is the preferred vendor?")}
+          placeholder={t("chooseVendor", "Choose vendor")}
+          invalid={!!errors.preferredVendorUuid}
+          invalidText={
+            errors.preferredVendorUuid && errors?.preferredVendorUuid?.message
+          }
+        />
+        <StockItemCategorySelector
+          name="categoryUuid"
+          controllerName="categoryUuid"
+          control={control}
+          title={t("category:", "Category:")}
+          placeholder={t("chooseACategory", "Choose a category")}
+          invalid={!!errors.categoryUuid}
+          invalidText={errors.categoryUuid && errors?.categoryUuid?.message}
+        />
+        {isDrug && (
+          <DispensingUnitSelector
+            name="dispensingUnitUuid"
+            controllerName="dispensingUnitUuid"
+            control={control}
+            title={t("dispensingUnit", "Dispensing Unit:")}
+            placeholder={t("dispensingUnitHolder", "Choose a dispensing unit")}
+            invalid={!!errors.dispensingUnitUuid}
+            invalidText={
+              errors.dispensingUnitUuid && errors?.dispensingUnitUuid?.message
+            }
+          />
+        )}
 
         <div style={{ display: "flex", flexDirection: "row-reverse" }}>
           <Button
             name="save"
             type="button"
             className="submitButton"
-            onClick={handleSubmit(handleSave, onError)}
+            onClick={handleSubmit(handleSave)}
             kind="primary"
             renderIcon={Save}
           >
-            {t("stockmanagement.save", "Save")}
+            {isSaving ? <InlineLoading /> : t("save", "Save")}
           </Button>
-          {/*<Button*/}
-          {/*  type="button"*/}
-          {/*  className="cancelButton"*/}
-          {/*  kind="tertiary"*/}
-          {/*  onClick={actions.onGoBack}*/}
-          {/*  renderIcon={Undo24}*/}
-          {/*>*/}
-          {/*  {t("stockmanagement.goback", "Go Back")}*/}
-          {/*</Button>*/}
         </div>
       </form>
     );
