@@ -97,7 +97,7 @@ export function useRoles(filter: ResourceFilterCriteria) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<Role>>{},
     isLoading,
     isError: error,
   };
@@ -129,7 +129,7 @@ export function useUsers(filter: UserFilterCriteria) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<User>>{},
     isLoading,
     isError: error,
   };

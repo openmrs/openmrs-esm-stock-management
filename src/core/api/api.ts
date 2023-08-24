@@ -10,6 +10,7 @@ export interface ResourceFilterCriteria extends PagingCriteria {
   v?: ResourceRepresentation | null;
   q?: string | null;
   totalCount?: boolean | null;
+  limit?: number | null;
 }
 
 export function toQueryParams<T extends ResourceFilterCriteria>(

@@ -8,13 +8,17 @@ import {
   Checkbox,
   DropdownSkeleton,
   CheckboxGroup,
+  Select,
+  SelectItem,
 } from "@carbon/react";
 import React, { useState } from "react";
 import styles from "./add-stock-user-role-scope.scss";
 import {
   LocationFilterCriteria,
+  useRoles,
   useStockLocations,
   useStockOperationTypes,
+  useUsers,
 } from "../../stock-lookups/stock-lookups.resource";
 import { ResourceRepresentation } from "../../core/api/api";
 
@@ -34,6 +38,20 @@ const AddStockUserRoleScope: React.FC = () => {
     isErrorLocation,
   } = useStockLocations({ v: ResourceRepresentation.Default });
 
+  // users
+  const {
+    items: { results: users },
+    isLoading: isLoadingUsers,
+    isError: isErrorUsers,
+  } = useUsers({});
+
+  // roles
+  const {
+    items: { results: roles },
+    isLoading: isLoadingRoles,
+    isError: isErrorRoles,
+  } = useRoles({});
+
   if (isLoading || isError) {
     return <DropdownSkeleton />;
   }
@@ -44,22 +62,60 @@ const AddStockUserRoleScope: React.FC = () => {
         <ModalHeader />
         <ModalBody>
           <section className={styles.section}>
-            <TextInput
+            <Select
+              name="users"
+              className="select-field"
+              labelText={"User"}
+              id="user"
+            >
+              <SelectItem
+                disabled
+                hidden
+                value="placeholder-item"
+                text="Choose a user"
+              />
+              {users?.map((sourceType) => {
+                return (
+                  <SelectItem
+                    key={sourceType.uuid}
+                    value={sourceType.uuid}
+                    text={sourceType.display}
+                  />
+                );
+              })}
+            </Select>
+            {/* <TextInput
               id="userName"
               type="text"
               labelText="User"
               size="md"
               placeholder="Filter"
-            />
+            /> */}
           </section>
           <section className={styles.section}>
-            <TextInput
+            <Select
+              name="roles"
+              className="select-field"
+              labelText={"Role"}
               id="userRole"
-              type="text"
-              labelText="Role"
               size="md"
-              placeholder="Choose a role"
-            />
+            >
+              <SelectItem
+                disabled
+                hidden
+                value="placeholder-item"
+                text="Choose a role"
+              />
+              {roles?.map((sourceType) => {
+                return (
+                  <SelectItem
+                    key={sourceType.role}
+                    value={sourceType.role}
+                    text={sourceType.display}
+                  />
+                );
+              })}
+            </Select>
           </section>
           <section className={styles.section}>
             <Checkbox labelText={`Enabled`} id="userEnabled" />
@@ -75,14 +131,18 @@ const AddStockUserRoleScope: React.FC = () => {
             </div>
           </section>
           <section className={styles.section}>
-            {stockOperations.length > 0 &&
-              stockOperations.map((type) => {
-                return (
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <Checkbox labelText={type.name} id="operationType" />
-                  </div>
-                );
-              })}
+            {stockOperations.length > 0 && (
+              <CheckboxGroup
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                }}
+              >
+                {stockOperations.map((type) => {
+                  return <Checkbox labelText={type.name} id="operationType" />;
+                })}
+              </CheckboxGroup>
+            )}
           </section>
           <section className={styles.section}>
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -93,7 +153,13 @@ const AddStockUserRoleScope: React.FC = () => {
               </span>
             </div>
           </section>
-          <CheckboxGroup className={styles.section}>
+          <CheckboxGroup
+            className={styles.section}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+            }}
+          >
             {locations?.length > 0 &&
               locations.map((type) => {
                 return <Checkbox labelText={type.name} id="locations" />;

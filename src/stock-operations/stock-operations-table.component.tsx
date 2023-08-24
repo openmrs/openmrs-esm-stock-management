@@ -34,6 +34,8 @@ interface StockOperationsTableProps {
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { items, tableHeaders } = useStockOperationPages({
     v: ResourceRepresentation.Default,
+    limit: 10,
+    totalCount: true,
   });
 
   const MaxDate: Date = today();
