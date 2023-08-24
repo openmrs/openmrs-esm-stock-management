@@ -88,7 +88,7 @@ export function useStockItemTransactions(filter: StockItemTransactionFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockItemTransactionDTO>>{},
     isLoading,
     isError: error,
   };
@@ -105,7 +105,7 @@ export function useStockItemInventory(filter: StockItemInventoryFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : {},
+    items: data?.data || <StockInventoryResult>{},
     isLoading,
     isError: error,
   };
@@ -135,7 +135,7 @@ export function useStockBatches(filter: StockBatchFilter) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockBatchDTO>>{},
     isLoading,
     isError: error,
   };
@@ -152,7 +152,7 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
   >(apiUrl, openmrsFetch);
 
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockItemPackagingUOMDTO>>{},
     isLoading,
     isError: error,
   };
@@ -166,7 +166,7 @@ export function useStockItem(id: string) {
     openmrsFetch
   );
   return {
-    items: data.data ? data.data : {},
+    item: data?.data || <StockItemDTO>{},
     isLoading,
     isError: error,
   };
@@ -226,9 +226,11 @@ export function createStockItem(item: StockItemDTO) {
 }
 
 // updateStockItem
-export function updateStockItem(item: StockItemDTO, uuid: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem/${uuid}`;
+export function updateStockItem(item: StockItemDTO) {
+  const apiUrl = `ws/rest/v1/stockmanagement/stockitem/${item.uuid}`;
   const abortController = new AbortController();
+  delete item.isDrug;
+  delete item.dateCreated;
   return openmrsFetch(apiUrl, {
     method: "POST",
     headers: {
