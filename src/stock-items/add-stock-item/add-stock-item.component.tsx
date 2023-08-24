@@ -1,44 +1,64 @@
-import React, { useState } from "react";
-import { Column, Grid, ProgressIndicator, ProgressStep } from "@carbon/react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { useLocations } from "@openmrs/esm-framework";
 import StockItemDetails from "./stock-item-details/stock-item-details.component";
-import styles from "./add-stock-item.scss";
+import { TabItem } from "../../core/components/tabs/types";
+import PackagingUnits from "./packaging-units/packaging-units.component";
+import Transactions from "./transactions/transactions.component";
+import BatchInformation from "./batch-information/batch-information.component";
+import StockQuantities from "./quantities/quantities.component";
+import StockRules from "./stock-rules/stock-rules.component";
+import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
+import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
+import { SaveStockItem } from "../types";
 
 interface AddStockItemProps {
-  state?: string;
+  isEditing?: boolean;
+  model?: StockItemDTO;
+  onSave?: SaveStockItem;
 }
 
-const AddStockItem: React.FC<AddStockItemProps> = () => {
+const AddEditStockItem: React.FC<AddStockItemProps> = ({
+  isEditing,
+  model,
+  onSave,
+}) => {
   const { t } = useTranslation();
 
-  const locations = useLocations();
+  const tabs: TabItem[] = [
+    {
+      name: t("stockItemDetails", "Stock Item Details"),
+      component: (
+        <StockItemDetails model={model} onSave={onSave} isEditing={isEditing} />
+      ),
+    },
+    {
+      name: t("packagingUnits", "Packaging Units"),
+      component: <PackagingUnits stockItemUuid={model.uuid} />,
+      disabled: !isEditing,
+    },
+    {
+      name: t("transactions", "Transactions"),
+      component: <Transactions stockItemUuid={model.uuid} />,
+      disabled: !isEditing,
+    },
+    {
+      name: t("batchInformation", "Batch Information"),
+      component: <BatchInformation stockItemUuid={model.uuid} />,
+      disabled: !isEditing,
+    },
+    {
+      name: t("quantities", "Quantities"),
+      component: <StockQuantities stockItemUuid={model.uuid} />,
+      disabled: !isEditing,
+    },
+    {
+      name: t("stockRules", "Stock Rules"),
+      component: <StockRules />,
+      disabled: !isEditing,
+    },
+  ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  return (
-    <Grid fullWith className={styles.noSpacing}>
-      {/*<Row>*/}
-      <Column sm={4} md={4} lg={4} className={styles.noSpacing}>
-        <ProgressIndicator
-          currentIndex={currentIndex}
-          vertical
-          onChange={(e: number) => setCurrentIndex(e)}
-        >
-          <ProgressStep label="Stock Item Details" />
-          <ProgressStep label="Packaging Units" />
-          <ProgressStep label="Transactions" />
-          <ProgressStep label="Batch Information" />
-          <ProgressStep label="Quantities" />
-          <ProgressStep label="Stock Rules" />
-        </ProgressIndicator>
-      </Column>
-      <Column sm={12} md={12} lg={12} className={styles.noSpacing}>
-        <StockItemDetails />
-      </Column>
-      {/*</Row>*/}
-    </Grid>
-  );
+  return <VerticalTabs tabs={tabs} />;
 };
 
-export default AddStockItem;
+export default AddEditStockItem;
