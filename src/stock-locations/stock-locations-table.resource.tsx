@@ -2,10 +2,11 @@ import { StockOperationFilter } from "../stock-operations/stock-operations.resou
 import { useMemo, useState } from "react";
 import { usePagination } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
-import { useLocations } from "../stock-lookups/stock-lookups.resource";
+import { useStockLocations } from "../stock-lookups/stock-lookups.resource";
 
 export function useStockLocationPages(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useLocations(filter);
+  const { locations, isErrorLocation, isLoadingLocations } =
+    useStockLocations(filter);
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -14,7 +15,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
     goTo,
     results: paginatedQueueEntries,
     currentPage,
-  } = usePagination(items.results, currentPageSize);
+  } = usePagination(locations.results, currentPageSize);
 
   const { t } = useTranslation();
 
@@ -45,7 +46,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
   );
 
   const tableRows = useMemo(() => {
-    return items?.results?.map((location) => ({
+    return locations?.results?.map((location) => ({
       id: location?.uuid,
       key: `key-${location?.uuid}`,
       uuid: `${location?.uuid}`,
@@ -54,17 +55,17 @@ export function useStockLocationPages(filter: StockOperationFilter) {
       childLocations:
         location?.childLocations?.map((p) => p.display)?.join(", ") ?? "",
     }));
-  }, [items?.results, t]);
+  }, [locations?.results]);
 
   return {
-    items: items.results,
+    items: locations.results,
     currentPage,
     currentPageSize,
     paginatedQueueEntries,
     goTo,
     pageSizes,
-    isLoading,
-    isError,
+    isLoadingLocations,
+    isErrorLocation,
     setPageSize,
     tableHeaders,
     tableRows,
