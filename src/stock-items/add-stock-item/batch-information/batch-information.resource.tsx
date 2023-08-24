@@ -1,9 +1,11 @@
 import { ResourceRepresentation } from "../../../core/api/api";
 import { useEffect, useMemo, useState } from "react";
 import {
+  StockItemFilter,
   StockItemInventoryFilter,
   useStockItemInventory,
 } from "../../stock-items.resource";
+import { useTranslation } from "react-i18next";
 
 export function useStockItemBatchInformationHook(v?: ResourceRepresentation) {
   const [stockItemFilter, setStockItemFilter] =
