@@ -12,12 +12,11 @@ const StockCommodityTabs: React.FC = () => {
     <div className={styles.tabContainer}>
       <Tabs>
         <TabList contained fullWidth>
-          <Tab> Stock Items</Tab>
-          <Tab> Stock Operations</Tab>
-          <Tab> Stock User Role Scopes</Tab>
-          <Tab> Stock Sources</Tab>
-          <Tab> Stock Locations</Tab>
-          <Tab> Stock Reports</Tab>
+          <Tab>Items</Tab>
+          <Tab>Operations</Tab>
+          <Tab>Role Scopes</Tab>
+          <Tab>Sources</Tab>
+          <Tab>Locations</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -34,9 +33,6 @@ const StockCommodityTabs: React.FC = () => {
           </TabPanel>
           <TabPanel>
             <StockLocations />
-          </TabPanel>
-          <TabPanel>
-            <StockItems />
           </TabPanel>
         </TabPanels>
       </Tabs>

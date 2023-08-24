@@ -1,11 +1,19 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { isDesktop, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-items-table.scss";
-import { DataTableSkeleton, Link, Tile } from "@carbon/react";
-import { ResourceRepresentation } from "../core/api/api";
+import {
+  Button,
+  DataTableSkeleton,
+  Link,
+  TableToolbarAction,
+  TableToolbarMenu,
+  TableToolbarSearch,
+  Tile,
+} from "@carbon/react";
 import { useStockItemsPages } from "./stock-items-table.resource";
 import DataList from "../core/components/table/table.component";
+import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
+import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
 
 interface StockItemsTableProps {
   from?: string;
@@ -14,11 +22,31 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { isLoading, items, paginatedQueueEntries, tableHeaders } =
-    useStockItemsPages({ v: ResourceRepresentation.Full });
+  const {
+    isLoading,
+    items,
+    tableHeaders,
+    setSearchString,
+    setDrug,
+    isDrug,
+    totalCount,
+    setCurrentPage,
+  } = useStockItemsPages();
+
+  const handleImport = () => {
+    // setShowImport(true);
+  };
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
+
+  const createStockItem = () => {
+    // search.refetch()
+  };
 
   const tableRows = useMemo(() => {
-    return paginatedQueueEntries?.map((stockItem) => ({
+    return items?.map((stockItem) => ({
       ...stockItem,
       id: stockItem?.uuid,
       key: `key-${stockItem?.uuid}`,
@@ -45,14 +73,48 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             }`
           : "",
     }));
-  }, [paginatedQueueEntries, t]);
+  }, [items, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
   if (items?.length) {
-    return <DataList columns={tableHeaders} data={tableRows} />;
+    return (
+      <DataList
+        columns={tableHeaders}
+        data={tableRows}
+        totalItems={totalCount}
+        goToPage={setCurrentPage}
+      >
+        {({ onInputChange }) => (
+          <>
+            <TableToolbarSearch persistent onChange={onInputChange} />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <FilterStockItems
+                filterType={isDrug}
+                changeFilterType={setDrug}
+              />
+            </div>
+            <Button onClick={handleImport} size="sm" kind="ghost">
+              {t("stockmanagement.import", "Import")}
+            </Button>
+            <TableToolbarMenu>
+              <TableToolbarAction onClick={handleRefresh}>
+                Refresh
+              </TableToolbarAction>
+            </TableToolbarMenu>
+            <AddStockItemActionButton />
+          </>
+        )}
+      </DataList>
+    );
   }
 
   return (

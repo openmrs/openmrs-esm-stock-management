@@ -25,16 +25,18 @@ export type ConceptFilterCriteria = ResourceFilterCriteria;
 export type LocationFilterCriteria = ResourceFilterCriteria;
 
 // getLocations
-export function useLocations(filter: LocationFilterCriteria) {
+export function useStockLocations(filter: LocationFilterCriteria) {
   const apiUrl = `ws/rest/v1/location${toQueryParams(filter, false)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<OpenMRSLocation> },
+    {
+      data: PageableResult<OpenMRSLocation>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data?.data || <PageableResult<OpenMRSLocation>>{},
-    isLoading,
-    isError: error,
+    locations: data?.data || <PageableResult<OpenMRSLocation>>{},
+    isErrorLocation: error,
+    isLoadingLocations: isLoading,
   };
 }
 
@@ -42,7 +44,9 @@ export function useLocations(filter: LocationFilterCriteria) {
 export function useLocationWithIdByUuid(id: string) {
   const apiUrl = `ws/rest/v1/stockmanagement/location/${id}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<OpenMRSLocation> },
+    {
+      data: PageableResult<OpenMRSLocation>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
@@ -71,7 +75,9 @@ export function useLocationTags(q: string) {
     q && q.length > 0 ? "&q=" + encodeURIComponent(q) : ""
   }`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<OpenMRSLocationTag> },
+    {
+      data: PageableResult<OpenMRSLocationTag>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
@@ -85,11 +91,13 @@ export function useLocationTags(q: string) {
 export function useRoles(filter: ResourceFilterCriteria) {
   const apiUrl = `ws/rest/v1/role${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<Role> },
+    {
+      data: PageableResult<Role>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<Role>>{},
     isLoading,
     isError: error,
   };
@@ -98,12 +106,14 @@ export function useRoles(filter: ResourceFilterCriteria) {
 // getStockOperationTypes
 export function useStockOperationTypes() {
   const apiUrl = `ws/rest/v1/stockmanagement/stockoperationtype?v=default`;
-  const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockOperationType> },
+  const { data, isLoading, error } = useSWR<
+    {
+      data: PageableResult<StockOperationType>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    types: data?.data || <PageableResult<StockOperationType>>{},
     isLoading,
     isError: error,
   };
@@ -113,11 +123,13 @@ export function useStockOperationTypes() {
 export function useUsers(filter: UserFilterCriteria) {
   const apiUrl = `ws/rest/v1/user${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<User> },
+    {
+      data: PageableResult<User>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<User>>{},
     isLoading,
     isError: error,
   };
@@ -126,10 +138,12 @@ export function useUsers(filter: UserFilterCriteria) {
 // getUser
 export function useUser(id: string) {
   const apiUrl = `ws/rest/v1/user${id}`;
-  const { data, error, isLoading } = useSWR<{ data: User }, Error>(
-    apiUrl,
-    openmrsFetch
-  );
+  const { data, error, isLoading } = useSWR<
+    {
+      data: User;
+    },
+    Error
+  >(apiUrl, openmrsFetch);
   return {
     items: data.data ? data.data : {},
     isLoading,
@@ -139,13 +153,15 @@ export function useUser(id: string) {
 
 // getConceptById
 export function useConceptById(id: string) {
-  const apiUrl = `ws/rest/v1/concept${id}`;
-  const { data, error, isLoading } = useSWR<{ data: Concept }, Error>(
-    apiUrl,
-    openmrsFetch
-  );
+  const apiUrl = `ws/rest/v1/concept/${id}`;
+  const { data, error, isLoading } = useSWR<
+    {
+      data: Concept;
+    },
+    Error
+  >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : {},
+    items: data?.data || <Concept>{},
     isLoading,
     isError: error,
   };
@@ -155,7 +171,9 @@ export function useConceptById(id: string) {
 export function useParties() {
   const apiUrl = `ws/rest/v1/stockmanagement/party?v=default`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<Party> },
+    {
+      data: PageableResult<Party>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
@@ -169,11 +187,13 @@ export function useParties() {
 export function useDrugs(filter: DrugFilterCriteria) {
   const apiUrl = `ws/rest/v1/drug${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<Drug> },
+    {
+      data: PageableResult<Drug>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<Drug>>{},
     isLoading,
     isError: error,
   };
@@ -183,7 +203,9 @@ export function useDrugs(filter: DrugFilterCriteria) {
 export function useConcepts(filter: ConceptFilterCriteria) {
   const apiUrl = `ws/rest/v1/concept${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<Concept> },
+    {
+      data: PageableResult<Concept>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
@@ -197,7 +219,9 @@ export function useConcepts(filter: ConceptFilterCriteria) {
 export function usePatients(filter: ConceptFilterCriteria) {
   const apiUrl = `ws/rest/v1/patient${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<Patient> },
+    {
+      data: PageableResult<Patient>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {

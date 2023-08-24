@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./table.component.scss";
 import { saveAs } from "file-saver";
+import { DataTableRenderProps } from "./types";
 
 type FilterProps = {
   rowIds: Array<string>;
@@ -37,9 +38,18 @@ type FilterProps = {
 interface ListProps {
   columns: any;
   data: any;
+  children?: (renderProps: DataTableRenderProps) => React.ReactElement;
+  totalItems?: number;
+  goToPage?: (page: number) => void;
 }
 
-const DataList: React.FC<ListProps> = ({ columns, data }) => {
+const DataList: React.FC<ListProps> = ({
+  columns,
+  data,
+  children,
+  totalItems,
+  goToPage,
+}) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const [allRows, setAllRows] = useState([]);
@@ -108,7 +118,7 @@ const DataList: React.FC<ListProps> = ({ columns, data }) => {
         headers={columns}
         filterRows={handleFilter}
         overflowMenuOnHover={isDesktop(layout)}
-        size={isTablet ? "lg" : "sm"}
+        size={isTablet ? "lg" : "md"}
         useZebraStyles
       >
         {({ rows, headers, getHeaderProps, getTableProps, onInputChange }) => (
@@ -117,39 +127,46 @@ const DataList: React.FC<ListProps> = ({ columns, data }) => {
               <TableToolbar
                 style={{
                   position: "static",
-                  height: "3rem",
                   overflow: "visible",
                   backgroundColor: "color",
                 }}
               >
                 <TableToolbarContent className={styles.toolbarContent}>
-                  <OverflowMenu
-                    size="sm"
-                    kind="tertiary"
-                    renderIcon={DocumentDownload}
-                    iconDescription="Download As"
-                    focusTrap={false}
-                  >
-                    <OverflowMenuItem
-                      itemText="Download As CSV"
-                      onClick={handleExport}
-                    />
-                    <OverflowMenuItem
-                      itemText="Download As PDF"
-                      onClick={handleExport}
-                    />
-                    <OverflowMenuItem
-                      itemText="Download As Json"
-                      onClick={handleExport}
-                    />
-                  </OverflowMenu>
-                  <TableToolbarSearch
-                    className={styles.patientListSearch}
-                    expanded
-                    onChange={onInputChange}
-                    placeholder={t("searchThisList", "Search this list")}
-                    size="sm"
-                  />
+                  {children ? (
+                    children({
+                      onInputChange,
+                    })
+                  ) : (
+                    <>
+                      <OverflowMenu
+                        size="sm"
+                        kind="tertiary"
+                        renderIcon={DocumentDownload}
+                        iconDescription="Download As"
+                        focusTrap={false}
+                      >
+                        <OverflowMenuItem
+                          itemText="Download As CSV"
+                          onClick={handleExport}
+                        />
+                        <OverflowMenuItem
+                          itemText="Download As PDF"
+                          onClick={handleExport}
+                        />
+                        <OverflowMenuItem
+                          itemText="Download As Json"
+                          onClick={handleExport}
+                        />
+                      </OverflowMenu>
+                      <TableToolbarSearch
+                        className={styles.patientListSearch}
+                        expanded
+                        onChange={onInputChange}
+                        placeholder={t("searchThisList", "Search this list")}
+                        size="sm"
+                      />
+                    </>
+                  )}
                 </TableToolbarContent>
               </TableToolbar>
               <Table {...getTableProps()}>
@@ -189,13 +206,17 @@ const DataList: React.FC<ListProps> = ({ columns, data }) => {
                 page={currentPage}
                 pageSize={currentPageSize}
                 pageSizes={pageSizes}
-                totalItems={list?.length}
+                totalItems={totalItems || list?.length}
                 className={styles.pagination}
                 onChange={({ pageSize, page }) => {
                   if (pageSize !== currentPageSize) {
                     setPageSize(pageSize);
                   }
                   if (page !== currentPage) {
+                    if (goToPage) {
+                      goToPage(page);
+                      return;
+                    }
                     goTo(page);
                   }
                 }}
