@@ -41,6 +41,7 @@ interface ListProps {
   children?: (renderProps: DataTableRenderProps) => React.ReactElement;
   totalItems?: number;
   goToPage?: (page: number) => void;
+  hasToolbar?: boolean;
 }
 
 const DataList: React.FC<ListProps> = ({
@@ -49,6 +50,7 @@ const DataList: React.FC<ListProps> = ({
   children,
   totalItems,
   goToPage,
+  hasToolbar = true,
 }) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
@@ -124,51 +126,53 @@ const DataList: React.FC<ListProps> = ({
         {({ rows, headers, getHeaderProps, getTableProps, onInputChange }) => (
           <div>
             <TableContainer className={styles.tableContainer}>
-              <TableToolbar
-                style={{
-                  position: "static",
-                  overflow: "visible",
-                  backgroundColor: "color",
-                }}
-              >
-                <TableToolbarContent className={styles.toolbarContent}>
-                  {children ? (
-                    children({
-                      onInputChange,
-                    })
-                  ) : (
-                    <>
-                      <OverflowMenu
-                        size="sm"
-                        kind="tertiary"
-                        renderIcon={DocumentDownload}
-                        iconDescription="Download As"
-                        focusTrap={false}
-                      >
-                        <OverflowMenuItem
-                          itemText="Download As CSV"
-                          onClick={handleExport}
+              {hasToolbar && (
+                <TableToolbar
+                  style={{
+                    position: "static",
+                    overflow: "visible",
+                    backgroundColor: "color",
+                  }}
+                >
+                  <TableToolbarContent className={styles.toolbarContent}>
+                    {children ? (
+                      children({
+                        onInputChange,
+                      })
+                    ) : (
+                      <>
+                        <OverflowMenu
+                          size="sm"
+                          kind="tertiary"
+                          renderIcon={DocumentDownload}
+                          iconDescription="Download As"
+                          focusTrap={false}
+                        >
+                          <OverflowMenuItem
+                            itemText="Download As CSV"
+                            onClick={handleExport}
+                          />
+                          <OverflowMenuItem
+                            itemText="Download As PDF"
+                            onClick={handleExport}
+                          />
+                          <OverflowMenuItem
+                            itemText="Download As Json"
+                            onClick={handleExport}
+                          />
+                        </OverflowMenu>
+                        <TableToolbarSearch
+                          className={styles.patientListSearch}
+                          expanded
+                          onChange={onInputChange}
+                          placeholder={t("searchThisList", "Search this list")}
+                          size="sm"
                         />
-                        <OverflowMenuItem
-                          itemText="Download As PDF"
-                          onClick={handleExport}
-                        />
-                        <OverflowMenuItem
-                          itemText="Download As Json"
-                          onClick={handleExport}
-                        />
-                      </OverflowMenu>
-                      <TableToolbarSearch
-                        className={styles.patientListSearch}
-                        expanded
-                        onChange={onInputChange}
-                        placeholder={t("searchThisList", "Search this list")}
-                        size="sm"
-                      />
-                    </>
-                  )}
-                </TableToolbarContent>
-              </TableToolbar>
+                      </>
+                    )}
+                  </TableToolbarContent>
+                </TableToolbar>
+              )}
               <Table {...getTableProps()}>
                 <TableHead>
                   <TableRow>
