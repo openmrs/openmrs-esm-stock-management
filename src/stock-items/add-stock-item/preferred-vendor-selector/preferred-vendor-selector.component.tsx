@@ -1,14 +1,14 @@
-import React, { forwardRef, ReactNode } from "react";
-import { ComboBox, TextInputSkeleton } from "@carbon/react";
-import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
-import { DISPENSING_UNITS_CONCEPT_ID } from "../../../constants";
+import React, { ReactNode } from "react";
 import { Concept } from "../../../core/api/types/concept/Concept";
 import { Control, Controller, FieldValues } from "react-hook-form";
-import { Drug } from "../../../core/api/types/concept/Drug";
+import { ComboBox, TextInputSkeleton } from "@carbon/react";
+import { useStockSources } from "../../../stock-sources/stock-sources.resource";
+import { ResourceRepresentation } from "../../../core/api/api";
+import { StockSource } from "../../../core/api/types/stockOperation/StockSource";
 
-interface DispensingUnitSelectorProps<T> {
-  dispensingUnitUuid?: string;
-  onDispensingUnitChange?: (unit: Concept) => void;
+interface PreferredVendorSelectorProps<T> {
+  preferredVendorUuid?: string;
+  onPreferredVendorChange?: (unit: StockSource) => void;
   title?: string;
   placeholder?: string;
   invalid?: boolean;
@@ -20,11 +20,15 @@ interface DispensingUnitSelectorProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const DispensingUnitSelector = <T,>(props: DispensingUnitSelectorProps<T>) => {
+const PreferredVendorSelector = <T,>(
+  props: PreferredVendorSelectorProps<T>
+) => {
   const {
-    items: { setMembers: dispensingUnits },
+    items: { results: sourcesList },
     isLoading,
-  } = useConceptById(DISPENSING_UNITS_CONCEPT_ID);
+  } = useStockSources({
+    v: ResourceRepresentation.Default,
+  });
 
   if (isLoading) return <TextInputSkeleton />;
 
@@ -40,20 +44,19 @@ const DispensingUnitSelector = <T,>(props: DispensingUnitSelectorProps<T>) => {
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}
-          items={dispensingUnits || []}
-          onChange={(data: { selectedItem: Concept }) => {
-            props.onDispensingUnitChange?.(data.selectedItem);
+          items={sourcesList || []}
+          onChange={(data: { selectedItem: StockSource }) => {
+            props.onPreferredVendorChange?.(data.selectedItem);
             onChange(data.selectedItem.uuid);
           }}
           initialSelectedItem={
-            dispensingUnits?.find((p) => p.uuid === props.dispensingUnitUuid) ||
-            {}
+            sourcesList?.find((p) => p.uuid === props.preferredVendorUuid) || {}
           }
           itemToString={(item?: Concept) =>
-            item && item?.display ? `${item?.display}` : ""
+            item && item?.name ? `${item?.name}` : ""
           }
           shouldFilterItem={() => true}
-          value={dispensingUnits?.find((p) => p.uuid === value)?.display ?? ""}
+          value={sourcesList?.find((p) => p.uuid === value)?.name ?? ""}
           placeholder={props.placeholder}
           ref={ref}
           invalid={props.invalid}
@@ -64,4 +67,4 @@ const DispensingUnitSelector = <T,>(props: DispensingUnitSelectorProps<T>) => {
   );
 };
 
-export default DispensingUnitSelector;
+export default PreferredVendorSelector;

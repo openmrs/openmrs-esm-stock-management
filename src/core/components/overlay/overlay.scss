@@ -90,3 +90,8 @@
     overflow-y: auto;
   }
 }
+
+/* Combo */
+:global(.cds--list-box__menu) {
+  z-index: 1000;
+}
