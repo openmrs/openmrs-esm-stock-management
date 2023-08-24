@@ -14,7 +14,7 @@ const StockCommodityTabs: React.FC = () => {
         <TabList contained fullWidth>
           <Tab>Items</Tab>
           <Tab>Operations</Tab>
-          <Tab>User Role Scopes</Tab>
+          <Tab>Role Scopes</Tab>
           <Tab>Sources</Tab>
           <Tab>Locations</Tab>
         </TabList>
