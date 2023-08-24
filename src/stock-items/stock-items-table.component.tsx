@@ -9,11 +9,15 @@ import {
   TableToolbarMenu,
   TableToolbarSearch,
   Tile,
+  Tooltip,
 } from "@carbon/react";
 import { useStockItemsPages } from "./stock-items-table.resource";
 import DataList from "../core/components/table/table.component";
 import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
 import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
+import { Edit } from "@carbon/react/icons";
+import { ResourceRepresentation } from "../core/api/api";
+import { launchAddOrEditDialog } from "./stock-item.utils";
 
 interface StockItemsTableProps {
   from?: string;
@@ -26,12 +30,11 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     isLoading,
     items,
     tableHeaders,
-    setSearchString,
     setDrug,
     isDrug,
     totalCount,
     setCurrentPage,
-  } = useStockItemsPages();
+  } = useStockItemsPages(ResourceRepresentation.Full);
 
   const handleImport = () => {
     // setShowImport(true);
@@ -41,19 +44,13 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     // search.refetch()
   };
 
-  const createStockItem = () => {
-    // search.refetch()
-  };
-
   const tableRows = useMemo(() => {
     return items?.map((stockItem) => ({
       ...stockItem,
       id: stockItem?.uuid,
       key: `key-${stockItem?.uuid}`,
       uuid: `${stockItem?.uuid}`,
-      type: stockItem?.drugUuid
-        ? t("stockmanagement.drug", "Drug")
-        : t("stockmanagement.other", "Other"),
+      type: stockItem?.drugUuid ? t("drug", "Drug") : t("other", "Other"),
       genericName: (
         <Link to={URL_STOCK_ITEM(stockItem?.uuid || "")}>
           {" "}
@@ -72,6 +69,20 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
               stockItem?.reorderLevelUoMName
             }`
           : "",
+      actions: (
+        <Tooltip align="bottom" label="Edit Stock Item">
+          <Button
+            kind="ghost"
+            size="md"
+            onClick={() => {
+              stockItem.isDrug = !!stockItem.drugUuid;
+              launchAddOrEditDialog(stockItem, true);
+            }}
+            iconDescription={t("editStockItem", "Edit Stock Item")}
+            renderIcon={(props) => <Edit size={16} {...props} />}
+          ></Button>
+        </Tooltip>
+      ),
     }));
   }, [items, t]);
 
