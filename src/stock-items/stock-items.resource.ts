@@ -66,7 +66,9 @@ export interface StockRuleFilter extends ResourceFilterCriteria {
 export function useStockItems(filter: StockItemFilter) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockitem${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockItemDTO> },
+    {
+      data: PageableResult<StockItemDTO>;
+    },
     Error
   >(apiUrl, openmrsFetch);
 
@@ -83,7 +85,9 @@ export function useStockItemTransactions(filter: StockItemTransactionFilter) {
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockItemTransactionDTO> },
+    {
+      data: PageableResult<StockItemTransactionDTO>;
+    },
     Error
   >(apiUrl, openmrsFetch);
 
@@ -100,7 +104,9 @@ export function useStockItemInventory(filter: StockItemInventoryFilter) {
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
-    { data: StockInventoryResult },
+    {
+      data: StockInventoryResult;
+    },
     Error
   >(apiUrl, openmrsFetch);
 
@@ -115,7 +121,9 @@ export function useStockItemInventory(filter: StockItemInventoryFilter) {
 export function useStockOperationItemsCost(filter: string) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockOperationItemCost> },
+    {
+      data: PageableResult<StockOperationItemCost>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
@@ -131,7 +139,9 @@ export function useStockBatches(filter: StockBatchFilter) {
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockBatchDTO> },
+    {
+      data: PageableResult<StockBatchDTO>;
+    },
     Error
   >(apiUrl, openmrsFetch);
   return {
@@ -147,7 +157,9 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockItemPackagingUOMDTO> },
+    {
+      data: PageableResult<StockItemPackagingUOMDTO>;
+    },
     Error
   >(apiUrl, openmrsFetch);
 
@@ -161,10 +173,12 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
 // getStockItem
 export function useStockItem(id: string) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockitem/${id}?v=full`;
-  const { data, error, isLoading } = useSWR<{ data: StockItemDTO }, Error>(
-    apiUrl,
-    openmrsFetch
-  );
+  const { data, error, isLoading } = useSWR<
+    {
+      data: StockItemDTO;
+    },
+    Error
+  >(apiUrl, openmrsFetch);
   return {
     item: data?.data || <StockItemDTO>{},
     isLoading,
@@ -214,7 +228,7 @@ export function deleteStockItemPackagingUnit(id: string) {
 export function createStockItem(item: StockItemDTO) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockitem`;
   const abortController = new AbortController();
-
+  delete item.isDrug;
   return openmrsFetch(apiUrl, {
     method: "POST",
     headers: {
@@ -288,7 +302,9 @@ export function importStockItem(item: FormData) {
 export function useStockRules(filter: StockRuleFilter) {
   const apiUrl = `ws/rest/v1/stockmanagement/stockrule${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockRule> },
+    {
+      data: PageableResult<StockRule>;
+    },
     Error
   >(apiUrl, openmrsFetch);
 
