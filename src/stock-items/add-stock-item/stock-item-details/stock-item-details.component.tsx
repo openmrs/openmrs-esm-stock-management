@@ -1,10 +1,10 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import addStockStyles from "../add-stock-item.scss";
 import styles from "./stock-item-details.scss";
 import { Save } from "@carbon/react/icons";
 
-import { Button, FormGroup, RadioButton, InlineLoading } from "@carbon/react";
+import { Button, FormGroup, InlineLoading, RadioButton } from "@carbon/react";
 import { StockItemDTO } from "../../../core/api/types/stockItem/StockItem";
 import DrugSelector from "../drug-selector/drug-selector.component";
 import { useForm } from "react-hook-form";
@@ -19,30 +19,34 @@ import ControlledTextInput from "../../../core/components/carbon/controlled-text
 import DispensingUnitSelector from "../dispensing-unit-selector/dispensing-unit-selector.component";
 import PreferredVendorSelector from "../preferred-vendor-selector/preferred-vendor-selector.component";
 import StockItemCategorySelector from "../stock-item-category-selector/stock-item-category-selector.component";
+import StockItemUnitsEdit from "../stock-item-units-edit/stock-item-units-edit.component";
+import { SaveStockItem } from "../../types";
+import ConceptsSelector from "../concepts-selector/concepts-selector.component";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
-  onSave: (item: StockItemDTO) => Promise<void>;
+  onSave: SaveStockItem;
+  isEditing?: boolean;
 }
 
 const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
-  ({ model, onSave }, ref) => {
+  ({ model, onSave, isEditing }, ref) => {
     const { t } = useTranslation();
-    const {
-      handleSubmit,
-      control,
-      setValue,
-      formState: { errors },
-    } = useForm<StockItemFormData>({
+    const { handleSubmit, control, formState } = useForm<StockItemFormData>({
       defaultValues: model,
       mode: "all",
       resolver: zodResolver(stockItemDetailsSchema),
     });
 
-    const handleSave = async (model: StockItemDTO) => {
+    const { errors } = formState;
+
+    const handleSave = async (item: StockItemDTO) => {
       try {
         setIsSaving(true);
-        await onSave(model);
+
+        // Restore uuid
+        item.uuid = model.uuid;
+        await onSave(item);
       } catch (e) {
         // Show notification
       } finally {
@@ -53,6 +57,11 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     const [isSaving, setIsSaving] = useState(false);
     const [isDrug, setIsDrug] = useState<boolean | null>();
     const [hasExpiration, setHasExpiration] = useState<boolean | null>();
+
+    useEffect(() => {
+      setIsDrug(model.isDrug);
+      setHasExpiration(model.hasExpiration);
+    }, [model.hasExpiration, model.isDrug]);
 
     return (
       <form className={`${addStockStyles.formContainer} ${styles.form}`}>
@@ -86,15 +95,17 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
           />
         )}
-        {/*<ComboBox titleText={t('stockmanagement.pleasespecify')}*/}
-        {/*          invalid={touched.conceptUuid && !!errors.conceptUuid} invalidText={t2(errors.conceptUuid)}*/}
-        {/*          name='conceptUuid' className='select-field' id="conceptUuid"*/}
-        {/*          items={(conceptsList?.results ?? []) as any}*/}
-        {/*          onChange={onConceptChanged}*/}
-        {/*          onInputChange={handleConceptSearch}*/}
-        {/*          initialSelectedItem={conceptsList?.results?.find(p => p.uuid === model.conceptUuid) ?? ""}*/}
-        {/*          itemToString={item => item ? `${item.display}` : ""}*/}
-        {/*          placeholder={t("stockmanagement.stockitem.edit.conceptholder")} />*/}
+        {isDrug != undefined && !isDrug && (
+          <ConceptsSelector
+            name="conceptUuid"
+            controllerName="conceptUuid"
+            control={control}
+            title={t("pleaseSpecify", "Please specify:")}
+            placeholder={t("chooseAnItem", "Choose an item")}
+            invalid={!!errors.drugUuid}
+            invalidText={errors.drugUuid && errors?.drugUuid?.message}
+          />
+        )}
         <ControlledTextInput
           id="commonName"
           name="commonName"
@@ -201,6 +212,13 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             invalidText={
               errors.dispensingUnitUuid && errors?.dispensingUnitUuid?.message
             }
+          />
+        )}
+        {isDrug && isEditing && (
+          <StockItemUnitsEdit
+            control={control}
+            formState={formState}
+            stockItemUuid={model.uuid}
           />
         )}
 

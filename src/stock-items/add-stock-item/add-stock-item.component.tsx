@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import StockItemDetails from "./stock-item-details/stock-item-details.component";
 import { TabItem } from "../../core/components/tabs/types";
@@ -9,13 +9,12 @@ import StockQuantities from "./quantities/quantities.component";
 import StockRules from "./stock-rules/stock-rules.component";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
-import { useForm } from "react-hook-form";
-import { initialValues } from "./add-stock-item.resource";
+import { SaveStockItem } from "../types";
 
 interface AddStockItemProps {
   isEditing?: boolean;
   model?: StockItemDTO;
-  onSave?: (item: StockItemDTO) => Promise<void>;
+  onSave?: SaveStockItem;
 }
 
 const AddEditStockItem: React.FC<AddStockItemProps> = ({
@@ -28,26 +27,28 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
   const tabs: TabItem[] = [
     {
       name: t("stockItemDetails", "Stock Item Details"),
-      component: <StockItemDetails model={model} onSave={onSave} />,
+      component: (
+        <StockItemDetails model={model} onSave={onSave} isEditing={isEditing} />
+      ),
     },
     {
       name: t("packagingUnits", "Packaging Units"),
-      component: <PackagingUnits />,
+      component: <PackagingUnits stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("transactions", "Transactions"),
-      component: <Transactions />,
+      component: <Transactions stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("batchInformation", "Batch Information"),
-      component: <BatchInformation />,
+      component: <BatchInformation stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("quantities", "Quantities"),
-      component: <StockQuantities />,
+      component: <StockQuantities stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },
     {
