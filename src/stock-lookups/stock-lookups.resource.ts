@@ -209,7 +209,7 @@ export function useConcepts(filter: ConceptFilterCriteria) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<Concept>>{},
     isLoading,
     isError: error,
   };
