@@ -129,7 +129,7 @@ export function useUsers(filter: UserFilterCriteria) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<User>>{},
     isLoading,
     isError: error,
   };
@@ -177,7 +177,7 @@ export function useParties() {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<Party>>{},
     isLoading,
     isError: error,
   };
