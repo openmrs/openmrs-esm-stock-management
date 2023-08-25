@@ -1,67 +1,42 @@
-import { StockSource } from "../../core/api/types/stockOperation/StockSource";
-import {
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Form,
-  TextInput,
-} from "@carbon/react";
 import React from "react";
-import styles from "./add-stock-operation.scss";
-import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
-import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
+import { SaveStockOperation } from "../../stock-items/types";
+import { useTranslation } from "react-i18next";
+import { TabItem } from "../../core/components/tabs/types";
+import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
+import BaseOperationDetails from "./base-operation-details.component";
+import StockItemsAddition from "./stock-items-addition.component";
+import StockOperationSubmission from "./stock-operation-submission.component";
+import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
 
 interface AddStockOperationProps {
-  source: StockSource;
-  closeModal: () => void;
+  isEditing?: boolean;
+  model?: StockOperationDTO;
+  onSave?: SaveStockOperation;
+  operation: StockOperationType;
 }
 
-const AddStockOperation: React.FC = () => {
-  // get stock sources
-  const { items, isLoading, isError } = useConceptById(
-    STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
-  );
+const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
+  const { t } = useTranslation();
 
-  return (
-    <div>
-      <Form>
-        <ModalHeader />
-        <ModalBody>
-          <section className={styles.section}>
-            <TextInput
-              id="fullname"
-              type="text"
-              labelText="FullName"
-              size="md"
-              placeholder="e.g National Medical Stores"
-            />
-          </section>
-          <section className={styles.section}>
-            <TextInput
-              id="acronym"
-              type="text"
-              size="md"
-              placeholder="e.g NMS"
-              labelText="Acronym/Code"
-            />
-          </section>
-          <section className={styles.section}>
-            <TextInput
-              id="sourceType"
-              type="text"
-              size="md"
-              labelText="Source type"
-            />
-          </section>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary">Cancel</Button>
-          <Button type="submit">Save</Button>
-        </ModalFooter>
-      </Form>
-    </div>
-  );
+  const tabs: TabItem[] = [
+    {
+      name: `${props.operation.name} Details`,
+      component: <BaseOperationDetails {...props} />,
+    },
+    {
+      name: t("stockItems", "Stock Items"),
+      component: <StockItemsAddition {...props} />,
+      disabled: !props.isEditing,
+    },
+    {
+      name: t("submitOrComplete", "Submit/Complete"),
+      component: <StockOperationSubmission {...props} />,
+      disabled: !props.isEditing,
+    },
+  ];
+
+  return <VerticalTabs tabs={tabs} />;
 };
 
 export default AddStockOperation;
