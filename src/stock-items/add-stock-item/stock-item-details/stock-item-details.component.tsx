@@ -64,7 +64,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     }, [model.hasExpiration, model.isDrug]);
 
     return (
-      <form className={`${addStockStyles.formContainer} ${styles.form}`}>
+      <form className={`formContainer verticalForm`}>
         <FormGroup
           className="clear-margin-bottom"
           legendText={t("itemType", "Item Type")}

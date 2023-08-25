@@ -145,6 +145,30 @@ nav :global(.bx--accordion__content) > a {
   margin: 0 !important;
   padding: 0 !important;
 }
+
 .section {
   margin: spacing.$spacing-03;
 }
+
+:global(.cds--table-sort__description) {
+  display: none;
+}
+
+:global(.formContainer) {
+  height: calc(100vh - 100px) !important;
+  overflow: scroll;
+  padding: 0 1rem;
+}
+
+:global(.verticalForm) {
+  display: flex;
+  grid-row-gap: 2em;
+  padding-top: 1rem;
+  align-content: space-between;
+  flex-direction: column;
+
+  :global(.cds--form-item) {
+    flex: none !important;
+  }
+}
+
