@@ -1,10 +1,9 @@
 import React from "react";
 import { ConfigurableLink } from "@openmrs/esm-framework";
-import { spaBasePath } from "./constants";
 
 export default function StockManagementLink() {
   return (
-    <ConfigurableLink to={spaBasePath}>
+    <ConfigurableLink to={window.getOpenmrsSpaBase()}>
       <span>Commodity</span>
     </ConfigurableLink>
   );
