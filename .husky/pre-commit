@@ -1,7 +1,4 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-set -e  # die on error
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
 yarn pretty-quick --staged
-yarn turbo run extract-translations
