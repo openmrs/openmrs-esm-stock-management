@@ -1,13 +1,12 @@
 import React from "react";
 import { useStockLocationPages } from "./stock-locations-table.resource";
 import {
-  DataTableSkeleton,
-  TableToolbarSearch,
   Button,
-  TableToolbarMenu,
+  DataTableSkeleton,
   TableToolbarAction,
+  TableToolbarMenu,
+  TableToolbarSearch,
   Tile,
-  Link,
 } from "@carbon/react";
 import styles from "../stock-items/stock-items-table.scss";
 import { ResourceRepresentation } from "../core/api/api";
@@ -21,9 +20,10 @@ interface StockLocationsTableProps {
 const StockLocations: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { tableHeaders, tableRows, items } = useStockLocationPages({
-    v: ResourceRepresentation.Full,
-  });
+  const { tableHeaders, tableRows, items, isLoadingLocations } =
+    useStockLocationPages({
+      v: ResourceRepresentation.Full,
+    });
 
   const handleImport = () => {
     // setShowImport(true);
@@ -37,9 +37,9 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
     // search.refetch()
   };
 
-  // if (isLoading) {
-  //   return <DataTableSkeleton role="progressbar" />;
-  // }
+  if (isLoadingLocations) {
+    return <DataTableSkeleton role="progressbar" />;
+  }
 
   if (items?.length) {
     return (
