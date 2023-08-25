@@ -1,4 +1,3 @@
 # UgandaEMR Stock Management
 
-This is a frontend module for managing a stock of essential medicines and drugs built for UgandaEMR+.
-
+A frontend module that handles stock management in UgandaEMR+. This frontend module uses the [Community backend module](https://github.com/METS-Programme/openmrs-module-ugandaemr-commodity).

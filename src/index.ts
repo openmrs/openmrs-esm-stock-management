@@ -4,7 +4,7 @@ import { configSchema } from "./config-schema";
 const moduleName = "@openmrs/esm-template-app";
 
 const options = {
-  featureName: "commodity-management",
+  featureName: "stock-management",
   moduleName,
 };
 
@@ -21,7 +21,7 @@ export const stockManagement = getAsyncLifecycle(
 );
 
 export const stockManagementLink = getAsyncLifecycle(
-  () => import("./stock-management-link.commodity"),
+  () => import("./stock-management-link.component"),
   options
 );
 
