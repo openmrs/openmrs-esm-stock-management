@@ -3,14 +3,13 @@ import { useTranslation } from "react-i18next";
 import { Layer, ClickableTile } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 
-const StockManagementAdminCardLink: React.FC = () => {
+const StockManagementCardLink: React.FC = () => {
   const { t } = useTranslation();
-  const header = t("manageForms", "Manage Forms");
+  const header = t("manageStock", "Manage stock");
   return (
     <Layer>
       <ClickableTile
-        href={`${window.spaBase}/stock-management`}
-        target="_blank"
+        href={window.getOpenmrsSpaBase() + "stock-management"}
         rel="noopener noreferrer"
       >
         <div>
@@ -27,4 +26,4 @@ const StockManagementAdminCardLink: React.FC = () => {
   );
 };
 
-export default StockManagementAdminCardLink;
+export default StockManagementCardLink;

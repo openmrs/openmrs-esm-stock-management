@@ -16,12 +16,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  cursor: pointer;
 }
 
 .right-justified-items {
   @include type.type-style('body-compact-02');
   color: $text-02;
-  padding-top: 1rem;
+  margin: 0.5rem;
 }
 
 .page-name {
@@ -29,10 +30,11 @@
 }
 
 .page-labels {
-  margin-left: 8px;
-  p:first-of-type {
-    margin-bottom: 0.25rem;
-  }
+  margin: 1rem;
+}
+
+.middot {
+  margin: 0 0.5rem;
 }
 
 .date-and-location {

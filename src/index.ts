@@ -15,18 +15,18 @@ export const importTranslation = require.context(
   "lazy"
 );
 
+export const stockManagementAdminCardLink = getAsyncLifecycle(
+  () => import("./stock-management-admin-card-link.component"),
+  options
+);
+
 export const stockManagement = getAsyncLifecycle(
   () => import("./stock-management.component"),
   options
 );
 
-export const stockManagementLink = getAsyncLifecycle(
-  () => import("./stock-management-link.component"),
-  options
-);
-
 export const stockManagementDashboard = getAsyncLifecycle(
-  () => import("./dashbooard/stock-management-dashboard.component"),
+  () => import("./dashboard/stock-management-dashboard.component"),
   options
 );
 

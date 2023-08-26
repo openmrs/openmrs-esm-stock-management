@@ -15,15 +15,15 @@ export const StockManagementHeader: React.FC = () => {
       <div className={styles["left-justified-items"]}>
         <StockManagementIllustration />
         <div className={styles["page-labels"]}>
-          <Location size={16} />
-          <span className={styles.value}>{userLocation}</span>
-          <p className={styles["page-name"]}>
-            {t("appName", "Stock Management")}{" "}
-          </p>
+          <p>{t("stockManagement", "Stock Management")}</p>
+          <p className={styles["page-name"]}>{t("home", "Home")}</p>
         </div>
       </div>
       <div className={styles["right-justified-items"]}>
         <div className={styles["date-and-location"]}>
+          <Location size={16} />
+          <span className={styles.value}>{userLocation}</span>
+          <span className={styles.middot}>&middot;</span>
           <Calendar size={16} />
           <span className={styles.value}>
             {formatDate(new Date(), { mode: "standard" })}
