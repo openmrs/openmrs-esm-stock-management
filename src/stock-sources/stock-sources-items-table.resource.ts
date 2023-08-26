@@ -33,7 +33,8 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
       },
       {
         id: 4,
-        header: "actions",
+        header: "Actions",
+        key: "actions",
       },
     ],
     []

@@ -1,14 +1,13 @@
+@use '@carbon/styles/scss/colors';
 @use '@carbon/styles/scss/spacing';
 @use '@carbon/styles/scss/type';
-@import '~@openmrs/esm-styleguide/src/vars';
 
 section {
   margin: spacing.$spacing-03;
 }
 
 .sectionTitle {
-  @include type.type-style('heading-compact-02');
-  color: $text-02;
+  color: colors.$gray-70;
   margin-bottom: spacing.$spacing-04;
 }
 

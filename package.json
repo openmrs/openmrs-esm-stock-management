@@ -34,14 +34,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openmrs/openmrs-esm-template-app.git"
+    "url": "git+https://github.com/openmrs/openmrs-esm-stock-management-app.git"
   },
-  "homepage": "https://github.com/openmrs/openmrs-esm-template-app#readme",
+  "homepage": "https://github.com/openmrs/openmrs-esm-stock-management-app#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/openmrs/openmrs-esm-template-app/issues"
+    "url": "https://github.com/openmrs/openmrs-esm-stock-management-app/issues"
   },
   "dependencies": {
     "@carbon/react": "^1.33.1",

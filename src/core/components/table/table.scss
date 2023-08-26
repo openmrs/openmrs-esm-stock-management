@@ -1,6 +1,6 @@
+@use '@carbon/styles/scss/colors';
 @use '@carbon/styles/scss/spacing';
 @use '@carbon/styles/scss/type';
-@import '../../../root.scss';
 @import '~@openmrs/esm-styleguide/src/vars';
 
 .widgetContainer {
@@ -108,7 +108,7 @@ section {
 
 .sectionTitle {
   @include type.type-style('heading-compact-02');
-  color: $text-02;
+  color: colors.$gray-70;
   margin-bottom: spacing.$spacing-04;
 }
 
@@ -159,4 +159,15 @@ section {
 
 .patientListDownload {
   margin-top: 10px;
+}
+
+.content {
+  @include type.type-style('heading-compact-02');
+  color: $text-02;
+  margin-bottom: 0.5rem;
+}
+
+.helper {
+  @include type.type-style('body-compact-01');
+  color: $text-02;
 }

@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { saveAs } from "file-saver";
 import {
   DataTable,
   OverflowMenu,
@@ -21,11 +24,8 @@ import {
   useLayoutType,
   usePagination,
 } from "@openmrs/esm-framework";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "./table.component.scss";
-import { saveAs } from "file-saver";
 import { DataTableRenderProps } from "./types";
+import styles from "./table.scss";
 
 type FilterProps = {
   rowIds: Array<string>;
@@ -199,6 +199,9 @@ const DataList: React.FC<ListProps> = ({
                     <div className={styles.tileContent}>
                       <p className={styles.content}>
                         {t("No data", "No data to display")}
+                      </p>
+                      <p className={styles.helper}>
+                        {t("checkFilters", "Check the filters above")}
                       </p>
                     </div>
                   </Tile>

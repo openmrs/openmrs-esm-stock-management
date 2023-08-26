@@ -1,18 +1,15 @@
 import React from "react";
-import { useStockLocationPages } from "./stock-locations-table.resource";
-import {
-  DataTableSkeleton,
-  TableToolbarSearch,
-  Button,
-  TableToolbarMenu,
-  TableToolbarAction,
-  Tile,
-  Link,
-} from "@carbon/react";
-import styles from "../stock-items/stock-items-table.scss";
-import { ResourceRepresentation } from "../core/api/api";
-import DataList from "../core/components/table/table.component";
 import { useTranslation } from "react-i18next";
+import {
+  Button,
+  TableToolbarAction,
+  TableToolbarMenu,
+  TableToolbarSearch,
+} from "@carbon/react";
+import { ResourceRepresentation } from "../core/api/api";
+import { useStockLocationPages } from "./stock-locations-table.resource";
+import DataList from "../core/components/table/table.component";
+import EmptyState from "../empty-state.component";
 
 interface StockLocationsTableProps {
   status?: string;
@@ -61,13 +58,7 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
     );
   }
 
-  return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No stock items to display</p>
-      </Tile>
-    </div>
-  );
+  return <EmptyState msg="No stock locations to display" helper="" />;
 };
 
 export default StockLocations;
