@@ -1,10 +1,11 @@
+@use '@carbon/styles/scss/colors';
 @use '@carbon/styles/scss/spacing';
 @use '@carbon/styles/scss/type';
 @import '~@openmrs/esm-styleguide/src/vars';
 
 .heading {
   @include type.type-style('productive-heading-02');
-  color: $text-02;
+  color: colors.$gray-70;
   margin-bottom: spacing.$spacing-05;;
 }
 

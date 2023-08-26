@@ -3,7 +3,7 @@ import { Column, Grid, ProgressIndicator, ProgressStep } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { useLocations } from "@openmrs/esm-framework";
 import StockItemDetails from "./stock-item-details/stock-item-details.component";
-import rootStyles from "../../root.scss";
+import styles from "./add-stock-item.scss";
 
 interface AddStockItemProps {
   state?: string;
@@ -17,9 +17,9 @@ const AddStockItem: React.FC<AddStockItemProps> = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <Grid fullWith className={rootStyles.noSpacing}>
+    <Grid fullWith className={styles.noSpacing}>
       {/*<Row>*/}
-      <Column sm={4} md={4} lg={4} className={rootStyles.noSpacing}>
+      <Column sm={4} md={4} lg={4} className={styles.noSpacing}>
         <ProgressIndicator
           currentIndex={currentIndex}
           vertical
@@ -33,7 +33,7 @@ const AddStockItem: React.FC<AddStockItemProps> = () => {
           <ProgressStep label="Stock Rules" />
         </ProgressIndicator>
       </Column>
-      <Column sm={12} md={12} lg={12} className={rootStyles.noSpacing}>
+      <Column sm={12} md={12} lg={12} className={styles.noSpacing}>
         <StockItemDetails />
       </Column>
       {/*</Row>*/}

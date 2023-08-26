@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import { URL_STOCK_OPERATION } from "../stock-items/stock-items-table.component";
@@ -13,18 +12,18 @@ import {
   DatePickerInput,
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
-import DataList from "../core/components/table/table.component";
-import { formatDisplayDate } from "../core/utils/datetimeUtils";
-import styles from "../stock-items/stock-items-table.scss";
-import AddStockOperationActionButton from "./add-stock-operation-button.component";
-import StockOperationSourcesFilter from "./stock-operation-sources-filter/stock-operation-sources-filter.component";
-import StockOperationStatusesFilter from "./stock-operation-statuses-filter/stock-operation-statuses-filter.component";
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
   formatForDatePicker,
   today,
 } from "../constants";
+import { formatDisplayDate } from "../core/utils/datetimeUtils";
+import DataList from "../core/components/table/table.component";
+import AddStockOperationActionButton from "./add-stock-operation-button.component";
+import StockOperationSourcesFilter from "./stock-operation-sources-filter/stock-operation-sources-filter.component";
+import StockOperationStatusesFilter from "./stock-operation-statuses-filter/stock-operation-statuses-filter.component";
+import EmptyState from "../empty-state.component";
 import StockOperationOperationsFilter from "./stock-operation-operations-filter/stock-operation-operations-filter.component";
 
 interface StockOperationsTableProps {
@@ -145,13 +144,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     );
   }
 
-  return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No stock operations to display</p>
-      </Tile>
-    </div>
-  );
+  return <EmptyState msg="No stock operations to display" helper="" />;
 };
 
 export default StockOperations;

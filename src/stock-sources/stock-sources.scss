@@ -1,5 +1,6 @@
-@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/colors';
 @use '@carbon/styles/scss/spacing';
+@use '@carbon/styles/scss/type';
 @import '~@openmrs/esm-styleguide/src/vars';
 
 .container {
@@ -71,7 +72,7 @@
   }
 
   th {
-    color: $text-02;
+    color: colors.$gray-70;
   }
 
   :global(.cds--data-table) {
@@ -99,18 +100,18 @@
 
 .content {
   @include type.type-style('heading-compact-02');
-  color: $text-02;
+  color: colors.$gray-70;
   margin-bottom: 0.5rem;
 }
 
 .helper {
   @include type.type-style('body-compact-01');
-  color: $text-02;
+  color: colors.$gray-70;
 }
 
 .separator {
   @include type.type-style('body-compact-02');
-  color: $text-02;
+  color: colors.$gray-70;
   width: 80%;
   margin: 1.5rem auto;
   overflow: hidden;
@@ -162,14 +163,14 @@
 .desktopHeading {
   h4 {
     @include type.type-style('heading-compact-02');
-    color: $text-02;
+    color: colors.$gray-70;
   }
 }
 
 .tabletHeading {
   h4 {
     @include type.type-style('heading-03');
-    color: $text-02;
+    color: colors.$gray-70;
   }
 }
 

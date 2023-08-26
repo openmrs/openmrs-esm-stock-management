@@ -110,10 +110,10 @@ function StockUserRoleScopesItems() {
       <Tile className={styles.tile}>
         <div className={styles.tileContent}>
           <p className={styles.content}>
-            {t("noUserRoleScopes", "No User Scopes to display")}
+            {t("noUserRoleScopes", "No user scopes to display")}
           </p>
           <p className={styles.helper}>
-            {t("noUserRoleScopes", "Check the filters above")}
+            {t("checkFilters", "Check the filters above")}
           </p>
         </div>
         <p className={styles.separator}>{t("or", "or")}</p>
@@ -122,7 +122,7 @@ function StockUserRoleScopesItems() {
           size="sm"
           renderIcon={(props) => <Add size={16} {...props} />}
         >
-          {t("addScopestolist", "Add Scopes to list")}
+          {t("addScopesTolist", "Add scopes to list")}
         </Button>
       </Tile>
     </div>

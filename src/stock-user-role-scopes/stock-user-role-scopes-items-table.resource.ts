@@ -61,7 +61,8 @@ export default function useStockUserRoleScopesPage(
       },
       {
         id: 8,
-        header: "actions",
+        header: "Actions",
+        key: "actions",
       },
     ],
     []

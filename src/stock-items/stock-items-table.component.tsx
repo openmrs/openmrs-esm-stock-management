@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import styles from "./stock-items-table.scss";
 import {
   Button,
   DataTableSkeleton,
@@ -8,12 +7,12 @@ import {
   TableToolbarAction,
   TableToolbarMenu,
   TableToolbarSearch,
-  Tile,
 } from "@carbon/react";
 import { useStockItemsPages } from "./stock-items-table.resource";
-import DataList from "../core/components/table/table.component";
-import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
 import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
+import DataList from "../core/components/table/table.component";
+import EmptyState from "../empty-state.component";
+import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
 
 interface StockItemsTableProps {
   from?: string;
@@ -117,13 +116,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     );
   }
 
-  return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No stock items to display</p>
-      </Tile>
-    </div>
-  );
+  return <EmptyState msg="No stock items to display" helper="" />;
 };
 
 export default StockItemsTableComponent;
