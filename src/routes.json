@@ -6,11 +6,6 @@
   },
   "extensions": [
     {
-      "name": "stock-management-link",
-      "slot": "app-menu-slot",
-      "component": "stockManagementLink"
-    },
-    {
       "name": "stock-management-dashboard",
       "slot": "stock-management-dashboard-slot",
       "component": "stockManagementDashboard"
