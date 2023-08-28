@@ -5,7 +5,7 @@ import { ArrowRight } from "@carbon/react/icons";
 
 const StockManagementCardLink: React.FC = () => {
   const { t } = useTranslation();
-  const header = t("manageStock", "Manage stock");
+  const header = t("manageStock", "Manage Stock");
   return (
     <Layer>
       <ClickableTile
