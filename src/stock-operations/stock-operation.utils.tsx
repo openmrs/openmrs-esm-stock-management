@@ -12,11 +12,13 @@ import {
 } from "./stock-operations.resource";
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
+import { useLocation } from "react-router-dom";
 
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
   operation: StockOperationType,
-  isEditing = false
+  isEditing = false,
+  operations?: StockOperationType[]
 ) => {
   try {
     const response: FetchResponse<StockOperationDTO> = await (isEditing
@@ -39,7 +41,7 @@ export const addOrEditStockOperation = async (
         closeOverlay();
 
         // launch edit dialog
-        launchAddOrEditDialog(response.data, operation, true);
+        launchAddOrEditDialog(response.data, operation, true, operations);
       }
     }
   } catch (error) {
@@ -55,17 +57,33 @@ export const addOrEditStockOperation = async (
 export const launchAddOrEditDialog = (
   stockOperation: StockOperationDTO,
   operation: StockOperationType,
-  isEditing = false
+  isEditing = false,
+  operations?: StockOperationType[]
 ) => {
   launchOverlay(
-    `${isEditing ? "Edit" : "Add"} ${operation?.name || ""}`,
+    `${isEditing ? "Edit" : "New: "} ${operation?.name || ""}`,
     <AddStockOperation
       model={stockOperation}
       onSave={(stockOperation) =>
-        addOrEditStockOperation(stockOperation, operation, isEditing)
+        addOrEditStockOperation(
+          stockOperation,
+          operation,
+          isEditing,
+          operations
+        )
       }
       isEditing={isEditing}
       operation={operation}
     />
   );
 };
+
+export const useUrlQueryParams = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
+export function getStockOperationUniqueId() {
+  return `${new Date().getTime()}-${Math.random()
+    .toString(36)
+    .substring(2, 16)}`;
+}

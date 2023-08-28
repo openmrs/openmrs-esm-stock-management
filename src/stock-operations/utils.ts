@@ -67,13 +67,3 @@ export const otherUser: User = {
     display: "Other",
   },
 } as unknown as User;
-
-export const TRANSFER_OUT_OPERATION_TYPE = "transferout";
-export const DISPOSED_OPERATION_TYPE = "disposed";
-export const STOCK_ISSUE_OPERATION_TYPE = "stockissue";
-export const STOCK_TAKE_OPERATION_TYPE = "stocktake";
-export const REQUISITION_OPERATION_TYPE = "requisition";
-export const OPENING_STOCK_OPERATION_TYPE = "initial";
-export const RECEIPT_OPERATION_TYPE = "receipt";
-export const RETURN_OPERATION_TYPE = "return";
-export const ADJUSTMENT_OPERATION_TYPE = "adjustment";

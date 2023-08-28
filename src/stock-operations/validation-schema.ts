@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { StockOperationStatusTypes } from "../core/api/types/stockOperation/StockOperationStatus";
+import { OperationType } from "../core/api/types/stockOperation/StockOperationType";
 
 export const stockItemPackagingUOMDTOSchema = z.object({
   id: z.string().nullish(),
@@ -120,4 +121,89 @@ export const stockOperationSchema = z.object({
   requisitionStockOperationUuid: z.string(),
 });
 
+export const reasonOperationSchema = z.object({
+  operationDate: z.coerce.date(),
+  sourceUuid: z.string({ required_error: "Location Required" }).min(1, {
+    message: "Location Required",
+  }),
+  reasonUuid: z.string({ required_error: "Reason Required" }).min(1, {
+    message: "Reason Required",
+  }),
+  responsiblePersonUuid: z
+    .string({
+      required_error: "Responsible Person Required",
+    })
+    .min(1, {
+      message: "Responsible Person Required",
+    }),
+  responsiblePersonOther: z.string().nullish(),
+  remarks: z.string().nullish(),
+});
+
+export type ReasonOperationItemFormData = z.infer<typeof reasonOperationSchema>;
+export const adjustmentOperationSchema = z.object({
+  operationDate: z.coerce.date(),
+  sourceUuid: z.string({ required_error: "Location Required" }).min(1, {
+    message: "Location Required",
+  }),
+  responsiblePersonUuid: z
+    .string({
+      required_error: "Responsible Person Required",
+    })
+    .min(1, {
+      message: "Responsible Person Required",
+    }),
+  responsiblePersonOther: z.string().nullish(),
+  remarks: z.string().nullish(),
+});
+
+export type AdjustmentOperationItemFormData = z.infer<
+  typeof adjustmentOperationSchema
+>;
+
+export const receiptOperationSchema = z.object({
+  operationDate: z.coerce.date(),
+  sourceUuid: z
+    .string({ required_error: "Location Required" })
+    .min(1, { message: "Location Required" }),
+  destinationUuid: z
+    .string({
+      required_error: "Destination Required",
+    })
+    .min(1, {
+      message: "Destination Required",
+    }),
+  destinationName: z.string(),
+  responsiblePersonUuid: z
+    .string({
+      required_error: "Responsible Person Required",
+    })
+    .min(1, {
+      message: "Responsible Person Required",
+    }),
+  remarks: z.string().nullish(),
+});
+
+export type ReceiptOperationItemFormData = z.infer<
+  typeof receiptOperationSchema
+>;
+
 export type StockOperationFormData = z.infer<typeof stockOperationSchema>;
+
+export const operationSchema = (operation: OperationType): z.Schema => {
+  switch (operation) {
+    case OperationType.TRANSFER_OUT_OPERATION_TYPE:
+    case OperationType.STOCK_TAKE_OPERATION_TYPE:
+    case OperationType.STOCK_ISSUE_OPERATION_TYPE:
+    case OperationType.RETURN_OPERATION_TYPE:
+    case OperationType.REQUISITION_OPERATION_TYPE:
+    case OperationType.RECEIPT_OPERATION_TYPE:
+      return receiptOperationSchema;
+
+    case OperationType.OPENING_STOCK_OPERATION_TYPE:
+      return adjustmentOperationSchema;
+    case OperationType.DISPOSED_OPERATION_TYPE:
+    case OperationType.ADJUSTMENT_OPERATION_TYPE:
+      return reasonOperationSchema;
+  }
+};

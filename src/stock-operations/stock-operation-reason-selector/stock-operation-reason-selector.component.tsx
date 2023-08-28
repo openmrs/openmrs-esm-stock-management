@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { Concept } from "../../core/api/types/concept/Concept";
-import { Select, SelectItem, SelectSkeleton } from "@carbon/react";
+import { ComboBox, SelectSkeleton } from "@carbon/react";
 import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
 import { STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID } from "../../constants";
 
@@ -34,36 +34,30 @@ const StockOperationReasonSelector = <T,>(
     <Controller
       name={props.controllerName}
       control={props.control}
-      render={({ field: { onChange, value, ref } }) => (
-        <Select
+      render={({ field: { onChange, ref } }) => (
+        <ComboBox
           labelText={props.title}
+          placeholder={props.placeholder}
           name={props.name}
           control={props.control}
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}
+          items={reasons}
+          initialSelectedItem={
+            reasons?.find((p) => p.uuid === props.reasonUuid) || {}
+          }
+          itemToString={(item?: Concept) =>
+            item && item?.display ? `${item?.display}` : ""
+          }
           onChange={(data: { selectedItem?: Concept }) => {
             props.onReasonChange?.(data?.selectedItem);
             onChange(data?.selectedItem?.uuid);
           }}
           ref={ref}
-          value={value || ""}
           invalid={props.invalid}
           invalidText={props.invalidText}
-        >
-          {props.placeholder && (
-            <SelectItem disabled hidden value={null} text={props.placeholder} />
-          )}
-          {reasons?.map((reason) => {
-            return (
-              <SelectItem
-                key={reason.uuid}
-                value={reason.uuid}
-                text={reason.display ?? ""}
-              />
-            );
-          })}
-        </Select>
+        />
       )}
     />
   );

@@ -7,6 +7,7 @@ import { ComboBox, TextInputSkeleton } from "@carbon/react";
 
 interface PartySelectorProps<T> {
   partyUuid?: string;
+  parties: Party[];
   onPartyChange?: (unit: Party) => void;
   title?: string;
   placeholder?: string;
@@ -21,19 +22,6 @@ interface PartySelectorProps<T> {
 }
 
 const PartySelector = <T,>(props: PartySelectorProps<T>) => {
-  const {
-    items: { results: parties },
-    isLoading,
-    isError,
-  } = useParties();
-
-  if (isLoading || isError) return <TextInputSkeleton />;
-
-  let filteredParties = [...parties];
-  if (props.filter) {
-    filteredParties = parties.filter(props.filter);
-  }
-
   return (
     <Controller
       name={props.controllerName}
@@ -46,13 +34,13 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}
-          items={parties || []}
+          items={props.parties}
           onChange={(data: { selectedItem: Party }) => {
             props.onPartyChange?.(data.selectedItem);
             onChange(data.selectedItem.uuid);
           }}
           initialSelectedItem={
-            filteredParties?.find((p) => p.uuid === props.partyUuid) || {}
+            props.parties?.find((p) => p.uuid === props.partyUuid) || {}
           }
           itemToString={(item?: Concept) =>
             item && item?.name ? `${item?.name}` : ""

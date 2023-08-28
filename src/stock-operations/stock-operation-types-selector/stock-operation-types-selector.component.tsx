@@ -6,11 +6,12 @@ import { StockOperationType } from "../../core/api/types/stockOperation/StockOpe
 
 interface StockOperationTypesSelectorProps {
   onOperationTypeSelected?: (operation: StockOperationType) => void;
+  onOperationLoaded?: (operation: StockOperationType[]) => void;
 }
 
 const StockOperationTypesSelector: React.FC<
   StockOperationTypesSelectorProps
-> = ({ onOperationTypeSelected }) => {
+> = ({ onOperationTypeSelected, onOperationLoaded }) => {
   const {
     types: { results: createOperationTypes },
     isLoading,
@@ -18,6 +19,8 @@ const StockOperationTypesSelector: React.FC<
   } = useStockOperationTypes();
 
   if (isLoading || isError) return <ButtonSkeleton />;
+
+  onOperationLoaded(createOperationTypes);
 
   return (
     <OverflowMenu

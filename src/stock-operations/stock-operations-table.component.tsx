@@ -37,6 +37,7 @@ import { isDesktop } from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "./utils";
+import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -57,6 +58,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     v: ResourceRepresentation.Default,
     totalCount: true,
   });
+
+  let operations: StockOperationType[] | null | undefined;
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation) => ({
@@ -247,12 +250,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   />
                   <StockOperationTypesSelector
                     onOperationTypeSelected={(operation) => {
-                      // TODO: Open side menu
                       launchAddOrEditDialog(
                         initialStockOperationValue,
                         operation,
-                        false
+                        false,
+                        operations
                       );
+                    }}
+                    onOperationLoaded={(ops) => {
+                      operations = ops;
                     }}
                   />
                 </TableToolbarContent>

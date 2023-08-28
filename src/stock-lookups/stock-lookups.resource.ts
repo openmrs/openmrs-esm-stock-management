@@ -1,4 +1,4 @@
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { FetchResponse, openmrsFetch } from "@openmrs/esm-framework";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import {
@@ -119,6 +119,13 @@ export function useStockOperationTypes() {
   };
 }
 
+export function getStockOperationTypes(): Promise<
+  FetchResponse<PageableResult<StockOperationType>>
+> {
+  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationtype?v=default`;
+  return openmrsFetch(apiUrl);
+}
+
 // getUsers
 export function useUsers(filter: UserFilterCriteria) {
   const apiUrl = `ws/rest/v1/user${toQueryParams(filter)}`;
@@ -181,6 +188,11 @@ export function useParties() {
     isLoading,
     isError: error,
   };
+}
+
+export function getParties(): Promise<FetchResponse<PageableResult<Party>>> {
+  const apiUrl = `ws/rest/v1/stockmanagement/party?v=default`;
+  return openmrsFetch(apiUrl);
 }
 
 // getDrugs
