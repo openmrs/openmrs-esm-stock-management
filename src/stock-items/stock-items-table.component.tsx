@@ -5,15 +5,12 @@ import {
   Button,
   DataTableSkeleton,
   Link,
-  TableToolbarAction,
-  TableToolbarMenu,
   TableToolbarSearch,
   Tile,
   Tooltip,
 } from "@carbon/react";
 import { useStockItemsPages } from "./stock-items-table.resource";
 import DataList from "../core/components/table/table.component";
-import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
 import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
 import { Edit } from "@carbon/react/icons";
 import { ResourceRepresentation } from "../core/api/api";
@@ -26,23 +23,8 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const {
-    isLoading,
-    items,
-    tableHeaders,
-    setDrug,
-    isDrug,
-    totalCount,
-    setCurrentPage,
-  } = useStockItemsPages(ResourceRepresentation.Full);
-
-  const handleImport = () => {
-    // setShowImport(true);
-  };
-
-  const handleRefresh = () => {
-    // search.refetch()
-  };
+  const { isLoading, items, tableHeaders, totalCount, setCurrentPage } =
+    useStockItemsPages(ResourceRepresentation.Full);
 
   const tableRows = useMemo(() => {
     return items?.map((stockItem) => ({
@@ -101,26 +83,26 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         {({ onInputChange }) => (
           <>
             <TableToolbarSearch persistent onChange={onInputChange} />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <FilterStockItems
-                filterType={isDrug}
-                changeFilterType={setDrug}
-              />
-            </div>
-            <Button onClick={handleImport} size="sm" kind="ghost">
-              {t("stockmanagement.import", "Import")}
-            </Button>
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={handleRefresh}>
-                Refresh
-              </TableToolbarAction>
-            </TableToolbarMenu>
+            {/*<div*/}
+            {/*  style={{*/}
+            {/*    display: "flex",*/}
+            {/*    flexDirection: "row",*/}
+            {/*    alignItems: "center",*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*<FilterStockItems*/}
+            {/*  filterType={isDrug}*/}
+            {/*  changeFilterType={setDrug}*/}
+            {/*/>*/}
+            {/*</div>*/}
+            {/*<Button onClick={handleImport} size="sm" kind="ghost">*/}
+            {/*  {t("stockmanagement.import", "Import")}*/}
+            {/*</Button>*/}
+            {/*<TableToolbarMenu>*/}
+            {/*  <TableToolbarAction onClick={handleRefresh}>*/}
+            {/*    Refresh*/}
+            {/*  </TableToolbarAction>*/}
+            {/*</TableToolbarMenu>*/}
             <AddStockItemActionButton />
           </>
         )}

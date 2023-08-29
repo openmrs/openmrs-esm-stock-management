@@ -1,11 +1,6 @@
 import React, { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "./stock-item-category-selector.scss";
-import { StockSource } from "../../../core/api/types/stockOperation/StockSource";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { Concept } from "../../../core/api/types/concept/Concept";
-import { useStockSources } from "../../../stock-sources/stock-sources.resource";
-import { ResourceRepresentation } from "../../../core/api/api";
 import { ComboBox, TextInputSkeleton } from "@carbon/react";
 import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
 import { STOCK_ITEM_CATEGORY_CONCEPT_ID } from "../../../constants";

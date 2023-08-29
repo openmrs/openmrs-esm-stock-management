@@ -33,7 +33,7 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
       isDrug: isDrug,
     });
   }, [searchString, currentPage, currentPageSize, isDrug]);
-
+  console.log(stockItemFilter);
   const { items, isLoading, isError } = useStockItems(stockItemFilter);
 
   const tableHeaders = useMemo(

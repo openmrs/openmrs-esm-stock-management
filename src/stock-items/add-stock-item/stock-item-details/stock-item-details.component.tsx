@@ -1,7 +1,5 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import addStockStyles from "../add-stock-item.scss";
-import styles from "./stock-item-details.scss";
 import { Save } from "@carbon/react/icons";
 
 import { Button, FormGroup, InlineLoading, RadioButton } from "@carbon/react";

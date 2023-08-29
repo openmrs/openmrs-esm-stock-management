@@ -8,10 +8,6 @@ interface StockRulesProps {
 }
 
 const StockRules: React.FC<StockRulesProps> = () => {
-  const { t } = useTranslation();
-
-  const locations = useLocations();
-
   return (
     <div className={addStockStyles.formContainer}>
       Stock rules Coming soon ...

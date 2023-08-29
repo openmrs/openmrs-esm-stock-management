@@ -1,10 +1,9 @@
-import React, { forwardRef, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { ComboBox, TextInputSkeleton } from "@carbon/react";
 import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
 import { DISPENSING_UNITS_CONCEPT_ID } from "../../../constants";
 import { Concept } from "../../../core/api/types/concept/Concept";
 import { Control, Controller, FieldValues } from "react-hook-form";
-import { Drug } from "../../../core/api/types/concept/Drug";
 
 interface DispensingUnitSelectorProps<T> {
   dispensingUnitUuid?: string;
