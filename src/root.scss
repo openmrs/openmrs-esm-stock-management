@@ -154,13 +154,13 @@ nav :global(.bx--accordion__content) > a {
   display: none;
 }
 
-:global(.formContainer) {
+.formContainer {
   height: calc(100vh - 100px) !important;
   overflow: scroll;
   padding: 0 1rem;
 }
 
-:global(.verticalForm) {
+.verticalForm {
   display: flex;
   grid-row-gap: 2em;
   padding-top: 1rem;

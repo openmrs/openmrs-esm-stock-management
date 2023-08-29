@@ -31,6 +31,7 @@ import ControlledTextInput from "../../core/components/carbon/controlled-text-in
 import StockOperationReasonSelector from "../stock-operation-reason-selector/stock-operation-reason-selector.component";
 import ControlledTextArea from "../../core/components/carbon/controlled-text-area/controlled-text-area.component";
 import { InitializeResult } from "./types";
+import rootStyles from "../../root.scss";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -147,7 +148,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   };
 
   return (
-    <form className={`formContainer verticalForm`}>
+    <form className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}>
       {canEdit && (
         <Controller
           control={control}

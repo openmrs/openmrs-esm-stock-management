@@ -20,6 +20,7 @@ import StockItemCategorySelector from "../stock-item-category-selector/stock-ite
 import StockItemUnitsEdit from "../stock-item-units-edit/stock-item-units-edit.component";
 import { SaveStockItem } from "../../types";
 import ConceptsSelector from "../concepts-selector/concepts-selector.component";
+import rootStyles from "../../../root.scss";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
@@ -62,7 +63,9 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     }, [model.hasExpiration, model.isDrug]);
 
     return (
-      <form className={`formContainer verticalForm`}>
+      <form
+        className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
+      >
         <FormGroup
           className="clear-margin-bottom"
           legendText={t("itemType", "Item Type")}

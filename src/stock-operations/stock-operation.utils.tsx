@@ -41,7 +41,7 @@ export const addOrEditStockOperation = async (
         closeOverlay();
 
         // launch edit dialog
-        launchAddOrEditDialog(response.data, operation, true, operations);
+        // launchAddOrEditDialog(response.data, operation, true, operations);
       }
     }
   } catch (error) {

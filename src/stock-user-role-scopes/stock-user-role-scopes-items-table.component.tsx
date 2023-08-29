@@ -73,7 +73,7 @@ function StockUserRoleScopesItems() {
         // ),
       };
     });
-  }, [items]);
+  }, [items, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
