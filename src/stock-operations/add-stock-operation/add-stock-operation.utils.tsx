@@ -1,5 +1,5 @@
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { initialStockOperationValue } from "../utils";
+import { initialStockOperationValue } from "../../core/utils/utils";
 import { MAIN_STORE_LOCATION_TAG, today } from "../../constants";
 import {
   operationFromString,

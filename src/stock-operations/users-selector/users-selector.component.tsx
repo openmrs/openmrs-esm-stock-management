@@ -4,7 +4,7 @@ import { User } from "../../core/api/types/identity/User";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { useUsersHook } from "./users-selector.resource";
 import { useDebounce } from "../../core/hooks/debounce-hook";
-import { otherUser } from "../utils";
+import { otherUser } from "../../core/utils/utils";
 
 interface UsersSelectorProps<T> {
   placeholder?: string;

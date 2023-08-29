@@ -36,7 +36,7 @@ import {
 import { isDesktop } from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
-import { initialStockOperationValue } from "./utils";
+import { initialStockOperationValue } from "../core/utils/utils";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 
 interface StockOperationsTableProps {

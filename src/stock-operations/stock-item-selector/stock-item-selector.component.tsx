@@ -1,12 +1,9 @@
 import React, { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "./stock-item-selector.scss";
-import { Drug } from "../../core/api/types/concept/Drug";
 import { Control, Controller, FieldValues } from "react-hook-form";
-import { useDrugsHook } from "../../stock-items/add-stock-item/drug-selector/drug-selector.resource";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import { useStockItems } from "./stock-item-selector.resource";
+import { useDebounce } from "../../core/hooks/debounce-hook";
 
 interface StockItemSelectorProps<T> {
   placeholder?: string;
@@ -24,6 +21,10 @@ interface StockItemSelectorProps<T> {
 
 const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
   const { isLoading, stockItemsList, setSearchString } = useStockItems({});
+
+  const debouncedSearch = useDebounce((query: string) => {
+    setSearchString(query);
+  }, 500);
 
   return (
     <div>
@@ -47,7 +48,7 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
               stockItemsList?.find((p) => p.uuid === props.stockItemUuid) ?? ""
             }
             itemToString={stockItemName}
-            onInputChange={setSearchString}
+            onInputChange={debouncedSearch}
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}

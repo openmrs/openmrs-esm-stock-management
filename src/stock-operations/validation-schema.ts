@@ -173,7 +173,6 @@ export const receiptOperationSchema = z.object({
     .min(1, {
       message: "Destination Required",
     }),
-  destinationName: z.string(),
   responsiblePersonUuid: z
     .string({
       required_error: "Responsible Person Required",

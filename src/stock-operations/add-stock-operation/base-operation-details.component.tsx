@@ -31,7 +31,7 @@ import {
 import { Save } from "@carbon/react/icons";
 import PartySelector from "../party-selector/party-selector.component";
 import UsersSelector from "../users-selector/users-selector.component";
-import { otherUser } from "../utils";
+import { otherUser } from "../../core/utils/utils";
 import ControlledTextInput from "../../core/components/carbon/controlled-text-input/controlled-text-input.component";
 import StockOperationReasonSelector from "../stock-operation-reason-selector/stock-operation-reason-selector.component";
 import ControlledTextArea from "../../core/components/carbon/controlled-text-area/controlled-text-area.component";
@@ -118,8 +118,16 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       delete req.creatorGivenName;
       delete req.dispatchedByFamilyName;
       delete req.uuid;
-      if ([OperationType.ADJUSTMENT_OPERATION_TYPE].includes(operationType)) {
+      if (
+        [
+          OperationType.ADJUSTMENT_OPERATION_TYPE,
+          OperationType.RECEIPT_OPERATION_TYPE,
+        ].includes(operationType)
+      ) {
         delete req.destinationName;
+      }
+
+      if ([OperationType.ADJUSTMENT_OPERATION_TYPE].includes(operationType)) {
         delete req.destinationUuid;
       }
 

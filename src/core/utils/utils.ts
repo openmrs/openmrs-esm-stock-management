@@ -1,5 +1,5 @@
-import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
-import { User } from "../core/api/types/identity/User";
+import { StockOperationDTO } from "../api/types/stockOperation/StockOperationDTO";
+import { User } from "../api/types/identity/User";
 
 export const initialStockOperationValue: StockOperationDTO = {
   atLocationName: "",

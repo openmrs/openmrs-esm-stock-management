@@ -1,0 +1,5 @@
+.tableContainer{
+  :global(.cds--data-table-content){
+    height: calc(100vh - 150px);
+  }
+}
