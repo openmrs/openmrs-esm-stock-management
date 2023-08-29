@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabItem } from "../../core/components/tabs/types";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
@@ -9,8 +9,6 @@ import { AddStockOperationProps } from "./types";
 import { useInitializeStockOperations } from "./add-stock-operation.resource";
 import { AccordionSkeleton } from "@carbon/react";
 import { closeOverlay } from "../../core/components/overlay/hook";
-import { toErrorMessage } from "../../core/utils/stringUtils";
-import { errorAlert } from "../../core/utils/alert";
 import { addOrEditStockOperation } from "../stock-operation.utils";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {

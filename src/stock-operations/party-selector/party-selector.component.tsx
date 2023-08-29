@@ -2,8 +2,7 @@ import React, { ReactNode } from "react";
 import { Concept } from "../../core/api/types/concept/Concept";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { Party } from "../../core/api/types/Party";
-import { useParties } from "../../stock-lookups/stock-lookups.resource";
-import { ComboBox, TextInputSkeleton } from "@carbon/react";
+import { ComboBox } from "@carbon/react";
 
 interface PartySelectorProps<T> {
   partyUuid?: string;

@@ -35,8 +35,8 @@ export async function initializeNewStockOperation(
   let model: StockOperationDTO;
   const isNew = !!stockOperation;
   const newItemsToCopy: StockOperationItemDTO[] = [];
-  let showQuantityRequested = false;
-  // let requisition: string | null | undefined;
+  const showQuantityRequested = false;
+
   let operationTypes = stockOperationTypes;
   const canIssueStock =
     stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false;
@@ -61,7 +61,8 @@ export async function initializeNewStockOperation(
   let destinationPartyList: Party[] | null | undefined;
 
   if (isNew) {
-    model = Object.assign(initialStockOperationValue, {
+    model = structuredClone(initialStockOperationValue());
+    model = Object.assign(model, {
       operationDate: today(),
       operationTypeName: currentStockOperationType?.name,
       operationTypeUuid: currentStockOperationType?.uuid,
@@ -141,8 +142,8 @@ export async function initializeNewStockOperation(
     if (currentStockOperationType?.hasSource) {
       if (isNew && shouldLockSource && sourcePartyList?.length > 0) {
         const party = sourcePartyList[0];
-        stockOperation.sourceUuid = party.uuid;
-        stockOperation.sourceName = party.name;
+        model.sourceUuid = party.uuid;
+        model.sourceName = party.name;
         location = party?.locationUuid;
       }
     }
@@ -161,8 +162,8 @@ export async function initializeNewStockOperation(
 
       if (isNew && shouldLockDestination && destinationPartyList?.length > 0) {
         const party = destinationPartyList[0];
-        stockOperation.destinationUuid = party.uuid;
-        stockOperation.destinationName = party.name;
+        model.destinationUuid = party.uuid;
+        model.destinationName = party.name;
       }
     }
   } else {
@@ -175,7 +176,6 @@ export async function initializeNewStockOperation(
   }
 
   const opType = operationFromString(currentStockOperationType.operationType);
-
   return {
     batchBalance: {},
     batchNos: {},

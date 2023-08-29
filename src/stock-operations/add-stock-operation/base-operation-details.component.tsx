@@ -22,13 +22,8 @@ import {
 } from "@carbon/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  adjustmentOperationSchema,
-  operationSchema,
-  StockOperationFormData,
-  stockOperationSchema,
-} from "../validation-schema";
-import { Save } from "@carbon/react/icons";
+import { operationSchema, StockOperationFormData } from "../validation-schema";
+import { ArrowRight } from "@carbon/react/icons";
 import PartySelector from "../party-selector/party-selector.component";
 import UsersSelector from "../users-selector/users-selector.component";
 import { otherUser } from "../../core/utils/utils";
@@ -68,6 +63,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm<StockOperationFormData>({
     defaultValues: model,
     mode: "all",
@@ -122,15 +118,26 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         [
           OperationType.ADJUSTMENT_OPERATION_TYPE,
           OperationType.RECEIPT_OPERATION_TYPE,
+          OperationType.STOCK_ISSUE_OPERATION_TYPE,
+          OperationType.STOCK_TAKE_OPERATION_TYPE,
+          OperationType.RETURN_OPERATION_TYPE,
+          OperationType.DISPOSED_OPERATION_TYPE,
+          OperationType.OPENING_STOCK_OPERATION_TYPE,
         ].includes(operationType)
       ) {
         delete req.destinationName;
       }
 
-      if ([OperationType.ADJUSTMENT_OPERATION_TYPE].includes(operationType)) {
+      if (
+        [
+          OperationType.ADJUSTMENT_OPERATION_TYPE,
+          OperationType.DISPOSED_OPERATION_TYPE,
+          OperationType.STOCK_TAKE_OPERATION_TYPE,
+          OperationType.OPENING_STOCK_OPERATION_TYPE,
+        ].includes(operationType)
+      ) {
         delete req.destinationUuid;
       }
-
       await onSave(req);
     } catch (e) {
       // Show notification
@@ -228,8 +235,10 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               ? t("chooseADestination", "Choose a destination")
               : "Location"
           }
-          invalid={!!errors.sourceUuid}
-          invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
+          invalid={!!errors.destinationUuid}
+          invalidText={
+            errors.destinationUuid && errors?.destinationUuid?.message
+          }
           parties={destinationPartyList || []}
         />
       )}
@@ -305,6 +314,9 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           title={t("reason", "Reason:")}
           invalid={!!errors.reasonUuid}
           invalidText={errors.reasonUuid && errors?.reasonUuid?.message}
+          onReasonChange={(reason) => {
+            setValue("reasonUuid", reason.uuid);
+          }}
         />
       )}
 
@@ -336,9 +348,9 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           className="submitButton"
           onClick={handleSubmit(handleSave)}
           kind="primary"
-          renderIcon={Save}
+          renderIcon={ArrowRight}
         >
-          {isSaving ? <InlineLoading /> : t("save", "Save")}
+          {isSaving ? <InlineLoading /> : t("next", "Next")}
         </Button>
       </div>
     </form>

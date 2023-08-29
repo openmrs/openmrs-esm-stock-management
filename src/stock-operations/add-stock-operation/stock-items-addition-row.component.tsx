@@ -1,10 +1,8 @@
 import React, { ChangeEvent, useState } from "react";
-import { useTranslation } from "react-i18next";
 import styles from "./stock-items-addition-row.scss";
 import { isDesktop } from "@openmrs/esm-framework";
 import {
   Button,
-  ComboBox,
   DatePicker,
   DatePickerInput,
   Link,
@@ -12,20 +10,16 @@ import {
   TableCell,
   TableRow,
   TextInput,
-  Tile,
 } from "@carbon/react";
 import { TrashCan } from "@carbon/react/icons";
 import { StockOperationItemFormData } from "../validation-schema";
 import StockItemSelector from "../stock-item-selector/stock-item-selector.component";
 import {
   Control,
-  FieldArray,
   FieldArrayWithId,
   FieldErrors,
-  useFieldArray,
   UseFieldArrayAppend,
   UseFieldArrayRemove,
-  useForm,
   UseFormSetValue,
 } from "react-hook-form";
 import { URL_STOCK_ITEM } from "../../stock-items/stock-items-table.component";
@@ -35,19 +29,13 @@ import {
   formatForDatePicker,
   today,
 } from "../../constants";
-import { stockOperationItemsSchema } from "./validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
 import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
 import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
-import {
-  StockItem,
-  StockItemDTO,
-} from "../../core/api/types/stockItem/StockItem";
-import { getStockOperationUniqueId } from "../stock-operation.utils";
-import append from "react-hook-form/dist/utils/append";
+import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import QtyUomSelector from "../qty-uom-selector/qty-uom-selector.component";
+import BatchNoSelector from "../batch-no-selector/batch-no-selector.component";
 
 interface StockItemsAdditionRowProps {
   canEdit?: boolean;
@@ -57,12 +45,24 @@ interface StockItemsAdditionRowProps {
   requiresBatchUuid?: boolean;
   canUpdateBatchInformation?: boolean;
   canCapturePurchasePrice?: boolean;
-  batchNos?: { [key: string]: StockBatchDTO[] };
-  itemUoM?: { [key: string]: StockItemPackagingUOMDTO[] };
-  batchBalance?: { [key: string]: StockItemInventory };
-  control: Control<{ stockItems: StockOperationItemDTO[] }>;
-  setValue: UseFormSetValue<{ stockItems: StockOperationItemDTO[] }>;
-  errors: FieldErrors<{ stockItems: StockOperationItemDTO[] }>;
+  batchNos?: {
+    [key: string]: StockBatchDTO[];
+  };
+  itemUoM?: {
+    [key: string]: StockItemPackagingUOMDTO[];
+  };
+  batchBalance?: {
+    [key: string]: StockItemInventory;
+  };
+  control: Control<{
+    stockItems: StockOperationItemDTO[];
+  }>;
+  setValue: UseFormSetValue<{
+    stockItems: StockOperationItemDTO[];
+  }>;
+  errors: FieldErrors<{
+    stockItems: StockOperationItemDTO[];
+  }>;
   remove: UseFieldArrayRemove;
   append: UseFieldArrayAppend<
     {
@@ -80,30 +80,23 @@ interface StockItemsAdditionRowProps {
 
 const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   canEdit,
-  rows,
   showQuantityRequested,
   requiresActualBatchInformation,
   requiresBatchUuid,
   canUpdateBatchInformation,
   canCapturePurchasePrice,
-  batchNos,
-  itemUoM,
   batchBalance,
   control,
   setValue,
   errors,
   remove,
   fields,
-  append,
 }) => {
-  const { t } = useTranslation();
-
-  const [stockItems, setStockItems] = useState<StockOperationItemFormData[]>(
-    () => rows
-  );
-
   const [stockItemUuid, setStockItemUuid] = useState<
     string | null | undefined
+  >();
+  const [stockItemExpiry, setStockItemExpiy] = useState<
+    Date | null | undefined
   >();
 
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
@@ -131,17 +124,10 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
       item.stockItemPackagingUOMName = null;
 
       item.stockBatchUuid = null;
-      // handleStockItemPackagingUoMsSearch(row, "", data.selectedItem?.uuid);
       if (requiresBatchUuid) {
         // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
       }
-    } /*else {
-      item.stockItemName = null;
-      item.stockItemUuid = null;
-      item.stockItemPackagingUOMUuid = null;
-      item.stockItemPackagingUOMName = null;
-      item.stockBatchUuid = null;
-    }*/
+    }
   };
 
   return (
@@ -203,51 +189,22 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 {requiresBatchUuid &&
                   !requiresActualBatchInformation &&
                   canEdit && (
-                    <ComboBox
-                      size="sm"
-                      initialSelectedItem={row?.stockBatchUuid}
-                      items={
-                        row?.stockBatchUuid
-                          ? [
-                              ...(row.stockItemUuid in batchNos &&
-                              batchNos[row.stockItemUuid] &&
-                              batchNos[row.stockItemUuid].some(
-                                (x) => x.uuid === row.stockBatchUuid
-                              )
-                                ? []
-                                : [
-                                    {
-                                      uuid: row?.stockBatchUuid,
-                                      display: row?.batchNo,
-                                    },
-                                  ]),
-                              ...((row.stockItemUuid &&
-                              row.stockItemUuid in batchNos
-                                ? batchNos[row.stockItemUuid]
-                                : null) ?? []),
-                            ]
-                          : (row.stockItemUuid && row.stockItemUuid in batchNos
-                              ? batchNos[row.stockItemUuid]
-                              : null) ?? []
-                      }
-                      onChange={({
-                        selectedItem,
-                      }: {
-                        selectedItem: string;
-                      }) => {
-                        setValue(`stockItems.${index}.batchNo`, selectedItem);
+                    <BatchNoSelector
+                      batchUuid={row?.stockBatchUuid}
+                      onBatchNoChanged={(item) => {
+                        setValue(`stockItems.${index}.batchNo`, item.batchNo);
+                        setValue(
+                          `stockItems.${index}.expiration`,
+                          item.expiration
+                        );
+                        setStockItemExpiy(item.expiration);
                       }}
-                      // onFocus={(e) => handleStockBatchSearch(row, "")}
-                      // onToggleClick={(e) => handleStockBatchSearch(row, "")}
-                      shouldFilterItem={(data) => true}
-                      // onInputChange={(q) => handleStockBatchSearch(row, q)}
-                      itemToString={(item) => item?.batchNo ?? ""}
                       placeholder={"Filter..."}
-                      invalid={
-                        row.uuid in errors &&
-                        "stockBatchUuid" in errors[row.uuid] &&
-                        !errors[row.uuid]["stockBatchUuid"]
-                      }
+                      invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
+                      control={control as unknown as Control}
+                      controllerName={`stockItems.${index}.stockBatchUuid`}
+                      name={`stockItems.${index}.stockBatchUuid`}
+                      stockItemUuid={row.stockItemUuid}
                     />
                   )}
                 {!(
@@ -291,7 +248,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 ) &&
                   !canEdit) ||
                   requiresBatchUuid) &&
-                  formatForDatePicker(row?.expiration)}
+                  formatForDatePicker(stockItemExpiry)}
               </TableCell>
             )}
             <TableCell>
@@ -301,7 +258,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   size="sm"
                   id={`qty-${row.uuid}`}
                   allowEmpty={true}
-                  onChange={(e: any, d: any) =>
+                  onChange={(e: any) =>
                     setValue(`stockItems.${index}.quantity`, e?.target?.value)
                   }
                   value={row?.quantity ?? ""}
@@ -354,7 +311,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                     invalidText=""
                     id={`purchaseprice-${row.uuid}`}
                     allowEmpty={true}
-                    onChange={(e: any, d: any) =>
+                    onChange={(e: any) =>
                       setValue(
                         `stockItems.${index}.purchasePrice`,
                         e?.target?.value

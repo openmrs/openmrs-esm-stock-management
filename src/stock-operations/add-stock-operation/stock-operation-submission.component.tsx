@@ -38,7 +38,6 @@ interface StockOperationSubmissionProps {
 }
 
 const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
-  isEditing,
   canEdit = true,
   locked = false,
   model,

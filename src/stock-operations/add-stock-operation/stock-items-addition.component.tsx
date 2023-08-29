@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { SaveStockOperation } from "../../stock-items/types";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@carbon/react";
-import { isDesktop, useLayoutType } from "@openmrs/esm-framework";
+import { isDesktop } from "@openmrs/esm-framework";
 import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
 import { getStockOperationUniqueId } from "../stock-operation.utils";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { stockOperationItemsSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
-import { Save, Add } from "@carbon/react/icons";
+import { Add, ArrowRight } from "@carbon/react/icons";
 import styles from "./stock-items-addition.component.scss";
 import { errorAlert } from "../../core/utils/alert";
 
@@ -50,7 +50,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   model,
   onSave,
 }) => {
-  const desktop = isDesktop(useLayoutType());
   const { t } = useTranslation();
   const [stockOperationItems, setStockOperationItems] = useState<
     StockOperationItemDTO[]
@@ -72,12 +71,9 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
 
   const {
     handleSubmit,
-    register,
     control,
     setValue,
-    getValues,
-    formState: { isValid, errors, isValidating, isDirty },
-    reset,
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(stockOperationItemsSchema),
     defaultValues: { stockItems: stockOperationItems },
@@ -166,21 +162,12 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
         styles={{
           width: "100%",
         }}
-        render={({
-          rows,
-          headers,
-          getHeaderProps,
-          getTableProps,
-          getRowProps,
-          getSelectionProps,
-          getBatchActionProps,
-          selectedRows,
-        }) => (
+        render={({ headers, getHeaderProps, getTableProps }) => (
           <TableContainer>
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
-                  {headers.map((header: any, index) => (
+                  {headers.map((header: any) => (
                     <TableHeader
                       {...getHeaderProps({
                         header,
@@ -220,9 +207,9 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                           className="submitButton"
                           onClick={handleSubmit(handleSave)}
                           kind="primary"
-                          renderIcon={Save}
+                          renderIcon={ArrowRight}
                         >
-                          {isSaving ? <InlineLoading /> : t("save", "Save")}
+                          {isSaving ? <InlineLoading /> : t("next", "Next")}
                         </Button>
                       </div>
                     </TableHeader>
@@ -255,18 +242,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
           </TableContainer>
         )}
       ></DataTable>
-      {/*<div style={{ display: "flex", flexDirection: "row-reverse" }}>*/}
-      {/*  <Button*/}
-      {/*    name="save"*/}
-      {/*    type="button"*/}
-      {/*    className="submitButton"*/}
-      {/*    onClick={handleSubmit(handleSave, (e) => alert(JSON.stringify(e)))}*/}
-      {/*    kind="primary"*/}
-      {/*    renderIcon={Save}*/}
-      {/*  >*/}
-      {/*    {isSaving ? <InlineLoading /> : t("save", "Save")}*/}
-      {/*  </Button>*/}
-      {/*</div>*/}
     </div>
   );
 };

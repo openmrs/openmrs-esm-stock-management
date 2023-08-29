@@ -26,7 +26,6 @@ import {
 import { ArrowRight, Edit } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
-import { today } from "../constants";
 import {
   StockOperationStatusCancelled,
   StockOperationStatusNew,
@@ -70,7 +69,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       operationNumber: (
         <Link
           to={URL_STOCK_OPERATION(stockOperation?.uuid || "")}
-          onClick={(e) => {
+          onClick={() => {
             //TODO handlerStockOperationClick(e, stockOperation?.uuid!)
           }}
         >{`${stockOperation?.operationNumber}`}</Link>
@@ -251,7 +250,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   <StockOperationTypesSelector
                     onOperationTypeSelected={(operation) => {
                       launchAddOrEditDialog(
-                        initialStockOperationValue,
+                        initialStockOperationValue(),
                         operation,
                         false,
                         operations
@@ -268,7 +267,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   <TableRow>
                     <TableExpandHeader />
                     {headers.map(
-                      (header: any, index) =>
+                      (header: any) =>
                         header.key !== "details" && (
                           <TableHeader
                             {...getHeaderProps({
@@ -290,7 +289,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row: any, rowIndex) => {
+                  {rows.map((row: any) => {
                     return (
                       <React.Fragment key={row.id}>
                         <TableExpandRow
@@ -300,7 +299,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                           {...getRowProps({ row })}
                         >
                           {row.cells.map(
-                            (cell: any, index: any) =>
+                            (cell: any) =>
                               cell?.info?.header !== "details" && (
                                 <TableCell key={cell.id}>
                                   {cell.value}
@@ -315,7 +314,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                               iconDescription={"View"}
                               kind="ghost"
                               renderIcon={Edit}
-                              onClick={(e) => {
+                              onClick={() => {
                                 //TODO onViewItem(row.id, e);
                               }}
                             />

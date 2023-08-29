@@ -64,13 +64,8 @@ export const launchAddOrEditDialog = (
     `${isEditing ? "Edit" : "New: "} ${operation?.name || ""}`,
     <AddStockOperation
       model={stockOperation}
-      onSave={(stockOperation) =>
-        addOrEditStockOperation(
-          stockOperation,
-          operation,
-          isEditing,
-          operations
-        )
+      onSave={(so) =>
+        addOrEditStockOperation(so, operation, isEditing, operations)
       }
       isEditing={isEditing}
       operation={operation}

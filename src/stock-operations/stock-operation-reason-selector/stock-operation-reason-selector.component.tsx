@@ -39,7 +39,6 @@ const StockOperationReasonSelector = <T,>(
           labelText={props.title}
           placeholder={props.placeholder}
           name={props.name}
-          control={props.control}
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}

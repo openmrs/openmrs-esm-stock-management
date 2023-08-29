@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
-import { ComboBox, SkeletonText, TextInputSkeleton } from "@carbon/react";
+import { ComboBox, SkeletonText } from "@carbon/react";
 import { useStockItem } from "../../stock-items/stock-items.resource";
 
 interface QtyUomSelectorProps<T> {
