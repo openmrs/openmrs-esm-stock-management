@@ -25,10 +25,6 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
       v: ResourceRepresentation.Full,
     });
 
-  const handleImport = () => {
-    // setShowImport(true);
-  };
-
   const handleRefresh = () => {
     // search.refetch()
   };
