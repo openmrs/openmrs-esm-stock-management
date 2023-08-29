@@ -1,5 +1,4 @@
 import React from "react";
-import { useLayoutType } from "@openmrs/esm-framework";
 import { TabItem } from "./types";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
 import styles from "./vertical-tabs.scss";

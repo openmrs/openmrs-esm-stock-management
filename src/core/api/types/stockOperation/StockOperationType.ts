@@ -53,6 +53,8 @@ export function operationFromString(str: string): OperationType | undefined {
     return OperationType.RETURN_OPERATION_TYPE;
   if (str === OperationType.ADJUSTMENT_OPERATION_TYPE)
     return OperationType.ADJUSTMENT_OPERATION_TYPE;
+  if (str === OperationType.OPENING_STOCK_OPERATION_TYPE)
+    return OperationType.OPENING_STOCK_OPERATION_TYPE;
 }
 
 export const StockOperationTypeRequiresStockAdjustmentReason = (
