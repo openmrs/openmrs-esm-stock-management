@@ -1,18 +1,17 @@
 import {
-  ModalHeader,
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  DropdownSkeleton,
+  Form,
   ModalBody,
   ModalFooter,
-  Button,
-  Form,
+  ModalHeader,
   TextInput,
-  Checkbox,
-  DropdownSkeleton,
-  CheckboxGroup,
 } from "@carbon/react";
-import React, { useState } from "react";
+import React from "react";
 import styles from "./add-stock-user-role-scope.scss";
 import {
-  LocationFilterCriteria,
   useStockLocations,
   useStockOperationTypes,
 } from "../../stock-lookups/stock-lookups.resource";
@@ -30,8 +29,6 @@ const AddStockUserRoleScope: React.FC = () => {
   //locations
   const {
     locations: { results: locations },
-    isLoadingLocations,
-    isErrorLocation,
   } = useStockLocations({ v: ResourceRepresentation.Default });
 
   if (isLoading || isError) {

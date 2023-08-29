@@ -20,15 +20,7 @@ import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-butto
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
 
-  const handleImport = () => {
-    // setShowImport(true);
-  };
-
   const handleRefresh = () => {
-    // search.refetch()
-  };
-
-  const createStockItem = () => {
     // search.refetch()
   };
 
