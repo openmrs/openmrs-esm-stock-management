@@ -2,10 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   DataTableSkeleton,
-  TableToolbarSearch,
-  Button,
-  TableToolbarMenu,
   TableToolbarAction,
+  TableToolbarMenu,
+  TableToolbarSearch,
 } from "@carbon/react";
 import useStockSourcesPage from "./stock-sources-items-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
@@ -14,16 +13,10 @@ import AddStockSourceActionButton from "./add-stock-source-button.component";
 import StockSourcesFilter from "./stock-sources-filter/stock-sources-filter.component";
 
 function StockSourcesItems() {
-  const { t } = useTranslation();
-
   // get sources
   const { isLoading, tableHeaders, tableRows } = useStockSourcesPage({
     v: ResourceRepresentation.Full,
   });
-
-  const handleImport = () => {
-    // setShowImport(true);
-  };
 
   const handleRefresh = () => {
     // search.refetch()

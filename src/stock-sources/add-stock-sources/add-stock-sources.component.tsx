@@ -21,9 +21,7 @@ const StockSourcesAddOrCreate: React.FC = () => {
   const { t } = useTranslation();
 
   // get stock sources
-  const { items, isLoading, isError } = useConceptById(
-    STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
-  );
+  const { items } = useConceptById(STOCK_SOURCE_TYPE_CODED_CONCEPT_ID);
 
   const [formModel, setFormModel] = useState<StockSource>();
 

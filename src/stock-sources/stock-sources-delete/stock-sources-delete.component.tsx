@@ -1,17 +1,5 @@
 import React from "react";
-import { StockSource } from "../../core/api/types/stockOperation/StockSource";
-import {
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  Button,
-} from "@carbon/react";
-
-interface StockSourcesDeleteDialogProps {
-  source: StockSource;
-  closeModal: () => void;
-}
+import { Button, Form, ModalFooter, ModalHeader } from "@carbon/react";
 
 const StockSourcesDelete: React.FC = () => {
   return (
