@@ -17,7 +17,7 @@ const StockCommodityTabs: React.FC = () => {
           <Tab>User Role Scopes</Tab>
           <Tab>Sources</Tab>
           <Tab>Locations</Tab>
-          <Tab>Reports</Tab>
+          {/*<Tab>Reports</Tab>*/}
         </TabList>
         <TabPanels>
           <TabPanel>
