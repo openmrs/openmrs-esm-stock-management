@@ -43,7 +43,8 @@
   }
 
   :global(.cds--tab-content) {
-    width: 80%;
+    width: 100% !important;
+    overflow-x: hidden;
     padding: 0;
   }
 

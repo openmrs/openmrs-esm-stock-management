@@ -1,18 +1,20 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import styles from "./stock-items-table.scss";
 import {
   Button,
   DataTableSkeleton,
   Link,
-  TableToolbarAction,
-  TableToolbarMenu,
   TableToolbarSearch,
+  Tile,
+  Tooltip,
 } from "@carbon/react";
 import { useStockItemsPages } from "./stock-items-table.resource";
-import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
 import DataList from "../core/components/table/table.component";
-import EmptyState from "../empty-state.component";
-import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
+import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
+import { Edit } from "@carbon/react/icons";
+import { ResourceRepresentation } from "../core/api/api";
+import { launchAddOrEditDialog } from "./stock-item.utils";
 
 interface StockItemsTableProps {
   from?: string;
@@ -21,28 +23,8 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const {
-    isLoading,
-    items,
-    tableHeaders,
-    setSearchString,
-    setDrug,
-    isDrug,
-    totalCount,
-    setCurrentPage,
-  } = useStockItemsPages();
-
-  const handleImport = () => {
-    // setShowImport(true);
-  };
-
-  const handleRefresh = () => {
-    // search.refetch()
-  };
-
-  const createStockItem = () => {
-    // search.refetch()
-  };
+  const { isLoading, items, tableHeaders, totalCount, setCurrentPage } =
+    useStockItemsPages(ResourceRepresentation.Full);
 
   const tableRows = useMemo(() => {
     return items?.map((stockItem) => ({
@@ -50,9 +32,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       id: stockItem?.uuid,
       key: `key-${stockItem?.uuid}`,
       uuid: `${stockItem?.uuid}`,
-      type: stockItem?.drugUuid
-        ? t("stockmanagement.drug", "Drug")
-        : t("stockmanagement.other", "Other"),
+      type: stockItem?.drugUuid ? t("drug", "Drug") : t("other", "Other"),
       genericName: (
         <Link to={URL_STOCK_ITEM(stockItem?.uuid || "")}>
           {" "}
@@ -71,6 +51,20 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
               stockItem?.reorderLevelUoMName
             }`
           : "",
+      actions: (
+        <Tooltip align="bottom" label="Edit Stock Item">
+          <Button
+            kind="ghost"
+            size="md"
+            onClick={() => {
+              stockItem.isDrug = !!stockItem.drugUuid;
+              launchAddOrEditDialog(stockItem, true);
+            }}
+            iconDescription={t("editStockItem", "Edit Stock Item")}
+            renderIcon={(props) => <Edit size={16} {...props} />}
+          ></Button>
+        </Tooltip>
+      ),
     }));
   }, [items, t]);
 
@@ -89,26 +83,26 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         {({ onInputChange }) => (
           <>
             <TableToolbarSearch persistent onChange={onInputChange} />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <FilterStockItems
-                filterType={isDrug}
-                changeFilterType={setDrug}
-              />
-            </div>
-            <Button onClick={handleImport} size="sm" kind="ghost">
-              {t("stockmanagement.import", "Import")}
-            </Button>
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={handleRefresh}>
-                Refresh
-              </TableToolbarAction>
-            </TableToolbarMenu>
+            {/*<div*/}
+            {/*  style={{*/}
+            {/*    display: "flex",*/}
+            {/*    flexDirection: "row",*/}
+            {/*    alignItems: "center",*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*<FilterStockItems*/}
+            {/*  filterType={isDrug}*/}
+            {/*  changeFilterType={setDrug}*/}
+            {/*/>*/}
+            {/*</div>*/}
+            {/*<Button onClick={handleImport} size="sm" kind="ghost">*/}
+            {/*  {t("stockmanagement.import", "Import")}*/}
+            {/*</Button>*/}
+            {/*<TableToolbarMenu>*/}
+            {/*  <TableToolbarAction onClick={handleRefresh}>*/}
+            {/*    Refresh*/}
+            {/*  </TableToolbarAction>*/}
+            {/*</TableToolbarMenu>*/}
             <AddStockItemActionButton />
           </>
         )}
@@ -116,7 +110,13 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     );
   }
 
-  return <EmptyState msg="No stock items to display" helper="" />;
+  return (
+    <div className={styles.tileContainer}>
+      <Tile className={styles.tile}>
+        <p className={styles.content}>No stock items to display</p>
+      </Tile>
+    </div>
+  );
 };
 
 export default StockItemsTableComponent;

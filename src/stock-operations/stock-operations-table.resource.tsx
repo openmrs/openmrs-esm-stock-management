@@ -25,12 +25,12 @@ export function useStockOperationPages(filter: StockOperationFilter) {
       {
         id: 0,
         header: t("type", "Type"),
-        key: "type",
+        key: "operationTypeName",
       },
       {
         id: 1,
         header: t("number", "Number"),
-        key: "number",
+        key: "operationNumber",
       },
       {
         id: 2,
@@ -50,20 +50,21 @@ export function useStockOperationPages(filter: StockOperationFilter) {
       {
         id: 5,
         header: t("date", "Date"),
-        key: "Date",
+        key: "operationDate",
       },
       {
         id: 6,
-        header: t("actions", "Actions"),
-        key: "actions",
+        key: "details",
       },
     ],
     [t]
   );
 
   return {
-    items: items.results,
+    items: items?.results,
+    totalItems: items?.totalCount,
     currentPage,
+    currentPageSize,
     paginatedQueueEntries,
     goTo,
     pageSizes,

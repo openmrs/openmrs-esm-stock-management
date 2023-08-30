@@ -1,4 +1,4 @@
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { FetchResponse, openmrsFetch } from "@openmrs/esm-framework";
 import useSWR from "swr";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
@@ -60,6 +60,13 @@ export function useStockOperation(id: string) {
     isLoading,
     isError: error,
   };
+} // getStockOperation
+export function getStockOperation(
+  id: string
+): Promise<FetchResponse<StockOperationDTO>> {
+  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${id}`;
+
+  return openmrsFetch(apiUrl);
 }
 
 // getStockOperationAndItems
@@ -125,8 +132,8 @@ export function createStockOperation(item: StockOperationDTO) {
 }
 
 // updateStockOperation
-export function updateStockOperation(item: StockOperationDTO, uuid: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${uuid}`;
+export function updateStockOperation(item: StockOperationDTO) {
+  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${item.uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",

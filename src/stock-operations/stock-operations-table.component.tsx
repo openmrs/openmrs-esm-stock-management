@@ -3,62 +3,62 @@ import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import { URL_STOCK_OPERATION } from "../stock-items/stock-items-table.component";
 import {
+  Button,
+  DataTable,
+  DataTableSkeleton,
   Link,
-  Tile,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableExpandedRow,
+  TableExpandHeader,
+  TableExpandRow,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableToolbar,
+  TableToolbarContent,
   TableToolbarSearch,
-  TableToolbarMenu,
-  TableToolbarAction,
-  DatePicker,
-  DatePickerInput,
+  Tile,
 } from "@carbon/react";
-import { ArrowRight } from "@carbon/react/icons";
-import {
-  DATE_PICKER_CONTROL_FORMAT,
-  DATE_PICKER_FORMAT,
-  formatForDatePicker,
-  today,
-} from "../constants";
+import { ArrowRight, Edit } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
-import DataList from "../core/components/table/table.component";
-import AddStockOperationActionButton from "./add-stock-operation-button.component";
-import StockOperationSourcesFilter from "./stock-operation-sources-filter/stock-operation-sources-filter.component";
-import StockOperationStatusesFilter from "./stock-operation-statuses-filter/stock-operation-statuses-filter.component";
-import EmptyState from "../empty-state.component";
-import StockOperationOperationsFilter from "./stock-operation-operations-filter/stock-operation-operations-filter.component";
+import styles from "../stock-items/stock-items-table.scss";
+import {
+  StockOperationStatusCancelled,
+  StockOperationStatusNew,
+  StockOperationStatusRejected,
+  StockOperationStatusReturned,
+} from "../core/api/types/stockOperation/StockOperationStatus";
+import { isDesktop } from "@openmrs/esm-framework";
+import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
+import { launchAddOrEditDialog } from "./stock-operation.utils";
+import { initialStockOperationValue } from "../core/utils/utils";
+import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 
 interface StockOperationsTableProps {
   status?: string;
 }
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
-  const { items, tableHeaders } = useStockOperationPages({
+  const {
+    items,
+    tableHeaders,
+    currentPage,
+    pageSizes,
+    totalItems,
+    goTo,
+    currentPageSize,
+    setPageSize,
+    isLoading,
+  } = useStockOperationPages({
     v: ResourceRepresentation.Default,
-    limit: 10,
     totalCount: true,
   });
 
-  const MaxDate: Date = today();
-
-  const handleImport = () => {
-    // setShowImport(true);
-  };
-
-  const handleRefresh = () => {
-    // search.refetch()
-  };
-
-  const createStockItem = () => {
-    // search.refetch()
-  };
-
-  // const onActiveDatesChange = (dates: Date[]): void => {
-  //   search.setOperationDateMax(
-  //     dates[1] ? JSON.stringify(dates[1]).replaceAll('"', "") : null
-  //   );
-  //   search.setOperationDateMin(
-  //     dates[0] ? JSON.stringify(dates[0]).replaceAll('"', "") : null
-  //   );
-  // }
+  let operations: StockOperationType[] | null | undefined;
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation) => ({
@@ -68,7 +68,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       operationTypeName: `${stockOperation?.operationTypeName}`,
       operationNumber: (
         <Link
-          to={URL_STOCK_OPERATION(stockOperation?.uuid)}
+          to={URL_STOCK_OPERATION(stockOperation?.uuid || "")}
+          onClick={() => {
+            //TODO handlerStockOperationClick(e, stockOperation?.uuid!)
+          }}
         >{`${stockOperation?.operationNumber}`}</Link>
       ),
       status: `${stockOperation?.status}`,
@@ -79,7 +82,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           {" "}
           {stockOperation?.sourceName ?? ""}{" "}
           {stockOperation?.sourceName && stockOperation?.destinationName ? (
-            <ArrowRight />
+            <ArrowRight size={16} />
           ) : (
             ""
           )}{" "}
@@ -92,59 +95,268 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         ""
       } ${stockOperation?.responsiblePersonGivenName ?? ""}`,
       operationDate: formatDisplayDate(stockOperation?.operationDate),
+      details: (
+        <div className="tbl-expand-display-fields">
+          <div className="field-label">
+            <span className="field-title">Created</span>
+            <span className="field-desc">
+              <span className="action-date">
+                {formatDisplayDate(stockOperation?.dateCreated)}
+              </span>{" "}
+              By
+              <span className="action-by">
+                {stockOperation.creatorFamilyName ?? ""}{" "}
+                {stockOperation.creatorGivenName ?? ""}
+              </span>
+            </span>
+          </div>
+          {stockOperation?.status !== StockOperationStatusNew &&
+            stockOperation?.status !== StockOperationStatusReturned &&
+            stockOperation?.submittedDate && (
+              <div className="field-label">
+                <span className="field-title">Submitted</span>
+                <span className="field-desc">
+                  <span className="action-date">
+                    {formatDisplayDate(stockOperation?.submittedDate)}
+                  </span>{" "}
+                  By
+                  <span className="action-by">
+                    {stockOperation.submittedByFamilyName ?? ""}{" "}
+                    {stockOperation.submittedByGivenName ?? ""}
+                  </span>
+                </span>
+              </div>
+            )}
+
+          {stockOperation?.completedDate && (
+            <div className="field-label">
+              <span className="field-title">Completed</span>
+              <span className="field-desc">
+                <span className="action-date">
+                  {formatDisplayDate(stockOperation?.completedDate)}
+                </span>{" "}
+                By
+                <span className="action-by">
+                  {stockOperation.completedByFamilyName ?? ""}{" "}
+                  {stockOperation.completedByGivenName ?? ""}
+                </span>
+              </span>
+            </div>
+          )}
+
+          {stockOperation?.status === StockOperationStatusCancelled && (
+            <div className="field-label">
+              <span className="field-title">Cancelled</span>
+              <span className="field-desc">
+                <span className="action-date">
+                  {formatDisplayDate(stockOperation?.cancelledDate)}
+                </span>{" "}
+                By
+                <span className="action-by">
+                  {stockOperation.cancelledByFamilyName ?? ""}{" "}
+                  {stockOperation.cancelledByGivenName ?? ""}
+                </span>
+                <p>{stockOperation.cancelReason}</p>
+              </span>
+            </div>
+          )}
+
+          {stockOperation?.status === StockOperationStatusRejected && (
+            <div className="field-label">
+              <span className="field-title">Rejected</span>
+              <span className="field-desc">
+                <span className="action-date">
+                  {formatDisplayDate(stockOperation?.rejectedDate)}
+                </span>{" "}
+                By
+                <span className="action-by">
+                  {stockOperation.rejectedByFamilyName ?? ""}{" "}
+                  {stockOperation.rejectedByGivenName ?? ""}
+                </span>
+                <p>{stockOperation.rejectionReason}</p>
+              </span>
+            </div>
+          )}
+
+          {stockOperation?.status === StockOperationStatusReturned && (
+            <div className="field-label">
+              <span className="field-title">Returned</span>
+              <span className="field-desc">
+                <span className="action-date">
+                  {formatDisplayDate(stockOperation?.returnedDate)}
+                </span>{" "}
+                By
+                <span className="action-by">
+                  {stockOperation.returnedByFamilyName ?? ""}{" "}
+                  {stockOperation.returnedByGivenName ?? ""}
+                </span>
+                <p>{stockOperation.returnReason}</p>
+              </span>
+            </div>
+          )}
+        </div>
+      ),
     }));
   }, [items]);
 
-  if (items?.length) {
+  if (isLoading) {
     return (
-      <DataList columns={tableHeaders} data={tableRows}>
-        {({ onInputChange }) => (
-          <>
-            <TableToolbarSearch persistent onChange={onInputChange} />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <DatePicker
-                datePickerType="range"
-                className="date-range-filter"
-                maxDate={formatForDatePicker(MaxDate)}
-                locale="en"
-                dateFormat={DATE_PICKER_CONTROL_FORMAT}
-              >
-                <DatePickerInput
-                  id="date-picker-input-id-start"
-                  autoComplete="off"
-                  placeholder={DATE_PICKER_FORMAT}
-                  labelText=""
-                />
-                <DatePickerInput
-                  id="date-picker-input-id-finish"
-                  autoComplete="off"
-                  placeholder={DATE_PICKER_FORMAT}
-                  labelText=""
-                />
-              </DatePicker>
-              <StockOperationSourcesFilter />
-              <StockOperationStatusesFilter />
-              <StockOperationOperationsFilter />
-            </div>
-
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={handleRefresh}>
-                Refresh
-              </TableToolbarAction>
-            </TableToolbarMenu>
-            <AddStockOperationActionButton />
-          </>
-        )}
-      </DataList>
+      <DataTableSkeleton
+        className={styles.dataTableSkeleton}
+        showHeader={false}
+        rowCount={5}
+        columnCount={5}
+        zebra
+      />
     );
   }
 
-  return <EmptyState msg="No stock operations to display" helper="" />;
+  if (items?.length && items?.length != 0) {
+    return (
+      <div className={styles.tableOverride}>
+        <div id="table-tool-bar">
+          <div></div>
+          <div className="right-filters"></div>
+        </div>
+        <DataTable
+          rows={tableRows}
+          headers={tableHeaders}
+          isSortable={true}
+          useZebraStyles={true}
+          render={({
+            rows,
+            headers,
+            getHeaderProps,
+            getTableProps,
+            getRowProps,
+            onInputChange,
+          }) => (
+            <TableContainer>
+              <TableToolbar
+                style={{
+                  position: "static",
+                  overflow: "visible",
+                  backgroundColor: "color",
+                }}
+              >
+                <TableToolbarContent className={styles.toolbarContent}>
+                  <TableToolbarSearch
+                    className={styles.patientListSearch}
+                    expanded
+                    onChange={onInputChange}
+                    placeholder="Filter Table"
+                    size="sm"
+                  />
+                  <StockOperationTypesSelector
+                    onOperationTypeSelected={(operation) => {
+                      launchAddOrEditDialog(
+                        initialStockOperationValue(),
+                        operation,
+                        false,
+                        operations
+                      );
+                    }}
+                    onOperationLoaded={(ops) => {
+                      operations = ops;
+                    }}
+                  />
+                </TableToolbarContent>
+              </TableToolbar>
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    <TableExpandHeader />
+                    {headers.map(
+                      (header: any) =>
+                        header.key !== "details" && (
+                          <TableHeader
+                            {...getHeaderProps({
+                              header,
+                              isSortable: header.isSortable,
+                            })}
+                            className={
+                              isDesktop
+                                ? styles.desktopHeader
+                                : styles.tabletHeader
+                            }
+                            key={`${header.key}`}
+                          >
+                            {header.header?.content ?? header.header}
+                          </TableHeader>
+                        )
+                    )}
+                    <TableHeader></TableHeader>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row: any) => {
+                    return (
+                      <React.Fragment key={row.id}>
+                        <TableExpandRow
+                          className={
+                            isDesktop ? styles.desktopRow : styles.tabletRow
+                          }
+                          {...getRowProps({ row })}
+                        >
+                          {row.cells.map(
+                            (cell: any) =>
+                              cell?.info?.header !== "details" && (
+                                <TableCell key={cell.id}>
+                                  {cell.value}
+                                </TableCell>
+                              )
+                          )}
+                          <TableCell>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="submitButton clear-padding-margin"
+                              iconDescription={"View"}
+                              kind="ghost"
+                              renderIcon={Edit}
+                              onClick={() => {
+                                //TODO onViewItem(row.id, e);
+                              }}
+                            />
+                          </TableCell>
+                        </TableExpandRow>
+                        <TableExpandedRow colSpan={headers.length + 2}>
+                          {<div>{row.cells[row.cells.length - 1].value}</div>}
+                        </TableExpandedRow>
+                      </React.Fragment>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        ></DataTable>
+        <Pagination
+          page={currentPage}
+          pageSize={currentPageSize}
+          pageSizes={pageSizes}
+          totalItems={totalItems}
+          onChange={({ pageSize, page }) => {
+            if (pageSize !== currentPageSize) {
+              setPageSize(pageSize);
+            }
+            if (page !== currentPage) {
+              goTo(page);
+            }
+          }}
+          className={styles.paginationOverride}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.tileContainer}>
+      <Tile className={styles.tile}>
+        <p className={styles.content}>No stock operations to display</p>
+      </Tile>
+    </div>
+  );
 };
 
 export default StockOperations;

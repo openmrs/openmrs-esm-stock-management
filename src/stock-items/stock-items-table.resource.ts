@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
 
-export function useStockItemsPages() {
+export function useStockItemsPages(v?: ResourceRepresentation) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
     startIndex: 0,
-    v: ResourceRepresentation.Default,
+    v: v || ResourceRepresentation.Default,
     limit: 10,
     q: null,
     totalCount: true,
@@ -73,7 +73,7 @@ export function useStockItemsPages() {
         header: t("reorderLevel", "Reorder Level"),
         key: "reorderLevel",
       },
-      // { key: "details", header: "" },
+      { key: "actions", header: "" },
     ],
     [t]
   );

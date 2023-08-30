@@ -18,3 +18,9 @@
   flex-direction: column;
   align-items: center;
 }
+
+.tableOverride {
+  :global(.cds--table-sort__description) {
+    display: none;
+  }
+}

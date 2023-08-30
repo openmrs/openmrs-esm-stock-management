@@ -51,11 +51,11 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
       component: <StockQuantities stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },
-    {
-      name: t("stockRules", "Stock Rules"),
-      component: <StockRules />,
-      disabled: !isEditing,
-    },
+    // {
+    //   name: t("stockRules", "Stock Rules"),
+    //   component: <StockRules />,
+    //   disabled: !isEditing,
+    // },
   ];
 
   return <VerticalTabs tabs={tabs} />;

@@ -29,7 +29,7 @@ const ControlledRadioButtonGroup = <T,>(
           }}
           id={props.name}
           ref={ref}
-          defaultSelected={value}
+          value={value}
         />
       )}
     />

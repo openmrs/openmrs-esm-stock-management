@@ -14,9 +14,7 @@ const FilterStockItems: React.FC<FilterStockItemsProps> = ({
     <RadioButtonGroup
       name="is-drug"
       defaultSelected={filterType}
-      onChange={({ newSelection }) => {
-        changeFilterType(newSelection);
-      }}
+      onChange={changeFilterType}
     >
       <RadioButton labelText="All" value="" id="is-drug-all" />
       <RadioButton labelText="Drugs" value="true" id="is-drug-drug" />

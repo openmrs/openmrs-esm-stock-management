@@ -104,3 +104,5 @@ export const HEALTH_CENTER_NAME = "Health Center";
 export const PRINT_LOGO =
   "moduleResources/stockmanagement/assets/print-logo.svg";
 export const PRINT_LOGO_TEXT = "Ministry of Health";
+
+export const MAIN_STORE_LOCATION_TAG = "Main Store";

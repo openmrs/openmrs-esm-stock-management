@@ -1,66 +1,107 @@
-import { StockSource } from "../../core/api/types/stockOperation/StockSource";
-import {
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Form,
-  TextInput,
-} from "@carbon/react";
-import React from "react";
-import styles from "./add-stock-operation.scss";
-import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
-import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { TabItem } from "../../core/components/tabs/types";
+import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
+import BaseOperationDetails from "./base-operation-details.component";
+import StockItemsAddition from "./stock-items-addition.component";
+import StockOperationSubmission from "./stock-operation-submission.component";
+import { AddStockOperationProps } from "./types";
+import { useInitializeStockOperations } from "./add-stock-operation.resource";
+import { AccordionSkeleton } from "@carbon/react";
+import { closeOverlay } from "../../core/components/overlay/hook";
+import { addOrEditStockOperation } from "../stock-operation.utils";
 
-interface AddStockOperationProps {
-  source: StockSource;
-  closeModal: () => void;
-}
-
-const AddStockOperation: React.FC = () => {
-  // get stock sources
-  const { items, isLoading, isError } = useConceptById(
-    STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
+const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
+  const { t } = useTranslation();
+  const { isLoading, isError, result } = useInitializeStockOperations(props);
+  const [isEditing, setIsEditing] = useState(props.isEditing);
+  const [manageStockItems, setManageStockItems] = useState(props.isEditing);
+  const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
+    props.isEditing
   );
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  if (isLoading) return <AccordionSkeleton />;
+  if (isError) {
+    closeOverlay();
+    // TODO: Show an error
+    return;
+  }
+
+  const tabs: TabItem[] = [
+    {
+      name: `${props.operation.name} Details`,
+      component: (
+        <BaseOperationDetails
+          {...props}
+          setup={result}
+          model={result?.dto}
+          onSave={async () => {
+            setManageStockItems(true);
+            setSelectedIndex(1);
+          }}
+        />
+      ),
+    },
+    {
+      name: t("stockItems", "Stock Items"),
+      component: (
+        <StockItemsAddition
+          {...props}
+          setup={result}
+          model={result?.dto}
+          onSave={async () => {
+            setManageSubmitOrComplete(true);
+            setSelectedIndex(2);
+          }}
+        />
+      ),
+      disabled: !(isEditing || manageStockItems),
+    },
+    {
+      name: result.requiresDispatchAcknowledgement
+        ? "Submit/Dispatch"
+        : "Submit/Complete",
+      component: (
+        <StockOperationSubmission
+          {...props}
+          setup={result}
+          model={result?.dto}
+          actions={{
+            onSave: async (model) => {
+              // TODO: Update
+              await addOrEditStockOperation(
+                model,
+                props.operation,
+                props.isEditing,
+                props.operations
+              );
+            },
+            onGoBack: () => {
+              setSelectedIndex(1);
+            },
+            onComplete: () => {
+              // TODO: Update
+            },
+            onSubmit: () => {
+              // TODO: Update
+            },
+            onDispatch: () => {
+              // TODO: Update
+            },
+          }}
+        />
+      ),
+      disabled: !(props.isEditing || manageSubmitOrComplete),
+    },
+  ];
 
   return (
-    <div>
-      <Form>
-        <ModalHeader />
-        <ModalBody>
-          <section className={styles.section}>
-            <TextInput
-              id="fullname"
-              type="text"
-              labelText="FullName"
-              size="md"
-              placeholder="e.g National Medical Stores"
-            />
-          </section>
-          <section className={styles.section}>
-            <TextInput
-              id="acronym"
-              type="text"
-              size="md"
-              placeholder="e.g NMS"
-              labelText="Acronym/Code"
-            />
-          </section>
-          <section className={styles.section}>
-            <TextInput
-              id="sourceType"
-              type="text"
-              size="md"
-              labelText="Source type"
-            />
-          </section>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary">Cancel</Button>
-          <Button type="submit">Save</Button>
-        </ModalFooter>
-      </Form>
-    </div>
+    <VerticalTabs
+      tabs={tabs}
+      selectedIndex={selectedIndex}
+      onChange={setSelectedIndex}
+    />
   );
 };
 

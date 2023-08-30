@@ -1,15 +1,17 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { useStockLocationPages } from "./stock-locations-table.resource";
 import {
   Button,
+  DataTableSkeleton,
   TableToolbarAction,
   TableToolbarMenu,
   TableToolbarSearch,
+  Tile,
 } from "@carbon/react";
+import styles from "../stock-items/stock-items-table.scss";
 import { ResourceRepresentation } from "../core/api/api";
-import { useStockLocationPages } from "./stock-locations-table.resource";
 import DataList from "../core/components/table/table.component";
-import EmptyState from "../empty-state.component";
+import { useTranslation } from "react-i18next";
 
 interface StockLocationsTableProps {
   status?: string;
@@ -18,13 +20,10 @@ interface StockLocationsTableProps {
 const StockLocations: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { tableHeaders, tableRows, items } = useStockLocationPages({
-    v: ResourceRepresentation.Full,
-  });
-
-  const handleImport = () => {
-    // setShowImport(true);
-  };
+  const { tableHeaders, tableRows, items, isLoadingLocations } =
+    useStockLocationPages({
+      v: ResourceRepresentation.Full,
+    });
 
   const handleRefresh = () => {
     // search.refetch()
@@ -34,9 +33,9 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
     // search.refetch()
   };
 
-  // if (isLoading) {
-  //   return <DataTableSkeleton role="progressbar" />;
-  // }
+  if (isLoadingLocations) {
+    return <DataTableSkeleton role="progressbar" />;
+  }
 
   if (items?.length) {
     return (
@@ -58,7 +57,13 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
     );
   }
 
-  return <EmptyState msg="No stock locations to display" helper="" />;
+  return (
+    <div className={styles.tileContainer}>
+      <Tile className={styles.tile}>
+        <p className={styles.content}>No stock items to display</p>
+      </Tile>
+    </div>
+  );
 };
 
 export default StockLocations;

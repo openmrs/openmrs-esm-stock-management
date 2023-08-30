@@ -5,21 +5,12 @@ import { interpolateUrl, navigate } from "@openmrs/esm-framework";
 import React, { AnchorHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
 
-interface EditActionsMenuProps {
-  patientUuid: string;
-  closeModal: () => void;
-}
-
 interface NameLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
   from: string;
 }
 
-const EditSourceActionsMenu: React.FC<NameLinkProps> = ({
-  from,
-  to,
-  children,
-}) => {
+const EditSourceActionsMenu: React.FC<NameLinkProps> = ({ from, to }) => {
   const { t } = useTranslation();
   const handleNameClick = (event: MouseEvent, to: string) => {
     event.preventDefault();
