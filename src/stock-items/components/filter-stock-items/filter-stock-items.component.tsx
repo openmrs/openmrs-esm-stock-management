@@ -1,5 +1,6 @@
 import React from "react";
 import { RadioButton, RadioButtonGroup } from "@carbon/react";
+import styles from "./filter-stock-items.scss";
 
 interface FilterStockItemsProps {
   filterType: string;
@@ -15,6 +16,7 @@ const FilterStockItems: React.FC<FilterStockItemsProps> = ({
       name="is-drug"
       defaultSelected={filterType}
       onChange={changeFilterType}
+      className={styles.spacing}
     >
       <RadioButton labelText="All" value="" id="is-drug-all" />
       <RadioButton labelText="Drugs" value="true" id="is-drug-drug" />

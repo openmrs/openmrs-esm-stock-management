@@ -1,20 +1,33 @@
-import React, { useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "./stock-items-table.scss";
 import {
   Button,
+  DataTable,
   DataTableSkeleton,
   Link,
+  Pagination,
+  Table,
+  TableBatchActions,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableToolbar,
+  TableToolbarContent,
   TableToolbarSearch,
   Tile,
   Tooltip,
 } from "@carbon/react";
-import { useStockItemsPages } from "./stock-items-table.resource";
-import DataList from "../core/components/table/table.component";
-import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
 import { Edit } from "@carbon/react/icons";
+import { isDesktop } from "@openmrs/esm-framework";
+import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
+import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
+import FilterStockItems from "./components/filter-stock-items/filter-stock-items.component";
 import { launchAddOrEditDialog } from "./stock-item.utils";
+import { useStockItemsPages } from "./stock-items-table.resource";
+import styles from "./stock-items-table.scss";
 
 interface StockItemsTableProps {
   from?: string;
@@ -23,8 +36,19 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { isLoading, items, tableHeaders, totalCount, setCurrentPage } =
-    useStockItemsPages(ResourceRepresentation.Full);
+  const {
+    isLoading,
+    items,
+    tableHeaders,
+    totalCount,
+    currentPageSize,
+    pageSizes,
+    currentPage,
+    setCurrentPage,
+    isDrug,
+    setDrug,
+    setSearchString,
+  } = useStockItemsPages(ResourceRepresentation.Full);
 
   const tableRows = useMemo(() => {
     return items?.map((stockItem) => ({
@@ -74,39 +98,109 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   if (items?.length) {
     return (
-      <DataList
-        columns={tableHeaders}
-        data={tableRows}
-        totalItems={totalCount}
-        goToPage={setCurrentPage}
-      >
-        {({ onInputChange }) => (
-          <>
-            <TableToolbarSearch persistent onChange={onInputChange} />
-            {/*<div*/}
-            {/*  style={{*/}
-            {/*    display: "flex",*/}
-            {/*    flexDirection: "row",*/}
-            {/*    alignItems: "center",*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*<FilterStockItems*/}
-            {/*  filterType={isDrug}*/}
-            {/*  changeFilterType={setDrug}*/}
-            {/*/>*/}
-            {/*</div>*/}
-            {/*<Button onClick={handleImport} size="sm" kind="ghost">*/}
-            {/*  {t("stockmanagement.import", "Import")}*/}
-            {/*</Button>*/}
-            {/*<TableToolbarMenu>*/}
-            {/*  <TableToolbarAction onClick={handleRefresh}>*/}
-            {/*    Refresh*/}
-            {/*  </TableToolbarAction>*/}
-            {/*</TableToolbarMenu>*/}
-            <AddStockItemActionButton />
-          </>
-        )}
-      </DataList>
+      <>
+        <DataTable
+          rows={tableRows}
+          headers={tableHeaders}
+          isSortable
+          useZebraStyles
+          render={({
+            rows,
+            headers,
+            getHeaderProps,
+            getTableProps,
+            getRowProps,
+            getBatchActionProps,
+          }) => (
+            <TableContainer>
+              <TableToolbar
+                style={{
+                  position: "static",
+                  overflow: "visible",
+                  backgroundColor: "color",
+                }}
+              >
+                <TableBatchActions
+                  {...getBatchActionProps()}
+                ></TableBatchActions>
+                <TableToolbarContent
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <TableToolbarSearch persistent onChange={setSearchString} />
+                  <FilterStockItems
+                    filterType={isDrug}
+                    changeFilterType={setDrug}
+                  />
+                  <AddStockItemActionButton />
+                </TableToolbarContent>
+              </TableToolbar>
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    {headers.map(
+                      (header) =>
+                        header.key !== "details" && (
+                          <TableHeader
+                            {...getHeaderProps({
+                              header,
+                              isSortable: header.isSortable,
+                            })}
+                            className={
+                              isDesktop
+                                ? styles.desktopHeader
+                                : styles.tabletHeader
+                            }
+                            key={`${header.key}`}
+                            isSortable={header.key !== "name"}
+                          >
+                            {header.header?.content ?? header.header}
+                          </TableHeader>
+                        )
+                    )}
+                    <TableHeader></TableHeader>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => {
+                    return (
+                      <React.Fragment key={row.id}>
+                        <TableRow
+                          className={
+                            isDesktop ? styles.desktopRow : styles.tabletRow
+                          }
+                          {...getRowProps({ row })}
+                          key={row.id}
+                        >
+                          {row.cells.map(
+                            (cell) =>
+                              cell?.info?.header !== "details" && (
+                                <TableCell key={cell.id}>
+                                  {cell.value}
+                                </TableCell>
+                              )
+                          )}
+                        </TableRow>
+                      </React.Fragment>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        ></DataTable>
+
+        <Pagination
+          page={currentPage}
+          pageSize={currentPageSize}
+          pageSizes={pageSizes}
+          totalItems={totalCount}
+          onChange={({ page }) => setCurrentPage(page)}
+          className={styles.paginationOverride}
+        />
+      </>
     );
   }
 
