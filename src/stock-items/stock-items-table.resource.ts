@@ -2,26 +2,30 @@ import { StockItemFilter, useStockItems } from "./stock-items.resource";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
+import { usePagination } from "@openmrs/esm-framework";
 
 export function useStockItemsPages(v?: ResourceRepresentation) {
-  const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
-    startIndex: 0,
-    v: v || ResourceRepresentation.Default,
-    limit: 10,
-    q: null,
-    totalCount: true,
-  });
-
   const { t } = useTranslation();
 
   const pageSizes = [10, 20, 30, 40, 50];
+  const [currentPage, setCurrentPage] = useState(1);
   const [currentPageSize, setPageSize] = useState(10);
   const [searchString, setSearchString] = useState(null);
 
   // Drug filter type
   const [isDrug, setDrug] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
+    startIndex: currentPage - 1,
+    v: v || ResourceRepresentation.Default,
+    limit: 10,
+    q: null,
+    totalCount: true,
+  });
+
+  const { items, isLoading, isError } = useStockItems(stockItemFilter);
+
+  const pagination = usePagination(items.results, currentPageSize);
 
   useEffect(() => {
     setStockItemFilter({
@@ -33,8 +37,6 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
       isDrug: isDrug,
     });
   }, [searchString, currentPage, currentPageSize, isDrug]);
-
-  const { items, isLoading, isError } = useStockItems(stockItemFilter);
 
   const tableHeaders = useMemo(
     () => [
@@ -79,17 +81,21 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   );
 
   return {
-    items: items.results,
+    items: pagination.results,
+    pagination,
     totalCount: items.totalCount,
-    currentPage,
     currentPageSize,
+    currentPage,
     setCurrentPage,
     setPageSize,
     pageSizes,
     isLoading,
     isError,
     isDrug,
-    setDrug,
+    setDrug: (drug: string) => {
+      setCurrentPage(1);
+      setDrug(drug);
+    },
     setSearchString,
     tableHeaders,
   };
