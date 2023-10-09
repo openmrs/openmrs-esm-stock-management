@@ -82,6 +82,7 @@ dist/
 
 # Turborepo
 .turbo
+/*.idea/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/.gitignore
 /.idea/modules.xml

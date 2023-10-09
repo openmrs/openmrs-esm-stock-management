@@ -96,120 +96,121 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (items?.length) {
-    return (
-      <>
-        <DataTable
-          rows={tableRows}
-          headers={tableHeaders}
-          isSortable
-          useZebraStyles
-          render={({
-            rows,
-            headers,
-            getHeaderProps,
-            getTableProps,
-            getRowProps,
-            getBatchActionProps,
-          }) => (
-            <TableContainer>
-              <TableToolbar
+  return (
+    <>
+      <DataTable
+        rows={tableRows}
+        headers={tableHeaders}
+        isSortable
+        useZebraStyles
+        render={({
+          rows,
+          headers,
+          getHeaderProps,
+          getTableProps,
+          getRowProps,
+          getBatchActionProps,
+        }) => (
+          <TableContainer>
+            <TableToolbar
+              style={{
+                position: "static",
+                overflow: "visible",
+                backgroundColor: "color",
+              }}
+            >
+              <TableBatchActions {...getBatchActionProps()}></TableBatchActions>
+              <TableToolbarContent
                 style={{
-                  position: "static",
-                  overflow: "visible",
-                  backgroundColor: "color",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                <TableBatchActions
-                  {...getBatchActionProps()}
-                ></TableBatchActions>
-                <TableToolbarContent
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <TableToolbarSearch persistent onChange={setSearchString} />
-                  <FilterStockItems
-                    filterType={isDrug}
-                    changeFilterType={setDrug}
-                  />
-                  <AddStockItemActionButton />
-                </TableToolbarContent>
-              </TableToolbar>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    {headers.map(
-                      (header) =>
-                        header.key !== "details" && (
-                          <TableHeader
-                            {...getHeaderProps({
-                              header,
-                              isSortable: header.isSortable,
-                            })}
-                            className={
-                              isDesktop
-                                ? styles.desktopHeader
-                                : styles.tabletHeader
-                            }
-                            key={`${header.key}`}
-                            isSortable={header.key !== "name"}
-                          >
-                            {header.header?.content ?? header.header}
-                          </TableHeader>
-                        )
-                    )}
-                    <TableHeader></TableHeader>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => {
-                    return (
-                      <React.Fragment key={row.id}>
-                        <TableRow
+                <TableToolbarSearch persistent onChange={setSearchString} />
+                <FilterStockItems
+                  filterType={isDrug}
+                  changeFilterType={setDrug}
+                />
+                <AddStockItemActionButton />
+              </TableToolbarContent>
+            </TableToolbar>
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  {headers.map(
+                    (header) =>
+                      header.key !== "details" && (
+                        <TableHeader
+                          {...getHeaderProps({
+                            header,
+                            isSortable: header.isSortable,
+                          })}
                           className={
-                            isDesktop ? styles.desktopRow : styles.tabletRow
+                            isDesktop
+                              ? styles.desktopHeader
+                              : styles.tabletHeader
                           }
-                          {...getRowProps({ row })}
-                          key={row.id}
+                          key={`${header.key}`}
+                          isSortable={header.key !== "name"}
                         >
-                          {row.cells.map(
-                            (cell) =>
-                              cell?.info?.header !== "details" && (
-                                <TableCell key={cell.id}>
-                                  {cell.value}
-                                </TableCell>
-                              )
-                          )}
-                        </TableRow>
-                      </React.Fragment>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        ></DataTable>
+                          {header.header?.content ?? header.header}
+                        </TableHeader>
+                      )
+                  )}
+                  <TableHeader></TableHeader>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => {
+                  return (
+                    <React.Fragment key={row.id}>
+                      <TableRow
+                        className={
+                          isDesktop ? styles.desktopRow : styles.tabletRow
+                        }
+                        {...getRowProps({ row })}
+                        key={row.id}
+                      >
+                        {row.cells.map(
+                          (cell) =>
+                            cell?.info?.header !== "details" && (
+                              <TableCell key={cell.id}>{cell.value}</TableCell>
+                            )
+                        )}
+                      </TableRow>
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            {rows.length === 0 ? (
+              <div className={styles.tileContainer}>
+                <Tile className={styles.tile}>
+                  <div className={styles.tileContent}>
+                    <p className={styles.content}>
+                      {t("noItemsToDisplay", "No Stock Items to display")}
+                    </p>
+                    <p className={styles.helper}>
+                      {t("checkFilters", "Check the filters above")}
+                    </p>
+                  </div>
+                  <p className={styles.separator}>{t("or", "or")}</p>
+                </Tile>
+              </div>
+            ) : null}
+          </TableContainer>
+        )}
+      ></DataTable>
 
-        <Pagination
-          page={currentPage}
-          pageSize={currentPageSize}
-          pageSizes={pageSizes}
-          totalItems={totalCount}
-          onChange={({ page }) => setCurrentPage(page)}
-          className={styles.paginationOverride}
-        />
-      </>
-    );
-  }
-
-  return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No stock items to display</p>
-      </Tile>
-    </div>
+      <Pagination
+        page={currentPage}
+        pageSize={currentPageSize}
+        pageSizes={pageSizes}
+        totalItems={totalCount}
+        onChange={({ page }) => setCurrentPage(page)}
+        className={styles.paginationOverride}
+      />
+    </>
   );
 };
 
