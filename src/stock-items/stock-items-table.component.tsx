@@ -110,6 +110,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
           getTableProps,
           getRowProps,
           getBatchActionProps,
+          onInputChange,
         }) => (
           <TableContainer>
             <TableToolbar
@@ -126,7 +127,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   alignItems: "center",
                 }}
               >
-                <TableToolbarSearch persistent onChange={setSearchString} />
+                <TableToolbarSearch persistent onChange={onInputChange} />
                 <FilterStockItems
                   filterType={isDrug}
                   changeFilterType={setDrug}
