@@ -22,6 +22,7 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
+  Tooltip,
 } from "@carbon/react";
 import { ArrowRight, Edit, Add } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -199,6 +200,21 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           )}
         </div>
       ),
+      actions: (
+        <Tooltip align="bottom" label="Edit Stock Operation">
+          <Button
+            type="button"
+            size="sm"
+            className="submitButton clear-padding-margin"
+            iconDescription={"View"}
+            kind="ghost"
+            renderIcon={Edit}
+            onClick={() => {
+              //TODO onViewItem(row.id, e);
+            }}
+          />
+        </Tooltip>
+      ),
     }));
   }, [items]);
 
@@ -306,19 +322,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                               <TableCell key={cell.id}>{cell.value}</TableCell>
                             )
                         )}
-                        <TableCell>
-                          <Button
-                            type="button"
-                            size="sm"
-                            className="submitButton clear-padding-margin"
-                            iconDescription={"View"}
-                            kind="ghost"
-                            renderIcon={Edit}
-                            onClick={() => {
-                              //TODO onViewItem(row.id, e);
-                            }}
-                          />
-                        </TableCell>
                       </TableExpandRow>
                       <TableExpandedRow colSpan={headers.length + 2}>
                         {<div>{row.cells[row.cells.length - 1].value}</div>}
