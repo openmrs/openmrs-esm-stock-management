@@ -14,9 +14,9 @@ const StockCommodityTabs: React.FC = () => {
         <TabList contained fullWidth>
           <Tab>Items</Tab>
           <Tab>Operations</Tab>
-          <Tab>User Role Scopes</Tab>
+          <Tab>User Roles</Tab>
           <Tab>Sources</Tab>
-          <Tab>Locations</Tab>
+          {/* <Tab>Locations</Tab> */}
           {/*<Tab>Reports</Tab>*/}
         </TabList>
         <TabPanels>
@@ -32,9 +32,9 @@ const StockCommodityTabs: React.FC = () => {
           <TabPanel>
             <StockSources />
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <StockLocations />
-          </TabPanel>
+          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </div>

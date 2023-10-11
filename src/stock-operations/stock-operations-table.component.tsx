@@ -22,8 +22,9 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
+  Tooltip,
 } from "@carbon/react";
-import { ArrowRight, Edit } from "@carbon/react/icons";
+import { ArrowRight, Edit, Add } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {
@@ -37,12 +38,15 @@ import StockOperationTypesSelector from "./stock-operation-types-selector/stock-
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
+import { useTranslation } from "react-i18next";
 
 interface StockOperationsTableProps {
   status?: string;
 }
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
+  const { t } = useTranslation();
+
   const {
     items,
     tableHeaders,
@@ -196,6 +200,21 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           )}
         </div>
       ),
+      actions: (
+        <Tooltip align="bottom" label="Edit Stock Operation">
+          <Button
+            type="button"
+            size="sm"
+            className="submitButton clear-padding-margin"
+            iconDescription={"View"}
+            kind="ghost"
+            renderIcon={Edit}
+            onClick={() => {
+              //TODO onViewItem(row.id, e);
+            }}
+          />
+        </Tooltip>
+      ),
     }));
   }, [items]);
 
@@ -211,150 +230,140 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     );
   }
 
-  if (items?.length && items?.length != 0) {
-    return (
-      <div className={styles.tableOverride}>
-        <div id="table-tool-bar">
-          <div></div>
-          <div className="right-filters"></div>
-        </div>
-        <DataTable
-          rows={tableRows}
-          headers={tableHeaders}
-          isSortable={true}
-          useZebraStyles={true}
-          render={({
-            rows,
-            headers,
-            getHeaderProps,
-            getTableProps,
-            getRowProps,
-            onInputChange,
-          }) => (
-            <TableContainer>
-              <TableToolbar
-                style={{
-                  position: "static",
-                  overflow: "visible",
-                  backgroundColor: "color",
-                }}
-              >
-                <TableToolbarContent className={styles.toolbarContent}>
-                  <TableToolbarSearch
-                    className={styles.patientListSearch}
-                    expanded
-                    onChange={onInputChange}
-                    placeholder="Filter Table"
-                    size="sm"
-                  />
-                  <StockOperationTypesSelector
-                    onOperationTypeSelected={(operation) => {
-                      launchAddOrEditDialog(
-                        initialStockOperationValue(),
-                        operation,
-                        false,
-                        operations
-                      );
-                    }}
-                    onOperationLoaded={(ops) => {
-                      operations = ops;
-                    }}
-                  />
-                </TableToolbarContent>
-              </TableToolbar>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    <TableExpandHeader />
-                    {headers.map(
-                      (header: any) =>
-                        header.key !== "details" && (
-                          <TableHeader
-                            {...getHeaderProps({
-                              header,
-                              isSortable: header.isSortable,
-                            })}
-                            className={
-                              isDesktop
-                                ? styles.desktopHeader
-                                : styles.tabletHeader
-                            }
-                            key={`${header.key}`}
-                          >
-                            {header.header?.content ?? header.header}
-                          </TableHeader>
-                        )
-                    )}
-                    <TableHeader></TableHeader>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row: any) => {
-                    return (
-                      <React.Fragment key={row.id}>
-                        <TableExpandRow
-                          className={
-                            isDesktop ? styles.desktopRow : styles.tabletRow
-                          }
-                          {...getRowProps({ row })}
-                        >
-                          {row.cells.map(
-                            (cell: any) =>
-                              cell?.info?.header !== "details" && (
-                                <TableCell key={cell.id}>
-                                  {cell.value}
-                                </TableCell>
-                              )
-                          )}
-                          <TableCell>
-                            <Button
-                              type="button"
-                              size="sm"
-                              className="submitButton clear-padding-margin"
-                              iconDescription={"View"}
-                              kind="ghost"
-                              renderIcon={Edit}
-                              onClick={() => {
-                                //TODO onViewItem(row.id, e);
-                              }}
-                            />
-                          </TableCell>
-                        </TableExpandRow>
-                        <TableExpandedRow colSpan={headers.length + 2}>
-                          {<div>{row.cells[row.cells.length - 1].value}</div>}
-                        </TableExpandedRow>
-                      </React.Fragment>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        ></DataTable>
-        <Pagination
-          page={currentPage}
-          pageSize={currentPageSize}
-          pageSizes={pageSizes}
-          totalItems={totalItems}
-          onChange={({ pageSize, page }) => {
-            if (pageSize !== currentPageSize) {
-              setPageSize(pageSize);
-            }
-            if (page !== currentPage) {
-              goTo(page);
-            }
-          }}
-          className={styles.paginationOverride}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No stock operations to display</p>
-      </Tile>
+    <div className={styles.tableOverride}>
+      <div id="table-tool-bar">
+        <div></div>
+        <div className="right-filters"></div>
+      </div>
+      <DataTable
+        rows={tableRows}
+        headers={tableHeaders}
+        isSortable={true}
+        useZebraStyles={true}
+        render={({
+          rows,
+          headers,
+          getHeaderProps,
+          getTableProps,
+          getRowProps,
+          onInputChange,
+        }) => (
+          <TableContainer>
+            <TableToolbar
+              style={{
+                position: "static",
+                overflow: "visible",
+                backgroundColor: "color",
+              }}
+            >
+              <TableToolbarContent className={styles.toolbarContent}>
+                <TableToolbarSearch
+                  className={styles.patientListSearch}
+                  expanded
+                  onChange={onInputChange}
+                  placeholder="Filter Table"
+                  size="sm"
+                />
+                <StockOperationTypesSelector
+                  onOperationTypeSelected={(operation) => {
+                    launchAddOrEditDialog(
+                      initialStockOperationValue(),
+                      operation,
+                      false,
+                      operations
+                    );
+                  }}
+                  onOperationLoaded={(ops) => {
+                    operations = ops;
+                  }}
+                />
+              </TableToolbarContent>
+            </TableToolbar>
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  <TableExpandHeader />
+                  {headers.map(
+                    (header: any) =>
+                      header.key !== "details" && (
+                        <TableHeader
+                          {...getHeaderProps({
+                            header,
+                            isSortable: header.isSortable,
+                          })}
+                          className={
+                            isDesktop
+                              ? styles.desktopHeader
+                              : styles.tabletHeader
+                          }
+                          key={`${header.key}`}
+                        >
+                          {header.header?.content ?? header.header}
+                        </TableHeader>
+                      )
+                  )}
+                  <TableHeader></TableHeader>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row: any) => {
+                  return (
+                    <React.Fragment key={row.id}>
+                      <TableExpandRow
+                        className={
+                          isDesktop ? styles.desktopRow : styles.tabletRow
+                        }
+                        {...getRowProps({ row })}
+                      >
+                        {row.cells.map(
+                          (cell: any) =>
+                            cell?.info?.header !== "details" && (
+                              <TableCell key={cell.id}>{cell.value}</TableCell>
+                            )
+                        )}
+                      </TableExpandRow>
+                      <TableExpandedRow colSpan={headers.length + 2}>
+                        {<div>{row.cells[row.cells.length - 1].value}</div>}
+                      </TableExpandedRow>
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            {rows.length === 0 ? (
+              <div className={styles.tileContainer}>
+                <Tile className={styles.tile}>
+                  <div className={styles.tileContent}>
+                    <p className={styles.content}>
+                      {t("noOperationsToDisplay", "No Stock Items to display")}
+                    </p>
+                    <p className={styles.helper}>
+                      {t("checkFilters", "Check the filters above")}
+                    </p>
+                  </div>
+                  <p className={styles.separator}>{t("or", "or")}</p>
+                </Tile>
+              </div>
+            ) : null}
+          </TableContainer>
+        )}
+      ></DataTable>
+      <Pagination
+        page={currentPage}
+        pageSize={currentPageSize}
+        pageSizes={pageSizes}
+        totalItems={totalItems}
+        onChange={({ pageSize, page }) => {
+          if (pageSize !== currentPageSize) {
+            setPageSize(pageSize);
+          }
+          if (page !== currentPage) {
+            goTo(page);
+          }
+        }}
+        className={styles.paginationOverride}
+      />
     </div>
   );
 };
