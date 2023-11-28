@@ -21,6 +21,7 @@ import StockItemUnitsEdit from "../stock-item-units-edit/stock-item-units-edit.c
 import { SaveStockItem } from "../../types";
 import ConceptsSelector from "../concepts-selector/concepts-selector.component";
 import rootStyles from "../../../root.scss";
+import { closeOverlay } from "../../../core/components/overlay/hook";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
@@ -233,6 +234,9 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             renderIcon={Save}
           >
             {isSaving ? <InlineLoading /> : t("save", "Save")}
+          </Button>
+          <Button kind="secondary" onClick={closeOverlay}>
+            {t("cancel", "Cancel")}
           </Button>
         </div>
       </form>

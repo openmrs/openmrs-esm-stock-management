@@ -16,6 +16,7 @@ import { StockSource } from "../../core/api/types/stockOperation/StockSource";
 import { createOrUpdateStockSource } from "../stock-sources.resource";
 import { showNotification, showToast } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
+import { closeOverlay } from "../../core/components/overlay/hook";
 
 const StockSourcesAddOrCreate: React.FC = () => {
   const { t } = useTranslation();
@@ -121,8 +122,10 @@ const StockSourcesAddOrCreate: React.FC = () => {
           </section>
         </ModalBody>
         <ModalFooter>
-          <Button kind="secondary">Cancel</Button>
-          <Button type="submit">Save</Button>
+          <Button kind="secondary" onClick={closeOverlay}>
+            {t("cancel", "Cancel")}
+          </Button>
+          <Button type="submit">{t("save", "Save")}</Button>
         </ModalFooter>
       </Form>
     </div>
