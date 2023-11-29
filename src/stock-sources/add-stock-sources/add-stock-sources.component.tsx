@@ -56,6 +56,7 @@ const StockSourcesAddOrCreate: React.FC = () => {
                 "Stock Source Added Successfully"
               ),
             });
+            closeOverlay();
           },
           (error) => {
             showNotification({
