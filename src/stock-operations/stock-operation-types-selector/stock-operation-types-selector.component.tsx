@@ -32,12 +32,13 @@ const StockOperationTypesSelector: React.FC<
       )}
       menuOffset={{ right: "-100px" }}
       style={{
-        backgroundColor: "#0f62fe !important",
+        backgroundColor: "#007d79",
         backgroundImage: "none",
         color: "#fff",
-        minHeight: "1em",
+        minHeight: "1rem",
         padding: ".95rem !important",
-        width: "auto",
+        width: "8rem",
+        marginRight: "0.5rem",
         whiteSpace: "nowrap",
       }}
     >

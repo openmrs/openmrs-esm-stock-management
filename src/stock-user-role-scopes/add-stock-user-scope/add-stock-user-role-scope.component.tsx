@@ -16,8 +16,11 @@ import {
   useStockOperationTypes,
 } from "../../stock-lookups/stock-lookups.resource";
 import { ResourceRepresentation } from "../../core/api/api";
+import { closeOverlay } from "../../core/components/overlay/hook";
+import { useTranslation } from "react-i18next";
 
 const AddStockUserRoleScope: React.FC = () => {
+  const { t } = useTranslation();
   // get stock sources
   // operation types
   const {
@@ -76,7 +79,7 @@ const AddStockUserRoleScope: React.FC = () => {
               stockOperations.map((type) => {
                 return (
                   <div style={{ display: "flex", flexDirection: "row" }}>
-                    <Checkbox labelText={type.name} id="operationType" />
+                    <Checkbox labelText={type.name} id={type.operationType} />
                   </div>
                 );
               })}
@@ -93,12 +96,14 @@ const AddStockUserRoleScope: React.FC = () => {
           <CheckboxGroup className={styles.section}>
             {locations?.length > 0 &&
               locations.map((type) => {
-                return <Checkbox labelText={type.name} id="locations" />;
+                return <Checkbox labelText={type.name} id={type.uuid} />;
               })}
           </CheckboxGroup>
         </ModalBody>
         <ModalFooter>
-          <Button kind="secondary">Cancel</Button>
+          <Button kind="secondary" onClick={closeOverlay}>
+            {t("cancel", "Cancel")}
+          </Button>
           <Button type="submit">Save</Button>
         </ModalFooter>
       </Form>
