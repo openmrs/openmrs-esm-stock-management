@@ -80,7 +80,7 @@ const StockSourcesAddOrCreate: React.FC = () => {
             <TextInput
               id="fullname"
               type="text"
-              labelText="FullName"
+              labelText={t("fullName", "Full Name")}
               size="md"
               onChange={onNameChanged}
               placeholder="e.g National Medical Stores"
@@ -93,22 +93,23 @@ const StockSourcesAddOrCreate: React.FC = () => {
               size="md"
               placeholder="e.g NMS"
               onChange={onAcronymChanged}
-              labelText="Acronym/Code"
+              labelText={t("acronym", "Acronym/Code")}
             />
           </section>
           <section className={styles.section}>
             <Select
               name="sourceType"
               className="select-field"
-              labelText={"Source Type"}
+              labelText={t("sourceType", "Source Type")}
               id="sourceType"
+              value={formModel?.sourceType ? formModel.sourceType.uuid : ""}
               onChange={onSourceTypeChange}
             >
               <SelectItem
                 disabled
                 hidden
-                value="placeholder-item"
-                text="Choose a source type"
+                value=""
+                text={t("chooseSourceType", "Choose a source type")}
               />
               {items?.answers?.map((sourceType) => {
                 return (
