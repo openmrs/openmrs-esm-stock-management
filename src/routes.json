@@ -18,6 +18,10 @@
     {
       "name": "stock-operation-dialog",
       "component": "stockOperationDialog"
+    },
+    {
+      "name": "import-bulk-stock-items",
+      "component": "importBulkStockItemsDialog"
     }
   ],
   "pages": [

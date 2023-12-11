@@ -38,6 +38,14 @@ export const stockOperationDialog = getAsyncLifecycle(
   options
 );
 
+export const importBulkStockItemsDialog = getAsyncLifecycle(
+  () =>
+    import(
+      "./stock-items/add-bulk-stock-item/stock-items-bulk-import.component"
+    ),
+  options
+);
+
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }
