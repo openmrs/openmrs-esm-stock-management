@@ -21,7 +21,11 @@
     },
     {
       "name": "delete-stock-modal",
-      "component": "deleteStockModal"
+      "component": "deleteStockModal" 
+    },
+    {
+      "name": "import-bulk-stock-items",
+      "component": "importBulkStockItemsDialog"
     }
   ],
   "pages": [
