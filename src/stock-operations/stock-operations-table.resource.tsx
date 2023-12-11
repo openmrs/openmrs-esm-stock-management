@@ -14,7 +14,7 @@ export function useStockOperationPages(filter: StockOperationFilter) {
 
   const {
     goTo,
-    results: paginatedQueueEntries,
+    results: paginatedItems,
     currentPage,
   } = usePagination(items.results, currentPageSize);
 
@@ -66,7 +66,7 @@ export function useStockOperationPages(filter: StockOperationFilter) {
     totalItems: items?.totalCount,
     currentPage,
     currentPageSize,
-    paginatedQueueEntries,
+    paginatedItems,
     goTo,
     pageSizes,
     isLoading,

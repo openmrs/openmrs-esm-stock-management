@@ -39,20 +39,6 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
     []
   );
 
-  const tableRows = useMemo(() => {
-    return items.results?.map((entry) => {
-      return {
-        ...entry,
-        id: entry?.uuid,
-        key: `key-${entry?.uuid}`,
-        uuid: entry?.uuid,
-        name: entry?.name,
-        acronym: entry?.acronym,
-        sourceType: entry?.sourceType?.display,
-      };
-    });
-  }, [items.results]);
-
   return {
     items: items.results,
     currentPage,
@@ -64,6 +50,5 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
     isError,
     setPageSize,
     tableHeaders,
-    tableRows,
   };
 }
