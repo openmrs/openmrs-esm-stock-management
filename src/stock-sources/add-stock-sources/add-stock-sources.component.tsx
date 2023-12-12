@@ -18,7 +18,11 @@ import { showNotification, showToast } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
 
-const StockSourcesAddOrCreate: React.FC = () => {
+interface AddStockSourceProps {
+  model?: StockSource;
+}
+
+const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
   const { t } = useTranslation();
 
   // get stock sources
@@ -27,10 +31,12 @@ const StockSourcesAddOrCreate: React.FC = () => {
   const [formModel, setFormModel] = useState<StockSource>();
 
   const onNameChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+    model ? (model.name = evt.target.value) : "";
     setFormModel({ ...formModel, name: evt.target.value });
   };
 
   const onAcronymChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+    model ? (model.acronym = evt.target.value) : "";
     setFormModel({ ...formModel, acronym: evt.target.value });
   };
 
@@ -44,6 +50,9 @@ const StockSourcesAddOrCreate: React.FC = () => {
   const onFormSubmit = useCallback(
     (event) => {
       event.preventDefault();
+      if (model) {
+        formModel.uuid = model.uuid;
+      }
       createOrUpdateStockSource(formModel)
         .then(
           () => {
@@ -83,6 +92,7 @@ const StockSourcesAddOrCreate: React.FC = () => {
               labelText={t("fullName", "Full Name")}
               size="md"
               onChange={onNameChanged}
+              value={model?.name}
               placeholder="e.g National Medical Stores"
             />
           </section>
@@ -93,6 +103,7 @@ const StockSourcesAddOrCreate: React.FC = () => {
               size="md"
               placeholder="e.g NMS"
               onChange={onAcronymChanged}
+              value={model?.acronym}
               labelText={t("acronym", "Acronym/Code")}
             />
           </section>
@@ -134,4 +145,4 @@ const StockSourcesAddOrCreate: React.FC = () => {
   );
 };
 
-export default StockSourcesAddOrCreate;
+export default StockSourcesAddOrUpdate;
