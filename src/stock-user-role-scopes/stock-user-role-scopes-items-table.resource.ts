@@ -32,7 +32,7 @@ export default function useStockUserRoleScopesPage(
       {
         id: 2,
         header: "Location(s)",
-        key: "location",
+        key: "locations",
       },
       {
         id: 3,
@@ -47,22 +47,22 @@ export default function useStockUserRoleScopesPage(
       {
         id: 5,
         header: "Active From ",
-        key: "from",
+        key: "activeFrom",
       },
       {
         id: 6,
         header: "Active To",
-        key: "permanent",
+        key: "activeTo",
       },
       {
         id: 7,
         header: "Enabled ?",
         key: "enabled",
       },
-      {
-        id: 8,
-        header: "actions",
-      },
+      // {
+      //   id: 8,
+      //   header: "actions",
+      // },
     ],
     []
   );

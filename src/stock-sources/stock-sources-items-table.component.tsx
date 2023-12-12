@@ -175,7 +175,7 @@ function StockSourcesItems() {
         page={currentPage}
         pageSize={currentPageSize}
         pageSizes={pageSizes}
-        totalItems={paginatedItems}
+        totalItems={paginatedItems.length}
         onChange={({ pageSize, page }) => {
           if (pageSize !== currentPageSize) {
             setPageSize(pageSize);

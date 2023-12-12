@@ -18,13 +18,16 @@ import {
   Tile,
   TableToolbarAction,
   TableToolbarMenu,
+  Button,
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
+import { Logout, Dashboard, ChooseItem, Edit } from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
+import { formatDisplayDate } from "../core/utils/datetimeUtils";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
@@ -58,11 +61,12 @@ function StockUserRoleScopesItems() {
           >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
         ),
         roleName: userRoleScope?.role,
-        locations: userRoleScope?.locations?.map((location) => {
-          const key = `loc-${userRoleScope?.uuid}-${location.locationUuid}`;
-          return <span key={key}>{location?.locationName}</span>;
-          //return
-        }),
+        locations: userRoleScope?.locations
+          ?.map((location) => {
+            return location?.locationName;
+            //return
+          })
+          ?.join(", "),
         stockOperations: userRoleScope?.operationTypes
           ?.map((operation) => {
             return operation?.operationTypeName;
@@ -71,8 +75,8 @@ function StockUserRoleScopesItems() {
         permanent: userRoleScope?.permanent
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
-        // activeFrom: formatDisplayDate(userRoleScope?.activeFrom),
-        // activeTo: formatDisplayDate(userRoleScope?.activeTo),
+        activeFrom: formatDisplayDate(userRoleScope?.activeFrom),
+        activeTo: formatDisplayDate(userRoleScope?.activeTo),
         enabled: userRoleScope?.enabled
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
@@ -83,8 +87,7 @@ function StockUserRoleScopesItems() {
         //     className="submitButton clear-padding-margin"
         //     iconDescription={"View"}
         //     kind="ghost"
-        //     renderIcon={Edit16}
-        //     onClick={(e) => onViewItem(userRoleScope?.uuid, e)}
+        //     renderIcon={(props) => <Edit size={16} {...props} />}
         //   />
         // ),
       };
@@ -202,7 +205,7 @@ function StockUserRoleScopesItems() {
         page={currentPage}
         pageSize={currentPageSize}
         pageSizes={pageSizes}
-        totalItems={paginatedItems}
+        totalItems={paginatedItems.length}
         onChange={({ pageSize, page }) => {
           if (pageSize !== currentPageSize) {
             setPageSize(pageSize);
