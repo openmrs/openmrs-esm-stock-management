@@ -78,7 +78,7 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
       {
         id: 7,
         key: "actions",
-        header: "Actions"
+        header: "Actions",
       },
     ],
     [t]
