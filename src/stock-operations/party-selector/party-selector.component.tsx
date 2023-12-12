@@ -36,7 +36,7 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
           items={props.parties}
           onChange={(data: { selectedItem: Party }) => {
             props.onPartyChange?.(data.selectedItem);
-            onChange(data.selectedItem.uuid);
+            onChange(data.selectedItem?.uuid);
           }}
           initialSelectedItem={
             props.parties?.find((p) => p.uuid === props.partyUuid) || {}

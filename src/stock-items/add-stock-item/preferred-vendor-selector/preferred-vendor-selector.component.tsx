@@ -47,7 +47,7 @@ const PreferredVendorSelector = <T,>(
           items={sourcesList || []}
           onChange={(data: { selectedItem: StockSource }) => {
             props.onPreferredVendorChange?.(data.selectedItem);
-            onChange(data.selectedItem.uuid);
+            onChange(data.selectedItem?.uuid);
           }}
           initialSelectedItem={
             sourcesList?.find((p) => p.uuid === props.preferredVendorUuid) || {}
