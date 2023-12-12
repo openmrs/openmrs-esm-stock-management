@@ -17,6 +17,7 @@ import {
   TableToolbarMenu,
   DataTableSkeleton,
   TableToolbarSearch,
+  Link,
 } from "@carbon/react";
 import { isDesktop } from "@openmrs/esm-framework";
 import useStockSourcesPage from "./stock-sources-items-table.resource";
@@ -25,6 +26,8 @@ import AddStockSourceActionButton from "./add-stock-source-button.component";
 import StockSourcesFilter from "./stock-sources-filter/stock-sources-filter.component";
 import styles from "./stock-sources.scss";
 import { useTranslation } from "react-i18next";
+import EditSourceActionsMenu from "./edit-stock-source/edit-stock-source-action.component";
+import DeleteStockSourcesActionMenu from "./stock-sources-delete/stock-sources-delete-action.component";
 
 function StockSourcesItems() {
   const { t } = useTranslation();
@@ -53,12 +56,17 @@ function StockSourcesItems() {
         key: `key-${entry?.uuid}`,
         uuid: entry?.uuid,
         name: entry?.name,
-        acronym: entry?.acronym,
+        acronym: <Link to={"test"}>{entry?.acronym}</Link>,
         sourceType: entry?.sourceType?.display,
+        actions: (
+          <>
+            <EditSourceActionsMenu />
+            <DeleteStockSourcesActionMenu />
+          </>
+        ),
       };
     });
   }, [items]);
-
   if (isLoading || items.length === 0) {
     return <DataTableSkeleton role="progressbar" />;
   }
@@ -100,9 +108,6 @@ function StockSourcesItems() {
                 >
                   <StockSourcesFilter />
                 </div>
-                <TableToolbarMenu>
-                  <TableToolbarAction onClick={""}>Refresh</TableToolbarAction>
-                </TableToolbarMenu>
                 <AddStockSourceActionButton />
               </TableToolbarContent>
             </TableToolbar>
@@ -164,7 +169,6 @@ function StockSourcesItems() {
                       {t("checkFilters", "Check the filters above")}
                     </p>
                   </div>
-                  <p className={styles.separator}>{t("or", "or")}</p>
                 </Tile>
               </div>
             ) : null}

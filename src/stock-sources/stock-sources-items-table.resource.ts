@@ -23,7 +23,7 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
       },
       {
         id: 2,
-        header: "Acronym",
+        header: "Acronym/Code",
         key: "acronym",
       },
       {
@@ -33,7 +33,8 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
       },
       {
         id: 4,
-        header: "actions",
+        header: "Actions",
+        key: "actions",
       },
     ],
     []

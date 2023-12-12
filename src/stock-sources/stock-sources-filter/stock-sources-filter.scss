@@ -1,4 +1,7 @@
 .filterContainer {
+    :global(.cds--label) {
+      width: max-content;
+    }
     :global(.cds--dropdown__wrapper--inline) {
       gap: 0;
     }
@@ -10,4 +13,5 @@
     :global(.cds--dropdown--inline) :global(.cds--list-box__field) {
       min-width: 12rem;
     }
+
   }

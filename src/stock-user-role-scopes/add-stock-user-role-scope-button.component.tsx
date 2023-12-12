@@ -13,7 +13,7 @@ const AddStockUserRoleScopeActionButton: React.FC = () => {
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
-      {t("stockmanagement.addnewuserrolescope", "Add New User Role Scope")}
+      {t("stockmanagement.addnewuserrolescope", "Add New")}
     </Button>
   );
 };

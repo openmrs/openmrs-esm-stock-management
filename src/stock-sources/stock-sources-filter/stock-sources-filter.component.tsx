@@ -17,8 +17,10 @@ const StockSourcesFilter: React.FC = () => {
       <div className={styles.filterContainer}>
         <Dropdown
           id="stockSourcesFiter"
+          titleText="Source Type"
           items={[...items.answers]}
-          itemToString={(item) => (item ? item.display : "Not Set")}
+          initialSelectedItem={items.answers[0]}
+          itemToString={(item) => (item ? item.display : "")}
           type="inline"
           size="sm"
         />
