@@ -1,32 +1,51 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  DataTable,
   DataTableSkeleton,
-  TableToolbarSearch,
-  Button,
-  TableToolbarMenu,
-  TableToolbarAction,
-  Tile,
   Link,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableToolbar,
+  TableToolbarContent,
+  TableToolbarSearch,
+  Tile,
+  TableToolbarAction,
+  TableToolbarMenu,
+  Button,
 } from "@carbon/react";
-import { Add } from "@carbon/react/icons";
 import styles from "./stock-user-role-scopes.scss";
+import { Logout, Dashboard, ChooseItem, Edit } from "@carbon/react/icons";
+import { isDesktop } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
-import DataList from "../core/components/table/table.component";
 import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
+import { formatDisplayDate } from "../core/utils/datetimeUtils";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
 
-  const handleRefresh = () => {
-    // search.refetch()
-  };
-
-  // get sources
-  const { isLoading, tableHeaders, items } = useStockUserRoleScopesPage({
-    v: ResourceRepresentation.Full,
+  // get user scopes
+  const {
+    items,
+    tableHeaders,
+    currentPage,
+    pageSizes,
+    paginatedItems,
+    goTo,
+    currentPageSize,
+    setPageSize,
+    isLoading,
+  } = useStockUserRoleScopesPage({
+    v: ResourceRepresentation.Default,
+    totalCount: true,
   });
 
   const tableRows = useMemo(() => {
@@ -42,11 +61,12 @@ function StockUserRoleScopesItems() {
           >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
         ),
         roleName: userRoleScope?.role,
-        locations: userRoleScope?.locations?.map((location) => {
-          const key = `loc-${userRoleScope?.uuid}-${location.locationUuid}`;
-          return <span key={key}>{location?.locationName}</span>;
-          //return
-        }),
+        locations: userRoleScope?.locations
+          ?.map((location) => {
+            return location?.locationName;
+            //return
+          })
+          ?.join(", "),
         stockOperations: userRoleScope?.operationTypes
           ?.map((operation) => {
             return operation?.operationTypeName;
@@ -55,8 +75,8 @@ function StockUserRoleScopesItems() {
         permanent: userRoleScope?.permanent
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
-        // activeFrom: formatDisplayDate(userRoleScope?.activeFrom),
-        // activeTo: formatDisplayDate(userRoleScope?.activeTo),
+        activeFrom: formatDisplayDate(userRoleScope?.activeFrom),
+        activeTo: formatDisplayDate(userRoleScope?.activeTo),
         enabled: userRoleScope?.enabled
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
@@ -67,56 +87,134 @@ function StockUserRoleScopesItems() {
         //     className="submitButton clear-padding-margin"
         //     iconDescription={"View"}
         //     kind="ghost"
-        //     renderIcon={Edit16}
-        //     onClick={(e) => onViewItem(userRoleScope?.uuid, e)}
+        //     renderIcon={(props) => <Edit size={16} {...props} />}
         //   />
         // ),
       };
     });
   }, [items, t]);
 
-  if (isLoading) {
+  if (isLoading || items.length === 0) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (items?.length) {
-    return (
-      <DataList columns={tableHeaders} data={tableRows}>
-        {({ onInputChange }) => (
-          <>
-            <TableToolbarSearch persistent onChange={onInputChange} />
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={handleRefresh}>
-                Refresh
-              </TableToolbarAction>
-            </TableToolbarMenu>
-            <AddStockUserRoleScopeActionButton />
-          </>
-        )}
-      </DataList>
-    );
-  }
-
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <div className={styles.tileContent}>
-          <p className={styles.content}>
-            {t("noUserRoleScopes", "No User Scopes to display")}
-          </p>
-          <p className={styles.helper}>
-            {t("noUserRoleScopes", "Check the filters above")}
-          </p>
-        </div>
-        <p className={styles.separator}>{t("or", "or")}</p>
-        <Button
-          kind="ghost"
-          size="sm"
-          renderIcon={(props) => <Add size={16} {...props} />}
-        >
-          {t("addScopestolist", "Add Scopes to list")}
-        </Button>
-      </Tile>
+    <div className={styles.tableOverride}>
+      <div id="table-tool-bar">
+        <div></div>
+        <div className="right-filters"></div>
+      </div>
+      <DataTable
+        rows={tableRows}
+        headers={tableHeaders}
+        isSortable={true}
+        useZebraStyles={true}
+        render={({
+          rows,
+          headers,
+          getHeaderProps,
+          getTableProps,
+          getRowProps,
+          onInputChange,
+        }) => (
+          <TableContainer>
+            <TableToolbar
+              style={{
+                position: "static",
+                overflow: "visible",
+                backgroundColor: "color",
+              }}
+            >
+              <TableToolbarContent className={styles.toolbarContent}>
+                <TableToolbarSearch persistent onChange={onInputChange} />
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={""}>Refresh</TableToolbarAction>
+                </TableToolbarMenu>
+                <AddStockUserRoleScopeActionButton />
+              </TableToolbarContent>
+            </TableToolbar>
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  {headers.map(
+                    (header: any) =>
+                      header.key !== "details" && (
+                        <TableHeader
+                          {...getHeaderProps({
+                            header,
+                            isSortable: header.isSortable,
+                          })}
+                          className={
+                            isDesktop
+                              ? styles.desktopHeader
+                              : styles.tabletHeader
+                          }
+                          key={`${header.key}`}
+                        >
+                          {header.header?.content ?? header.header}
+                        </TableHeader>
+                      )
+                  )}
+                  <TableHeader></TableHeader>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row: any) => {
+                  return (
+                    <React.Fragment key={row.id}>
+                      <TableRow
+                        className={
+                          isDesktop ? styles.desktopRow : styles.tabletRow
+                        }
+                        {...getRowProps({ row })}
+                      >
+                        {row.cells.map(
+                          (cell: any) =>
+                            cell?.info?.header !== "details" && (
+                              <TableCell key={cell.id}>{cell.value}</TableCell>
+                            )
+                        )}
+                      </TableRow>
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            {rows.length === 0 ? (
+              <div className={styles.tileContainer}>
+                <Tile className={styles.tile}>
+                  <div className={styles.tileContent}>
+                    <p className={styles.content}>
+                      {t(
+                        "noOperationsToDisplay",
+                        "No Stock User scopes to display"
+                      )}
+                    </p>
+                    <p className={styles.helper}>
+                      {t("checkFilters", "Check the filters above")}
+                    </p>
+                  </div>
+                </Tile>
+              </div>
+            ) : null}
+          </TableContainer>
+        )}
+      ></DataTable>
+      <Pagination
+        page={currentPage}
+        pageSize={currentPageSize}
+        pageSizes={pageSizes}
+        totalItems={paginatedItems.length}
+        onChange={({ pageSize, page }) => {
+          if (pageSize !== currentPageSize) {
+            setPageSize(pageSize);
+          }
+          if (page !== currentPage) {
+            goTo(page);
+          }
+        }}
+        className={styles.paginationOverride}
+      />
     </div>
   );
 }
