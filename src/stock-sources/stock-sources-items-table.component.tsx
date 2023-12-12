@@ -61,7 +61,7 @@ function StockSourcesItems() {
         actions: (
           <>
             <EditSourceActionsMenu />
-            <DeleteStockSourcesActionMenu />
+            {/* <DeleteStockSourcesActionMenu /> */}
           </>
         ),
       };

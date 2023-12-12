@@ -18,7 +18,7 @@ import { showNotification, showToast } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
 
-const StockSourcesAddOrCreate: React.FC = () => {
+const StockSourcesEditOrCreate: React.FC = () => {
   const { t } = useTranslation();
 
   // get stock sources
@@ -134,4 +134,4 @@ const StockSourcesAddOrCreate: React.FC = () => {
   );
 };
 
-export default StockSourcesAddOrCreate;
+export default StockSourcesEditOrCreate;
