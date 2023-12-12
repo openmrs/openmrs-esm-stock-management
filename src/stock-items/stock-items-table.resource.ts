@@ -75,7 +75,11 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
         header: t("reorderLevel", "Reorder Level"),
         key: "reorderLevel",
       },
-      { key: "actions", header: "" },
+      {
+        id: 7,
+        key: "actions",
+        header: "Actions",
+      },
     ],
     [t]
   );
