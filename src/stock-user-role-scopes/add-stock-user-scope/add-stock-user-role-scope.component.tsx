@@ -6,7 +6,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  TextInput,
+  InlineLoading,
   Toggle,
   DatePickerInput,
   DatePicker,
@@ -98,12 +98,12 @@ const AddStockUserRoleScope: React.FC = () => {
   };
 
   const onStockOperationTypeChanged = (
-    chkboxChecked: boolean,
-    id: string,
-    cvt: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
+    uuid: string,
+    isChecked: boolean
   ): void => {
-    const operationType = formModel.operationTypes.find(
-      (x) => x.operationTypeUuid === cvt.target.value
+    const operationType = formModel?.operationTypes?.find(
+      (x) => x.operationTypeUuid === event?.target?.value
     );
     if (operationType) {
       const newOperationTypes = [
@@ -114,7 +114,7 @@ const AddStockUserRoleScope: React.FC = () => {
       setFormModel({ ...formModel, operationTypes: newOperationTypes });
     } else {
       const stockOperationType = stockOperations?.find(
-        (x) => x.uuid === cvt.target.value
+        (x) => x.uuid === event?.target?.value
       );
       const operationType: UserRoleScopeOperationType = {
         operationTypeName: stockOperationType?.name,
@@ -122,18 +122,17 @@ const AddStockUserRoleScope: React.FC = () => {
       } as unknown as UserRoleScopeOperationType;
       setFormModel({
         ...formModel,
-        operationTypes: [...(formModel.operationTypes ?? []), operationType],
+        operationTypes: [...(formModel?.operationTypes ?? []), operationType],
       });
     }
   };
 
   const onLocationCheckBoxChanged = (
-    chkboxChecked: boolean,
-    id: string,
-    cvt: React.ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>,
+    id: string
   ): void => {
     const selectedLocation = formModel?.locations?.find(
-      (x) => x.locationUuid === cvt.target.value
+      (x) => x.locationUuid === event?.target?.value
     );
     if (selectedLocation) {
       const newLocations = [
@@ -143,7 +142,7 @@ const AddStockUserRoleScope: React.FC = () => {
       ];
       setFormModel({ ...formModel, locations: newLocations });
     } else {
-      const loc = locations?.find((x) => x.uuid === cvt.target.value);
+      const loc = locations?.find((x) => x.uuid === event?.target?.value);
       const newLocation: UserRoleScopeLocation = {
         locationName: loc?.display,
         locationUuid: loc?.uuid,
@@ -181,30 +180,30 @@ const AddStockUserRoleScope: React.FC = () => {
   const onUserChanged = (data: { selectedItem: User }) => {
     setFormModel({ ...formModel, userUuid: data.selectedItem?.uuid });
     setRoles(data.selectedItem?.roles ?? []);
+
+    console.info(roles);
   };
 
-  const onRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const onRoleChange = (data: { selectedItem: Role }) => {
     const rootLocations = locations?.map((x) => x.uuid);
-    const newLocations = [
-      ...(formModel.locations?.filter(
+    const filteredLocations =
+      formModel.locations?.filter(
         (x) =>
           !rootLocations ||
           rootLocations.length === 0 ||
           !rootLocations.some((p) => p === x.locationUuid)
-      ) ?? []),
-    ];
+      ) ?? [];
+
     setFormModel({
       ...formModel,
-      role: e.target.value,
-      locations: newLocations,
+      role: data.selectedItem?.display,
+      locations: [...filteredLocations],
     });
   };
 
-  const onEnableDescendantsChanged = (
-    cvt: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onEnableDescendantsChanged = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedLocation = formModel?.locations?.find(
-      (x) => x.locationUuid === cvt.target.value
+      (x) => x.locationUuid === event?.target?.value
     );
     if (selectedLocation) {
       const enableDescendants = !(selectedLocation.enableDescendants === true);
@@ -235,11 +234,13 @@ const AddStockUserRoleScope: React.FC = () => {
   const addStockUserRole = async (e) => {
     e.preventDefault();
 
+    // console.info(formModel);
+
     createOrUpdateUserRoleScope(formModel).then(
       (res) => {
         showToast({
           critical: true,
-          title: t("rejectOrder", "Rejected Order"),
+          title: t("addUserRole", "Add User role"),
           kind: "success",
           description: t(
             "successfullysaved",
@@ -262,6 +263,16 @@ const AddStockUserRoleScope: React.FC = () => {
       }
     );
   };
+
+  if (isLoading || loadingRoles || loadingUsers) {
+    return (
+      <InlineLoading
+        status="active"
+        iconDescription="Loading"
+        description="Loading data..."
+      />
+    );
+  }
 
   return (
     <div>
@@ -305,7 +316,7 @@ const AddStockUserRoleScope: React.FC = () => {
                     size="md"
                     onChange={onRoleChange}
                     items={rolesData?.results}
-                    shouldFilterItem={(data) => true}
+                    shouldFilterItem={() => true}
                     onFocus={() => rolesData?.results}
                     onToggleClick={() => rolesData?.results}
                     itemToString={(item) => (item ? item?.display : "")}
@@ -379,10 +390,16 @@ const AddStockUserRoleScope: React.FC = () => {
                       <Checkbox
                         value={type.uuid}
                         checked={isOperationChecked(type)}
-                        onChange={onStockOperationTypeChanged}
+                        onChange={(event) =>
+                          onStockOperationTypeChanged(
+                            event,
+                            type.uuid,
+                            isOperationChecked(type)
+                          )
+                        }
                         className={styles.checkbox}
                         labelText={type.name}
-                        id={type.operationType}
+                        id={type.uuid}
                       />
                     </div>
                   );
@@ -406,6 +423,14 @@ const AddStockUserRoleScope: React.FC = () => {
                 locations.map((type) => {
                   const checkedLocation = findCheckedLocation(type);
 
+                  const getToggledValue = (locationUuid) => {
+                    const location =
+                      checkedLocation?.locationUuid === locationUuid
+                        ? checkedLocation
+                        : null;
+                    return location?.enableDescendants === true;
+                  };
+
                   return (
                     <div
                       style={{
@@ -420,7 +445,9 @@ const AddStockUserRoleScope: React.FC = () => {
                         key={`chk-loc-child-key-${type.uuid}`}
                         id={`chk-loc-child-${type.uuid}`}
                         value={type.uuid}
-                        onChange={onLocationCheckBoxChanged}
+                        onChange={(event) =>
+                          onLocationCheckBoxChanged(event, type.uuid)
+                        }
                         className={styles.checkbox}
                         labelText={type.name}
                         checked={checkedLocation != null}
@@ -431,8 +458,7 @@ const AddStockUserRoleScope: React.FC = () => {
                           hideLabel
                           className={styles.toggle}
                           size={"sm"}
-                          toggled={checkedLocation?.enableDescendants === true}
-                          onChange={onEnableDescendantsChanged}
+                          onToggleClick={getToggledValue(type.uuid)}
                           key={`tg-loc-child-key-${type.uuid}`}
                           id={`tg-loc-child-${type.uuid}`}
                         />
