@@ -42,7 +42,7 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
             items={stockItemsList || []}
             onChange={(data: { selectedItem: StockItemDTO }) => {
               props.onStockItemChanged?.(data.selectedItem);
-              onChange(data.selectedItem.uuid);
+              onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
               stockItemsList?.find((p) => p.uuid === props.stockItemUuid) ?? ""

@@ -45,7 +45,7 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
             items={userList || []}
             onChange={(data: { selectedItem: User }) => {
               props.onUserChanged?.(data.selectedItem);
-              onChange(data.selectedItem.uuid);
+              onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
               userList?.find((p) => p.uuid === props.userUuid) ?? ""

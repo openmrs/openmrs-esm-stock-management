@@ -37,13 +37,13 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
             controllerName={props.controllerName}
             id={props.name}
             size={"sm"}
-            items={item.packagingUnits || []}
+            items={item?.packagingUnits || []}
             onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
               props.onStockPackageChanged?.(data.selectedItem);
-              onChange(data.selectedItem.uuid);
+              onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
-              item.packagingUnits?.find(
+              item?.packagingUnits?.find(
                 (p) => p.uuid === props.stockItemUuid
               ) ?? ""
             }

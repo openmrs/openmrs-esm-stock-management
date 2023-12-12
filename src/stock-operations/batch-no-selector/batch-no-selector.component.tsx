@@ -52,7 +52,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             items={stockItemBatchNos || []}
             onChange={(data: { selectedItem?: StockBatchDTO }) => {
               props.onBatchNoChanged?.(data.selectedItem);
-              onChange(data.selectedItem.uuid);
+              onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
               stockItemBatchNos?.find((p) => p.uuid === props.batchUuid) ?? ""

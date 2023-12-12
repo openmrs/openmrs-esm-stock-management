@@ -44,7 +44,7 @@ const StockItemCategorySelector = <T,>(
           items={categories || []}
           onChange={(data: { selectedItem: Concept }) => {
             props.onCategoryUuidChange?.(data.selectedItem);
-            onChange(data.selectedItem.uuid);
+            onChange(data.selectedItem?.uuid);
           }}
           initialSelectedItem={
             categories?.find((p) => p.uuid === props.categoryUuid) || {}

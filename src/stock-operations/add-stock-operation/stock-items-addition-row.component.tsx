@@ -151,9 +151,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                     handleStockItemChange(index, item);
                     setValue(
                       `stockItems.${index}.packagingUnits`,
-                      item.packagingUnits
+                      item?.packagingUnits
                     );
-                    setStockItemUuid(item.uuid);
+                    setStockItemUuid(item?.uuid);
                   }}
                 />
               )}
@@ -192,12 +192,12 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                     <BatchNoSelector
                       batchUuid={row?.stockBatchUuid}
                       onBatchNoChanged={(item) => {
-                        setValue(`stockItems.${index}.batchNo`, item.batchNo);
+                        setValue(`stockItems.${index}.batchNo`, item?.batchNo);
                         setValue(
                           `stockItems.${index}.expiration`,
-                          item.expiration
+                          item?.expiration
                         );
-                        setStockItemExpiy(item.expiration);
+                        setStockItemExpiy(item?.expiration);
                       }}
                       placeholder={"Filter..."}
                       invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
@@ -288,7 +288,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   onStockPackageChanged={(selectedItem) => {
                     setValue(
                       `stockItems.${index}.stockItemPackagingUOMUuid`,
-                      selectedItem.uuid
+                      selectedItem?.uuid
                     );
                   }}
                   placeholder={"Filter..."}

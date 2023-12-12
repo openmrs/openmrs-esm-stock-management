@@ -266,7 +266,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             errors?.responsiblePersonUuid?.message
           }
           onUserChanged={(user) => {
-            if (user.uuid === otherUser.uuid) {
+            if (user?.uuid === otherUser.uuid) {
               setIsOtherUser(true);
             }
           }}
