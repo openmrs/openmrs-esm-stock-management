@@ -21,13 +21,21 @@ import {
   Button,
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
-import { Logout, Dashboard, ChooseItem, Edit } from "@carbon/react/icons";
+import {
+  Logout,
+  Dashboard,
+  ChooseItem,
+  Edit,
+  ArrowDownLeft,
+  ArrowLeft,
+} from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
+import EditStockUserRoleActionsMenu from "./edit-stock-user-scope/edit-stock-user-scope-action-menu.component";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
@@ -49,7 +57,7 @@ function StockUserRoleScopesItems() {
   });
 
   const tableRows = useMemo(() => {
-    return items?.map((userRoleScope) => {
+    return items?.map((userRoleScope, index) => {
       return {
         ...userRoleScope,
         id: userRoleScope?.uuid,
@@ -61,12 +69,19 @@ function StockUserRoleScopesItems() {
           >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
         ),
         roleName: userRoleScope?.role,
-        locations: userRoleScope?.locations
-          ?.map((location) => {
-            return location?.locationName;
-            //return
-          })
-          ?.join(", "),
+        locations: userRoleScope?.locations?.map((location) => {
+          const key = `loc-${userRoleScope?.uuid}-${location.locationUuid}`;
+          return (
+            <span key={key}>
+              {location?.locationName}
+              {location?.enableDescendants ? (
+                <ArrowDownLeft key={`${key}-${index}-0`} />
+              ) : (
+                <ArrowLeft key={`${key}-${index}-1`} />
+              )}{" "}
+            </span>
+          ); //return
+        }),
         stockOperations: userRoleScope?.operationTypes
           ?.map((operation) => {
             return operation?.operationTypeName;
@@ -75,21 +90,12 @@ function StockUserRoleScopesItems() {
         permanent: userRoleScope?.permanent
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
-        activeFrom: formatDisplayDate(userRoleScope?.activeFrom),
-        activeTo: formatDisplayDate(userRoleScope?.activeTo),
+        activeFrom: formatDisplayDate(userRoleScope?.activeFrom) ?? "Not Set",
+        activeTo: formatDisplayDate(userRoleScope?.activeTo) ?? "Not Set",
         enabled: userRoleScope?.enabled
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
-        // actions: (
-        //   <Button
-        //     type="button"
-        //     size="sm"
-        //     className="submitButton clear-padding-margin"
-        //     iconDescription={"View"}
-        //     kind="ghost"
-        //     renderIcon={(props) => <Edit size={16} {...props} />}
-        //   />
-        // ),
+        actions: <EditStockUserRoleActionsMenu data={items[index]} />,
       };
     });
   }, [items, t]);

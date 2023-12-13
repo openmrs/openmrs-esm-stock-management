@@ -59,10 +59,11 @@ export default function useStockUserRoleScopesPage(
         header: "Enabled ?",
         key: "enabled",
       },
-      // {
-      //   id: 8,
-      //   header: "actions",
-      // },
+      {
+        id: 8,
+        header: "Actions",
+        key: "actions",
+      },
     ],
     []
   );
