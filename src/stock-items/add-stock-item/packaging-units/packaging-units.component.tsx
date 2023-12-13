@@ -21,6 +21,8 @@ import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
 import { createStockItemPackagingUnit } from "../../stock-items.resource";
 import { showSnackbar } from "@openmrs/esm-framework";
+import { deleteStockItemPackagingUnit } from "../../stock-items.resource";
+import { showNotification, showToast } from "@openmrs/esm-framework";
 
 interface PackagingUnitsProps {
   onSubmit?: () => void;
@@ -142,6 +144,34 @@ const PackagingUnitRow: React.FC<{
   const {
     control,
     formState: { errors },
+  } = useForm<PackageUnitFormData>({
+    defaultValues: row,
+    mode: "all",
+    resolver: zodResolver(packageUnitSchema),
+  });
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    deleteStockItemPackagingUnit(row.uuid).then(
+      () => {
+        showToast({
+          critical: true,
+          title: `Delete packing item `,
+          kind: "success",
+          description: `Stock Item packing unit deleted Successfully`,
+        });
+      },
+      (error) => {
+        showNotification({
+          title: `Error Deleting a stock item packing unit`,
+          kind: "error",
+          critical: true,
+          description: error?.message,
+        });
+      }
+    );
+  };
+
   } = useFormContext();
   errors;
   return (
