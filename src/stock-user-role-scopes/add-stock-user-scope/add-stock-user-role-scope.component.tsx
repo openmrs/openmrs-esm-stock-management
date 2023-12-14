@@ -19,6 +19,7 @@ import {
   useRoles,
   useStockLocations,
   useStockOperationTypes,
+  useUser,
   useUsers,
 } from "../../stock-lookups/stock-lookups.resource";
 import { ResourceRepresentation } from "../../core/api/api";
@@ -43,12 +44,20 @@ import { StockOperationType } from "../../core/api/types/stockOperation/StockOpe
 
 const MinDate: Date = today();
 
-const AddStockUserRoleScope: React.FC = () => {
+interface AddStockUserRoleScopeProps {
+  model?: UserRoleScope;
+}
+
+const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
+  model,
+}) => {
   const { t } = useTranslation();
 
-  const [formModel, setFormModel] = useState<UserRoleScope>();
+  const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
 
   const [roles, setRoles] = useState<Role[]>([]);
+
+  const { data: user } = useUser(model?.uuid);
 
   // operation types
   const {
@@ -288,6 +297,11 @@ const AddStockUserRoleScope: React.FC = () => {
                     id="userName"
                     size="md"
                     labelText="User"
+                    value={
+                      formModel.userUuid
+                        ? `${formModel.userFamilyName} ${formModel.userGivenName}`
+                        : ``
+                    }
                     items={users?.results}
                     onChange={onUserChanged}
                     shouldFilterItem={(data) => true}
@@ -315,7 +329,8 @@ const AddStockUserRoleScope: React.FC = () => {
                     labelText="Role"
                     size="md"
                     onChange={onRoleChange}
-                    items={rolesData?.results}
+                    value={formModel?.role ?? ""}
+                    items={rolesData?.results ?? roles}
                     shouldFilterItem={() => true}
                     onFocus={() => rolesData?.results}
                     onToggleClick={() => rolesData?.results}
@@ -332,12 +347,14 @@ const AddStockUserRoleScope: React.FC = () => {
                 onChange={onEnabledChanged}
                 checked={formModel?.enabled}
                 labelText={`Enabled ?`}
+                value={model?.enabled}
                 id="chk-userEnabled"
               />
               <Checkbox
                 onChange={onPermanentChanged}
                 name="isPermanent"
                 checked={formModel?.permanent}
+                value={model?.permanent}
                 labelText={`Permanent ?`}
                 id="chk-userPermanent"
               />
