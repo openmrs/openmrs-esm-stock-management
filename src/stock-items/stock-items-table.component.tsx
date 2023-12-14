@@ -28,6 +28,7 @@ import FilterStockItems from "./components/filter-stock-items/filter-stock-items
 import { launchAddOrEditDialog } from "./stock-item.utils";
 import { useStockItemsPages } from "./stock-items-table.resource";
 import styles from "./stock-items-table.scss";
+import EditStockItemActionsMenu from "./edit-stock-item/edit-stock-item-action-menu.component";
 
 interface StockItemsTableProps {
   from?: string;
@@ -47,22 +48,16 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     setCurrentPage,
     isDrug,
     setDrug,
-    setSearchString,
   } = useStockItemsPages(ResourceRepresentation.Full);
 
   const tableRows = useMemo(() => {
-    return items?.map((stockItem) => ({
+    return items?.map((stockItem, index) => ({
       ...stockItem,
       id: stockItem?.uuid,
       key: `key-${stockItem?.uuid}`,
       uuid: `${stockItem?.uuid}`,
       type: stockItem?.drugUuid ? t("drug", "Drug") : t("other", "Other"),
-      genericName: (
-        <Link to={URL_STOCK_ITEM(stockItem?.uuid || "")}>
-          {" "}
-          {`${stockItem?.drugName ?? stockItem.conceptName}`}
-        </Link>
-      ),
+      genericName: <EditStockItemActionsMenu data={items[index]} />,
       commonName: stockItem?.commonName,
       tradeName: stockItem?.drugUuid ? stockItem?.conceptName : "",
       preferredVendorName: stockItem?.preferredVendorName,
