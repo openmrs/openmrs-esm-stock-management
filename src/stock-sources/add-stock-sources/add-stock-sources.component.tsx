@@ -28,7 +28,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
   // get stock sources
   const { items } = useConceptById(STOCK_SOURCE_TYPE_CODED_CONCEPT_ID);
 
-  const [formModel, setFormModel] = useState<StockSource>();
+  const [formModel, setFormModel] = useState<StockSource>({ ...model });
 
   const onNameChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
     model ? (model.name = evt.target.value) : "";
@@ -78,7 +78,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
         )
         .catch();
     },
-    [formModel, t]
+    [formModel, model, t]
   );
   return (
     <div>
