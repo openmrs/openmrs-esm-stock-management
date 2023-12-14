@@ -187,7 +187,7 @@ const AddStockUserRoleScope: React.FC = () => {
   const onRoleChange = (data: { selectedItem: Role }) => {
     const rootLocations = locations?.map((x) => x.uuid);
     const filteredLocations =
-      formModel.locations?.filter(
+      formModel?.locations?.filter(
         (x) =>
           !rootLocations ||
           rootLocations.length === 0 ||
