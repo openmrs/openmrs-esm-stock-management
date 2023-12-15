@@ -29,7 +29,7 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
     useStockItemPackagingUOMs(stockItemFilter);
 
   const tableHeaders = useMemo(
-    () => [     
+    () => [
       {
         key: "packaging",
         header: "Packaging Unit",

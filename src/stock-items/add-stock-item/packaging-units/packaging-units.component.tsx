@@ -76,7 +76,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
     );
 
   return (
-    <FormProvider {...packageUnitForm}>      
+    <FormProvider {...packageUnitForm}>
       <DataTable
         rows={items}
         headers={tableHeaders}
@@ -103,23 +103,23 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-              <div style={{minHeight:"10rem"}}>
-                {items.length > 0 ? (
-                  <>
-                    {items.map((row: StockItemPackagingUOMDTO) => {
-                      return <PackagingUnitRow row={row} key={row.uuid} />;
-                    })}
-                  </>
-                ) : (
-                  <PackagingUnitRow row={{}} key={stockItemUuid} />
-                )}
+                <div style={{ minHeight: "10rem" }}>
+                  {items.length > 0 ? (
+                    <>
+                      {items.map((row: StockItemPackagingUOMDTO) => {
+                        return <PackagingUnitRow row={row} key={row.uuid} />;
+                      })}
+                    </>
+                  ) : (
+                    <PackagingUnitRow row={{}} key={stockItemUuid} />
+                  )}
                 </div>
               </TableBody>
             </Table>
           </TableContainer>
         )}
       ></DataTable>
-         <Button
+      <Button
         name="save"
         type="submit"
         className="submitButton"
