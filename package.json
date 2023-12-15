@@ -7,7 +7,7 @@
   "main": "src/index.ts",
   "source": true,
   "scripts": {
-    "start": "openmrs develop --backend https://data.kenyahmis.org:8500 --port 9000",
+    "start": "openmrs develop",
     "serve": "webpack serve --mode=development",
     "build": "webpack --mode production",
     "analyze": "webpack --mode=production --env analyze=true",

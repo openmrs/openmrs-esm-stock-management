@@ -94,7 +94,7 @@ function StockUserRoleScopesItems() {
     });
   }, [items, t]);
 
-  if (isLoading || items.length === 0) {
+  if (isLoading || items?.length === 0) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
@@ -105,7 +105,7 @@ function StockUserRoleScopesItems() {
         <div className="right-filters"></div>
       </div>
       <DataTable
-        rows={tableRows}
+        rows={tableRows ?? []}
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
