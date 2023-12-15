@@ -31,13 +31,13 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
   const tableHeaders = useMemo(
     () => [
       {
-        key: "quantity",
-        header: "Quantity",
+        key: "packaging",
+        header: "Packaging Unit",
         styles: { width: "50%" },
       },
       {
-        key: "packaging",
-        header: "Packaging Unit",
+        key: "quantity",
+        header: "Quantity",
         styles: { width: "50%" },
       },
     ],

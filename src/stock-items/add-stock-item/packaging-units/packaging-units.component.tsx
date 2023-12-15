@@ -15,10 +15,12 @@ import {
 import PackagingUnitsConceptSelector from "../packaging-units-concept-selector/packaging-units-concept-selector.component";
 import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
 import { Save, TrashCan } from "@carbon/react/icons";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
+import { createStockItemPackagingUnit } from "../../stock-items.resource";
+import { showSnackbar } from "@openmrs/esm-framework";
 
 interface PackagingUnitsProps {
   onSubmit?: () => void;
@@ -28,10 +30,40 @@ interface PackagingUnitsProps {
 const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
   const { items, isLoading, tableHeaders, setStockItemUuid } =
     useStockItemPackageUnitsHook();
-
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+
+  const packageUnitForm = useForm<PackageUnitFormData>({
+    defaultValues: {},
+    mode: "all",
+    resolver: zodResolver(packageUnitSchema),
+  });
+
+  const handleSavePackageUnits = () => {
+    const { getValues } = packageUnitForm;
+    const { factor, packagingUomName, packagingUomUuid } = getValues();
+    const payload: StockItemPackagingUOMDTO = {
+      factor: factor,
+      packagingUomUuid,
+      stockItemUuid,
+    };
+    createStockItemPackagingUnit(payload).then(
+      (resp) =>
+        showSnackbar({
+          title: "Package Unit",
+          subtitle: "Package Unit saved successfully",
+          kind: "success",
+        }),
+      (error) => {
+        showSnackbar({
+          title: "Package Unit",
+          subtitle: "Error saving package unit",
+          kind: "error",
+        });
+      }
+    );
+  };
 
   if (isLoading)
     return (
@@ -44,7 +76,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
     );
 
   return (
-    <>
+    <FormProvider {...packageUnitForm}>
       <DataTable
         rows={items}
         headers={tableHeaders}
@@ -71,9 +103,17 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {items.map((row: StockItemPackagingUOMDTO) => {
-                  return <PackagingUnitRow row={row} key={row.uuid} />;
-                })}
+                <div style={{ minHeight: "10rem" }}>
+                  {items.length > 0 ? (
+                    <>
+                      {items.map((row: StockItemPackagingUOMDTO) => {
+                        return <PackagingUnitRow row={row} key={row.uuid} />;
+                      })}
+                    </>
+                  ) : (
+                    <PackagingUnitRow row={{}} key={stockItemUuid} />
+                  )}
+                </div>
               </TableBody>
             </Table>
           </TableContainer>
@@ -83,15 +123,13 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
         name="save"
         type="submit"
         className="submitButton"
-        onClick={() => {
-          // TODO: Implement Save
-        }}
+        onClick={handleSavePackageUnits}
         kind="primary"
         renderIcon={Save}
       >
         Save
       </Button>
-    </>
+    </FormProvider>
   );
 };
 
@@ -104,21 +142,17 @@ const PackagingUnitRow: React.FC<{
   const {
     control,
     formState: { errors },
-  } = useForm<PackageUnitFormData>({
-    defaultValues: row,
-    mode: "all",
-    resolver: zodResolver(packageUnitSchema),
-  });
-
+  } = useFormContext();
+  errors;
   return (
-    <TableRow key={key}>
+    <TableRow>
       <TableCell>
         <PackagingUnitsConceptSelector
           controllerName="packagingUomUuid"
           name="packagingUomUuid"
           control={control}
           invalid={!!errors.packagingUomUuid}
-          invalidText={errors?.packagingUomUuid?.message}
+          // invalidText={errors?.packagingUomUuid?.message}
         />
       </TableCell>
       <TableCell>
@@ -134,7 +168,7 @@ const PackagingUnitRow: React.FC<{
             control={control}
             id="factor"
             invalid={!!errors.factor}
-            invalidText={errors?.factor?.message}
+            // invalidText={errors?.factor?.message}
           />
           <Button
             type="button"
