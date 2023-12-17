@@ -213,6 +213,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           invalid={!!errors.sourceUuid}
           invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
           parties={sourcePartyList || []}
+          value={model.sourceName}
         />
       )}
 
@@ -241,6 +242,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             errors.destinationUuid && errors?.destinationUuid?.message
           }
           parties={destinationPartyList || []}
+          value={model.destinationName}
         />
       )}
 
@@ -270,6 +272,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               setIsOtherUser(true);
             }
           }}
+          model={model}
         />
       )}
 
@@ -318,6 +321,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           onReasonChange={(reason) => {
             setValue("reasonUuid", reason.uuid);
           }}
+          model={model}
         />
       )}
 

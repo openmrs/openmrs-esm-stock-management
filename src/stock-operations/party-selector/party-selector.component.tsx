@@ -18,6 +18,7 @@ interface PartySelectorProps<T> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
+  value: string;
 }
 
 const PartySelector = <T,>(props: PartySelectorProps<T>) => {
@@ -49,6 +50,7 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
           ref={ref}
           invalid={props.invalid}
           invalidText={props.invalidText}
+          value={props.value}
         />
       )}
     />

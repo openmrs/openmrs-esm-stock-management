@@ -5,6 +5,7 @@ import { ComboBox, InlineLoading } from "@carbon/react";
 import { useUsersHook } from "./users-selector.resource";
 import { useDebounce } from "../../core/hooks/debounce-hook";
 import { otherUser } from "../../core/utils/utils";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface UsersSelectorProps<T> {
   placeholder?: string;
@@ -18,6 +19,7 @@ interface UsersSelectorProps<T> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
+  model: StockOperationDTO;
 }
 
 const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
@@ -56,6 +58,7 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
             invalid={props.invalid}
             invalidText={props.invalidText}
             ref={ref}
+            value={` ${props.model.responsiblePersonFamilyName} ${props.model.responsiblePersonGivenName}`}
           />
         )}
       />
