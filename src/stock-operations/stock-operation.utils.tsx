@@ -16,7 +16,7 @@ import { useLocation } from "react-router-dom";
 
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
-  operation: StockOperationType,
+  operation?: StockOperationType,
   isEditing = false,
   operations?: StockOperationType[]
 ) => {
@@ -56,7 +56,7 @@ export const addOrEditStockOperation = async (
 
 export const launchAddOrEditDialog = (
   stockOperation: StockOperationDTO,
-  operation: StockOperationType,
+  operation?: StockOperationType,
   isEditing = false,
   operations?: StockOperationType[]
 ) => {

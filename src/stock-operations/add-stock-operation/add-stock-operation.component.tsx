@@ -34,8 +34,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       component: (
         <BaseOperationDetails
           {...props}
+          isEditing={isEditing}
           setup={result}
-          model={result?.dto}
+          model={props?.model ?? result.dto}
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -48,8 +49,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       component: (
         <StockItemsAddition
           {...props}
+          isEditing={isEditing}
           setup={result}
-          model={result?.dto}
+          model={props?.model ?? result.dto}
           onSave={async () => {
             setManageSubmitOrComplete(true);
             setSelectedIndex(2);
@@ -65,8 +67,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       component: (
         <StockOperationSubmission
           {...props}
+          isEditing={isEditing}
           setup={result}
-          model={result?.dto}
+          model={props?.model ?? result.dto}
           actions={{
             onSave: async (model) => {
               // TODO: Update
