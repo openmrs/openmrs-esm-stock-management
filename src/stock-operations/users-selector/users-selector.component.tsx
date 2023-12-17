@@ -19,7 +19,6 @@ interface UsersSelectorProps<T> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
-  model: StockOperationDTO;
 }
 
 const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
@@ -58,7 +57,6 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
             invalid={props.invalid}
             invalidText={props.invalidText}
             ref={ref}
-            value={` ${props.model.responsiblePersonFamilyName} ${props.model.responsiblePersonGivenName}`}
           />
         )}
       />

@@ -18,7 +18,6 @@ interface StockOperationReasonSelectorProps<T> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
-  model: StockOperationDTO;
 }
 
 const StockOperationReasonSelector = <T,>(
@@ -58,7 +57,6 @@ const StockOperationReasonSelector = <T,>(
           ref={ref}
           invalid={props.invalid}
           invalidText={props.invalidText}
-          value={props.model.reasonName}
         />
       )}
     />

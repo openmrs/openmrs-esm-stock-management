@@ -30,12 +30,15 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
   const tabs: TabItem[] = [
     {
-      name: `${props.operation.name} Details`,
+      name: isEditing
+        ? `${props.model.operationTypeName} Details`
+        : `${props.operation.name} Details`,
       component: (
         <BaseOperationDetails
           {...props}
           isEditing={isEditing}
           setup={result}
+          canEdit={props.model.status === "NEW" ? true : false}
           model={props?.model ?? result.dto}
           onSave={async () => {
             setManageStockItems(true);
