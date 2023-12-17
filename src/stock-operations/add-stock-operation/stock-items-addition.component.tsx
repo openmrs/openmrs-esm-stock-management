@@ -76,7 +76,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(stockOperationItemsSchema),
-    defaultValues: { stockItems: stockOperationItems },
+    defaultValues: { stockItems: model.stockOperationItems },
     mode: "onSubmit",
   });
 

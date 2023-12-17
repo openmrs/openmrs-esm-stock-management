@@ -61,7 +61,9 @@ export const launchAddOrEditDialog = (
   operations?: StockOperationType[]
 ) => {
   launchOverlay(
-    `${isEditing ? "Edit" : "New: "} ${operation?.name || ""}`,
+    `${isEditing ? "Edit" : "New: "} ${
+      isEditing ? stockOperation.operationTypeName : operation.name
+    }`,
     <AddStockOperation
       model={stockOperation}
       onSave={(so) =>

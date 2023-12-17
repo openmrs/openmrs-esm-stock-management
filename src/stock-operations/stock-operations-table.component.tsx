@@ -59,20 +59,24 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     setPageSize,
     isLoading,
   } = useStockOperationPages({
-    v: ResourceRepresentation.Default,
+    v: ResourceRepresentation.Full,
     totalCount: true,
   });
 
   let operations: StockOperationType[] | null | undefined;
   let operation: StockOperationType | null | undefined;
-
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
       ...stockOperation,
       id: stockOperation?.uuid,
       key: `key-${stockOperation?.uuid}`,
       operationTypeName: `${stockOperation?.operationTypeName}`,
-      operationNumber: <EditStockOperationActionMenu model={items[index]} />,
+      operationNumber: (
+        <EditStockOperationActionMenu
+          model={items[index]}
+          operations={operations}
+        />
+      ),
       status: `${stockOperation?.status}`,
       source: `${stockOperation?.sourceName ?? ""}`,
       destination: `${stockOperation?.destinationName ?? ""}`,
@@ -205,13 +209,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             kind="ghost"
             renderIcon={Edit}
             onClick={() => {
-              <EditStockOperationActionMenu model={items[index]} />;
+              launchAddOrEditDialog(items[index], operation, true, operations);
             }}
           />
         </Tooltip>
       ),
     }));
-  }, [items]);
+  }, [items, operation, operations]);
 
   if (isLoading) {
     return (

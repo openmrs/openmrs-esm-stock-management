@@ -5,10 +5,11 @@ import { launchAddOrEditDialog } from "../stock-operation.utils";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
 interface EditStockOperationActionMenuProps {
   model: StockOperationDTO;
+  operations: StockOperationType[];
 }
 const EditStockOperationActionMenu: React.FC<
   EditStockOperationActionMenuProps
-> = ({ model }) => {
+> = ({ model, operations }) => {
   const type: StockOperationType = {
     uuid: "",
     name: "",
@@ -41,7 +42,7 @@ const EditStockOperationActionMenu: React.FC<
         iconDescription={"View"}
         kind="ghost"
         onClick={() => {
-          launchAddOrEditDialog(model, type, true, []);
+          launchAddOrEditDialog(model, type, true, operations);
         }}
       >
         {`${model?.operationNumber}`}
