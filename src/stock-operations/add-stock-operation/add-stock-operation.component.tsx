@@ -7,7 +7,7 @@ import StockItemsAddition from "./stock-items-addition.component";
 import StockOperationSubmission from "./stock-operation-submission.component";
 import { AddStockOperationProps } from "./types";
 import { useInitializeStockOperations } from "./add-stock-operation.resource";
-import { AccordionSkeleton } from "@carbon/react";
+import { AccordionSkeleton, Button } from "@carbon/react";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { addOrEditStockOperation } from "../stock-operation.utils";
 
@@ -103,11 +103,80 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   ];
 
   return (
-    <VerticalTabs
-      tabs={tabs}
-      selectedIndex={selectedIndex}
-      onChange={setSelectedIndex}
-    />
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "5px",
+        }}
+      >
+        <div style={{ margin: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <span style={{ margin: "4px" }}>Status :</span>
+            <span style={{ margin: "4px" }}>{props.model.status}</span>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            {props.model.status === "NEW" && (
+              <div style={{ margin: "4px" }}>
+                <span>Started : </span>
+                <span>By </span>
+                <span>
+                  {props.model.creatorFamilyName} {""}
+                  {props.model.creatorGivenName}
+                </span>
+              </div>
+            )}
+            {props.model.status === "SUBMITTED" && (
+              <div style={{ margin: "4px" }}>
+                <span>Submitted : </span>
+                <span>By </span>
+                <span>
+                  {props.model.submittedByFamilyName} {""}
+                  {props.model.submittedByGivenName}
+                </span>
+              </div>
+            )}
+            {props.model.status === "COMPLETED" && (
+              <div style={{ margin: "4px" }}>
+                <span>Completed : </span>
+                <span>By </span>
+                <span>
+                  {props.model.completedByFamilyName} {""}
+                  {props.model.completedByGivenName}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          style={{
+            margin: "10px",
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <div style={{ margin: "2px" }}>
+            <Button>Approve</Button>
+          </div>
+          <div style={{ margin: "2px" }}>
+            <Button kind="">Reject</Button>
+          </div>
+          <div style={{ margin: "2px" }}>
+            <Button kind="tertiary">Return</Button>
+          </div>
+          <div style={{ margin: "2px" }}>
+            <Button kind="danger--ghost">Cancel</Button>
+          </div>
+        </div>
+      </div>
+      <VerticalTabs
+        tabs={tabs}
+        selectedIndex={selectedIndex}
+        onChange={setSelectedIndex}
+      />
+    </>
   );
 };
 
