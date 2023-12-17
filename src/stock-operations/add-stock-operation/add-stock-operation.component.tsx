@@ -169,6 +169,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           <div style={{ margin: "2px" }}>
             <Button kind="danger--ghost">Cancel</Button>
           </div>
+          <div style={{ margin: "2px" }}>
+            <Button kind="tertiary">Print</Button>
+          </div>
         </div>
       </div>
       <VerticalTabs
