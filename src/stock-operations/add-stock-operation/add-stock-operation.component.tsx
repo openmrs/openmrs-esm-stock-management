@@ -7,26 +7,43 @@ import StockItemsAddition from "./stock-items-addition.component";
 import StockOperationSubmission from "./stock-operation-submission.component";
 import { AddStockOperationProps } from "./types";
 import { useInitializeStockOperations } from "./add-stock-operation.resource";
-import { AccordionSkeleton, Button } from "@carbon/react";
+import { AccordionSkeleton } from "@carbon/react";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { addOrEditStockOperation } from "../stock-operation.utils";
-import {
-  Printer,
-  Error,
-  Repeat,
-  CloseOutline,
-  CheckmarkOutline,
-} from "@carbon/react/icons";
+import StockOperationApprovalButton from "../stock-operations-dialog/stock-operations-approve-button.component";
+import StockOperationRejectButton from "../stock-operations-dialog/stock-operations-reject-button.component";
+import StockOperationReturnButton from "../stock-operations-dialog/stock-operations-return-button.component";
+import StockOperationCancelButton from "../stock-operations-dialog/stock-operations-cancel-button.component";
+import StockOperationPrintButton from "../stock-operations-dialog/stock-operations-print-button.component";
+import { StockOperationTypeHasPrint } from "../../core/api/types/stockOperation/StockOperationType";
+import StockOperationApproveDispatchButton from "../stock-operations-dialog/stock-operations-approve-dispatch-button.component";
+import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
+import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
   const { isLoading, isError, result } = useInitializeStockOperations(props);
-  const [isEditing, setIsEditing] = useState(props.isEditing);
+  const [isNew, setIsNew] = useState(false);
+  const [canPrint, setCanPrint] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
+  const [canApprove, setCanApprove] = useState(false);
+  const [canReceiveItems, setCanReceiveItems] = useState(false);
+  const [canDisplayReceivedItems, setCanDisplayReceivedItems] = useState(false);
+  const [isRequisitionAndCanIssueStock, setIsRequisitionAndCanIssueStock] =
+    useState(false);
+  const [canUpdateBatchInformation, setCanUpdateBatchInformation] =
+    useState(false);
+
+  const [isEditing, setIsEditing] = useState<boolean>(props.isEditing);
   const [manageStockItems, setManageStockItems] = useState(props.isEditing);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props.isEditing
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  // let canEditModel = false;
+  // let canViewModel = false;
+  // let canApproveModel = false;
 
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
@@ -34,6 +51,28 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     // TODO: Show an error
     return;
   }
+
+  // if (isEditing) {
+  // canEditModel = props.model?.permission?.canEdit ?? false;
+  // canViewModel = props.model?.permission?.canView ?? false;
+  // canApproveModel = props.model?.permission?.canApprove ?? false;
+  // const canIssueStock =
+  //   props.model?.permission?.isRequisitionAndCanIssueStock ?? false;
+  // const canReceiveItems = props.model?.permission?.canReceiveItems ?? false;
+  // const canDisplayReceivedItems =
+  //   props.model?.permission?.canDisplayReceivedItems ?? false;
+  // const canUpdateItemsBatchInformation =
+  //   props.model?.permission?.canUpdateBatchInformation ?? false;
+
+  // setCanEdit(canEditModel);
+  // setCanApprove(canApproveModel);
+  // setCanReceiveItems(canReceiveItems);
+  // setCanDisplayReceivedItems(canDisplayReceivedItems);
+  // setCanUpdateBatchInformation(canUpdateItemsBatchInformation);
+
+  // setIsRequisitionAndCanIssueStock(canIssueStock);
+  // setCanPrint(canIssueStock);
+  // }
 
   const tabs: TabItem[] = [
     {
@@ -157,53 +196,70 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             )}
           </div>
         </div>
-        <div
-          style={{
-            margin: "10px",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          <div style={{ margin: "2px" }}>
-            <Button
-              renderIcon={(props) => <CheckmarkOutline size={16} {...props} />}
-            >
-              Approve
-            </Button>
+        {/* {((!canEdit && (canApprove || canReceiveItems)) ||
+          (!isNew && (canEdit || canPrint)) ||
+          isRequisitionAndCanIssueStock) && (
+          <div
+            style={{
+              margin: "10px",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            {!canEdit && canApprove && (
+              <>
+                {!result.requiresDispatchAcknowledgement && (
+                  <div style={{ margin: "2px" }}>
+                    <StockOperationApprovalButton uuid={""} />
+                  </div>
+                )}
+                {result.requiresDispatchAcknowledgement && (
+                  <div style={{ margin: "2px" }}>
+                    <StockOperationApproveDispatchButton uuid={""} />
+                  </div>
+                )}
+
+                <div style={{ margin: "2px" }}>
+                  <StockOperationRejectButton uuid={""} />
+                </div>
+                <div style={{ margin: "2px" }}>
+                  <StockOperationReturnButton uuid={""} />
+                </div>
+                <div style={{ margin: "2px" }}>
+                  <StockOperationCancelButton uuid={""} />
+                </div>
+                <div style={{ margin: "2px" }}>
+                  <StockOperationPrintButton uuid={""} />
+                </div>
+              </>
+            )}
+
+            {!canEdit && canReceiveItems && (
+              <>
+                <div style={{ margin: "2px" }}>
+                  <StockOperationCompleteDispatchButton uuid={""} />
+                </div>
+                <div style={{ margin: "2px" }}>
+                  <StockOperationReturnButton uuid={""} />
+                </div>
+              </>
+            )}
+
+            {isNew && canEdit && (
+              <div style={{ margin: "2px" }}>
+                <StockOperationCancelButton uuid={""} />
+              </div>
+            )}
+
+            {isRequisitionAndCanIssueStock && (
+              <div style={{ margin: "2px" }}>
+                <StockOperationIssueStockButton uuid={""} />
+              </div>
+            )}
+
+            {!isNew && canPrint && <StockOperationPrintButton uuid={""} />}
           </div>
-          <div style={{ margin: "2px" }}>
-            <Button
-              kind=""
-              renderIcon={(props) => <CloseOutline size={16} {...props} />}
-            >
-              Reject
-            </Button>
-          </div>
-          <div style={{ margin: "2px" }}>
-            <Button
-              kind="tertiary"
-              renderIcon={(props) => <Repeat size={16} {...props} />}
-            >
-              Return
-            </Button>
-          </div>
-          <div style={{ margin: "2px" }}>
-            <Button
-              kind="danger--ghost"
-              renderIcon={(props) => <Error size={16} {...props} />}
-            >
-              Cancel
-            </Button>
-          </div>
-          <div style={{ margin: "2px" }}>
-            <Button
-              kind="tertiary"
-              renderIcon={(props) => <Printer size={16} {...props} />}
-            >
-              Print
-            </Button>
-          </div>
-        </div>
+        )} */}
       </div>
       <VerticalTabs
         tabs={tabs}
