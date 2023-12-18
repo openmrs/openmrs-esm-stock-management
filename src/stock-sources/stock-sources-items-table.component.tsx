@@ -16,19 +16,16 @@ import {
   TableToolbarMenu,
   DataTableSkeleton,
   TableToolbarSearch,
-  Button,
-  Tooltip,
 } from "@carbon/react";
 import { isDesktop } from "@openmrs/esm-framework";
-import { Edit } from "@carbon/react/icons";
 import useStockSourcesPage from "./stock-sources-items-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import AddStockSourceActionButton from "./add-stock-source-button.component";
 import StockSourcesFilter from "./stock-sources-filter/stock-sources-filter.component";
 import styles from "./stock-sources.scss";
 import { useTranslation } from "react-i18next";
-import { launchOverlay } from "../core/components/overlay/hook";
-import StockSourcesAddOrUpdate from "./add-stock-sources/add-stock-sources.component";
+import StockSourcesDeleteActionMenu from "./stock-sources-delete/stock-sources-delete.component";
+import EditStockSourceActionsMenu from "./edit-stock-source/edit-stock-source.component";
 
 function StockSourcesItems() {
   const { t } = useTranslation();
@@ -49,31 +46,8 @@ function StockSourcesItems() {
     totalCount: true,
   });
 
-  const handleClick = useCallback((data: any) => {
-    launchOverlay(
-      "Edit Stock Source",
-      <StockSourcesAddOrUpdate model={data} />
-    );
-  }, []);
-
-  if (items) {
-    items.forEach((row) => {
-      row["actions"] = (
-        <Tooltip align="bottom" label="Edit Stock Item">
-          <Button
-            kind="ghost"
-            size="md"
-            onClick={() => handleClick(row)}
-            iconDescription={t("editStockItem", "Edit Stock Item")}
-            renderIcon={(props) => <Edit size={16} {...props} />}
-          ></Button>
-        </Tooltip>
-      );
-    });
-  }
-
   const tableRows = useMemo(() => {
-    return items?.map((entry) => {
+    return items?.map((entry, index) => {
       return {
         ...entry,
         id: entry?.uuid,
@@ -82,6 +56,12 @@ function StockSourcesItems() {
         name: entry?.name,
         acronym: entry?.acronym,
         sourceType: entry?.sourceType?.display,
+        actions: (
+          <>
+            <EditStockSourceActionsMenu data={items[index]} />
+            <StockSourcesDeleteActionMenu uuid={items[index].uuid} />
+          </>
+        ),
       };
     });
   }, [items]);

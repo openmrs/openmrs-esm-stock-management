@@ -1,32 +1,35 @@
-import { Button, Tooltip } from "@carbon/react";
+import React, { useCallback } from "react";
+import { Button } from "@carbon/react";
 import { Edit } from "@carbon/react/icons";
-import { interpolateUrl, navigate } from "@openmrs/esm-framework";
 
-import React, { AnchorHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
+import { launchOverlay } from "../../core/components/overlay/hook";
+import StockSourcesAddOrUpdate from "../add-stock-sources/add-stock-sources.component";
+import { StockSource } from "../../core/api/types/stockOperation/StockSource";
 
-interface NameLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
-  to: string;
-  from: string;
+interface EditStockSourcesActionMenuProps {
+  data?: StockSource;
 }
 
-const EditSourceActionsMenu: React.FC<NameLinkProps> = ({ from, to }) => {
+const EditStockSourceActionsMenu: React.FC<EditStockSourcesActionMenuProps> = ({
+  data,
+}) => {
   const { t } = useTranslation();
-  const handleNameClick = (event: MouseEvent, to: string) => {
-    event.preventDefault();
-    navigate({ to });
-    localStorage.setItem("fromPage", from);
-  };
+  const handleClick = useCallback(() => {
+    launchOverlay(
+      "Edit Stock Source",
+      <StockSourcesAddOrUpdate model={data} />
+    );
+  }, [data]);
+
   return (
-    <Tooltip align="bottom" label="Edit Patient">
-      <Button
-        kind="ghost"
-        onClick={(e) => handleNameClick(e, to)}
-        href={interpolateUrl(to)}
-        iconDescription={t("editSource", "Edit Source")}
-        renderIcon={(props) => <Edit size={16} {...props} />}
-      ></Button>
-    </Tooltip>
+    <Button
+      kind="ghost"
+      size="md"
+      onClick={() => handleClick()}
+      iconDescription={t("editStockItem", "Edit Stock Item")}
+      renderIcon={(props) => <Edit size={16} {...props} />}
+    />
   );
 };
-export default EditSourceActionsMenu;
+export default EditStockSourceActionsMenu;
