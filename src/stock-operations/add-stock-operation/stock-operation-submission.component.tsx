@@ -48,9 +48,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   return (
-    <div>
+    <div style={{ margin: "10px" }}>
       {canEdit && !locked && (
-        <div style={{ margin: "5px" }}>
+        <div style={{ margin: "10px" }}>
           <RadioButtonGroup
             name="rbgApprovelRequired"
             legendText={t(
@@ -91,7 +91,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
       )}
 
       {canEdit && !locked && (
-        <div className="stkpg-form-buttons" style={{ margin: "5px" }}>
+        <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
           {model.approvalRequired != null && (
             <>
               {!requiresDispatchAcknowledgement && !model.approvalRequired && (

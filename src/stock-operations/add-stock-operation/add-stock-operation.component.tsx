@@ -10,6 +10,13 @@ import { useInitializeStockOperations } from "./add-stock-operation.resource";
 import { AccordionSkeleton, Button } from "@carbon/react";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { addOrEditStockOperation } from "../stock-operation.utils";
+import {
+  Printer,
+  Error,
+  Repeat,
+  CloseOutline,
+  CheckmarkOutline,
+} from "@carbon/react/icons";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -158,19 +165,43 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           }}
         >
           <div style={{ margin: "2px" }}>
-            <Button>Approve</Button>
+            <Button
+              renderIcon={(props) => <CheckmarkOutline size={16} {...props} />}
+            >
+              Approve
+            </Button>
           </div>
           <div style={{ margin: "2px" }}>
-            <Button kind="">Reject</Button>
+            <Button
+              kind=""
+              renderIcon={(props) => <CloseOutline size={16} {...props} />}
+            >
+              Reject
+            </Button>
           </div>
           <div style={{ margin: "2px" }}>
-            <Button kind="tertiary">Return</Button>
+            <Button
+              kind="tertiary"
+              renderIcon={(props) => <Repeat size={16} {...props} />}
+            >
+              Return
+            </Button>
           </div>
           <div style={{ margin: "2px" }}>
-            <Button kind="danger--ghost">Cancel</Button>
+            <Button
+              kind="danger--ghost"
+              renderIcon={(props) => <Error size={16} {...props} />}
+            >
+              Cancel
+            </Button>
           </div>
           <div style={{ margin: "2px" }}>
-            <Button kind="tertiary">Print</Button>
+            <Button
+              kind="tertiary"
+              renderIcon={(props) => <Printer size={16} {...props} />}
+            >
+              Print
+            </Button>
           </div>
         </div>
       </div>

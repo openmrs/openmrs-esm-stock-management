@@ -46,7 +46,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   model,
   onSave,
   operation,
-  canEdit = true,
+  canEdit,
   isEditing,
   setup: {
     requiresStockAdjustmentReason: showReason,
@@ -148,213 +148,217 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   };
 
   return (
-    <form className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}>
-      {canEdit && (
-        <Controller
-          control={control}
-          render={({ field: { onChange } }) => (
-            <DatePicker
-              datePickerType="single"
-              maxDate={formatForDatePicker(today())}
-              locale="en"
-              dateFormat={DATE_PICKER_CONTROL_FORMAT}
-              onChange={onChange}
-            >
-              <DatePickerInput
-                invalid={!!errors.operationDate}
-                invalidText={errors?.operationDate?.message}
-                id="operationDate"
-                name="operationDate"
-                placeholder={DATE_PICKER_FORMAT}
-                labelText={t("operationDate", "Operation Date")}
-                value={formatForDatePicker(model?.operationDate)}
-              />
-            </DatePicker>
-          )}
-          name="operationDate"
-        />
-      )}
-
-      {!canEdit && (
-        <>
-          <TextInput
-            id="operationDateLbl"
-            value={formatForDatePicker(model?.operationDate)}
-            readOnly={true}
-            labelText="Operation Date"
+    <div style={{ margin: "10px" }}>
+      <form
+        className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
+      >
+        {canEdit && (
+          <Controller
+            control={control}
+            render={({ field: { onChange } }) => (
+              <DatePicker
+                datePickerType="single"
+                maxDate={formatForDatePicker(today())}
+                locale="en"
+                dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                onChange={onChange}
+              >
+                <DatePickerInput
+                  invalid={!!errors.operationDate}
+                  invalidText={errors?.operationDate?.message}
+                  id="operationDate"
+                  name="operationDate"
+                  placeholder={DATE_PICKER_FORMAT}
+                  labelText={t("operationDate", "Operation Date")}
+                  value={formatForDatePicker(model?.operationDate)}
+                />
+              </DatePicker>
+            )}
+            name="operationDate"
           />
-        </>
-      )}
+        )}
 
-      {isEditing && model?.operationNumber && (
-        <TextInput
-          id="operationNoLbl"
-          value={model?.operationNumber}
-          readOnly={true}
-          labelText={"Operation Number:"}
-        />
-      )}
+        {!canEdit && (
+          <>
+            <TextInput
+              id="operationDateLbl"
+              value={formatForDatePicker(model?.operationDate)}
+              readOnly={true}
+              labelText="Operation Date"
+            />
+          </>
+        )}
 
-      {canEdit && !lockSource && operation?.hasSource && (
-        <PartySelector
-          controllerName="sourceUuid"
-          name="sourceUuid"
-          control={control}
-          title={
-            operation?.hasDestination
-              ? t("from:", "From:")
-              : t("location:", "Location:")
-          }
-          placeholder={
-            operation.hasDestination
-              ? t("chooseASource", "Choose a source")
-              : t("chooseALocation", "Choose a location")
-          }
-          invalid={!!errors.sourceUuid}
-          invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
-          parties={sourcePartyList || []}
-        />
-      )}
+        {isEditing && model?.operationNumber && (
+          <TextInput
+            id="operationNoLbl"
+            value={model?.operationNumber}
+            readOnly={true}
+            labelText={"Operation Number:"}
+          />
+        )}
 
-      {(!canEdit || lockSource) && operation?.hasSource && (
-        <TextInput
-          id="sourceUuidLbl"
-          value={model?.sourceName ?? ""}
-          readOnly={true}
-          labelText={operation?.hasDestination ? "From:" : "Location:"}
-        />
-      )}
-
-      {canEdit && !lockDestination && operation?.hasDestination && (
-        <PartySelector
-          controllerName="destinationUuid"
-          name="destinationUuid"
-          control={control}
-          title={operation?.hasSource ? "To:" : "Location:"}
-          placeholder={
-            operation?.hasSource
-              ? t("chooseADestination", "Choose a destination")
-              : "Location"
-          }
-          invalid={!!errors.destinationUuid}
-          invalidText={
-            errors.destinationUuid && errors?.destinationUuid?.message
-          }
-          parties={destinationPartyList || []}
-        />
-      )}
-
-      {(!canEdit || lockDestination) && operation?.hasDestination && (
-        <TextInput
-          id="destinationUuidLbl"
-          value={model?.destinationName ?? ""}
-          readOnly={true}
-          labelText={operation?.hasSource ? "To:" : "Location:"}
-        />
-      )}
-
-      {canEdit && (
-        <UsersSelector
-          controllerName="responsiblePersonUuid"
-          name="responsiblePersonUuid"
-          control={control}
-          title={t("responsiblePerson:", "Responsible Person:")}
-          placeholder={t("filter", "Filter ...")}
-          invalid={!!errors.responsiblePersonUuid}
-          invalidText={
-            errors.responsiblePersonUuid &&
-            errors?.responsiblePersonUuid?.message
-          }
-          onUserChanged={(user) => {
-            if (user?.uuid === otherUser.uuid) {
-              setIsOtherUser(true);
+        {canEdit && !lockSource && operation?.hasSource && (
+          <PartySelector
+            controllerName="sourceUuid"
+            name="sourceUuid"
+            control={control}
+            title={
+              operation?.hasDestination
+                ? t("from:", "From:")
+                : t("location:", "Location:")
             }
-          }}
-        />
-      )}
+            placeholder={
+              operation.hasDestination
+                ? t("chooseASource", "Choose a source")
+                : t("chooseALocation", "Choose a location")
+            }
+            invalid={!!errors.sourceUuid}
+            invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
+            parties={sourcePartyList || []}
+          />
+        )}
 
-      {isOtherUser && (
-        <ControlledTextInput
-          id="responsiblePersonOther"
-          name="responsiblePersonOther"
+        {(!canEdit || lockSource) && operation?.hasSource && (
+          <TextInput
+            id="sourceUuidLbl"
+            value={model?.sourceName ?? ""}
+            readOnly={true}
+            labelText={operation?.hasDestination ? "From:" : "Location:"}
+          />
+        )}
+
+        {canEdit && !lockDestination && operation?.hasDestination && (
+          <PartySelector
+            controllerName="destinationUuid"
+            name="destinationUuid"
+            control={control}
+            title={operation?.hasSource ? "To:" : "Location:"}
+            placeholder={
+              operation?.hasSource
+                ? t("chooseADestination", "Choose a destination")
+                : "Location"
+            }
+            invalid={!!errors.destinationUuid}
+            invalidText={
+              errors.destinationUuid && errors?.destinationUuid?.message
+            }
+            parties={destinationPartyList || []}
+          />
+        )}
+
+        {(!canEdit || lockDestination) && operation?.hasDestination && (
+          <TextInput
+            id="destinationUuidLbl"
+            value={model?.destinationName ?? ""}
+            readOnly={true}
+            labelText={operation?.hasSource ? "To:" : "Location:"}
+          />
+        )}
+
+        {canEdit && (
+          <UsersSelector
+            controllerName="responsiblePersonUuid"
+            name="responsiblePersonUuid"
+            control={control}
+            title={t("responsiblePerson:", "Responsible Person:")}
+            placeholder={t("filter", "Filter ...")}
+            invalid={!!errors.responsiblePersonUuid}
+            invalidText={
+              errors.responsiblePersonUuid &&
+              errors?.responsiblePersonUuid?.message
+            }
+            onUserChanged={(user) => {
+              if (user?.uuid === otherUser.uuid) {
+                setIsOtherUser(true);
+              }
+            }}
+          />
+        )}
+
+        {isOtherUser && (
+          <ControlledTextInput
+            id="responsiblePersonOther"
+            name="responsiblePersonOther"
+            control={control}
+            controllerName="responsiblePersonOther"
+            maxLength={255}
+            size={"md"}
+            value={`${model?.responsiblePersonOther ?? ""}`}
+            labelText={t("responsiblePerson", "Responsible Person:")}
+            placeholder={t("pleaseSpecify", "Please Specify:")}
+            invalid={!!errors.responsiblePersonOther}
+            invalidText={
+              errors.responsiblePersonOther &&
+              errors?.responsiblePersonOther?.message
+            }
+          />
+        )}
+
+        {!canEdit && (
+          <TextInput
+            id="responsiblePersonLbl"
+            value={
+              (model?.responsiblePersonUuid &&
+              model?.responsiblePersonUuid !== otherUser.uuid
+                ? `${model?.responsiblePersonFamilyName} ${model?.responsiblePersonGivenName}`
+                : model?.responsiblePersonOther) ?? ""
+            }
+            readOnly={true}
+            labelText={"Responsible Person"}
+          />
+        )}
+
+        {showReason && canEdit && (
+          <StockOperationReasonSelector
+            controllerName="reasonUuid"
+            name="reasonUuid"
+            control={control}
+            placeholder={t("chooseAReason", "Choose a reason")}
+            title={t("reason", "Reason:")}
+            invalid={!!errors.reasonUuid}
+            invalidText={errors.reasonUuid && errors?.reasonUuid?.message}
+            onReasonChange={(reason) => {
+              setValue("reasonUuid", reason.uuid);
+            }}
+          />
+        )}
+
+        {showReason && !canEdit && (
+          <TextInput
+            id="reasonUuidLbl"
+            value={model?.reasonName ?? ""}
+            readOnly={true}
+            labelText={"Reason:"}
+          />
+        )}
+
+        <ControlledTextArea
+          id="remarks"
+          name="remarks"
           control={control}
-          controllerName="responsiblePersonOther"
+          controllerName="remarks"
           maxLength={255}
-          size={"md"}
-          value={`${model?.responsiblePersonOther ?? ""}`}
-          labelText={t("responsiblePerson", "Responsible Person:")}
-          placeholder={t("pleaseSpecify", "Please Specify:")}
-          invalid={!!errors.responsiblePersonOther}
-          invalidText={
-            errors.responsiblePersonOther &&
-            errors?.responsiblePersonOther?.message
-          }
+          value={`${model?.remarks ?? ""}`}
+          labelText={t("remarks:", "Remarks:")}
+          invalid={!!errors.remarks}
+          invalidText={errors.remarks && errors?.remarks?.message}
         />
-      )}
 
-      {!canEdit && (
-        <TextInput
-          id="responsiblePersonLbl"
-          value={
-            (model?.responsiblePersonUuid &&
-            model?.responsiblePersonUuid !== otherUser.uuid
-              ? `${model?.responsiblePersonFamilyName} ${model?.responsiblePersonGivenName}`
-              : model?.responsiblePersonOther) ?? ""
-          }
-          readOnly={true}
-          labelText={"Responsible Person"}
-        />
-      )}
-
-      {showReason && canEdit && (
-        <StockOperationReasonSelector
-          controllerName="reasonUuid"
-          name="reasonUuid"
-          control={control}
-          placeholder={t("chooseAReason", "Choose a reason")}
-          title={t("reason", "Reason:")}
-          invalid={!!errors.reasonUuid}
-          invalidText={errors.reasonUuid && errors?.reasonUuid?.message}
-          onReasonChange={(reason) => {
-            setValue("reasonUuid", reason.uuid);
-          }}
-        />
-      )}
-
-      {showReason && !canEdit && (
-        <TextInput
-          id="reasonUuidLbl"
-          value={model?.reasonName ?? ""}
-          readOnly={true}
-          labelText={"Reason:"}
-        />
-      )}
-
-      <ControlledTextArea
-        id="remarks"
-        name="remarks"
-        control={control}
-        controllerName="remarks"
-        maxLength={255}
-        value={`${model?.remarks ?? ""}`}
-        labelText={t("remarks:", "Remarks:")}
-        invalid={!!errors.remarks}
-        invalidText={errors.remarks && errors?.remarks?.message}
-      />
-
-      <div style={{ display: "flex", flexDirection: "row-reverse" }}>
-        <Button
-          name="save"
-          type="button"
-          className="submitButton"
-          onClick={handleSubmit(handleSave)}
-          kind="primary"
-          renderIcon={ArrowRight}
-        >
-          {isSaving ? <InlineLoading /> : t("next", "Next")}
-        </Button>
-      </div>
-    </form>
+        <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+          <Button
+            name="save"
+            type="button"
+            className="submitButton"
+            onClick={handleSubmit(handleSave)}
+            kind="primary"
+            renderIcon={ArrowRight}
+          >
+            {isSaving ? <InlineLoading /> : t("next", "Next")}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -153,95 +153,97 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   };
 
   return (
-    <div className={styles.tableContainer}>
-      <DataTable
-        rows={stockOperationItems}
-        headers={headers}
-        isSortable={false}
-        useZebraStyles={true}
-        styles={{
-          width: "100%",
-        }}
-        render={({ headers, getHeaderProps, getTableProps }) => (
-          <TableContainer>
-            <Table {...getTableProps()}>
-              <TableHead>
-                <TableRow>
-                  {headers.map((header: any) => (
-                    <TableHeader
-                      {...getHeaderProps({
-                        header,
-                        isSortable: false,
-                      })}
-                      className={
-                        isDesktop ? styles.desktopHeader : styles.tabletHeader
-                      }
-                      style={header?.styles}
-                      key={`${header.key}`}
-                    >
-                      {header.header?.content ?? header.header}
-                    </TableHeader>
-                  ))}
-                  {canEdit && (
-                    <TableHeader
-                      style={{
-                        width: "3% !important",
-                      }}
-                    >
-                      <div
+    <div style={{ margin: "10px" }}>
+      <div className={styles.tableContainer}>
+        <DataTable
+          rows={stockOperationItems}
+          headers={headers}
+          isSortable={false}
+          useZebraStyles={true}
+          styles={{
+            width: "100%",
+          }}
+          render={({ headers, getHeaderProps, getTableProps }) => (
+            <TableContainer>
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    {headers.map((header: any) => (
+                      <TableHeader
+                        {...getHeaderProps({
+                          header,
+                          isSortable: false,
+                        })}
+                        className={
+                          isDesktop ? styles.desktopHeader : styles.tabletHeader
+                        }
+                        style={header?.styles}
+                        key={`${header.key}`}
+                      >
+                        {header.header?.content ?? header.header}
+                      </TableHeader>
+                    ))}
+                    {canEdit && (
+                      <TableHeader
                         style={{
                           width: "3% !important",
-                          display: "flex",
-                          flexDirection: "row",
-                          gap: "8px",
                         }}
                       >
-                        <Button
-                          renderIcon={Add}
-                          onClick={addNewItem}
-                          hasIconOnly
-                        ></Button>
-                        <Button
-                          name="save"
-                          type="button"
-                          className="submitButton"
-                          onClick={handleSubmit(handleSave)}
-                          kind="primary"
-                          renderIcon={ArrowRight}
+                        <div
+                          style={{
+                            width: "3% !important",
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "8px",
+                          }}
                         >
-                          {isSaving ? <InlineLoading /> : t("next", "Next")}
-                        </Button>
-                      </div>
-                    </TableHeader>
-                  )}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <StockItemsAdditionRow
-                  rows={stockOperationItems}
-                  batchBalance={batchBalance}
-                  batchNos={batchNos}
-                  control={control}
-                  setValue={setValue}
-                  errors={errors}
-                  remove={remove}
-                  append={append}
-                  canEdit={canEdit}
-                  showQuantityRequested={showQuantityRequested}
-                  requiresActualBatchInformation={
-                    requiresActualBatchInformation
-                  }
-                  requiresBatchUuid={requiresBatchUuid}
-                  canUpdateBatchInformation={canUpdateBatchInformation}
-                  canCapturePurchasePrice={canCaptureQuantityPrice}
-                  itemUoM={itemUoM}
-                  fields={fields}
-                />{" "}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      ></DataTable>
+                          <Button
+                            renderIcon={Add}
+                            onClick={addNewItem}
+                            hasIconOnly
+                          ></Button>
+                          <Button
+                            name="save"
+                            type="button"
+                            className="submitButton"
+                            onClick={handleSubmit(handleSave)}
+                            kind="primary"
+                            renderIcon={ArrowRight}
+                          >
+                            {isSaving ? <InlineLoading /> : t("next", "Next")}
+                          </Button>
+                        </div>
+                      </TableHeader>
+                    )}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <StockItemsAdditionRow
+                    rows={stockOperationItems}
+                    batchBalance={batchBalance}
+                    batchNos={batchNos}
+                    control={control}
+                    setValue={setValue}
+                    errors={errors}
+                    remove={remove}
+                    append={append}
+                    canEdit={canEdit}
+                    showQuantityRequested={showQuantityRequested}
+                    requiresActualBatchInformation={
+                      requiresActualBatchInformation
+                    }
+                    requiresBatchUuid={requiresBatchUuid}
+                    canUpdateBatchInformation={canUpdateBatchInformation}
+                    canCapturePurchasePrice={canCaptureQuantityPrice}
+                    itemUoM={itemUoM}
+                    fields={fields}
+                  />{" "}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        ></DataTable>
+      </div>
     </div>
   );
 };
