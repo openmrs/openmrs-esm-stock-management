@@ -16,6 +16,7 @@ import {
 } from "../../core/api/types/stockOperation/StockOperationAction";
 import { executeStockOperationAction } from "../stock-operations.resource";
 import { showNotification, showToast } from "@openmrs/esm-framework";
+import { closeOverlay } from "../../core/components/overlay/hook";
 
 interface StockOperationDialogProps {
   title: string;
@@ -85,6 +86,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
           ),
         });
         closeModal();
+        closeOverlay();
       },
       (err) => {
         setIsApproving(false);
@@ -94,6 +96,8 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
           critical: true,
           description: err?.message,
         });
+        closeModal();
+        closeOverlay();
       }
     );
   };
