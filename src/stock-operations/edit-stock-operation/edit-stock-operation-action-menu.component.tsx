@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Tooltip } from "@carbon/react";
+import { Button } from "@carbon/react";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { launchAddOrEditDialog } from "../stock-operation.utils";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
@@ -33,6 +33,7 @@ const EditStockOperationActionMenu: React.FC<
     voidReason: "",
     voided: false,
   };
+
   return (
     <>
       <Button
@@ -42,7 +43,7 @@ const EditStockOperationActionMenu: React.FC<
         iconDescription={"View"}
         kind="ghost"
         onClick={() => {
-          launchAddOrEditDialog(model, type, true, operations);
+          launchAddOrEditDialog(model, true, type, operations, false);
         }}
       >
         {`${model?.operationNumber}`}

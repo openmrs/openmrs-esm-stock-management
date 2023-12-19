@@ -209,7 +209,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             kind="ghost"
             renderIcon={Edit}
             onClick={() => {
-              launchAddOrEditDialog(items[index], operation, true, operations);
+              launchAddOrEditDialog(
+                items[index],
+                true,
+                operation,
+                operations,
+                false
+              );
             }}
           />
         </Tooltip>
@@ -268,9 +274,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
                       initialStockOperationValue(),
-                      operation,
                       false,
-                      operations
+                      operation,
+                      operations,
+                      false
                     );
                   }}
                   onOperationLoaded={(ops) => {

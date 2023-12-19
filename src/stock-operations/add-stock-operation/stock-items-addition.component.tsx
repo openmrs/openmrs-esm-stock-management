@@ -46,7 +46,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     canUpdateItemsBatchInformation: canUpdateBatchInformation,
     itemUoM,
   },
-  canEdit = true,
+  canEdit,
   model,
   onSave,
 }) => {

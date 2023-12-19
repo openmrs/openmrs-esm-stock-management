@@ -4,21 +4,23 @@ import { Button } from "@carbon/react";
 import { showModal } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { CheckmarkOutline } from "@carbon/react/icons";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface StockOperationApprovalButtonProps {
-  uuid: string;
+  operation: StockOperationDTO;
 }
 
 const StockOperationApprovalButton: React.FC<
   StockOperationApprovalButtonProps
-> = ({ uuid }) => {
+> = ({ operation }) => {
   const { t } = useTranslation();
   const launchApprovalModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "Approve",
+      operation: operation,
       closeModal: () => dispose(),
     });
-  }, []);
+  }, [operation]);
 
   return (
     <Button

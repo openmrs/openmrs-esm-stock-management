@@ -15,35 +15,49 @@ import StockOperationRejectButton from "../stock-operations-dialog/stock-operati
 import StockOperationReturnButton from "../stock-operations-dialog/stock-operations-return-button.component";
 import StockOperationCancelButton from "../stock-operations-dialog/stock-operations-cancel-button.component";
 import StockOperationPrintButton from "../stock-operations-dialog/stock-operations-print-button.component";
-import { StockOperationTypeHasPrint } from "../../core/api/types/stockOperation/StockOperationType";
 import StockOperationApproveDispatchButton from "../stock-operations-dialog/stock-operations-approve-dispatch-button.component";
 import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
+import {
+  OperationType,
+  StockOperationType,
+  StockOperationTypeCanCapturePurchasePrice,
+  StockOperationTypeIsNegativeQtyAllowed,
+  StockOperationTypeIsQuantityOptional,
+  StockOperationTypeRequiresActualBatchInformation,
+  StockOperationTypeRequiresBatchUuid,
+  StockOperationTypeRequiresDispatchAcknowledgement,
+  StockOperationTypeRequiresStockAdjustmentReason,
+  operationFromString,
+} from "../../core/api/types/stockOperation/StockOperationType";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
   const { isLoading, isError, result } = useInitializeStockOperations(props);
-  const [isNew, setIsNew] = useState(false);
-  const [canPrint, setCanPrint] = useState(false);
-  const [canEdit, setCanEdit] = useState(false);
-  const [canApprove, setCanApprove] = useState(false);
-  const [canReceiveItems, setCanReceiveItems] = useState(false);
-  const [canDisplayReceivedItems, setCanDisplayReceivedItems] = useState(false);
-  const [isRequisitionAndCanIssueStock, setIsRequisitionAndCanIssueStock] =
-    useState(false);
-  const [canUpdateBatchInformation, setCanUpdateBatchInformation] =
-    useState(false);
+  const [canPrint, setCanPrint] = useState(props?.canPrint);
 
-  const [isEditing, setIsEditing] = useState<boolean>(props.isEditing);
-  const [manageStockItems, setManageStockItems] = useState(props.isEditing);
+  const [isEditing, setIsEditing] = useState<boolean>(props?.isEditing);
+  const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props.isEditing
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // let canEditModel = false;
-  // let canViewModel = false;
-  // let canApproveModel = false;
+  const [stockOperationType, setStockOperationType] = useState<
+    StockOperationType | null | undefined
+  >(null);
+  const [isNegativeQtyAllowed, setIsNegativeQtyAllowed] = useState(false);
+  const [requiresBatchUuid, setRequiresBatchUuid] = useState(false);
+  const [requiresActualBatchInformation, setRequiresActualBatchInformation] =
+    useState(false);
+  const [isQuantityOptional, setIsQuantityOptional] = useState(false);
+  const [canCapturePurchasePrice, setCanCapturePurchasePrice] = useState(false);
+  const [requireStockAdjustmentReason, setRequireStockAdjustmentReason] =
+    useState(false);
+  const [requiresDispatchAcknowledgement, setRequiresDispatchAcknowledgement] =
+    useState(false);
+  const [allowExpiredBatchNumbers, setAllowExpiredBatchNumbers] =
+    useState(false);
 
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
@@ -51,28 +65,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     // TODO: Show an error
     return;
   }
-
-  // if (isEditing) {
-  // canEditModel = props.model?.permission?.canEdit ?? false;
-  // canViewModel = props.model?.permission?.canView ?? false;
-  // canApproveModel = props.model?.permission?.canApprove ?? false;
-  // const canIssueStock =
-  //   props.model?.permission?.isRequisitionAndCanIssueStock ?? false;
-  // const canReceiveItems = props.model?.permission?.canReceiveItems ?? false;
-  // const canDisplayReceivedItems =
-  //   props.model?.permission?.canDisplayReceivedItems ?? false;
-  // const canUpdateItemsBatchInformation =
-  //   props.model?.permission?.canUpdateBatchInformation ?? false;
-
-  // setCanEdit(canEditModel);
-  // setCanApprove(canApproveModel);
-  // setCanReceiveItems(canReceiveItems);
-  // setCanDisplayReceivedItems(canDisplayReceivedItems);
-  // setCanUpdateBatchInformation(canUpdateItemsBatchInformation);
-
-  // setIsRequisitionAndCanIssueStock(canIssueStock);
-  // setCanPrint(canIssueStock);
-  // }
 
   const tabs: TabItem[] = [
     {
@@ -85,7 +77,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           isEditing={isEditing}
           setup={result}
           canEdit={props.model.status === "NEW" ? true : false}
-          model={props?.model ?? result.dto}
+          model={isEditing ? props?.model : result.dto}
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -100,7 +92,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           {...props}
           isEditing={isEditing}
           setup={result}
-          model={props?.model ?? result.dto}
+          canEdit={props.model.status === "NEW" ? true : false}
+          model={isEditing ? props?.model : result.dto}
           onSave={async () => {
             setManageSubmitOrComplete(true);
             setSelectedIndex(2);
@@ -118,15 +111,19 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           {...props}
           isEditing={isEditing}
           setup={result}
-          model={props?.model ?? result.dto}
+          canEdit={props.model.status === "NEW" ? true : false}
+          locked={false}
+          model={isEditing ? props?.model : result.dto}
+          requiresDispatchAcknowledgement={false}
           actions={{
             onSave: async (model) => {
               // TODO: Update
               await addOrEditStockOperation(
                 model,
-                props.operation,
                 props.isEditing,
-                props.operations
+                props.operation,
+                props.operations,
+                props.canPrint
               );
             },
             onGoBack: () => {
@@ -147,6 +144,39 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(props.isEditing || manageSubmitOrComplete),
     },
   ];
+
+  // const currentStockOperationType = props.operations?.find(
+  //   (p) => p.uuid === props.operation?.uuid
+  // );
+
+  // console.info("data operations-->", props);
+
+  // console.info("data-->", currentStockOperationType);
+  // const operationType: OperationType = operationFromString(
+  //   currentStockOperationType?.operationType ?? ""
+  // );
+
+  // setStockOperationType(currentStockOperationType);
+  // setIsNegativeQtyAllowed(
+  //   StockOperationTypeIsNegativeQtyAllowed(operationType)
+  // );
+  // setRequiresBatchUuid(StockOperationTypeRequiresBatchUuid(operationType));
+  // setRequiresActualBatchInformation(
+  //   StockOperationTypeRequiresActualBatchInformation(operationType)
+  // );
+  // setIsQuantityOptional(StockOperationTypeIsQuantityOptional(operationType));
+  // setCanCapturePurchasePrice(
+  //   StockOperationTypeCanCapturePurchasePrice(operationType)
+  // );
+  // setRequireStockAdjustmentReason(
+  //   StockOperationTypeRequiresStockAdjustmentReason(operationType)
+  // );
+  // setRequiresDispatchAcknowledgement(
+  //   StockOperationTypeRequiresDispatchAcknowledgement(operationType)
+  // );
+  // setAllowExpiredBatchNumbers(
+  //   currentStockOperationType?.allowExpiredBatchNumbers ?? false
+  // );
 
   return (
     <>
@@ -196,9 +226,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             )}
           </div>
         </div>
-        {/* {((!canEdit && (canApprove || canReceiveItems)) ||
-          (!isNew && (canEdit || canPrint)) ||
-          isRequisitionAndCanIssueStock) && (
+
+        {((!props.model.permission.canEdit &&
+          (props.model.permission.canApprove ||
+            props.model.permission.canReceiveItems)) ||
+          props.model.permission.canEdit ||
+          canPrint ||
+          props.model.permission.isRequisitionAndCanIssueStock) && (
           <div
             style={{
               margin: "10px",
@@ -206,60 +240,69 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               flexDirection: "row",
             }}
           >
-            {!canEdit && canApprove && (
-              <>
-                {!result.requiresDispatchAcknowledgement && (
-                  <div style={{ margin: "2px" }}>
-                    <StockOperationApprovalButton uuid={""} />
-                  </div>
+            <>
+              {!props.model.permission.canEdit &&
+                props.model.permission.canApprove && (
+                  <>
+                    {!requiresDispatchAcknowledgement && (
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationApprovalButton operation={props.model} />
+                      </div>
+                    )}
+                    {requiresDispatchAcknowledgement && (
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationApproveDispatchButton
+                          operation={props.model}
+                        />
+                      </div>
+                    )}
+
+                    <div style={{ margin: "2px" }}>
+                      <StockOperationRejectButton operation={props.model} />
+                    </div>
+                    <div style={{ margin: "2px" }}>
+                      <StockOperationReturnButton operation={props.model} />
+                    </div>
+                    <div style={{ margin: "2px" }}>
+                      <StockOperationCancelButton operation={props.model} />
+                    </div>
+                  </>
                 )}
-                {result.requiresDispatchAcknowledgement && (
-                  <div style={{ margin: "2px" }}>
-                    <StockOperationApproveDispatchButton uuid={""} />
-                  </div>
+
+              {!props.model.permission.canEdit &&
+                props.model.permission.canReceiveItems && (
+                  <>
+                    <div style={{ margin: "2px" }}>
+                      <StockOperationCompleteDispatchButton
+                        operation={props.model}
+                      />
+                    </div>
+                    <div style={{ margin: "2px" }}>
+                      <StockOperationReturnButton operation={props.model} />
+                    </div>
+                  </>
                 )}
 
+              {props.model.permission.canEdit && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationRejectButton uuid={""} />
+                  <StockOperationCancelButton operation={props.model} />
                 </div>
-                <div style={{ margin: "2px" }}>
-                  <StockOperationReturnButton uuid={""} />
-                </div>
-                <div style={{ margin: "2px" }}>
-                  <StockOperationCancelButton uuid={""} />
-                </div>
-                <div style={{ margin: "2px" }}>
-                  <StockOperationPrintButton uuid={""} />
-                </div>
-              </>
-            )}
+              )}
 
-            {!canEdit && canReceiveItems && (
-              <>
+              {props.model?.permission?.isRequisitionAndCanIssueStock && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationCompleteDispatchButton uuid={""} />
+                  <StockOperationIssueStockButton operation={props.model} />
                 </div>
+              )}
+
+              {canPrint && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationReturnButton uuid={""} />
+                  <StockOperationPrintButton operation={props.model} />
                 </div>
-              </>
-            )}
-
-            {isNew && canEdit && (
-              <div style={{ margin: "2px" }}>
-                <StockOperationCancelButton uuid={""} />
-              </div>
-            )}
-
-            {isRequisitionAndCanIssueStock && (
-              <div style={{ margin: "2px" }}>
-                <StockOperationIssueStockButton uuid={""} />
-              </div>
-            )}
-
-            {!isNew && canPrint && <StockOperationPrintButton uuid={""} />}
+              )}
+            </>
           </div>
-        )} */}
+        )}
       </div>
       <VerticalTabs
         tabs={tabs}

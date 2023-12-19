@@ -38,8 +38,8 @@ interface StockOperationSubmissionProps {
 }
 
 const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
-  canEdit = true,
-  locked = false,
+  canEdit,
+  locked,
   model,
   requiresDispatchAcknowledgement,
   actions,
@@ -55,7 +55,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             name="rbgApprovelRequired"
             legendText={t(
               "doesThisTransactionRequireApproval",
-              "Does the transaction require approval?"
+              "Does the transaction require approval ?"
             )}
             onChange={(selectedItem: boolean) => {
               model.approvalRequired = selectedItem;
@@ -84,7 +84,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             readOnly={true}
             labelText={t(
               "doesThisTransactionRequireApproval",
-              "Does the transaction require approval?"
+              "Does the transaction require approval ?"
             )}
           />
         </>

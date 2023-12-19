@@ -4,21 +4,23 @@ import { Button } from "@carbon/react";
 import { showModal } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { Error } from "@carbon/react/icons";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface StockOperationCancelButtonProps {
-  uuid: string;
+  operation: StockOperationDTO;
 }
 
 const StockOperationCancelButton: React.FC<StockOperationCancelButtonProps> = ({
-  uuid,
+  operation,
 }) => {
   const { t } = useTranslation();
   const launchCancelModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "Cancel",
+      operation: operation,
       closeModal: () => dispose(),
     });
-  }, []);
+  }, [operation]);
 
   return (
     <Button

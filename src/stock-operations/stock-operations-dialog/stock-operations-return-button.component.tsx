@@ -10,21 +10,23 @@ import {
   CloseOutline,
   CheckmarkOutline,
 } from "@carbon/react/icons";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface StockOperationReturnButtonProps {
-  uuid: string;
+  operation: StockOperationDTO;
 }
 
 const StockOperationReturnButton: React.FC<StockOperationReturnButtonProps> = ({
-  uuid,
+  operation,
 }) => {
   const { t } = useTranslation();
   const launchReturnModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "Return",
+      operation: operation,
       closeModal: () => dispose(),
     });
-  }, []);
+  }, [operation]);
 
   return (
     <Button

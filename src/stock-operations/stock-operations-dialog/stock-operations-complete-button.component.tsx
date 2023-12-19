@@ -3,20 +3,20 @@ import React, { useCallback } from "react";
 import { Button } from "@carbon/react";
 import { showModal } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
-import { DeliveryTruck } from "@carbon/react/icons";
+import { CheckmarkOutline } from "@carbon/react/icons";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
-interface StockOperationIssueStockButtonProps {
+interface StockOperationCompleteButtonProps {
   operation: StockOperationDTO;
 }
 
-const StockOperationIssueStockButton: React.FC<
-  StockOperationIssueStockButtonProps
+const StockOperationCompleteButton: React.FC<
+  StockOperationCompleteButtonProps
 > = ({ operation }) => {
   const { t } = useTranslation();
-  const launchIssueStockModal = useCallback(() => {
+  const launchCompleteModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
-      title: "Issue Stock",
+      title: "Complete",
       operation: operation,
       closeModal: () => dispose(),
     });
@@ -24,13 +24,12 @@ const StockOperationIssueStockButton: React.FC<
 
   return (
     <Button
-      onClick={launchIssueStockModal}
-      kind="tertiary"
-      renderIcon={(props) => <DeliveryTruck size={16} {...props} />}
+      onClick={launchCompleteModal}
+      renderIcon={(props) => <CheckmarkOutline size={16} {...props} />}
     >
-      {t("issueStock", "Issue Stock ")}
+      {t("complete", "Complete")}
     </Button>
   );
 };
 
-export default StockOperationIssueStockButton;
+export default StockOperationCompleteButton;

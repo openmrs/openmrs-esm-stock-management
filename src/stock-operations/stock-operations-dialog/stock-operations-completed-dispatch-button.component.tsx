@@ -3,27 +3,29 @@ import React, { useCallback } from "react";
 import { Button } from "@carbon/react";
 import { showModal } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
-import { CheckmarkOutline } from "@carbon/react/icons";
+import { Arrival } from "@carbon/react/icons";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface StockOperationCompleteDispatchButtonProps {
-  uuid: string;
+  operation: StockOperationDTO;
 }
 
 const StockOperationCompleteDispatchButton: React.FC<
   StockOperationCompleteDispatchButtonProps
-> = ({ uuid }) => {
+> = ({ operation }) => {
   const { t } = useTranslation();
   const launchcompletedDispatchModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "Complete Dispatch",
+      operation: operation,
       closeModal: () => dispose(),
     });
-  }, []);
+  }, [operation]);
 
   return (
     <Button
       onClick={launchcompletedDispatchModal}
-      renderIcon={(props) => <CheckmarkOutline size={16} {...props} />}
+      renderIcon={(props) => <Arrival size={16} {...props} />}
     >
       {t("complete", "Complete Dispatch ")}
     </Button>

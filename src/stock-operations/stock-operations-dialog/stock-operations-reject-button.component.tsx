@@ -10,21 +10,23 @@ import {
   CloseOutline,
   CheckmarkOutline,
 } from "@carbon/react/icons";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface StockOperationRejectButtonProps {
-  uuid: string;
+  operation: StockOperationDTO;
 }
 
 const StockOperationRejectButton: React.FC<StockOperationRejectButtonProps> = ({
-  uuid,
+  operation,
 }) => {
   const { t } = useTranslation();
   const launchRejectModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "Reject",
+      operation: operation,
       closeModal: () => dispose(),
     });
-  }, []);
+  }, [operation]);
 
   return (
     <Button

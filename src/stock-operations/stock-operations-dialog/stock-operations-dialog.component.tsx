@@ -34,8 +34,12 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
 
   const [notes, setNotes] = useState("");
 
+  const [isApproving, setIsApproving] = useState(false);
+
   const handleClick = async (event) => {
     event.preventDefault();
+
+    setIsApproving(true);
 
     let actionName: StopOperationActionType | null = null;
 
@@ -70,6 +74,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
     // submit action
     executeStockOperationAction(payload).then(
       () => {
+        setIsApproving(false);
         showToast({
           critical: true,
           title: t("title", `${title} Operation`),
@@ -82,6 +87,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
         closeModal();
       },
       (err) => {
+        setIsApproving(false);
         showNotification({
           title: t(`errorMessage`, `Error ${title} operation`),
           kind: "error",
