@@ -227,12 +227,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           </div>
         </div>
 
-        {((!props.model.permission.canEdit &&
-          (props.model.permission.canApprove ||
-            props.model.permission.canReceiveItems)) ||
-          props.model.permission.canEdit ||
+        {((!props.model?.permission?.canEdit &&
+          (props.model?.permission?.canApprove ||
+            props.model?.permission?.canReceiveItems)) ||
+          props.model?.permission?.canEdit ||
           canPrint ||
-          props.model.permission.isRequisitionAndCanIssueStock) && (
+          props.model?.permission?.isRequisitionAndCanIssueStock) && (
           <div
             style={{
               margin: "10px",
@@ -241,8 +241,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             }}
           >
             <>
-              {!props.model.permission.canEdit &&
-                props.model.permission.canApprove && (
+              {!props.model?.permission?.canEdit &&
+                props.model?.permission?.canApprove && (
                   <>
                     {!requiresDispatchAcknowledgement && (
                       <div style={{ margin: "2px" }}>
@@ -269,8 +269,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                   </>
                 )}
 
-              {!props.model.permission.canEdit &&
-                props.model.permission.canReceiveItems && (
+              {!props.model?.permission?.canEdit &&
+                props.model?.permission?.canReceiveItems && (
                   <>
                     <div style={{ margin: "2px" }}>
                       <StockOperationCompleteDispatchButton
@@ -283,7 +283,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                   </>
                 )}
 
-              {props.model.permission.canEdit && (
+              {props.model?.permission?.canEdit && (
                 <div style={{ margin: "2px" }}>
                   <StockOperationCancelButton operation={props.model} />
                 </div>
