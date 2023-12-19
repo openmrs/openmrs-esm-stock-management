@@ -23,6 +23,7 @@ import { createStockItemPackagingUnit } from "../../stock-items.resource";
 import { showSnackbar } from "@openmrs/esm-framework";
 import { deleteStockItemPackagingUnit } from "../../stock-items.resource";
 import { showNotification, showToast } from "@openmrs/esm-framework";
+import { useTranslation } from "react-i18next";
 
 interface PackagingUnitsProps {
   onSubmit?: () => void;
@@ -141,6 +142,7 @@ const PackagingUnitRow: React.FC<{
   row: StockItemPackagingUOMDTO;
   key?: string;
 }> = ({ row, key }) => {
+  const { t } = useTranslation();
   const {
     control,
     formState: { errors },
@@ -156,14 +158,17 @@ const PackagingUnitRow: React.FC<{
       () => {
         showToast({
           critical: true,
-          title: `Delete packing item `,
+          title: t("deletePackingUnit", "Delete packing unit"),
           kind: "success",
-          description: `Stock Item packing unit deleted Successfully`,
+          description: t(
+            "deleteMessage",
+            `Stock Item packing unit deleted Successfully`
+          ),
         });
       },
       (error) => {
         showNotification({
-          title: `Error Deleting a stock item packing unit`,
+          title: t("error", `Error Deleting a stock item packing unit`),
           kind: "error",
           critical: true,
           description: error?.message,
