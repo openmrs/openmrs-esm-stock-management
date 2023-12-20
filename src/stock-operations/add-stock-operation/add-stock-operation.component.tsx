@@ -35,6 +35,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
   const { isLoading, isError, result } = useInitializeStockOperations(props);
   const [canPrint, setCanPrint] = useState(props?.canPrint);
+  const [canEdit, setCanEdit] = useState(props?.canEdit);
 
   const [isEditing, setIsEditing] = useState<boolean>(props?.isEditing);
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
@@ -76,7 +77,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           {...props}
           isEditing={isEditing}
           setup={result}
-          canEdit={props.model.status === "NEW" ? true : false}
+          canEdit={canEdit}
           model={isEditing ? props?.model : result.dto}
           onSave={async () => {
             setManageStockItems(true);
@@ -92,7 +93,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           {...props}
           isEditing={isEditing}
           setup={result}
-          canEdit={props.model.status === "NEW" ? true : false}
+          canEdit={canEdit}
           model={isEditing ? props?.model : result.dto}
           onSave={async () => {
             setManageSubmitOrComplete(true);
@@ -111,7 +112,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           {...props}
           isEditing={isEditing}
           setup={result}
-          canEdit={props.model.status === "NEW" ? true : false}
+          canEdit={canEdit}
           locked={false}
           model={isEditing ? props?.model : result.dto}
           requiresDispatchAcknowledgement={false}
@@ -137,6 +138,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             },
             onDispatch: () => {
               // TODO: Update
+              
             },
           }}
         />

@@ -51,4 +51,5 @@ export interface AddStockOperationProps {
   operation: StockOperationType;
   operations?: StockOperationType[];
   canPrint?: boolean;
+  canEdit?: boolean;
 }
