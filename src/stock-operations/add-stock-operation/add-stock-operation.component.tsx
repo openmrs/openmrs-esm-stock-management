@@ -138,7 +138,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             },
             onDispatch: () => {
               // TODO: Update
-              
             },
           }}
         />
