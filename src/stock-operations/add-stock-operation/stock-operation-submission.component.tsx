@@ -38,8 +38,8 @@ interface StockOperationSubmissionProps {
 }
 
 const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
-  canEdit = true,
-  locked = false,
+  canEdit,
+  locked,
   model,
   requiresDispatchAcknowledgement,
   actions,
@@ -48,47 +48,50 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   return (
-    <div>
+    <div style={{ margin: "10px" }}>
       {canEdit && !locked && (
-        <RadioButtonGroup
-          name="rbgApprovelRequired"
-          legendText={t(
-            "doesThisTransactionRequireApproval",
-            "Does the transaction require approval?"
-          )}
-          onChange={(selectedItem: boolean) => {
-            model.approvalRequired = selectedItem;
-          }}
-          defaultSelected={model.approvalRequired}
-        >
-          <RadioButton
-            value={true}
-            id="rbgApprovelRequired-true"
-            labelText={t("yes", "Yes")}
-          />
-          <RadioButton
-            value={false}
-            id="rbgApprovelRequired-false"
-            labelText={t("no", "No")}
-          />
-        </RadioButtonGroup>
+        <div style={{ margin: "10px" }}>
+          <RadioButtonGroup
+            name="rbgApprovelRequired"
+            legendText={t(
+              "doesThisTransactionRequireApproval",
+              "Does the transaction require approval ?"
+            )}
+            onChange={(selectedItem: boolean) => {
+              model.approvalRequired = selectedItem;
+            }}
+            defaultSelected={model.approvalRequired}
+          >
+            <RadioButton
+              value={true}
+              id="rbgApprovelRequired-true"
+              labelText={t("yes", "Yes")}
+            />
+            <RadioButton
+              value={false}
+              id="rbgApprovelRequired-false"
+              labelText={t("no", "No")}
+            />
+          </RadioButtonGroup>
+        </div>
       )}
       {!canEdit && (
         <>
           <TextInput
+            style={{ margin: "5px" }}
             id="rbgApproveRequiredLbl"
             value={model.approvalRequired ? t("yes", "Yes") : t("no", "No")}
             readOnly={true}
             labelText={t(
               "doesThisTransactionRequireApproval",
-              "Does the transaction require approval?"
+              "Does the transaction require approval ?"
             )}
           />
         </>
       )}
 
       {canEdit && !locked && (
-        <div className="stkpg-form-buttons">
+        <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
           {model.approvalRequired != null && (
             <>
               {!requiresDispatchAcknowledgement && !model.approvalRequired && (

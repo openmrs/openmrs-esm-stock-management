@@ -50,4 +50,6 @@ export interface AddStockOperationProps {
   onSave?: SaveStockOperation;
   operation: StockOperationType;
   operations?: StockOperationType[];
+  canPrint?: boolean;
+  canEdit?: boolean;
 }

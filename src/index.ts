@@ -30,6 +30,14 @@ export const stockManagementDashboard = getAsyncLifecycle(
   options
 );
 
+export const stockOperationDialog = getAsyncLifecycle(
+  () =>
+    import(
+      "./stock-operations/stock-operations-dialog/stock-operations-dialog.component"
+    ),
+  options
+);
+
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }

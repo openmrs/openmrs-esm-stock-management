@@ -39,6 +39,7 @@ import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useTranslation } from "react-i18next";
+import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -58,25 +59,23 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     setPageSize,
     isLoading,
   } = useStockOperationPages({
-    v: ResourceRepresentation.Default,
+    v: ResourceRepresentation.Full,
     totalCount: true,
   });
 
   let operations: StockOperationType[] | null | undefined;
-
+  let operation: StockOperationType | null | undefined;
   const tableRows = useMemo(() => {
-    return items?.map((stockOperation) => ({
+    return items?.map((stockOperation, index) => ({
       ...stockOperation,
       id: stockOperation?.uuid,
       key: `key-${stockOperation?.uuid}`,
       operationTypeName: `${stockOperation?.operationTypeName}`,
       operationNumber: (
-        <Link
-          to={URL_STOCK_OPERATION(stockOperation?.uuid || "")}
-          onClick={() => {
-            //TODO handlerStockOperationClick(e, stockOperation?.uuid!)
-          }}
-        >{`${stockOperation?.operationNumber}`}</Link>
+        <EditStockOperationActionMenu
+          model={items[index]}
+          operations={operations}
+        />
       ),
       status: `${stockOperation?.status}`,
       source: `${stockOperation?.sourceName ?? ""}`,
@@ -210,13 +209,19 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             kind="ghost"
             renderIcon={Edit}
             onClick={() => {
-              //TODO onViewItem(row.id, e);
+              launchAddOrEditDialog(
+                items[index],
+                true,
+                operation,
+                operations,
+                false
+              );
             }}
           />
         </Tooltip>
       ),
     }));
-  }, [items]);
+  }, [items, operation, operations]);
 
   if (isLoading) {
     return (
@@ -269,9 +274,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
                       initialStockOperationValue(),
-                      operation,
                       false,
-                      operations
+                      operation,
+                      operations,
+                      false
                     );
                   }}
                   onOperationLoaded={(ops) => {

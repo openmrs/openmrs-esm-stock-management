@@ -5,6 +5,7 @@ import { ComboBox, InlineLoading } from "@carbon/react";
 import { useUsersHook } from "./users-selector.resource";
 import { useDebounce } from "../../core/hooks/debounce-hook";
 import { otherUser } from "../../core/utils/utils";
+import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface UsersSelectorProps<T> {
   placeholder?: string;

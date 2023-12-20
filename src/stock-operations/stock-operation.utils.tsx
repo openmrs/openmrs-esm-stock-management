@@ -13,12 +13,14 @@ import {
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
+import { boolean } from "zod";
 
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
-  operation: StockOperationType,
-  isEditing = false,
-  operations?: StockOperationType[]
+  isEditing: boolean,
+  operation?: StockOperationType,
+  operations?: StockOperationType[],
+  canPrint?: boolean
 ) => {
   try {
     const response: FetchResponse<StockOperationDTO> = await (isEditing
@@ -56,19 +58,25 @@ export const addOrEditStockOperation = async (
 
 export const launchAddOrEditDialog = (
   stockOperation: StockOperationDTO,
-  operation: StockOperationType,
-  isEditing = false,
-  operations?: StockOperationType[]
+  isEditing: boolean,
+  operation?: StockOperationType,
+  operations?: StockOperationType[],
+  canPrint?: boolean
 ) => {
   launchOverlay(
-    `${isEditing ? "Edit" : "New: "} ${operation?.name || ""}`,
+    `${isEditing ? "Edit" : "New: "} ${
+      isEditing ? stockOperation.operationTypeName : operation.name
+    }`,
     <AddStockOperation
       model={stockOperation}
       onSave={(so) =>
-        addOrEditStockOperation(so, operation, isEditing, operations)
+        addOrEditStockOperation(so, isEditing, operation, operations, canPrint)
       }
       isEditing={isEditing}
       operation={operation}
+      canEdit={
+        isEditing ? (stockOperation.status === "NEW" ? true : false) : false
+      }
     />
   );
 };
