@@ -19,8 +19,16 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import { createStockItemPackagingUnit } from "../../stock-items.resource";
-import { showSnackbar } from "@openmrs/esm-framework";
+import {
+  createStockItemPackagingUnit,
+  deleteStockItemPackagingUnit,
+} from "../../stock-items.resource";
+import {
+  showNotification,
+  showSnackbar,
+  showToast,
+} from "@openmrs/esm-framework";
+import { useTranslation } from "react-i18next";
 
 interface PackagingUnitsProps {
   onSubmit?: () => void;
@@ -33,6 +41,8 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+
+  const { t } = useTranslation();
 
   const packageUnitForm = useForm<PackageUnitFormData>({
     defaultValues: {},
@@ -51,14 +61,20 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
     createStockItemPackagingUnit(payload).then(
       (resp) =>
         showSnackbar({
-          title: "Package Unit",
-          subtitle: "Package Unit saved successfully",
+          title: t("savePackingUnitTitle", "Package Unit"),
+          subtitle: t(
+            "savePackingUnitMessage",
+            "Package Unit saved successfully"
+          ),
           kind: "success",
         }),
       (error) => {
         showSnackbar({
-          title: "Package Unit",
-          subtitle: "Error saving package unit",
+          title: t("savePackagingUnitErrorTitle", "Package Unit"),
+          subtitle: t(
+            "savePackagingUnitErrorMessage",
+            "Error saving package unit"
+          ),
           kind: "error",
         });
       }
@@ -139,11 +155,41 @@ const PackagingUnitRow: React.FC<{
   row: StockItemPackagingUOMDTO;
   key?: string;
 }> = ({ row, key }) => {
+  const { t } = useTranslation();
+
   const {
     control,
     formState: { errors },
   } = useFormContext();
-  errors;
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    deleteStockItemPackagingUnit(row.uuid).then(
+      () => {
+        showToast({
+          critical: true,
+          title: t("deletePackagingUnitTitle", `Delete packing item `),
+          kind: "success",
+          description: t(
+            "deletePackagingUnitMesaage",
+            `Stock Item packing unit deleted Successfully`
+          ),
+        });
+      },
+      (error) => {
+        showNotification({
+          title: t(
+            "deletePackingUnitErrorTitle",
+            `Error Deleting a stock item packing unit`
+          ),
+          kind: "error",
+          critical: true,
+          description: error?.message,
+        });
+      }
+    );
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -177,9 +223,7 @@ const PackagingUnitRow: React.FC<{
             iconDescription={"Delete"}
             kind="ghost"
             renderIcon={TrashCan}
-            onClick={() => {
-              //TODO onRemoveItem(row, e);
-            }}
+            onClick={(e) => handleDelete(e)}
           />
         </div>
       </TableCell>
