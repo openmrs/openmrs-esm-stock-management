@@ -83,8 +83,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             }}
             name="isDrug"
           >
-            <RadioButton value={isDrug} id="isDrug-true" labelText="Drug" />
-            <RadioButton value={isDrug} id="isDrug-false" labelText="Other" />
+            <RadioButton value={true} id="isDrug-true" labelText="Drug" />
+            <RadioButton value={false} id="isDrug-false" labelText="Other" />
           </ControlledRadioButtonGroup>
         </FormGroup>
         {isDrug && (
