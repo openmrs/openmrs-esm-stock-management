@@ -148,7 +148,6 @@ export function createStockOperation(item: StockOperationDTO) {
 
 // updateStockOperation
 export function updateStockOperation(item: StockOperationDTO) {
-  console.log("Item")
   const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${item.uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {

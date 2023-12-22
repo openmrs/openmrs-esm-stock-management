@@ -109,7 +109,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               setSelectedIndex(1);
             },
             onComplete: async (model) => {
-              console.log("Model",model);
               // TODO: Update
               await addOrEditStockOperation(
                 model,

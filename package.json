@@ -1,9 +1,9 @@
 {
-  "name": "@ugandaemr/esm-stock-management-app",
+  "name": "@kenyaemr/esm-stock-management-app",
   "version": "3.0.0",
   "license": "MPL-2.0",
-  "description": "A frontend module that handles stock management in UgandaEMR+",
-  "browser": "dist/esm-ugandaemr-stock-management-app.js",
+  "description": "A frontend module that handles stock management in kenyaemr+",
+  "browser": "dist/esm-kenyaemr-stock-management-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

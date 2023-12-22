@@ -46,7 +46,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     canUpdateItemsBatchInformation: canUpdateBatchInformation,
     itemUoM,
   },
-  canEdit,
+  canEdit = true,
   model,
   onSave,
 }) => {
@@ -76,7 +76,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(stockOperationItemsSchema),
-    defaultValues: { stockItems: model.stockOperationItems },
+    defaultValues: { stockItems: stockOperationItems },
     mode: "onSubmit",
   });
 

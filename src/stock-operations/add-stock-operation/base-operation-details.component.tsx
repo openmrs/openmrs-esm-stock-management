@@ -146,7 +146,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       setIsSaving(false);
     }
   };
-
   return (
     <div style={{ margin: "10px" }}>
       <form
@@ -198,14 +197,14 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {canEdit && !lockSource && operation?.hasSource && (
+        {!canEdit && !lockSource && operation?.hasSource && (
           <PartySelector
             controllerName="sourceUuid"
             name="sourceUuid"
             control={control}
             title={
               operation?.hasDestination
-                ? t("from:", "From:")
+                ? t("from:", "From1:")
                 : t("location:", "Location:")
             }
             placeholder={
@@ -219,12 +218,12 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || lockSource) && operation?.hasSource && (
+        {(canEdit || lockSource) && operation?.hasSource && (
           <TextInput
             id="sourceUuidLbl"
             value={model?.sourceName ?? ""}
             readOnly={true}
-            labelText={operation?.hasDestination ? "From:" : "Location:"}
+            labelText={operation?.hasDestination ? "From2:" : "Location:"}
           />
         )}
 
@@ -256,7 +255,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {canEdit && (
+        {!canEdit && (
           <UsersSelector
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
@@ -295,7 +294,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {!canEdit && (
+        {canEdit && (
           <TextInput
             id="responsiblePersonLbl"
             value={
