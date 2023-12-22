@@ -34,9 +34,9 @@ interface StockOperationSubmissionProps {
   actions: {
     onGoBack: () => void;
     onSave?: SaveStockOperation;
-    onComplete: SaveStockOperationAction;
-    onSubmit: SaveStockOperationAction;
-    onDispatch: SaveStockOperationAction;
+    onComplete: (model) => void;
+    onSubmit: () => void;
+    onDispatch: () => void;
   };
 }
 
@@ -58,7 +58,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             name="rbgApprovelRequired"
             legendText={t(
               "doesThisTransactionRequireApproval",
-              "Does the transaction require approval ?"
+              "Does the transaction require approval2 ?"
             )}
             onChange={(selectedItem: boolean) => {
               model.approvalRequired = selectedItem;
@@ -104,7 +104,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
-                  onClick={actions.onComplete}
+                  onClick={async () => {
+                    delete model.dateCreated;
+                    model.status = "COMPLETED";
+                    setIsSaving(true);
+                    await actions.onComplete(model);
+                    setIsSaving(false);
+                  }}
                   renderIcon={ListChecked}
                 >
                   {t("complete", "Complete")}
@@ -145,6 +151,8 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             style={{ margin: "4px" }}
             disabled={isSaving}
             onClick={async () => {
+              delete model.dateCreated;
+              delete model.status;
               setIsSaving(true);
               await actions.onSave(model);
               setIsSaving(false);
@@ -152,7 +160,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             kind="secondary"
             renderIcon={Save}
           >
-            {isSaving ? <InlineLoading /> : t("save", "Save")}
+            {isSaving ? <InlineLoading /> : t("save", "Save2")}
           </Button>
           {!isSaving && (
             <Button
