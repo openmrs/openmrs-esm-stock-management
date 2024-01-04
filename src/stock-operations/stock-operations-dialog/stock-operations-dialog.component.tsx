@@ -20,16 +20,18 @@ import { closeOverlay } from "../../core/components/overlay/hook";
 
 interface StockOperationDialogProps {
   title: string;
+  requireReason: boolean;
   operation: StockOperationDTO;
   closeModal: () => void;
 }
 
 const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
   title,
+  requireReason,
   operation,
   closeModal,
 }) => {
-  const confirmType = title.toLocaleLowerCase();
+  const confirmType = title.toLocaleLowerCase().trim();
 
   const { t } = useTranslation();
 
@@ -117,7 +119,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
               </h5>
             </section>
             <br />
-            {title !== "Approve" && (
+            {requireReason && (
               <section className={styles.section}>
                 <TextArea
                   labelText={t("notes", "Please explain the reason:")}

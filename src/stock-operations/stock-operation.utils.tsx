@@ -2,6 +2,7 @@ import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
 import React from "react";
 import {
   FetchResponse,
+  showModal,
   showNotification,
   showToast,
 } from "@openmrs/esm-framework";
@@ -90,3 +91,16 @@ export function getStockOperationUniqueId() {
     .toString(36)
     .substring(2, 16)}`;
 }
+
+export const showActionDialogButton = async (
+  title: string,
+  requireReason: boolean,
+  operation: StockOperationDTO
+) => {
+  const dispose = showModal("stock-operation-dialog", {
+    title: title,
+    operation: operation,
+    requireReason: requireReason,
+    closeModal: () => dispose(),
+  });
+};

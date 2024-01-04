@@ -18,6 +18,7 @@ const StockOperationApprovalButton: React.FC<
     const dispose = showModal("stock-operation-dialog", {
       title: "Approve",
       operation: operation,
+      requireReason: false,
       closeModal: () => dispose(),
     });
   }, [operation]);

@@ -18,6 +18,7 @@ const StockOperationIssueStockButton: React.FC<
     const dispose = showModal("stock-operation-dialog", {
       title: "Issue Stock",
       operation: operation,
+      requireReason: true,
       closeModal: () => dispose(),
     });
   }, [operation]);

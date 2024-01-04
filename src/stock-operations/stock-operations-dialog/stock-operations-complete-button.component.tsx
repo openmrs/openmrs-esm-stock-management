@@ -18,6 +18,7 @@ const StockOperationCompleteButton: React.FC<
     const dispose = showModal("stock-operation-dialog", {
       title: "Complete",
       operation: operation,
+      requireReason: true,
       closeModal: () => dispose(),
     });
   }, [operation]);

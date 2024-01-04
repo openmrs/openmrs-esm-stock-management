@@ -9,7 +9,10 @@ import { AddStockOperationProps } from "./types";
 import { useInitializeStockOperations } from "./add-stock-operation.resource";
 import { AccordionSkeleton } from "@carbon/react";
 import { closeOverlay } from "../../core/components/overlay/hook";
-import { addOrEditStockOperation } from "../stock-operation.utils";
+import {
+  addOrEditStockOperation,
+  showActionDialogButton,
+} from "../stock-operation.utils";
 import StockOperationApprovalButton from "../stock-operations-dialog/stock-operations-approve-button.component";
 import StockOperationRejectButton from "../stock-operations-dialog/stock-operations-reject-button.component";
 import StockOperationReturnButton from "../stock-operations-dialog/stock-operations-return-button.component";
@@ -18,18 +21,6 @@ import StockOperationPrintButton from "../stock-operations-dialog/stock-operatio
 import StockOperationApproveDispatchButton from "../stock-operations-dialog/stock-operations-approve-dispatch-button.component";
 import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
-import {
-  OperationType,
-  StockOperationType,
-  StockOperationTypeCanCapturePurchasePrice,
-  StockOperationTypeIsNegativeQtyAllowed,
-  StockOperationTypeIsQuantityOptional,
-  StockOperationTypeRequiresActualBatchInformation,
-  StockOperationTypeRequiresBatchUuid,
-  StockOperationTypeRequiresDispatchAcknowledgement,
-  StockOperationTypeRequiresStockAdjustmentReason,
-  operationFromString,
-} from "../../core/api/types/stockOperation/StockOperationType";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -44,20 +35,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const [stockOperationType, setStockOperationType] = useState<
-    StockOperationType | null | undefined
-  >(null);
-  const [isNegativeQtyAllowed, setIsNegativeQtyAllowed] = useState(false);
-  const [requiresBatchUuid, setRequiresBatchUuid] = useState(false);
-  const [requiresActualBatchInformation, setRequiresActualBatchInformation] =
-    useState(false);
-  const [isQuantityOptional, setIsQuantityOptional] = useState(false);
-  const [canCapturePurchasePrice, setCanCapturePurchasePrice] = useState(false);
-  const [requireStockAdjustmentReason, setRequireStockAdjustmentReason] =
-    useState(false);
   const [requiresDispatchAcknowledgement, setRequiresDispatchAcknowledgement] =
-    useState(false);
-  const [allowExpiredBatchNumbers, setAllowExpiredBatchNumbers] =
     useState(false);
 
   if (isLoading) return <AccordionSkeleton />;
@@ -130,14 +108,14 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             onGoBack: () => {
               setSelectedIndex(1);
             },
-            onComplete: () => {
-              // TODO: Update
+            onComplete: async (model) => {
+              await showActionDialogButton("Complete", false, model);
             },
-            onSubmit: () => {
-              // TODO: Update
+            onSubmit: async (model) => {
+              await showActionDialogButton("Submit for approval", false, model);
             },
-            onDispatch: () => {
-              // TODO: Update
+            onDispatch: async (model) => {
+              await showActionDialogButton("Dispatch Approval", false, model);
             },
           }}
         />
@@ -146,38 +124,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     },
   ];
 
-  // const currentStockOperationType = props.operations?.find(
-  //   (p) => p.uuid === props.operation?.uuid
-  // );
-
-  // console.info("data operations-->", props);
-
-  // console.info("data-->", currentStockOperationType);
-  // const operationType: OperationType = operationFromString(
-  //   currentStockOperationType?.operationType ?? ""
-  // );
-
-  // setStockOperationType(currentStockOperationType);
-  // setIsNegativeQtyAllowed(
-  //   StockOperationTypeIsNegativeQtyAllowed(operationType)
-  // );
-  // setRequiresBatchUuid(StockOperationTypeRequiresBatchUuid(operationType));
-  // setRequiresActualBatchInformation(
-  //   StockOperationTypeRequiresActualBatchInformation(operationType)
-  // );
-  // setIsQuantityOptional(StockOperationTypeIsQuantityOptional(operationType));
-  // setCanCapturePurchasePrice(
-  //   StockOperationTypeCanCapturePurchasePrice(operationType)
-  // );
-  // setRequireStockAdjustmentReason(
-  //   StockOperationTypeRequiresStockAdjustmentReason(operationType)
-  // );
-  // setRequiresDispatchAcknowledgement(
-  //   StockOperationTypeRequiresDispatchAcknowledgement(operationType)
-  // );
-  // setAllowExpiredBatchNumbers(
-  //   currentStockOperationType?.allowExpiredBatchNumbers ?? false
-  // );
+  // const addOrEditStockOperation = async () => {};
 
   return (
     <>
@@ -295,8 +242,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                   <StockOperationIssueStockButton operation={props.model} />
                 </div>
               )}
-
-              {canPrint && (
+              {(props.model?.permission?.isRequisitionAndCanIssueStock ||
+                props.model?.operationType === "stockissue" ||
+                props.model?.operationType === "requisition" ||
+                props.model?.operationType === "receipt" ||
+                props.model?.operationType === "transferout") && (
                 <div style={{ margin: "2px" }}>
                   <StockOperationPrintButton operation={props.model} />
                 </div>
