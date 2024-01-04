@@ -34,9 +34,9 @@ interface StockOperationSubmissionProps {
   actions: {
     onGoBack: () => void;
     onSave?: SaveStockOperation;
-    onComplete: (model) => void;
-    onSubmit: () => void;
-    onDispatch: () => void;
+    onComplete: SaveStockOperationAction;
+    onSubmit: SaveStockOperationAction;
+    onDispatch: SaveStockOperationAction;
   };
 }
 

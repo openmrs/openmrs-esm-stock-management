@@ -109,24 +109,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               setSelectedIndex(1);
             },
             onComplete: async (model) => {
-              // TODO: Update
-              await addOrEditStockOperation(
-                model,
-                props.isEditing,
-                props.operation,
-                props.operations,
-                props.canPrint
-              );
+              await showActionDialogButton("Complete", false, model);
             },
-            onSubmit: async () => {
-              await showActionDialogButton("Submit", false, props?.model);
+            onSubmit: async (model) => {
+              await showActionDialogButton("Submit for approval", false, model);
             },
-            onDispatch: async () => {
-              await showActionDialogButton(
-                "Dispatch Approval",
-                false,
-                props?.model
-              );
+            onDispatch: async (model) => {
+              await showActionDialogButton("Dispatch Approval", false, model);
             },
           }}
         />
@@ -134,6 +123,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(props.isEditing || manageSubmitOrComplete),
     },
   ];
+
+  // const addOrEditStockOperation = async () => {};
 
   return (
     <>
