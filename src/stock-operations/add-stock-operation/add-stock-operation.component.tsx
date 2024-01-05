@@ -112,11 +112,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               await showActionDialogButton("Complete", false, props?.model);
             },
             onSubmit: async () => {
-              await showActionDialogButton(
-                "Submit for approval",
-                false,
-                props?.model
-              );
+              await showActionDialogButton("Submit", false, props?.model);
             },
             onDispatch: async () => {
               await showActionDialogButton(
@@ -131,8 +127,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(props.isEditing || manageSubmitOrComplete),
     },
   ];
-
-  // const addOrEditStockOperation = async () => {};
 
   return (
     <>

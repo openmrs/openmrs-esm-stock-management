@@ -31,7 +31,6 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
   operation,
   closeModal,
 }) => {
-  console.info(operation);
   const confirmType = title.toLocaleLowerCase().trim();
 
   const { t } = useTranslation();
@@ -48,6 +47,12 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
     let actionName: StopOperationActionType | null = null;
 
     switch (confirmType) {
+      case "submit":
+        actionName = "SUBMIT";
+        break;
+      case "dispatch":
+        actionName = "DISPATCH";
+        break;
       case "complete":
         actionName = "COMPLETE";
         break;
