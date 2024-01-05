@@ -108,14 +108,22 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             onGoBack: () => {
               setSelectedIndex(1);
             },
-            onComplete: async (model) => {
-              await showActionDialogButton("Complete", false, model);
+            onComplete: async () => {
+              await showActionDialogButton("Complete", false, props?.model);
             },
-            onSubmit: async (model) => {
-              await showActionDialogButton("Submit for approval", false, model);
+            onSubmit: async () => {
+              await showActionDialogButton(
+                "Submit for approval",
+                false,
+                props?.model
+              );
             },
-            onDispatch: async (model) => {
-              await showActionDialogButton("Dispatch Approval", false, model);
+            onDispatch: async () => {
+              await showActionDialogButton(
+                "Dispatch Approval",
+                false,
+                props?.model
+              );
             },
           }}
         />
