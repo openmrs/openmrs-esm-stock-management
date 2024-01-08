@@ -18,6 +18,7 @@ const StockOperationCancelButton: React.FC<StockOperationCancelButtonProps> = ({
     const dispose = showModal("stock-operation-dialog", {
       title: "Cancel",
       operation: operation,
+      requireReason: true,
       closeModal: () => dispose(),
     });
   }, [operation]);

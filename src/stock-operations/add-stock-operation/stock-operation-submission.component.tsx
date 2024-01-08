@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { SaveStockOperation } from "../../stock-items/types";
+import {
+  SaveStockOperation,
+  SaveStockOperationAction,
+} from "../../stock-items/types";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
 import { InitializeResult } from "./types";
 import {
@@ -31,9 +34,9 @@ interface StockOperationSubmissionProps {
   actions: {
     onGoBack: () => void;
     onSave?: SaveStockOperation;
-    onComplete: () => void;
-    onSubmit: () => void;
-    onDispatch: () => void;
+    onComplete: SaveStockOperationAction;
+    onSubmit: SaveStockOperationAction;
+    onDispatch: SaveStockOperationAction;
   };
 }
 
@@ -98,6 +101,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                 <Button
                   name="complete"
                   type="button"
+                  style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
                   onClick={actions.onComplete}
@@ -110,6 +114,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                 <Button
                   name="dispatch"
                   type="button"
+                  style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
                   onClick={actions.onDispatch}
@@ -122,12 +127,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                 <Button
                   name="submit"
                   type="button"
+                  style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
                   onClick={actions.onSubmit}
                   renderIcon={SendFilled}
                 >
-                  {t("submit", "Submit")}
+                  {t("submit", "Submit For Review")}
                 </Button>
               )}
             </>
@@ -136,6 +142,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             name="save"
             type="button"
             className="submitButton"
+            style={{ margin: "4px" }}
             disabled={isSaving}
             onClick={async () => {
               setIsSaving(true);
@@ -150,6 +157,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
           {!isSaving && (
             <Button
               type="button"
+              style={{ margin: "4px" }}
               className="cancelButton"
               kind="tertiary"
               onClick={actions.onGoBack}

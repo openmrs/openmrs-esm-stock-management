@@ -24,6 +24,7 @@ const StockOperationRejectButton: React.FC<StockOperationRejectButtonProps> = ({
     const dispose = showModal("stock-operation-dialog", {
       title: "Reject",
       operation: operation,
+      requireReason: true,
       closeModal: () => dispose(),
     });
   }, [operation]);

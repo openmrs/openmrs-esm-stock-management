@@ -20,16 +20,18 @@ import { closeOverlay } from "../../core/components/overlay/hook";
 
 interface StockOperationDialogProps {
   title: string;
+  requireReason: boolean;
   operation: StockOperationDTO;
   closeModal: () => void;
 }
 
 const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
   title,
+  requireReason,
   operation,
   closeModal,
 }) => {
-  const confirmType = title.toLocaleLowerCase();
+  const confirmType = title.toLocaleLowerCase().trim();
 
   const { t } = useTranslation();
 
@@ -45,6 +47,18 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
     let actionName: StopOperationActionType | null = null;
 
     switch (confirmType) {
+      case "submit":
+        actionName = "SUBMIT";
+        break;
+      case "dispatch":
+        actionName = "DISPATCH";
+        break;
+      case "complete":
+        actionName = "COMPLETE";
+        break;
+      case "completedispatch":
+        actionName = "COMPLETE";
+        break;
       case "cancel":
         actionName = "CANCEL";
         break;
@@ -68,7 +82,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
 
     const payload: StopOperationAction = {
       name: actionName,
-      uuid: operation.uuid,
+      uuid: operation?.uuid,
       reason: notes,
     };
 
@@ -117,7 +131,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
               </h5>
             </section>
             <br />
-            {title !== "Approve" && (
+            {requireReason && (
               <section className={styles.section}>
                 <TextArea
                   labelText={t("notes", "Please explain the reason:")}

@@ -24,6 +24,7 @@ const StockOperationReturnButton: React.FC<StockOperationReturnButtonProps> = ({
     const dispose = showModal("stock-operation-dialog", {
       title: "Return",
       operation: operation,
+      requireReason: true,
       closeModal: () => dispose(),
     });
   }, [operation]);
