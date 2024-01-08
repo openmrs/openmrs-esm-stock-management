@@ -61,6 +61,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             setManageStockItems(true);
             setSelectedIndex(1);
           }}
+          operation={props.operation}
         />
       ),
     },

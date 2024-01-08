@@ -153,7 +153,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                       `stockItems.${index}.packagingUnits`,
                       item?.packagingUnits
                     );
-                    setStockItemUuid(item?.uuid);
+                    setStockItemUuid(item?.uuid ?? "");
                   }}
                 />
               )}
@@ -182,6 +182,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setValue(`stockItems.${index}.batchNo`, e.target.value)
                       }
+                      defaultValue={row.batchNo}
                       invalidText=""
                       invalid={errors?.stockItems?.[index]?.batchNo}
                     />
@@ -248,7 +249,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 ) &&
                   !canEdit) ||
                   requiresBatchUuid) &&
-                  formatForDatePicker(stockItemExpiry)}
+                  formatForDatePicker(row.expiration)}
               </TableCell>
             )}
             <TableCell>

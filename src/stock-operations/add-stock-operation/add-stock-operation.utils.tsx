@@ -73,6 +73,7 @@ export async function initializeNewStockOperation(
       currentStockOperationType.operationType ==
       OperationType.STOCK_ISSUE_OPERATION_TYPE
     ) {
+      console.log("requisition");
       // requisition = urlQueryParams?.get("requisition");
       // if (requisition) {
       //   const response = await getStockOperation(requisition);

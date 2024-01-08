@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
 import { ComboBox, SkeletonText } from "@carbon/react";
@@ -21,6 +21,10 @@ interface QtyUomSelectorProps<T> {
 
 const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
   const { isLoading, isError, item } = useStockItem(props.stockItemUuid);
+  const initialSelectedItem = useMemo(
+    () => (item?.packagingUnits?.length > 0 ? item.packagingUnits[0] : []),
+    [item?.packagingUnits]
+  );
 
   if (isLoading || isError) return <SkeletonText />;
 
@@ -42,11 +46,7 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
               props.onStockPackageChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
-            initialSelectedItem={
-              item?.packagingUnits?.find(
-                (p) => p.uuid === props.stockItemUuid
-              ) ?? ""
-            }
+            initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockItemPackagingUOMDTO) => s.packagingUomName}
             placeholder={props.placeholder}
             invalid={props.invalid}
