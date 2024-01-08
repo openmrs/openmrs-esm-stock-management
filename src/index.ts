@@ -1,7 +1,7 @@
 import { getAsyncLifecycle, defineConfigSchema } from "@openmrs/esm-framework";
 import { configSchema } from "./config-schema";
 
-const moduleName = "@openmrs/esm-stock-management-app";
+const moduleName = "@kenyaemr/esm-stock-management-app";
 
 const options = {
   featureName: "stock-management",
