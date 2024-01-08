@@ -75,7 +75,7 @@ export const launchAddOrEditDialog = (
       isEditing={isEditing}
       operation={operation}
       canEdit={
-        isEditing ? (stockOperation.status === "NEW" ? true : false) : false
+        isEditing ? (stockOperation.status === "NEW" ? true : false) : true
       }
     />
   );
