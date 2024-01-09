@@ -87,8 +87,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     totalCount: true,
   });
 
-  console.log(items);
-
   let operations: StockOperationType[] | null | undefined;
 
   const tableRows = useMemo(() => {
