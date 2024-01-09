@@ -24,12 +24,10 @@ export const addOrEditStockOperation = async (
 ) => {
   // eslint-disable-next-line prefer-const
   let payload = stockOperation;
-  console.log(operation);
   try {
     if (operation.operationType === "requisition") {
       delete payload.destinationName;
     }
-    console.log("payload", payload);
     const response: FetchResponse<StockOperationDTO> = await (isEditing
       ? updateStockOperation
       : createStockOperation)(payload);

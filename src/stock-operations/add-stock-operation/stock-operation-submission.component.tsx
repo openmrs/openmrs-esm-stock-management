@@ -160,7 +160,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             kind="secondary"
             renderIcon={Save}
           >
-            {isSaving ? <InlineLoading /> : t("save", "Save2")}
+            {isSaving ? <InlineLoading /> : t("save", "Save")}
           </Button>
           {!isSaving && (
             <Button
