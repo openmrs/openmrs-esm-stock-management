@@ -31,7 +31,7 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
 
   const { config } = useConfig();
 
-  const { printItemCost, printBalanceOnHand } = config;
+  // const { printItemCost, printBalanceOnHand } = config;
 
   // on print stock operation
   const onPrintStockOperation = async () => {
