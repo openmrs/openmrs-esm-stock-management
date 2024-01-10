@@ -1,12 +1,12 @@
 import React from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { ComboBox } from "@carbon/react";
-import { ComboBoxProps } from "@carbon/react/lib/components/ComboBox/ComboBox";
 
-interface ControlledComboBoxProps<T> extends ComboBoxProps {
+interface ControlledComboBoxProps<T> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
+  onChange?: (e: { selectedItem: never }) => void;
 }
 
 const ControlledComboBox = <T,>(props: ControlledComboBoxProps<T>) => {
