@@ -67,9 +67,9 @@ export const BuildStockOperationData = async (
   data.operationDate =
     parentOperation?.operationDate ?? currentOperation?.operationDate;
   data.location =
-    parentOperation?.atLocationName ?? currentOperation?.atLocationName!;
-  data.source = currentOperation?.sourceName!;
-  data.destination = currentOperation?.destinationName!;
+    parentOperation?.atLocationName ?? currentOperation?.atLocationName;
+  data.source = currentOperation?.sourceName;
+  data.destination = currentOperation?.destinationName;
   data.responsiblePerson = data.orderedBy =
     parentOperation?.responsiblePersonFamilyName
       ? `${parentOperation.responsiblePersonFamilyName ?? ""} ${
