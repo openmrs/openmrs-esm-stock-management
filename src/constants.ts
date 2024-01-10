@@ -87,16 +87,22 @@ export const APP_STOCKMANAGEMENT_REPORTS = "App: stockmanagement.reports";
 /** @type {string}: Task: stockmanagement.reports.mutate, Able to create stock reports*/
 
 // concepts
-export const STOCK_SOURCE_TYPE_CODED_CONCEPT_ID = "2e1e8049-9cbe-4a2d-b1e5-8a91e5d7d97d";
-export const STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID = "3bbfaa44-d5b8-404d-b4c1-2bf49ad8ce25";
-export const DISPENSING_UNITS_CONCEPT_ID = "162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-export const PACKAGING_UNITS_CODED_CONCEPT_ID = "bce2b1af-98b1-48a2-98a2-3e4ffb3c79c2";
-export const STOCK_ITEM_CATEGORY_CONCEPT_ID ="6d24eb6e-b42f-4706-ab2d-ae4472161f6a";
+export const STOCK_SOURCE_TYPE_CODED_CONCEPT_ID =
+  "2e1e8049-9cbe-4a2d-b1e5-8a91e5d7d97d";
+export const STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID =
+  "3bbfaa44-d5b8-404d-b4c1-2bf49ad8ce25";
+export const DISPENSING_UNITS_CONCEPT_ID =
+  "162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+export const PACKAGING_UNITS_CODED_CONCEPT_ID =
+  "bce2b1af-98b1-48a2-98a2-3e4ffb3c79c2";
+export const STOCK_ITEM_CATEGORY_CONCEPT_ID =
+  "6d24eb6e-b42f-4706-ab2d-ae4472161f6a";
 
 export const STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND = false;
 export const STOCK_OPERATION_PRINT_DISABLE_COSTS = false;
 export const HEALTH_CENTER_NAME = "Health Center";
-export const PRINT_LOGO = "moduleResources/stockmanagement/assets/print-logo.svg";
+export const PRINT_LOGO =
+  "moduleResources/stockmanagement/assets/print-logo.svg";
 export const PRINT_LOGO_TEXT = "Ministry of Health";
 
 export const MAIN_STORE_LOCATION_TAG = "Main Store";
@@ -113,44 +119,10 @@ export const STOCKMGMT_RESOURCE_URL =
 export const STOCKMGMT_SPA_PAGE_URL =
   (window as any).STOCKMGMT_SPA_PAGE_URL ??
   process.env.REACT_APP_STOCKMGMT_SPA_PAGE_URL;
-export const STOCK_SOURCE_TYPE_CODED_CONCEPT_ID =
-  (window as any).STOCK_SOURCE_TYPE_CODED_CONCEPT_ID ??
-  process.env.REACT_APP_STOCK_SOURCE_TYPE_CODED_CONCEPT_ID;
-export const STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID =
-  (window as any).STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID ??
-  process.env.REACT_APP_STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID;
-export const PACKAGING_UNITS_CODED_CONCEPT_ID =
-  (window as any).PACKAGING_UNITS_CODED_CONCEPT_ID ??
-  process.env.REACT_APP_PACKAGING_UNITS_CODED_CONCEPT_ID;
-export const DISPENSING_UNITS_CONCEPT_ID =
-  (window as any).DISPENSING_UNITS_CONCEPT_ID ??
-  process.env.REACT_APP_DISPENSING_UNITS_CONCEPT_ID;
-export const STOCK_ITEM_CATEGORY_CONCEPT_ID =
-  (window as any).STOCK_ITEM_CATEGORY_CONCEPT_ID ??
-  process.env.REACT_APP_STOCK_ITEM_CATEGORY_CONCEPT_ID;
-
-export const STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND =
-  (window as any).STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND ??
-  (process.env.REACT_APP_STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND &&
-    process.env.REACT_APP_STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND ===
-      "true") ??
-  false;
-export const STOCK_OPERATION_PRINT_DISABLE_COSTS =
-  (window as any).STOCK_OPERATION_PRINT_DISABLE_COSTS ??
-  (process.env.REACT_APP_STOCK_OPERATION_PRINT_DISABLE_COSTS &&
-    process.env.REACT_APP_STOCK_OPERATION_PRINT_DISABLE_COSTS === "true") ??
-  false;
-export const PRINT_LOGO =
-  (window as any).PRINT_LOGO ?? process.env.REACT_APP_PRINT_LOGO;
 export const URL_PRINT_LOGO = () =>
   PRINT_LOGO
     ? `${BASE_OPENMRS_APP_URL}${PRINT_LOGO}`
     : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-export const PRINT_LOGO_TEXT =
-  (window as any).PRINT_LOGO_TEXT ?? process.env.REACT_APP_PRINT_LOGO_TEXT;
-export const HEALTH_CENTER_NAME =
-  (window as any).HEALTH_CENTER_NAME ??
-  process.env.REACT_APP_HEALTH_CENTER_NAME;
 export const CLOSE_PRINT_AFTER_PRINT: boolean =
   (window as any).CLOSE_PRINT_AFTER_PRINT ??
   (process.env.REACT_APP_CLOSE_PRINT_AFTER_PRINT &&

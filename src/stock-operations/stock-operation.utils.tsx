@@ -14,7 +14,6 @@ import {
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
-import { boolean } from "zod";
 
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,

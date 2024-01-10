@@ -1,12 +1,10 @@
 import React, { useMemo } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
-import { URL_STOCK_OPERATION } from "../stock-items/stock-items-table.component";
 import {
   Button,
   DataTable,
   DataTableSkeleton,
-  Link,
   Pagination,
   Table,
   TableBody,
