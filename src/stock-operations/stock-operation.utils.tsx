@@ -14,7 +14,12 @@ import {
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
+<<<<<<< HEAD
 
+=======
+import { boolean } from "zod";
+import { extractErrorMessagesFromResponse } from "../constants";
+>>>>>>> 9bb974c (Error on save and on submission made user friendly (#8))
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
   isEditing: boolean,
@@ -52,11 +57,12 @@ export const addOrEditStockOperation = async (
       }
     }
   } catch (error) {
+    const errorMessages = extractErrorMessagesFromResponse(error);
     showNotification({
-      title: `Error ${isEditing ? "edit" : "add"}ing a stock operation`,
+      description: errorMessages.join(", "),
+      title: "Error on saving form",
       kind: "error",
       critical: true,
-      description: error?.message,
     });
   }
 };
