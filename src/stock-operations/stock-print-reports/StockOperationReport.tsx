@@ -62,8 +62,8 @@ export const BuildStockOperationData = async (
         }`
       : "";
   }
-  data.remarks = currentOperation.remarks!;
-  data.operationNumber = currentOperation.operationNumber!;
+  data.remarks = currentOperation.remarks;
+  data.operationNumber = currentOperation.operationNumber;
   data.operationDate =
     parentOperation?.operationDate ?? currentOperation?.operationDate;
   data.location =
@@ -73,7 +73,7 @@ export const BuildStockOperationData = async (
   data.responsiblePerson = data.orderedBy =
     parentOperation?.responsiblePersonFamilyName
       ? `${parentOperation.responsiblePersonFamilyName ?? ""} ${
-          parentOperation!.responsiblePersonGivenName ?? ""
+          parentOperation?.responsiblePersonGivenName ?? ""
         }`
       : `${currentOperation.responsiblePersonFamilyName ?? ""} ${
           currentOperation.responsiblePersonGivenName ?? ""
@@ -88,25 +88,25 @@ export const BuildStockOperationData = async (
   }`;
   data.items = stockOperationItems.map((p) => {
     const item: StockOperationItemData = {};
-    item.itemCode = p.acronym!;
-    item.itemDescription = p.stockItemName!;
-    item.purchasePrice = p.purchasePrice!;
-    item.batchNumber = p.batchNo!;
-    item.expiryDate = p.expiration!;
+    item.itemCode = p?.acronym;
+    item.itemDescription = p?.stockItemName;
+    item.purchasePrice = p?.purchasePrice;
+    item.batchNumber = p?.batchNo;
+    item.expiryDate = p?.expiration;
     if (parentOperation) {
-      item.quantityRequired = p.quantityRequested!;
-      item.quantityRequiredUoM = p.quantityRequestedPackagingUOMName!;
-      item.quantityIssued = p.quantity!;
-      item.quantityIssuedUoM = p.stockItemPackagingUOMName!;
+      item.quantityRequired = p?.quantityRequested;
+      item.quantityRequiredUoM = p?.quantityRequestedPackagingUOMName;
+      item.quantityIssued = p?.quantity;
+      item.quantityIssuedUoM = p?.stockItemPackagingUOMName;
     } else if (
       OperationType.STOCK_ISSUE_OPERATION_TYPE ===
       currentOperation.operationType
     ) {
-      item.quantityIssued = p.quantity!;
-      item.quantityIssuedUoM = p.stockItemPackagingUOMName!;
+      item.quantityIssued = p?.quantity;
+      item.quantityIssuedUoM = p?.stockItemPackagingUOMName;
     } else {
-      item.quantityRequired = p.quantity!;
-      item.quantityRequiredUoM = p.stockItemPackagingUOMName!;
+      item.quantityRequired = p?.quantity;
+      item.quantityRequiredUoM = p?.stockItemPackagingUOMName;
     }
     if (operationItemsCost) {
       const operationItemCost = operationItemsCost.find(
