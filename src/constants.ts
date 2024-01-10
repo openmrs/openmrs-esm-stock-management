@@ -107,32 +107,16 @@ export const PRINT_LOGO_TEXT = "Ministry of Health";
 
 export const MAIN_STORE_LOCATION_TAG = "Main Store";
 
-export const BASE_OPENMRS_APP_URL =
-  (window as any).STOCKMGMT_BASE_URL ??
-  process.env.REACT_APP_BASE_OPENMRS_APP_URL ??
-  (document
-    .getElementsByTagName("baseFallback")[0]
-    .getAttribute("href") as string);
-export const STOCKMGMT_RESOURCE_URL =
-  (window as any).STOCKMGMT_RESOURCE_URL ??
-  process.env.REACT_APP_STOCKMGMT_RESOURCE_URL;
-export const STOCKMGMT_SPA_PAGE_URL =
-  (window as any).STOCKMGMT_SPA_PAGE_URL ??
-  process.env.REACT_APP_STOCKMGMT_SPA_PAGE_URL;
+export const BASE_OPENMRS_APP_URL = "/openmrs/";
+
+export const STOCKMGMT_RESOURCE_URL = "/openmrs/stockmanagement/spa.page/";
+export const STOCKMGMT_SPA_PAGE_URL = "/openmrs/stockmanagement/spa.page";
 export const URL_PRINT_LOGO = () =>
   PRINT_LOGO
     ? `${BASE_OPENMRS_APP_URL}${PRINT_LOGO}`
     : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-export const CLOSE_PRINT_AFTER_PRINT: boolean =
-  (window as any).CLOSE_PRINT_AFTER_PRINT ??
-  (process.env.REACT_APP_CLOSE_PRINT_AFTER_PRINT &&
-    process.env.REACT_APP_CLOSE_PRINT_AFTER_PRINT === "true") ??
-  true;
-export const ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION: boolean =
-  (window as any).ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION ??
-  (process.env.REACT_APP_ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION &&
-    process.env.REACT_APP_ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION === "true") ??
-  false;
+export const CLOSE_PRINT_AFTER_PRINT = true;
+export const ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION = false;
 
 export const BASE_URL_CONFIGURED = BASE_OPENMRS_APP_URL;
 export const LOGIN_URL = BASE_OPENMRS_APP_URL + "login.htm";

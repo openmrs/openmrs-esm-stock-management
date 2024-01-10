@@ -65,7 +65,7 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
         parentOperation?.operationType === "stockissue" ||
         parentOperation?.operationType === "transferout"
       ) {
-        const enableOperationPrintCosts = !printItemCost;
+        const enableOperationPrintCosts = true;
         if (enableOperationPrintCosts) {
           const inventoryFilter: StockItemInventoryFilter = {};
           if (operation?.uuid) {
@@ -86,7 +86,7 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
             });
         }
       }
-      const enableBalance = !printBalanceOnHand;
+      const enableBalance = true;
       if (
         enableBalance &&
         (parentOperation || parentOperation?.operationType === "requisition")
