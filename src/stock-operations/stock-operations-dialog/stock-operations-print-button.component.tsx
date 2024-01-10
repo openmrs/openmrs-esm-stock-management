@@ -1,24 +1,24 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React from "react";
 
 import { Button } from "@carbon/react";
-import { showModal } from "@openmrs/esm-framework";
+import { useConfig } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { Printer } from "@carbon/react/icons";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { StockOperationItemCost } from "../../core/api/types/stockOperation/StockOperationItemCost";
 import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
-import {
-  StockOperationPrintHasItemCosts,
-  StockOperationTypeIsReceipt,
-  StockOperationTypeIsRequistion,
-  StockOperationTypeIsTransferOut,
-} from "../../core/api/types/stockOperation/StockOperationType";
+
 import { StockItemInventoryFilter } from "../../stock-items/stock-items.resource";
 import { ResourceRepresentation } from "../../core/api/api";
 import { BuildStockOperationData } from "../stock-print-reports/StockOperationReport";
 import { PrintGoodsReceivedNoteStockOperation } from "../stock-print-reports/GoodsReceivedNote";
 import { PrintTransferOutStockOperation } from "../stock-print-reports/StockTransferDocument";
 import { PrintRequisitionStockOperation } from "../stock-print-reports/RequisitionDocument";
+import {
+  getStockItemInventory,
+  getStockOperation,
+  getStockOperationItemsCost,
+} from "../stock-operations.resource";
 
 interface StockOperationCancelButtonProps {
   operation: StockOperationDTO;
@@ -29,6 +29,10 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  const { config } = useConfig();
+
+  const { printItemCost, printBalanceOnHand } = config;
+
   // on print stock operation
   const onPrintStockOperation = async () => {
     try {
@@ -37,16 +41,18 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
       let itemInventory: StockItemInventory[] | null | undefined = null;
 
       if (operation.requisitionStockOperationUuid) {
-        await getStockOperation(operation.requisitionStockOperationUuid, false).unwrap()
+        // get stock operation
+        getStockOperation(operation.requisitionStockOperationUuid)
           .then((payload: any) => {
             if ((payload as any).error) {
-              handleErrors(payload);
               return;
             }
             parentOperation = payload;
           })
           .catch((error: any) => {
-            handleErrors(error);
+            if ((error as any).error) {
+              return;
+            }
             return;
           });
         if (!parentOperation) {
@@ -55,31 +61,35 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
       }
 
       if (
-        operation ||
-        StockOperationPrintHasItemCosts(operation.operationType!) ||
-        StockOperationTypeIsTransferOut(operation.operationType!)
+        parentOperation ||
+        parentOperation?.operationType === "stockissue" ||
+        parentOperation?.operationType === "transferout"
       ) {
-        let enableOperationPrintCosts = !STOCK_OPERATION_PRINT_DISABLE_COSTS;
+        const enableOperationPrintCosts = !printItemCost;
         if (enableOperationPrintCosts) {
-          await getStockOperationItemsCost(operation.uuid!, false)
-            .unwrap()
+          const inventoryFilter: StockItemInventoryFilter = {};
+          if (operation?.uuid) {
+            inventoryFilter.stockOperationUuid = operation.uuid;
+          }
+          getStockOperationItemsCost(inventoryFilter)
             .then((payload: any) => {
               if ((payload as any).error) {
-                handleErrors(payload);
                 return;
               }
               itemsCost = payload?.results;
             })
             .catch((error: any) => {
-              handleErrors(error);
+              if ((error as any).error) {
+                return;
+              }
               return;
             });
         }
       }
-      let enableBalance = !STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND;
+      const enableBalance = !printBalanceOnHand;
       if (
         enableBalance &&
-        (operation || StockOperationTypeIsRequistion(operation.operationType!))
+        (parentOperation || parentOperation?.operationType === "requisition")
       ) {
         const inventoryFilter: StockItemInventoryFilter = {};
         if (operation?.uuid) {
@@ -94,36 +104,36 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
         inventoryFilter.includeStockItemName = "true";
 
         inventoryFilter.date = JSON.stringify(
-          operation?.dateCreated ?? operation?.dateCreated
-        ).replaceAll('"', "");
+          parentOperation?.dateCreated ?? operation?.dateCreated
+        );
 
         // get stock item inventory
-        await getStockItemInventory(inventoryFilter)
-          .unwrap()
+        getStockItemInventory(inventoryFilter)
           .then((payload: any) => {
             if ((payload as any).error) {
-              handleErrors(payload);
               return;
             }
             itemInventory = payload?.results;
           })
           .catch((error: any) => {
-            handleErrors(error);
+            if ((error as any).error) {
+              return;
+            }
             return;
           });
       }
 
       const data = await BuildStockOperationData(
-        editableModel,
-        stockOperationItems,
-        parentOperation!,
+        operation,
+        operation.stockOperationItems,
+        parentOperation,
         itemsCost,
         itemInventory
       );
       if (data) {
-        if (StockOperationTypeIsReceipt(operation?.operationType)) {
+        if (operation?.operationType === "receipt") {
           await PrintGoodsReceivedNoteStockOperation(data);
-        } else if (StockOperationTypeIsTransferOut(operation?.operationType!)) {
+        } else if (operation?.operationType === "transferout") {
           await PrintTransferOutStockOperation(data);
         } else {
           await PrintRequisitionStockOperation(data);

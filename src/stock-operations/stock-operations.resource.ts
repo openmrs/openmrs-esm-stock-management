@@ -5,6 +5,7 @@ import { PageableResult } from "../core/api/types/PageableResult";
 import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
 import { StockOperationLinkDTO } from "../core/api/types/stockOperation/StockOperationLinkDTO";
 import { StopOperationAction } from "../core/api/types/stockOperation/StockOperationAction";
+import { InventoryGroupBy } from "../core/api/types/stockItem/StockItem";
 
 export interface StockOperationFilter extends ResourceFilterCriteria {
   status?: string | null | undefined;
@@ -15,6 +16,20 @@ export interface StockOperationFilter extends ResourceFilterCriteria {
   operationDateMin?: string | null | undefined;
   operationDateMax?: string | null | undefined;
   sourceTypeUuid?: string | null | undefined;
+}
+
+export interface StockItemInventoryFilter extends ResourceFilterCriteria {
+  stockItemUuid?: string | null;
+  partyUuid?: string | null;
+  locationUuid?: string | null;
+  includeBatchNo?: boolean | null;
+  stockBatchUuid?: string | null;
+  groupBy?: InventoryGroupBy | null;
+  totalBy?: InventoryGroupBy | null;
+  stockOperationUuid?: string | null;
+  date?: string | null;
+  includeStockItemName?: "true" | "false" | "0" | "1";
+  excludeExpired?: boolean | null;
 }
 
 // getStockOperations
@@ -173,5 +188,32 @@ export function updateStockOperationBatchNumbers(
     },
     signal: abortController.signal,
     body: item,
+  });
+}
+
+// get stock operation itemcosts
+export function getStockOperationItemsCost(filter: StockOperationFilter) {
+  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
+  const abortController = new AbortController();
+  return openmrsFetch(apiUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    signal: abortController.signal,
+  });
+}
+// get stockiteminvoentory
+export function getStockItemInventory(filter: StockItemInventoryFilter) {
+  const apiUrl = `ws/rest/v1/stockmanagement/stockiteminventory${toQueryParams(
+    filter
+  )}`;
+  const abortController = new AbortController();
+  return openmrsFetch(apiUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    signal: abortController.signal,
   });
 }
