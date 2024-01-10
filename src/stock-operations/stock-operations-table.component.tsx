@@ -64,7 +64,33 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   });
 
   let operations: StockOperationType[] | null | undefined;
-  let operation: StockOperationType | null | undefined;
+  const operation: StockOperationType = useMemo(
+    () => ({
+      uuid: "",
+      name: "",
+      description: "",
+      operationType: "",
+      hasSource: false,
+      sourceType: "Location",
+      hasDestination: false,
+      destinationType: "Location",
+      hasRecipient: false,
+      recipientRequired: false,
+      availableWhenReserved: false,
+      allowExpiredBatchNumbers: false,
+      stockOperationTypeLocationScopes: [],
+      creator: undefined,
+      dateCreated: undefined,
+      changedBy: undefined,
+      dateChanged: undefined,
+      dateVoided: undefined,
+      voidedBy: undefined,
+      voidReason: "",
+      voided: false,
+    }),
+    []
+  );
+
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
       ...stockOperation,
