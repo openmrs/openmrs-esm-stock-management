@@ -45,23 +45,6 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
-
-  const {
-    items,
-    tableHeaders,
-    currentPage,
-    pageSizes,
-    totalItems,
-    goTo,
-    currentPageSize,
-    setPageSize,
-    isLoading,
-  } = useStockOperationPages({
-    v: ResourceRepresentation.Full,
-    totalCount: true,
-  });
-
-  let operations: StockOperationType[] | null | undefined;
   const operation: StockOperationType = useMemo(
     () => ({
       uuid: "",
@@ -88,6 +71,23 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }),
     []
   );
+
+  const {
+    items,
+    tableHeaders,
+    currentPage,
+    pageSizes,
+    totalItems,
+    goTo,
+    currentPageSize,
+    setPageSize,
+    isLoading,
+  } = useStockOperationPages({
+    v: ResourceRepresentation.Full,
+    totalCount: true,
+  });
+
+  let operations: StockOperationType[] | null | undefined;
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
