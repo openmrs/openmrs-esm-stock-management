@@ -18,17 +18,9 @@ import {
   Tile,
   TableToolbarAction,
   TableToolbarMenu,
-  Button,
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
-import {
-  Logout,
-  Dashboard,
-  ChooseItem,
-  Edit,
-  ArrowDownLeft,
-  ArrowLeft,
-} from "@carbon/react/icons";
+import { ArrowDownLeft, ArrowLeft } from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";

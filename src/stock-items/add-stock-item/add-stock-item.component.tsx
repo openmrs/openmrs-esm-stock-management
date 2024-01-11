@@ -6,7 +6,6 @@ import PackagingUnits from "./packaging-units/packaging-units.component";
 import Transactions from "./transactions/transactions.component";
 import BatchInformation from "./batch-information/batch-information.component";
 import StockQuantities from "./quantities/quantities.component";
-import StockRules from "./stock-rules/stock-rules.component";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import { SaveStockItem } from "../types";
