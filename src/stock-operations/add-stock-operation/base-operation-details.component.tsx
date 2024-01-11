@@ -64,16 +64,19 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
-  const stockIssuedRequisitionUuids = items
-    .filter(
-      (item) => item.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE
-    )
-    .map((item) => item.requisitionStockOperationUuid);
-  const requisitionStockOperations = items.filter(
-    (item) =>
-      item.operationType === OperationType.REQUISITION_OPERATION_TYPE &&
-      !stockIssuedRequisitionUuids.includes(item.uuid)
-  );
+  const stockIssuedRequisitionUuids =
+    items
+      ?.filter(
+        (item) =>
+          item.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE
+      )
+      .map((item) => item.requisitionStockOperationUuid) ?? [];
+  const requisitionStockOperations =
+    items?.filter(
+      (item) =>
+        item.operationType === OperationType.REQUISITION_OPERATION_TYPE &&
+        !stockIssuedRequisitionUuids.includes(item.uuid)
+    ) ?? [];
   const operationType = operationFromString(operation.operationType);
 
   const {

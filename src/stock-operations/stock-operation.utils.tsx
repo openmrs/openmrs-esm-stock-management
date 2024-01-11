@@ -14,12 +14,9 @@ import {
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
-<<<<<<< HEAD
-
-=======
 import { boolean } from "zod";
 import { extractErrorMessagesFromResponse } from "../constants";
->>>>>>> 9bb974c (Error on save and on submission made user friendly (#8))
+import { handleMutate } from "./swr-revalidation";
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
   isEditing: boolean,
@@ -38,6 +35,7 @@ export const addOrEditStockOperation = async (
       : createStockOperation)(payload);
 
     if (response?.data) {
+      handleMutate("ws/rest/v1/stockmanagement/stockoperation");
       showToast({
         critical: true,
         title: `${isEditing ? "Edit" : "Add"} Stock Operation`,
