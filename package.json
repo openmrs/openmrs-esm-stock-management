@@ -1,13 +1,13 @@
 {
-  "name": "@kenyaemr/esm-stock-management-app",
+  "name": "@ugandaemr/esm-stock-management-app",
   "version": "3.0.0",
   "license": "MPL-2.0",
-  "description": "A frontend module that handles stock management in kenyaemr+",
-  "browser": "dist/esm-kenyaemr-stock-management-app.js",
+  "description": "A frontend module that handles stock management in UgandaEMR+",
+  "browser": "dist/esm-ugandaemr-stock-management-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
-    "start": "openmrs develop --backend https://dev.kenyahmis.org --port 6703",
+    "start": "openmrs develop --backend http://194.163.171.253:8282",
     "serve": "webpack serve --mode=development",
     "build": "webpack --mode production",
     "analyze": "webpack --mode=production --env analyze=true",

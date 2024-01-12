@@ -18,6 +18,10 @@
     {
       "name": "stock-operation-dialog",
       "component": "stockOperationDialog"
+    },
+    {
+      "name": "delete-stock-modal",
+      "component": "deleteStockModal"
     }
   ],
   "pages": [

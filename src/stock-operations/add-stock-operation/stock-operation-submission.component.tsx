@@ -58,7 +58,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             name="rbgApprovelRequired"
             legendText={t(
               "doesThisTransactionRequireApproval",
-              "Does the transaction require approval2 ?"
+              "Does the transaction require approval ?"
             )}
             onChange={(selectedItem: boolean) => {
               model.approvalRequired = selectedItem;
