@@ -169,6 +169,9 @@ export const operationSchema = (operation: OperationType): z.Schema => {
             .min(1, {
               message: "Destination Required",
             }),
+          requisitionStockOperationUuid: z.string({
+            required_error: "Requisition stock uuid required",
+          }),
         })
       );
     case OperationType.RETURN_OPERATION_TYPE:

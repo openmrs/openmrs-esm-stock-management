@@ -192,3 +192,13 @@ export const URL_BATCH_JOB_ARTIFACT = (
   `${BASE_OPENMRS_APP_URL}ws/rest/v1/stockmanagement/batchjobartifact?id=${uuid}${
     download ? "&download=1" : ""
   }`;
+
+export function extractErrorMessagesFromResponse(errorObject) {
+  const fieldErrors = errorObject?.responseBody?.error?.fieldErrors;
+  if (!fieldErrors) {
+    return [errorObject?.responseBody?.error?.message ?? errorObject?.message];
+  }
+  return Object.values(fieldErrors).flatMap((errors: Array<Error>) =>
+    errors.map((error) => error.message)
+  );
+}

@@ -17,6 +17,7 @@ import {
 import { executeStockOperationAction } from "../stock-operations.resource";
 import { showNotification, showToast } from "@openmrs/esm-framework";
 import { closeOverlay } from "../../core/components/overlay/hook";
+import { extractErrorMessagesFromResponse } from "../../constants";
 
 interface StockOperationDialogProps {
   title: string;
@@ -104,11 +105,12 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
       },
       (err) => {
         setIsApproving(false);
+        const errorMessages = extractErrorMessagesFromResponse(err);
         showNotification({
-          title: t(`errorMessage`, `Error ${title} operation`),
+          description: t("errorDescription", errorMessages.join(", ")),
+          title: t("errorDescriptionTitle", "Error on saving form"),
           kind: "error",
           critical: true,
-          description: err?.message,
         });
         closeModal();
         closeOverlay();

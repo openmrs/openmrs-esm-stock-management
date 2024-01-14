@@ -20,11 +20,17 @@ import { getStockOperationUniqueId } from "../stock-operation.utils";
 import { useTranslation } from "react-i18next";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { stockOperationItemsSchema } from "./validationSchema";
+import {
+  baseStockOperationSchema,
+  stockItemTableSchema,
+  stockOperationItemsSchema,
+  useValidationSchema,
+} from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
 import { Add, ArrowRight } from "@carbon/react/icons";
 import styles from "./stock-items-addition.component.scss";
 import { errorAlert } from "../../core/utils/alert";
+import { z } from "zod";
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -46,15 +52,14 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     canUpdateItemsBatchInformation: canUpdateBatchInformation,
     itemUoM,
   },
-  canEdit,
+  canEdit = true,
   model,
   onSave,
+  operation,
 }) => {
   const { t } = useTranslation();
-  const [stockOperationItems, setStockOperationItems] = useState<
-    StockOperationItemDTO[]
-  >([{ uuid: `new-item-1`, id: `new-item-1` }]);
-
+  const { operationType } = operation ?? {};
+  const validationSchema = useValidationSchema(operationType);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
     if (item.stockItems.length == 0) {
       errorAlert(
@@ -73,10 +78,14 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     handleSubmit,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
-    resolver: zodResolver(stockOperationItemsSchema),
-    defaultValues: { stockItems: model.stockOperationItems },
+    resolver: zodResolver(validationSchema),
+    defaultValues: {
+      stockItems: model.stockOperationItems ?? [
+        { uuid: `new-item-1`, id: `new-item-1` },
+      ],
+    },
     mode: "onSubmit",
   });
 
@@ -156,7 +165,11 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     <div style={{ margin: "10px" }}>
       <div className={styles.tableContainer}>
         <DataTable
-          rows={stockOperationItems}
+          rows={
+            model.stockOperationItems ?? [
+              { uuid: `new-item-1`, id: `new-item-1` },
+            ]
+          }
           headers={headers}
           isSortable={false}
           useZebraStyles={true}
@@ -206,7 +219,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                             name="save"
                             type="button"
                             className="submitButton"
-                            onClick={handleSubmit(handleSave)}
+                            onClick={() => handleSubmit(handleSave)()}
                             kind="primary"
                             renderIcon={ArrowRight}
                           >
@@ -219,7 +232,11 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                 </TableHead>
                 <TableBody>
                   <StockItemsAdditionRow
-                    rows={stockOperationItems}
+                    rows={
+                      model.stockOperationItems ?? [
+                        { uuid: `new-item-1`, id: `new-item-1` },
+                      ]
+                    }
                     batchBalance={batchBalance}
                     batchNos={batchNos}
                     control={control}

@@ -1,9 +1,10 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { useDebounce } from "../../core/hooks/debounce-hook";
 import { useStockItemBatchNos } from "./batch-no-selector.resource";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
+import first from "lodash-es/first";
 
 interface BatchNoSelectorProps<T> {
   placeholder?: string;
@@ -23,10 +24,19 @@ interface BatchNoSelectorProps<T> {
 const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   const { isLoading, stockItemBatchNos, setSearchString } =
     useStockItemBatchNos(props.stockItemUuid);
+  const initialSelectedItem = useMemo(
+    () =>
+      stockItemBatchNos?.find(
+        (stockItem) => stockItem.uuid === props.batchUuid
+      ) ?? "",
+    [stockItemBatchNos, props.batchUuid]
+  );
 
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
   }, 500);
+
+  if (isLoading) return <InlineLoading status="active" />;
 
   return (
     <div
@@ -54,9 +64,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
               props.onBatchNoChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
-            initialSelectedItem={
-              stockItemBatchNos?.find((p) => p.uuid === props.batchUuid) ?? ""
-            }
+            initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockBatchDTO) => s.batchNo}
             placeholder={props.placeholder}
             invalid={props.invalid}

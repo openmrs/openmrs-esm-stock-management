@@ -19,6 +19,7 @@ import {
   DatePickerInput,
   InlineLoading,
   TextInput,
+  ComboBox,
 } from "@carbon/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +33,8 @@ import StockOperationReasonSelector from "../stock-operation-reason-selector/sto
 import ControlledTextArea from "../../core/components/carbon/controlled-text-area/controlled-text-area.component";
 import { InitializeResult } from "./types";
 import rootStyles from "../../root.scss";
+import { ResourceRepresentation } from "../../core/api/api";
+import { useStockOperationPages } from "../stock-operations-table.resource";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -57,7 +60,23 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   },
 }) => {
   const { t } = useTranslation();
-
+  const { isLoading, items } = useStockOperationPages({
+    v: ResourceRepresentation.Full,
+    totalCount: true,
+  });
+  const stockIssuedRequisitionUuids =
+    items
+      ?.filter(
+        (item) =>
+          item.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE
+      )
+      .map((item) => item.requisitionStockOperationUuid) ?? [];
+  const requisitionStockOperations =
+    items?.filter(
+      (item) =>
+        item.operationType === OperationType.REQUISITION_OPERATION_TYPE &&
+        !stockIssuedRequisitionUuids.includes(item.uuid)
+    ) ?? [];
   const operationType = operationFromString(operation.operationType);
 
   const {
@@ -72,8 +91,16 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   });
 
   const [isOtherUser, setIsOtherUser] = useState<boolean | null>();
-
   const [isSaving, setIsSaving] = useState(false);
+  if (isLoading) {
+    return (
+      <InlineLoading
+        status="active"
+        iconDescription="Loading"
+        description="Loading data..."
+      />
+    );
+  }
 
   const handleSave = async (item: StockOperationDTO) => {
     try {
@@ -124,6 +151,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           OperationType.RETURN_OPERATION_TYPE,
           OperationType.DISPOSED_OPERATION_TYPE,
           OperationType.OPENING_STOCK_OPERATION_TYPE,
+          OperationType.TRANSFER_OUT_OPERATION_TYPE,
         ].includes(operationType)
       ) {
         delete req.destinationName;
@@ -146,12 +174,35 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       setIsSaving(false);
     }
   };
-
   return (
     <div style={{ margin: "10px" }}>
       <form
         className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
       >
+        {operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && (
+          <Controller
+            control={control}
+            name="requisitionStockOperationUuid"
+            render={({ field }) => (
+              <ComboBox
+                id="requisitionStockOperationUuid"
+                items={requisitionStockOperations}
+                {...field}
+                onChange={(data: { selectedItem: StockOperationDTO }) => {
+                  field.onChange(data.selectedItem.uuid);
+                }}
+                itemToElement={(item) => {
+                  return item?.operationNumber ?? "";
+                }}
+                titleText={t("requisitionStockOperation", "Requisition")}
+                invalid={!!errors.requisitionStockOperationUuid}
+                invalidText={errors.requisitionStockOperationUuid?.message}
+                placeholder={t("chooseARequisition", "Choose a requisition")}
+              />
+            )}
+          />
+        )}
+
         {canEdit && (
           <Controller
             control={control}

@@ -1,4 +1,11 @@
-import { FetchResponse, openmrsFetch } from "@openmrs/esm-framework";
+import {
+  FetchResponse,
+  OpenmrsResource,
+  getCurrentUser,
+  getLoggedInUser,
+  openmrsFetch,
+  useSession,
+} from "@openmrs/esm-framework";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import {
@@ -242,3 +249,32 @@ export function usePatients(filter: ConceptFilterCriteria) {
     isError: error,
   };
 }
+
+type UserRole = {
+  results: Array<{
+    userUuid: string;
+    locations: Array<OpenmrsResource>;
+    operationTypes: Array<{
+      uuid: string;
+      operationTypeName: string;
+      operationTypeUuid: string;
+    }>;
+  }>;
+};
+
+export const useUserRoles = () => {
+  const { user: loggedInUser } = useSession();
+  const url = `/ws/rest/v1/stockmanagement/userrolescope`;
+  const { data, isLoading, error } = useSWR<{ data: UserRole }>(
+    url,
+    openmrsFetch
+  );
+  const currentUserRoles = data?.data?.results.find(
+    (user) => user.userUuid === loggedInUser.uuid
+  );
+  return {
+    userRoles: currentUserRoles,
+    isLoading,
+    error,
+  };
+};

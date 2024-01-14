@@ -1,7 +1,7 @@
 import { getAsyncLifecycle, defineConfigSchema } from "@openmrs/esm-framework";
 import { configSchema } from "./config-schema";
 
-const moduleName = "@openmrs/esm-stock-management-app";
+const moduleName = "@ugandaemr/esm-stock-management-app";
 
 const options = {
   featureName: "stock-management",
@@ -36,6 +36,13 @@ export const stockOperationDialog = getAsyncLifecycle(
       "./stock-operations/stock-operations-dialog/stock-operations-dialog.component"
     ),
   options
+);
+export const deleteStockModal = getAsyncLifecycle(
+  () => import("./stock-sources/delete-stock-modal.component"),
+  {
+    featureName: "delete-stock-modal",
+    moduleName,
+  }
 );
 
 export function startupApp() {
