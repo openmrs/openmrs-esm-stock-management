@@ -35,10 +35,10 @@ function StockUserRoleScopesItems() {
   // get user scopes
   const {
     items,
+    totalItems,
     tableHeaders,
     currentPage,
     pageSizes,
-    paginatedItems,
     goTo,
     currentPageSize,
     setPageSize,
@@ -202,7 +202,7 @@ function StockUserRoleScopesItems() {
         page={currentPage}
         pageSize={currentPageSize}
         pageSizes={pageSizes}
-        totalItems={paginatedItems.length}
+        totalItems={totalItems}
         onChange={({ pageSize, page }) => {
           if (pageSize !== currentPageSize) {
             setPageSize(pageSize);
