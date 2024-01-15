@@ -1,15 +1,9 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback } from "react";
 
 import { Button } from "@carbon/react";
 import { showModal } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
-import {
-  Printer,
-  Error,
-  Repeat,
-  CloseOutline,
-  CheckmarkOutline,
-} from "@carbon/react/icons";
+import { CloseOutline } from "@carbon/react/icons";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 
 interface StockOperationReturnButtonProps {

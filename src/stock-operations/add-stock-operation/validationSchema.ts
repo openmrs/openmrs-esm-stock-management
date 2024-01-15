@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const stockItemTableSchema = z.object({
+export const baseStockOperationSchema = {
   stockItemUuid: z.string().min(1, { message: "Required" }),
   stockItemName: z.string().min(1).nullish(),
   stockItemPackagingUOMUuid: z.string().min(1, { message: "Required" }),
@@ -11,7 +11,9 @@ const stockItemTableSchema = z.object({
   quantity: z.coerce.number().min(1, { message: "Required" }),
   purchasePrice: z.coerce.number().nullish(),
   hasExpiration: z.boolean().nullish(),
-});
+};
+
+export const stockItemTableSchema = z.object(baseStockOperationSchema);
 
 export const stockItemTableSchemaWithNoExpiration = stockItemTableSchema.omit({
   expiration: true,
@@ -28,3 +30,16 @@ export type StockOperationItemsFormData = z.infer<
 export type StockOperationItemFormData = z.infer<
   typeof stockOperationItemsSchema
 >["stockItems"][number];
+
+export function useValidationSchema(operationType?: string) {
+  if (operationType === "requisition") {
+    const customSchema = stockItemTableSchema.omit({
+      batchNo: true,
+      expiration: true,
+    });
+    return z.object({
+      stockItems: z.array(customSchema),
+    });
+  }
+  return stockOperationItemsSchema;
+}

@@ -104,7 +104,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
-                  onClick={actions.onComplete}
+                  onClick={async () => {
+                    delete model.dateCreated;
+                    model.status = "COMPLETED";
+                    setIsSaving(true);
+                    await actions.onComplete(model);
+                    setIsSaving(false);
+                  }}
                   renderIcon={ListChecked}
                 >
                   {t("complete", "Complete")}
@@ -145,6 +151,8 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             style={{ margin: "4px" }}
             disabled={isSaving}
             onClick={async () => {
+              delete model.dateCreated;
+              delete model.status;
               setIsSaving(true);
               await actions.onSave(model);
               setIsSaving(false);

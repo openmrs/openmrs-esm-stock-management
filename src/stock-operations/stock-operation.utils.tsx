@@ -15,7 +15,8 @@ import AddStockOperation from "./add-stock-operation/add-stock-operation.compone
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
 import { boolean } from "zod";
-
+import { extractErrorMessagesFromResponse } from "../constants";
+import { handleMutate } from "./swr-revalidation";
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
   isEditing: boolean,
@@ -23,12 +24,18 @@ export const addOrEditStockOperation = async (
   operations?: StockOperationType[],
   canPrint?: boolean
 ) => {
+  // eslint-disable-next-line prefer-const
+  let payload = stockOperation;
   try {
+    if (operation.operationType === "requisition") {
+      delete payload.destinationName;
+    }
     const response: FetchResponse<StockOperationDTO> = await (isEditing
       ? updateStockOperation
-      : createStockOperation)(stockOperation);
+      : createStockOperation)(payload);
 
     if (response?.data) {
+      handleMutate("ws/rest/v1/stockmanagement/stockoperation");
       showToast({
         critical: true,
         title: `${isEditing ? "Edit" : "Add"} Stock Operation`,
@@ -48,11 +55,12 @@ export const addOrEditStockOperation = async (
       }
     }
   } catch (error) {
+    const errorMessages = extractErrorMessagesFromResponse(error);
     showNotification({
-      title: `Error ${isEditing ? "edit" : "add"}ing a stock operation`,
+      description: errorMessages.join(", "),
+      title: "Error on saving form",
       kind: "error",
       critical: true,
-      description: error?.message,
     });
   }
 };

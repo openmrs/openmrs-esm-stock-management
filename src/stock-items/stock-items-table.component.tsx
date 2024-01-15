@@ -2,7 +2,6 @@ import {
   Button,
   DataTable,
   DataTableSkeleton,
-  Link,
   Pagination,
   Table,
   TableBatchActions,
