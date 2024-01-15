@@ -263,7 +263,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                     setValue(`stockItems.${index}.quantity`, e?.target?.value)
                   }
                   value={row?.quantity ?? ""}
-                  invalidText=""
+                  invalidText={errors?.stockItems?.[index]?.quantity?.message}
                   placeholder={
                     requiresBatchUuid &&
                     !requiresActualBatchInformation &&

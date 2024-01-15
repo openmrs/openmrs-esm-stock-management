@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { SaveStockOperation } from "../../stock-items/types";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
@@ -31,6 +31,7 @@ import { Add, ArrowRight } from "@carbon/react/icons";
 import styles from "./stock-items-addition.component.scss";
 import { errorAlert } from "../../core/utils/alert";
 import { z } from "zod";
+import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -59,6 +60,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
 }) => {
   const { t } = useTranslation();
   const { operationType } = operation ?? {};
+  const { formContext, setFormContext } = useStockOperationContext();
   const validationSchema = useValidationSchema(operationType);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
     if (item.stockItems.length == 0) {
@@ -95,6 +97,14 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     name: "stockItems",
     control,
   });
+
+  useEffect(() => {
+    if (formContext?.stockItems) {
+      const stockItems =
+        formContext?.stockItems as Array<StockOperationItemDTO>;
+      stockItems?.forEach((item) => append(item));
+    }
+  }, [append, formContext?.stockItems]);
 
   const headers = [
     {
