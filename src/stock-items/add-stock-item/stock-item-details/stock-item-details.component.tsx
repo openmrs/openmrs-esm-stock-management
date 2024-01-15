@@ -84,7 +84,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               setIsDrug(selection);
             }}
             name="isDrug"
-            options={radioOptions}
+            radioOptions={radioOptions}
           />
         </FormGroup>
         {isDrug && (
@@ -155,7 +155,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               onChange={(selection: boolean) => {
                 setHasExpiration(selection);
               }}
-              options={expirationOptions}
+              radioOptions={expirationOptions}
             />
           </FormGroup>
 
