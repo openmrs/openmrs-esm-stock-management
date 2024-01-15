@@ -37,9 +37,10 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       return;
     }
     const formData = new FormData();
-    formData.set("file", selectedFile);
-    formData.set("hasHeader", hasHeader ? "true" : "false");
-
+    if(selectedFile) {
+      formData.append("file", selectedFile, "Import_Stock_Items.csv");
+      formData.append("hasHeader", hasHeader ? "true" : "false");
+    }
     UploadStockItems(formData).then(
       (resp) => {
         showToast({
@@ -105,7 +106,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
           <Button kind="secondary" onClick={closeModal}>
             {t("cancel", "Cancel")}
           </Button>
-          <Button type="submit" onClick={onConfirmUpload}>
+          <Button type="button" onClick={onConfirmUpload}>
             {t("uploadStockItems", "Upload StockItems")}
           </Button>
         </ModalFooter>
