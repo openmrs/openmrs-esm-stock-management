@@ -100,8 +100,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
 
   useEffect(() => {
     if (formContext?.stockItems) {
-      const stockItems =
-        formContext?.stockItems as Array<StockOperationItemDTO>;
+      const stockItems = formContext?.stockItems as Array<StockOperationItemDTO>;
       stockItems?.forEach((item) => append(item));
     }
   }, [append, formContext?.stockItems]);
