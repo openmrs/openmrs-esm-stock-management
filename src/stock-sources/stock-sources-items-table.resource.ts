@@ -41,7 +41,8 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
   );
 
   return {
-    items: items.results,
+    items: paginatedItems,
+    totalItems: items?.totalCount,
     currentPage,
     currentPageSize,
     paginatedItems,

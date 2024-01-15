@@ -33,10 +33,10 @@ function StockSourcesItems() {
   // get sourcess
   const {
     items,
+    totalItems,
     tableHeaders,
     currentPage,
     pageSizes,
-    paginatedItems,
     goTo,
     currentPageSize,
     setPageSize,
@@ -182,7 +182,7 @@ function StockSourcesItems() {
         page={currentPage}
         pageSize={currentPageSize}
         pageSizes={pageSizes}
-        totalItems={paginatedItems.length}
+        totalItems={totalItems}
         onChange={({ pageSize, page }) => {
           if (pageSize !== currentPageSize) {
             setPageSize(pageSize);

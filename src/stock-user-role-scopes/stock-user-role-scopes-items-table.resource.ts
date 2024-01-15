@@ -69,7 +69,8 @@ export default function useStockUserRoleScopesPage(
   );
 
   return {
-    items: items.results,
+    items: paginatedItems,
+    totalItems: items?.totalCount,
     currentPage,
     currentPageSize,
     paginatedItems,
