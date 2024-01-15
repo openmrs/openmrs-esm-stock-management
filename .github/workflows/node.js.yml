@@ -112,6 +112,20 @@ jobs:
           name: dist
           path: |
             dist
+  Trigger_server_build:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Invoke workflow without inputs. Don't wait for result
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: KenyaEMR CI
+          repo: palladiumkenya/openmrs-config-kenyaemr
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: false    
 
   release:
     runs-on: ubuntu-latest
