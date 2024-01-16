@@ -69,7 +69,7 @@ export function useStockItemQuantitiesHook(v?: ResourceRepresentation) {
   );
 
   return {
-    items: items.results,
+    items: items.results ?? [],
     totalCount: items.totalCount,
     currentPage,
     currentPageSize,
