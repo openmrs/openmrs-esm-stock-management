@@ -337,7 +337,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any,index) => {
+                {rows.map((row: any, index) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableExpandRow
@@ -358,9 +358,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                           <div>
                             <strong>Date Created </strong> <br />
                             {formatDisplayDate(items[index]?.dateCreated)}
-                            &nbsp;&nbsp;
-                            By
-                            &nbsp;&nbsp;
+                            &nbsp;&nbsp; By &nbsp;&nbsp;
                             {items[index]?.creatorFamilyName}
                           </div>
                         }
