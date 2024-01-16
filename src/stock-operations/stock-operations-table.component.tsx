@@ -21,6 +21,10 @@ import {
   TableToolbarSearch,
   Tile,
   Tooltip,
+  StructuredListHead,
+  StructuredListRow,
+  StructuredListCell,
+  StructuredListBody,
 } from "@carbon/react";
 import { ArrowRight, Edit, Add } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -337,7 +341,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any) => {
+                {rows.map((row: any, index) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableExpandRow
@@ -354,7 +358,56 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                         )}
                       </TableExpandRow>
                       <TableExpandedRow colSpan={headers.length + 2}>
-                        {<div>{row.cells[row.cells.length - 1].value}</div>}
+                        <>
+                          <StructuredListHead>
+                            <StructuredListRow head>
+                              <StructuredListCell head>
+                                Date Created
+                              </StructuredListCell>
+                              <StructuredListCell head>
+                                Date Submitted
+                              </StructuredListCell>
+                              <StructuredListCell head>
+                                Date Completed
+                              </StructuredListCell>
+                            </StructuredListRow>
+                          </StructuredListHead>
+                          <StructuredListBody>
+                            <StructuredListRow>
+                              <StructuredListCell noWrap>
+                                {items[index]?.dateCreated
+                                  ? formatDisplayDate(items[index]?.dateCreated)
+                                  : ""}
+                                {items[index]?.dateCreated ? "By" : ""}
+                                {items[index]?.dateCreated
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.submittedDate
+                                  ? formatDisplayDate(
+                                      items[index]?.submittedDate
+                                    )
+                                  : ""}
+                                {items[index]?.submittedDate ? "By" : ""}
+                                {items[index]?.submittedDate
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.completedDate
+                                  ? formatDisplayDate(
+                                      items[index]?.completedDate
+                                    )
+                                  : ""}
+                                {items[index]?.completedDate ? "By" : ""}
+                                {items[index]?.completedDate
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                            </StructuredListRow>
+                          </StructuredListBody>
+                        </>
                       </TableExpandedRow>
                     </React.Fragment>
                   );
