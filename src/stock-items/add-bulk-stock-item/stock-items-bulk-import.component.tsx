@@ -37,7 +37,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       return;
     }
     const formData = new FormData();
-    if(selectedFile) {
+    if (selectedFile) {
       formData.append("file", selectedFile, "Import_Stock_Items.csv");
       formData.append("hasHeader", hasHeader ? "true" : "false");
     }
