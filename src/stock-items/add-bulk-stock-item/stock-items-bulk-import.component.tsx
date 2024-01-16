@@ -37,17 +37,18 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       return;
     }
     const formData = new FormData();
-    formData.set("file", selectedFile);
-    formData.set("hasHeader", hasHeader ? "true" : "false");
-
+    if (selectedFile) {
+      formData.append("file", selectedFile, "Import_Stock_Items.csv");
+      formData.append("hasHeader", hasHeader ? "true" : "false");
+    }
     UploadStockItems(formData).then(
       (resp) => {
         showToast({
           critical: true,
-          title: t("rejectOrder", "Rejected Order"),
+          title: t("rejectOrder", "Uploaded Order"),
           kind: "success",
           description: t(
-            "successfullyrejected",
+            "Successfully uploaded",
             `You have successfully uploaded stock items`
           ),
         });
@@ -56,7 +57,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       (err) => {
         showNotification({
           title: t(
-            `errorUploadingItems', 'An error occured uploading stock items`
+            `errorUploadingItems', 'An error occurred uploading stock items`
           ),
           kind: "error",
           critical: true,
@@ -105,7 +106,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
           <Button kind="secondary" onClick={closeModal}>
             {t("cancel", "Cancel")}
           </Button>
-          <Button type="submit" onClick={onConfirmUpload}>
+          <Button type="button" onClick={onConfirmUpload}>
             {t("uploadStockItems", "Upload StockItems")}
           </Button>
         </ModalFooter>

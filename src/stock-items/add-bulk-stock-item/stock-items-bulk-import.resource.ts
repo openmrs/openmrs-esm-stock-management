@@ -5,9 +5,9 @@ export async function UploadStockItems(body: any) {
 
   return openmrsFetch(`/ws/rest/v1/stockmanagement/stockitemimport`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    // headers: {
+    //   "Content-Type": "application/json",
+    // },
     signal: abortController.signal,
     body: body,
   });
