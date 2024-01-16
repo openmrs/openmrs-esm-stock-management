@@ -4,6 +4,7 @@ import { ResourceRepresentation } from "../core/api/api";
 import {
   Button,
   DataTable,
+  TabPanel,
   DataTableSkeleton,
   Pagination,
   Table,
@@ -19,6 +20,7 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
+  
   Tile,
   Tooltip,
 } from "@carbon/react";
@@ -260,7 +262,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   }
 
   return (
+
     <div className={styles.tableOverride}>
+      <TabPanel>Stock operations to track movement of stock.</TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>

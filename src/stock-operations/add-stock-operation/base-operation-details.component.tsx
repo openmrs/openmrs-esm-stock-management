@@ -85,6 +85,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     formState: { errors },
     setValue,
   } = useForm<StockOperationFormData>({
+    
+    
     defaultValues: model,
     mode: "all",
     resolver: zodResolver(operationSchema(operationType)),
@@ -270,14 +272,22 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || lockSource) && operation?.hasSource && (
+        {(!canEdit || isEditing || lockSource)  && (
+          <TextInput
+            id="sourceUuidLbl"
+            value={model?.sourceName ?? ""}
+            readOnly={true}
+            labelText={operation?.hasDestination ? "From:" : "From:"}
+          />
+        )}
+         {/* {(!canEdit || lockSource) && operation?.hasSource && (
           <TextInput
             id="sourceUuidLbl"
             value={model?.sourceName ?? ""}
             readOnly={true}
             labelText={operation?.hasDestination ? "From:" : "Location:"}
           />
-        )}
+        )}        */}
 
         {canEdit && !lockDestination && operation?.hasDestination && (
           <PartySelector
@@ -298,14 +308,22 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || lockDestination) && operation?.hasDestination && (
+        {(!canEdit || isEditing ||lockDestination)  && (
+          <TextInput
+            id="destinationUuidLbl"
+            value={model?.destinationName ?? ""}
+            readOnly={true}
+            labelText={operation?.hasSource ? "To:" : "To:"}
+          />
+        )}
+             {/* {(!canEdit || lockDestination) && operation?.hasDestination && (
           <TextInput
             id="destinationUuidLbl"
             value={model?.destinationName ?? ""}
             readOnly={true}
             labelText={operation?.hasSource ? "To:" : "Location:"}
           />
-        )}
+        )} */}
 
         {canEdit && (
           <UsersSelector

@@ -1,8 +1,9 @@
 import React, { useMemo } from "react";
 import {
+  TabPanel,
   DataTable,
   Pagination,
-  Table,
+  Table,  
   TableBody,
   TableCell,
   TableContainer,
@@ -72,6 +73,7 @@ function StockSourcesItems() {
 
   return (
     <div className={styles.tableOverride}>
+       <TabPanel>List of partners who provide stock to the facility.</TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
