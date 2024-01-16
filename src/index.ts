@@ -54,6 +54,17 @@ export const deleteUserScopeModal = getAsyncLifecycle(
   }
 );
 
+export const deleteStockRuleModal = getAsyncLifecycle(
+  () =>
+    import(
+      "./stock-items/add-stock-item/stock-item-rules/delete-stock-rule-modal.component"
+    ),
+  {
+    featureName: "delete-stock-rule-modal",
+    moduleName,
+  }
+);
+
 export const importBulkStockItemsDialog = getAsyncLifecycle(
   () =>
     import(
