@@ -21,6 +21,10 @@ import {
   TableToolbarSearch,
   Tile,
   Tooltip,
+  StructuredListHead,
+  StructuredListRow,
+  StructuredListCell,
+  StructuredListBody,
 } from "@carbon/react";
 import { ArrowRight, Edit, Add } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -354,14 +358,40 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                         )}
                       </TableExpandRow>
                       <TableExpandedRow colSpan={headers.length + 2}>
-                        {
-                          <div>
-                            <strong>Date Created </strong> <br />
-                            {formatDisplayDate(items[index]?.dateCreated)}
-                            &nbsp;&nbsp; By &nbsp;&nbsp;
-                            {items[index]?.creatorFamilyName}
-                          </div>
-                        }
+                        <>
+                          <StructuredListHead>
+                            <StructuredListRow head>
+                              <StructuredListCell head>
+                                Date Created
+                              </StructuredListCell>
+                              <StructuredListCell head>
+                                Date Submitted
+                              </StructuredListCell>
+                              <StructuredListCell head>
+                                Date Completed
+                              </StructuredListCell>
+                            </StructuredListRow>
+                          </StructuredListHead>
+                          <StructuredListBody>
+                            <StructuredListRow>
+                              <StructuredListCell noWrap>
+                                {formatDisplayDate(items[index]?.dateCreated)}
+                                &nbsp; By &nbsp;
+                                {items[index]?.creatorFamilyName}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {formatDisplayDate(items[index]?.submittedDate)}
+                                &nbsp; By &nbsp;
+                                {items[index]?.creatorFamilyName}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {formatDisplayDate(items[index]?.completedDate)}
+                                &nbsp; By &nbsp;
+                                {items[index]?.creatorFamilyName}
+                              </StructuredListCell>
+                            </StructuredListRow>
+                          </StructuredListBody>
+                        </>
                       </TableExpandedRow>
                     </React.Fragment>
                   );
