@@ -375,19 +375,35 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                           <StructuredListBody>
                             <StructuredListRow>
                               <StructuredListCell noWrap>
-                                {formatDisplayDate(items[index]?.dateCreated)}
-                                &nbsp; By &nbsp;
-                                {items[index]?.creatorFamilyName}
+                                {items[index]?.dateCreated
+                                  ? formatDisplayDate(items[index]?.dateCreated)
+                                  : ""}
+                                {items[index]?.dateCreated ? "By" : ""}
+                                {items[index]?.dateCreated
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {formatDisplayDate(items[index]?.submittedDate)}
-                                &nbsp; By &nbsp;
-                                {items[index]?.creatorFamilyName}
+                                {items[index]?.submittedDate
+                                  ? formatDisplayDate(
+                                      items[index]?.submittedDate
+                                    )
+                                  : ""}
+                                {items[index]?.submittedDate ? "By" : ""}
+                                {items[index]?.submittedDate
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {formatDisplayDate(items[index]?.completedDate)}
-                                &nbsp; By &nbsp;
-                                {items[index]?.creatorFamilyName}
+                                {items[index]?.completedDate
+                                  ? formatDisplayDate(
+                                      items[index]?.completedDate
+                                    )
+                                  : ""}
+                                {items[index]?.completedDate ? "By" : ""}
+                                {items[index]?.completedDate
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
                               </StructuredListCell>
                             </StructuredListRow>
                           </StructuredListBody>
