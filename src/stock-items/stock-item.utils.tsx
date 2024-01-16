@@ -30,7 +30,7 @@ export const addOrEditStockItem = async (
 
       // Close overlay and open edit overlay
       closeOverlay();
-      
+
       if (!isEditing) {
         closeOverlay();
 
