@@ -13,6 +13,7 @@ export function useStockItemBatchInformationHook(v?: ResourceRepresentation) {
       limit: 10,
       q: null,
       totalCount: true,
+      includeBatchNo: true,
     });
 
   const pageSizes = [10, 20, 30, 40, 50];
@@ -37,6 +38,7 @@ export function useStockItemBatchInformationHook(v?: ResourceRepresentation) {
       partyUuid: partyUuid,
       locationUuid: locationUuid,
       stockBatchUuid: stockBatchUuid,
+      includeBatchNo: true,
     });
   }, [
     searchString,
