@@ -20,6 +20,10 @@
       "component": "stockOperationDialog"
     },
     {
+      "name": "import-bulk-stock-items",
+      "component": "importBulkStockItemsDialog"
+    },
+    {
       "name": "delete-stock-modal",
       "component": "deleteStockModal"
     }

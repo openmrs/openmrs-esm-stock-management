@@ -45,6 +45,14 @@ export const deleteStockModal = getAsyncLifecycle(
   }
 );
 
+export const importBulkStockItemsDialog = getAsyncLifecycle(
+  () =>
+    import(
+      "./stock-items/add-bulk-stock-item/stock-items-bulk-import.component"
+    ),
+  options
+);
+
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }
