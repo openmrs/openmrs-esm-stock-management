@@ -46,7 +46,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (items?.length != undefined) {
+  if (items?.length > 0) {
     return (
       <DataList
         columns={tableHeaders}
