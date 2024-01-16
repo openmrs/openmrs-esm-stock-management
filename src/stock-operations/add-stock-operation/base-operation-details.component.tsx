@@ -35,6 +35,8 @@ import { InitializeResult } from "./types";
 import rootStyles from "../../root.scss";
 import { ResourceRepresentation } from "../../core/api/api";
 import { useStockOperationPages } from "../stock-operations-table.resource";
+import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
+import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -60,6 +62,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   },
 }) => {
   const { t } = useTranslation();
+  const { formContext, setFormContext } = useStockOperationContext();
   const { isLoading, items } = useStockOperationPages({
     v: ResourceRepresentation.Full,
     totalCount: true,
@@ -190,6 +193,13 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                 {...field}
                 onChange={(data: { selectedItem: StockOperationDTO }) => {
                   field.onChange(data.selectedItem.uuid);
+                  Object.assign(
+                    model.stockOperationItems,
+                    data.selectedItem.stockOperationItems
+                  );
+                  setFormContext({
+                    stockItems: data.selectedItem.stockOperationItems,
+                  });
                 }}
                 itemToElement={(item) => {
                   return item?.operationNumber ?? "";
