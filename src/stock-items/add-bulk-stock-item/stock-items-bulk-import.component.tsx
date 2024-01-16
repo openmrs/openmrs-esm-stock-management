@@ -45,10 +45,10 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       (resp) => {
         showToast({
           critical: true,
-          title: t("rejectOrder", "Rejected Order"),
+          title: t("rejectOrder", "Uploaded Order"),
           kind: "success",
           description: t(
-            "successfullyrejected",
+            "Successfully uploaded",
             `You have successfully uploaded stock items`
           ),
         });
@@ -57,7 +57,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       (err) => {
         showNotification({
           title: t(
-            `errorUploadingItems', 'An error occured uploading stock items`
+            `errorUploadingItems', 'An error occurred uploading stock items`
           ),
           kind: "error",
           critical: true,
