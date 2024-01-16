@@ -99,7 +99,10 @@ function StockUserRoleScopesItems() {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>To access stock management features, users must have assigned roles specifying location and stock operation type scopes.</TabPanel>
+      <TabPanel>
+        To access stock management features, users must have assigned roles
+        specifying location and stock operation type scopes.
+      </TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>

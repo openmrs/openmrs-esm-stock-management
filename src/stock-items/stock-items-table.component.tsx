@@ -1,6 +1,6 @@
 import {
   Button,
-  TabPanel, 
+  TabPanel,
   DataTable,
   DataTableSkeleton,
   Pagination,
@@ -94,7 +94,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   return (
     <>
-     <TabPanel>Drugs and other stock items managed by the system.</TabPanel>
+      <TabPanel>Drugs and other stock items managed by the system.</TabPanel>
       <DataTable
         rows={tableRows}
         headers={tableHeaders}

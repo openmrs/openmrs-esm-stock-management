@@ -85,8 +85,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     formState: { errors },
     setValue,
   } = useForm<StockOperationFormData>({
-    
-    
     defaultValues: model,
     mode: "all",
     resolver: zodResolver(operationSchema(operationType)),
@@ -272,7 +270,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || isEditing || lockSource)  && (
+        {(!canEdit || isEditing || lockSource) && (
           <TextInput
             id="sourceUuidLbl"
             value={model?.sourceName ?? ""}
@@ -280,7 +278,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             labelText={operation?.hasDestination ? "From:" : "From:"}
           />
         )}
-         {/* {(!canEdit || lockSource) && operation?.hasSource && (
+        {/* {(!canEdit || lockSource) && operation?.hasSource && (
           <TextInput
             id="sourceUuidLbl"
             value={model?.sourceName ?? ""}
@@ -308,7 +306,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || isEditing ||lockDestination)  && (
+        {(!canEdit || isEditing || lockDestination) && (
           <TextInput
             id="destinationUuidLbl"
             value={model?.destinationName ?? ""}
@@ -316,7 +314,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             labelText={operation?.hasSource ? "To:" : "To:"}
           />
         )}
-             {/* {(!canEdit || lockDestination) && operation?.hasDestination && (
+        {/* {(!canEdit || lockDestination) && operation?.hasDestination && (
           <TextInput
             id="destinationUuidLbl"
             value={model?.destinationName ?? ""}

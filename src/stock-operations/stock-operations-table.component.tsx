@@ -20,7 +20,6 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
-  
   Tile,
   Tooltip,
 } from "@carbon/react";
@@ -262,7 +261,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   }
 
   return (
-
     <div className={styles.tableOverride}>
       <TabPanel>Stock operations to track movement of stock.</TabPanel>
       <div id="table-tool-bar">
