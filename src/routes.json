@@ -26,6 +26,10 @@
     {
       "name": "delete-stock-modal",
       "component": "deleteStockModal"
+    },
+    {
+      "name": "delete-stock-user-scope-modal",
+      "component": "deleteUserScopeModal"
     }
   ],
   "pages": [

@@ -41,6 +41,7 @@ import { debounce } from "lodash-es";
 import { User } from "../../core/api/types/identity/User";
 import { Role } from "../../core/api/types/identity/Role";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
+import { handleMutate } from "../swr-revalidation";
 
 const MinDate: Date = today();
 
@@ -247,6 +248,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
     createOrUpdateUserRoleScope(formModel).then(
       (res) => {
+        handleMutate("ws/rest/v1/stockmanagement/userrolescope");
         showToast({
           critical: true,
           title: t("addUserRole", "Add User role"),

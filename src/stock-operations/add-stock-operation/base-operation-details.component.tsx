@@ -288,15 +288,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             labelText={operation?.hasDestination ? "From:" : "From:"}
           />
         )}
-        {/* {(!canEdit || lockSource) && operation?.hasSource && (
-          <TextInput
-            id="sourceUuidLbl"
-            value={model?.sourceName ?? ""}
-            readOnly={true}
-            labelText={operation?.hasDestination ? "From:" : "Location:"}
-          />
-        )}        */}
-
         {canEdit && !lockDestination && operation?.hasDestination && (
           <PartySelector
             controllerName="destinationUuid"
@@ -324,14 +315,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             labelText={operation?.hasSource ? "To:" : "To:"}
           />
         )}
-        {/* {(!canEdit || lockDestination) && operation?.hasDestination && (
-          <TextInput
-            id="destinationUuidLbl"
-            value={model?.destinationName ?? ""}
-            readOnly={true}
-            labelText={operation?.hasSource ? "To:" : "Location:"}
-          />
-        )} */}
 
         {canEdit && (
           <UsersSelector

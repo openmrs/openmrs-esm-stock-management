@@ -9,6 +9,7 @@ import {
   SelectItem,
 } from "@carbon/react";
 import React, { ChangeEvent, useCallback, useState } from "react";
+import { handleMutate } from "../swr-revalidation";
 import styles from "./add-stock-sources.scss";
 import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
 import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
@@ -65,6 +66,9 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
                 "Stock Source Added Successfully"
               ),
             });
+
+            handleMutate("ws/rest/v1/stockmanagement/stocksource");
+
             closeOverlay();
           },
           (error) => {
