@@ -42,7 +42,7 @@ export const addOrEditStockItem = async (
       title: `Error ${isEditing ? "edit" : "add"}ing a stock item`,
       kind: "error",
       critical: true,
-      description: error?.message,
+      description: error?.responseBody?.error?.message,
     });
   }
 };
