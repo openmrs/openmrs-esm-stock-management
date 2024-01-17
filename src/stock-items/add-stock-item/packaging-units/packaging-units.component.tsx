@@ -33,9 +33,13 @@ import { useTranslation } from "react-i18next";
 interface PackagingUnitsProps {
   onSubmit?: () => void;
   stockItemUuid: string;
+  handleTabChange: (index) => void;
 }
 
-const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
+const PackagingUnits: React.FC<PackagingUnitsProps> = ({
+  stockItemUuid,
+  handleTabChange,
+}) => {
   const { items, isLoading, tableHeaders, setStockItemUuid } =
     useStockItemPackageUnitsHook();
   useEffect(() => {
@@ -79,6 +83,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid }) => {
         });
       }
     );
+    handleTabChange(0);
   };
 
   if (isLoading)

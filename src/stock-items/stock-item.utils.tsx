@@ -28,9 +28,6 @@ export const addOrEditStockItem = async (
         } Successfully`,
       });
 
-      // Close overlay and open edit overlay
-      closeOverlay();
-
       if (!isEditing) {
         closeOverlay();
 
@@ -45,7 +42,7 @@ export const addOrEditStockItem = async (
       title: `Error ${isEditing ? "edit" : "add"}ing a stock item`,
       kind: "error",
       critical: true,
-      description: error?.responseBody.error?.message,
+      description: error?.responseBody?.error?.message,
     });
   }
 };

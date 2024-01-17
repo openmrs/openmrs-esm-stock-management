@@ -383,7 +383,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                 {items[index]?.dateCreated
                                   ? formatDisplayDate(items[index]?.dateCreated)
                                   : ""}
+                                &nbsp;
                                 {items[index]?.dateCreated ? "By" : ""}
+                                &nbsp;
                                 {items[index]?.dateCreated
                                   ? items[index]?.creatorFamilyName
                                   : ""}
@@ -394,7 +396,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                       items[index]?.submittedDate
                                     )
                                   : ""}
+                                &nbsp;
                                 {items[index]?.submittedDate ? "By" : ""}
+                                &nbsp;
                                 {items[index]?.submittedDate
                                   ? items[index]?.creatorFamilyName
                                   : ""}
@@ -405,7 +409,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                       items[index]?.completedDate
                                     )
                                   : ""}
+                                &nbsp;
                                 {items[index]?.completedDate ? "By" : ""}
+                                &nbsp;
                                 {items[index]?.completedDate
                                   ? items[index]?.creatorFamilyName
                                   : ""}
