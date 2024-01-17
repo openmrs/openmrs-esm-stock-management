@@ -27,7 +27,7 @@ interface StockItemDetailsProps {
   model: StockItemDTO;
   onSave: SaveStockItem;
   isEditing?: boolean;
-  handleTabChange: () => void;
+  handleTabChange: (index) => void;
 }
 
 const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
@@ -47,7 +47,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         // Restore uuid
         item.uuid = model.uuid;
         await onSave(item);
-        handleTabChange();
+        handleTabChange(1);
       } catch (e) {
         // Show notification
       } finally {
