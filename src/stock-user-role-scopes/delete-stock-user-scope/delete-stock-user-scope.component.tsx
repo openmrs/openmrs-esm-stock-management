@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
 import { deleteUserRoleScopes } from "../stock-user-role-scopes.resource";
 import { showModal, showNotification, showToast } from "@openmrs/esm-framework";
+import { handleMutate } from "../swr-revalidation";
 
 interface StockUserScopDeleteActionMenuProps {
   uuid: string;
@@ -26,6 +27,7 @@ const StockUserScopeDeleteActionMenu: React.FC<
         deleteUserRoleScopes(ids)
           .then(
             () => {
+              handleMutate("ws/rest/v1/stockmanagement/userrolescope");
               setDeletingUserScope(false);
               showToast({
                 critical: true,
