@@ -27,10 +27,11 @@ interface StockItemDetailsProps {
   model: StockItemDTO;
   onSave: SaveStockItem;
   isEditing?: boolean;
+  handleTabChange: () => void;
 }
 
 const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
-  ({ model, onSave, isEditing }, ref) => {
+  ({ model, onSave, isEditing, handleTabChange }, ref) => {
     const { t } = useTranslation();
     const { handleSubmit, control, formState } = useForm<StockItemFormData>({
       defaultValues: model,
@@ -39,7 +40,6 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     });
 
     const { errors } = formState;
-
     const handleSave = async (item: StockItemDTO) => {
       try {
         setIsSaving(true);
@@ -47,6 +47,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         // Restore uuid
         item.uuid = model.uuid;
         await onSave(item);
+        handleTabChange();
       } catch (e) {
         // Show notification
       } finally {
