@@ -29,7 +29,7 @@ export const addOrEditStockItem = async (
       });
 
       // Close overlay and open edit overlay
-      closeOverlay();
+      // closeOverlay();
 
       if (!isEditing) {
         closeOverlay();
