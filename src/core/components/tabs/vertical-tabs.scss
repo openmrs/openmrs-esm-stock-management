@@ -54,12 +54,21 @@
 
   :global(.cds--tabs) {
     width: auto;
-    max-height: 100%;
+    max-height: 20rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  :global(.cds--tabs__panel) {
+    height: 100%;
+    overflow-y: auto;
   }
 
   :global(.cds--tabs .cds--tabs__nav-link) {
     border-bottom: 0;
     border-left: 3px solid $ui-03;
+    line-height: 3.5;
   }
 
   :global(.cds--tabs .cds--tabs__nav-item--selected) {
