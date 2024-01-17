@@ -266,7 +266,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>Stock operations to track movement of stock.</TabPanel>
+      <TabPanel>{t("panelDescription", "Stock operations to track movement of stock.")}</TabPanel>
+      
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
