@@ -40,7 +40,12 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
     },
     {
       name: t("packagingUnits", "Packaging Units"),
-      component: <PackagingUnits stockItemUuid={model.uuid} />,
+      component: (
+        <PackagingUnits
+          handleTabChange={handleTabChange}
+          stockItemUuid={model.uuid}
+        />
+      ),
       disabled: !isEditing,
     },
     {
