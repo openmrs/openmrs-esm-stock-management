@@ -23,8 +23,8 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
 }) => {
   const { t } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
-  const handleTabChange = () => {
-    setSelectedTab((prevState) => prevState + 1);
+  const handleTabChange = (index: number) => {
+    setSelectedTab(index);
   };
   const tabs: TabItem[] = [
     {
@@ -65,7 +65,13 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
     // },
   ];
 
-  return <VerticalTabs tabs={tabs} selectedIndex={selectedTab} />;
+  return (
+    <VerticalTabs
+      onChange={handleTabChange}
+      tabs={tabs}
+      selectedIndex={selectedTab}
+    />
+  );
 };
 
 export default AddEditStockItem;
