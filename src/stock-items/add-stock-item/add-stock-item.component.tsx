@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import StockItemDetails from "./stock-item-details/stock-item-details.component";
 import { TabItem } from "../../core/components/tabs/types";
@@ -22,12 +22,20 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
   onSave,
 }) => {
   const { t } = useTranslation();
-
+  const [selectedTab, setSelectedTab] = useState(0);
+  const handleTabChange = () => {
+    setSelectedTab((prevState) => prevState + 1);
+  };
   const tabs: TabItem[] = [
     {
       name: t("stockItemDetails", "Stock Item Details"),
       component: (
-        <StockItemDetails model={model} onSave={onSave} isEditing={isEditing} />
+        <StockItemDetails
+          handleTabChange={handleTabChange}
+          model={model}
+          onSave={onSave}
+          isEditing={isEditing}
+        />
       ),
     },
     {
@@ -57,7 +65,7 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
     // },
   ];
 
-  return <VerticalTabs tabs={tabs} />;
+  return <VerticalTabs tabs={tabs} selectedIndex={selectedTab} />;
 };
 
 export default AddEditStockItem;
