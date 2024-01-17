@@ -287,7 +287,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             readOnly={true}
             labelText={operation?.hasDestination ? "From:" : "From:"}
           />
-        )}       
+        )}
         {canEdit && !lockDestination && operation?.hasDestination && (
           <PartySelector
             controllerName="destinationUuid"
@@ -314,7 +314,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             readOnly={true}
             labelText={operation?.hasSource ? "To:" : "To:"}
           />
-        )} 
+        )}
 
         {canEdit && (
           <UsersSelector

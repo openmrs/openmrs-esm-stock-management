@@ -94,8 +94,13 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   return (
     <>
-     <TabPanel>{t("panelDescription", "Drugs and other stock items managed by the system.")}</TabPanel>
-     
+      <TabPanel>
+        {t(
+          "panelDescription",
+          "Drugs and other stock items managed by the system."
+        )}
+      </TabPanel>
+
       <DataTable
         rows={tableRows}
         headers={tableHeaders}

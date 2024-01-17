@@ -29,6 +29,7 @@ import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component"
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import EditStockUserRoleActionsMenu from "./edit-stock-user-scope/edit-stock-user-scope-action-menu.component";
+import StockUserScopeDeleteActionMenu from "./delete-stock-user-scope/delete-stock-user-scope.component";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
@@ -88,7 +89,12 @@ function StockUserRoleScopesItems() {
         enabled: userRoleScope?.enabled
           ? t("stockmanagement.yes", "Yes")
           : t("stockmanagement.no", "No"),
-        actions: <EditStockUserRoleActionsMenu data={items[index]} />,
+        actions: (
+          <div style={{ display: "flex" }}>
+            <EditStockUserRoleActionsMenu data={items[index]} />
+            <StockUserScopeDeleteActionMenu uuid={items[index].uuid} />
+          </div>
+        ),
       };
     });
   }, [items, t]);
@@ -98,8 +104,13 @@ function StockUserRoleScopesItems() {
   }
 
   return (
-    <div className={styles.tableOverride}>     
-      <TabPanel>{t("panelDescription", "To access stock management features, users must have assigned roles specifying location and stock operation type scopes.")}</TabPanel>
+    <div className={styles.tableOverride}>
+      <TabPanel>
+        {t(
+          "panelDescription",
+          "To access stock management features, users must have assigned roles specifying location and stock operation type scopes."
+        )}
+      </TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
