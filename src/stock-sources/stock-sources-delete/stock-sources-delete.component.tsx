@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { handleMutate } from "../swr-revalidation";
 import { Button, InlineLoading } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
@@ -27,6 +28,8 @@ const StockSourcesDeleteActionMenu: React.FC<
           .then(
             () => {
               setDeletingSource(false);
+
+              handleMutate("ws/rest/v1/stockmanagement/stocksource");
               showToast({
                 critical: true,
                 title: t("deletingSource", "Delete Source"),
