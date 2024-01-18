@@ -36,6 +36,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const [requiresDispatchAcknowledgement, setRequiresDispatchAcknowledgement] =
+    useState(false);
+
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
     closeOverlay();
@@ -193,18 +196,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               {!props.model?.permission?.canEdit &&
                 props.model?.permission?.canApprove && (
                   <>
-                    {!(props.model
-                      ? props.model?.operationTypeName === "return" ||
-                        props.model?.operationTypeName === "stockissue"
-                      : false) && (
+                    {!requiresDispatchAcknowledgement && (
                       <div style={{ margin: "2px" }}>
                         <StockOperationApprovalButton operation={props.model} />
                       </div>
                     )}
-                    {(props.model
-                      ? props.model?.operationTypeName === "return" ||
-                        props.model?.operationTypeName === "stockissue"
-                      : false) && (
+                    {requiresDispatchAcknowledgement && (
                       <div style={{ margin: "2px" }}>
                         <StockOperationApproveDispatchButton
                           operation={props.model}

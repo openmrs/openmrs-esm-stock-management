@@ -16,7 +16,7 @@ const StockOperationApproveDispatchButton: React.FC<
   const { t } = useTranslation();
   const launchApproveDispatchModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
-      title: "Dispatch",
+      title: "Approve Dispatch",
       operation: operation,
       requireReason: true,
       closeModal: () => dispose(),
@@ -28,7 +28,7 @@ const StockOperationApproveDispatchButton: React.FC<
       onClick={launchApproveDispatchModal}
       renderIcon={(props) => <Departure size={16} {...props} />}
     >
-      {t("approve", "Dispatch")}
+      {t("approve", "Approve Dispatch ")}
     </Button>
   );
 };
