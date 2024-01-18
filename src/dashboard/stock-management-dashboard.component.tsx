@@ -3,20 +3,25 @@ import { StockManagementHeader } from "../stock-management-header/stock-manageme
 import StockCommodityTabs from "../stock-tabs/commodity-tabs.component";
 import Overlay from "../core/components/overlay/overlay.component";
 import styles from "./stock-management-dashboard.scss";
-import StockManagementDashboardItems from "./stock-management-dashboard-items.component";
+import StockManagementDashboardSideNav from "./stock-management-dashboard-side-nav.component";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 export default function StockManagementDashboard() {
   const basePath = `${window.getOpenmrsSpaBase()}stock-management`;
-  console.log("basePath", basePath);
   return (
     <BrowserRouter basename={basePath}>
       <div className={styles.container}>
-        <StockManagementDashboardItems />
+        <StockManagementDashboardSideNav />
         <div>
           <StockManagementHeader />
           <Routes>
-            <Route path="" element={<StockCommodityTabs />} />
+            <Route path="overview" element={<StockCommodityTabs />} />
+            <Route path="orders" element={<StockCommodityTabs />} />
+            <Route path="requisitions" element={<StockCommodityTabs />} />
+            <Route path="expired-stock" element={<StockCommodityTabs />} />
+            <Route path="transaction-history" element={<StockCommodityTabs />} />
+            <Route path="stock-list" element={<StockCommodityTabs />} />
+            <Route path="settings" element={<StockCommodityTabs />} />
           </Routes>
         </div>
         <Overlay />

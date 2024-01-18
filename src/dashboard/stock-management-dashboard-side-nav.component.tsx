@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SideNavItem } from "../core/components/side-nav/types";
-import VerticalTabs from "../core/components/tabs/vertical-tabs.component";
-import StockCommodityTabs from "../stock-tabs/commodity-tabs.component";
 import SideNavItemsList from "../core/components/side-nav/side-nav.component";
 
-const StockManagementDashboardItems = () => {
+const StockManagementDashboardSideNav = () => {
   const { t } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
-  const handleTabChange = (index: number) => {
-    setSelectedTab(index);
-  };
+
   const tabs: SideNavItem[] = [
     {
       name: t("stockManagementOverview", "Overview"),
@@ -18,37 +14,31 @@ const StockManagementDashboardItems = () => {
     },
     {
       name: t("stockManagementOrders", "Orders"),
-      link: "#",
-      //TODO: Add component
+      link: "orders",
     },
     {
       name: t("stockManagementRequisitions", "Requisitions"),
-      link: "#",
-      //TODO: Add component
+      link: "requisitions",
     },
     {
       name: t("stockManagementStockList", "Stock List"),
-      link: "#",
-      //TODO: Add component
+      link: "stock-list",
     },
     {
       name: t("stockManagementExpiredStock", "Expired Stock"),
-      link: "#",
-      //TODO: Add component
+      link: "expired-stock",
     },
     {
       name: t("stockManagementTransactionHistory", "Transaction History"),
-      link: "#",
-      //TODO: Add component
+      link: "transaction-history",
     },
     {
       name: t("stockManagementSettings", "Settings"),
-      link: "#",
-      //TODO: Add component
+      link: "settings",
     },
   ];
 
-  return <SideNavItemsList tabs={tabs} selectedIndex={selectedTab} />;
+  return <SideNavItemsList tabs={tabs} selectedIndex={selectedTab} onSelectTab={setSelectedTab} />;
 };
 
-export default StockManagementDashboardItems;
+export default StockManagementDashboardSideNav;

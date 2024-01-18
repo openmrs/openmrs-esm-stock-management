@@ -8,29 +8,23 @@ import {
 import styles from "./side-nav.scss";
 import { navigate } from "@openmrs/esm-framework";
 
-interface VerticalTabsProps {
+interface SideNavProps {
   tabs: SideNavItem[];
-  title?: string;
-  hasContainer?: boolean;
   selectedIndex?: number;
-  onChange?: (index: number) => void;
+  onSelectTab: (index: number) => void;
 }
 
-const SideNavItemsList: React.FC<VerticalTabsProps> = ({
+const SideNavItemsList: React.FC<SideNavProps> = ({
   tabs,
-  title,
-  hasContainer,
   selectedIndex,
-  onChange,
+  onSelectTab,
 }) => {
   return (
     <div
       className={`
-        ${hasContainer ? styles.tabContainer : ""}
         ${styles.cohortBuilder}
       `}
     >
-      {title && <p className={styles.heading}>{title}</p>}
       <div className={styles.tab}>
         <SideNav
           isFixedNav
@@ -41,9 +35,14 @@ const SideNavItemsList: React.FC<VerticalTabsProps> = ({
           <SideNavItems>
             {tabs.map((tab: SideNavItem, index: number) => (
               <SideNavLink
-                onClick={() =>
-                  navigate({ to: `${window.getOpenmrsSpaBase()}stock-management/${tab.link}` })
-                }
+                key={index}
+                isActive={index === selectedIndex}
+                onClick={() => {
+                  onSelectTab(index); // Call onSelectTab to update selectedTab in the parent
+                  navigate({
+                    to: `${window.getOpenmrsSpaBase()}stock-management/${tab.link}`,
+                  });
+                }}
               >
                 {tab.name}
               </SideNavLink>
