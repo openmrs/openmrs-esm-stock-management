@@ -22,6 +22,7 @@ import { SaveStockItem } from "../../types";
 import ConceptsSelector from "../concepts-selector/concepts-selector.component";
 import rootStyles from "../../../root.scss";
 import { closeOverlay } from "../../../core/components/overlay/hook";
+import { expirationOptions, radioOptions } from "./stock-item-details.resource";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
@@ -56,12 +57,12 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     };
 
     const [isSaving, setIsSaving] = useState(false);
-    const [isDrug, setIsDrug] = useState<boolean | null>();
+    const [isDrug, setIsDrug] = useState(false);
     const [hasExpiration, setHasExpiration] = useState<boolean | null>();
 
     useEffect(() => {
-      setIsDrug(model.isDrug);
-      setHasExpiration(model.hasExpiration);
+      setIsDrug(model.isDrug ?? false);
+      setHasExpiration(model.hasExpiration ?? false);
     }, [model.hasExpiration, model.isDrug]);
 
     return (
@@ -83,10 +84,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               setIsDrug(selection);
             }}
             name="isDrug"
-          >
-            <RadioButton value={true} id="isDrug-true" labelText="Drug" />
-            <RadioButton value={false} id="isDrug-false" labelText="Other" />
-          </ControlledRadioButtonGroup>
+            radioOptions={radioOptions}
+          />
         </FormGroup>
         {isDrug && (
           <DrugSelector
@@ -156,18 +155,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               onChange={(selection: boolean) => {
                 setHasExpiration(selection);
               }}
-            >
-              <RadioButton
-                value={true}
-                id="hasExpiration-true"
-                labelText={t("yes", "Yes")}
-              />
-              <RadioButton
-                value={false}
-                id="hasExpiration-false"
-                labelText={t("no", "No")}
-              />
-            </ControlledRadioButtonGroup>
+              radioOptions={expirationOptions}
+            />
           </FormGroup>
 
           {hasExpiration && (
