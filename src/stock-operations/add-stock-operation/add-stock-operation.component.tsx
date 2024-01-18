@@ -22,14 +22,12 @@ import StockOperationApproveDispatchButton from "../stock-operations-dialog/stoc
 import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
 import { StockOperation } from "./stock-operation-context/useStockOperationContext";
+import { showToast } from "@openmrs/esm-framework";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
+  const { isEditing, canEdit, canPrint } = props;
   const { isLoading, isError, result } = useInitializeStockOperations(props);
-  const [canPrint, setCanPrint] = useState(props?.canPrint);
-  const [canEdit, setCanEdit] = useState(props?.canEdit);
-
-  const [isEditing, setIsEditing] = useState<boolean>(props?.isEditing);
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props.isEditing
@@ -42,7 +40,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
     closeOverlay();
-    // TODO: Show an error
+    showToast({
+      kind: "error",
+      title: t("error", "Error"),
+      description: t("errorLoadingStockOperation", "Error loading stock item"),
+      millis: 5000,
+      critical: true,
+    });
     return;
   }
 

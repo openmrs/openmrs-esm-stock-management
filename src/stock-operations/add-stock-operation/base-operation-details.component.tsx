@@ -35,8 +35,11 @@ import { InitializeResult } from "./types";
 import rootStyles from "../../root.scss";
 import { ResourceRepresentation } from "../../core/api/api";
 import { useStockOperationPages } from "../stock-operations-table.resource";
-import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
 import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
+import {
+  createBaseOperationPayload,
+  getRequisitionStockOperations,
+} from "./add-stock-utils";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -62,24 +65,12 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   },
 }) => {
   const { t } = useTranslation();
-  const { formContext, setFormContext } = useStockOperationContext();
+  const { setFormContext } = useStockOperationContext();
   const { isLoading, items } = useStockOperationPages({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
-  const stockIssuedRequisitionUuids =
-    items
-      ?.filter(
-        (item) =>
-          item.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE
-      )
-      .map((item) => item.requisitionStockOperationUuid) ?? [];
-  const requisitionStockOperations =
-    items?.filter(
-      (item) =>
-        item.operationType === OperationType.REQUISITION_OPERATION_TYPE &&
-        !stockIssuedRequisitionUuids.includes(item.uuid)
-    ) ?? [];
+  const requisitionStockOperations = getRequisitionStockOperations(items);
   const operationType = operationFromString(operation.operationType);
 
   const {
@@ -108,69 +99,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   const handleSave = async (item: StockOperationDTO) => {
     try {
       setIsSaving(true);
-
-      // Restore uuid
-      const req = Object.assign(model, item);
-      delete req.submitted;
-      delete req.cancelledByFamilyName;
-      delete req.atLocationName;
-      delete req.completedByGivenName;
-      delete req.cancelledBy;
-      delete req.submittedByFamilyName;
-      delete req.operationOrder;
-      delete req.dispatchedByGivenName;
-      delete req.submittedByGivenName;
-      delete req.returnedByGivenName;
-      delete req.operationNumber;
-      delete req.responsiblePersonFamilyName;
-      delete req.returnReason;
-      delete req.atLocationUuid;
-      delete req.cancelReason;
-      delete req.rejectedByGivenName;
-      delete req.reasonName;
-      delete req.submittedBy;
-      delete req.creator;
-      delete req.completedByFamilyName;
-      delete req.operationTypeName;
-      delete req.rejectedByFamilyName;
-      delete req.responsiblePerson;
-      delete req.creatorFamilyName;
-      delete req.returnedByFamilyName;
-      delete req.cancelledByGivenName;
-      delete req.operationType;
-      delete req.responsiblePersonGivenName;
-      delete req.sourceName;
-      delete req.rejectionReason;
-      delete req.completedBy;
-      delete req.creatorGivenName;
-      delete req.dispatchedByFamilyName;
-      delete req.uuid;
-      if (
-        [
-          OperationType.ADJUSTMENT_OPERATION_TYPE,
-          OperationType.RECEIPT_OPERATION_TYPE,
-          OperationType.STOCK_ISSUE_OPERATION_TYPE,
-          OperationType.STOCK_TAKE_OPERATION_TYPE,
-          OperationType.RETURN_OPERATION_TYPE,
-          OperationType.DISPOSED_OPERATION_TYPE,
-          OperationType.OPENING_STOCK_OPERATION_TYPE,
-          OperationType.TRANSFER_OUT_OPERATION_TYPE,
-        ].includes(operationType)
-      ) {
-        delete req.destinationName;
-      }
-
-      if (
-        [
-          OperationType.ADJUSTMENT_OPERATION_TYPE,
-          OperationType.DISPOSED_OPERATION_TYPE,
-          OperationType.STOCK_TAKE_OPERATION_TYPE,
-          OperationType.OPENING_STOCK_OPERATION_TYPE,
-        ].includes(operationType)
-      ) {
-        delete req.destinationUuid;
-      }
-      await onSave(req);
+      const payload = createBaseOperationPayload(model, item, operationType);
+      await onSave(payload);
     } catch (e) {
       // Show notification
     } finally {
@@ -190,7 +120,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               <ComboBox
                 id="requisitionStockOperationUuid"
                 items={requisitionStockOperations}
-                {...field}
                 onChange={(data: { selectedItem: StockOperationDTO }) => {
                   field.onChange(data.selectedItem.uuid);
                   Object.assign(
@@ -201,9 +130,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                     stockItems: data.selectedItem.stockOperationItems,
                   });
                 }}
-                itemToElement={(item) => {
-                  return item?.operationNumber ?? "";
-                }}
+                itemToString={(item) => `${item?.operationNumber}` ?? ""}
                 titleText={t("requisitionStockOperation", "Requisition")}
                 invalid={!!errors.requisitionStockOperationUuid}
                 invalidText={errors.requisitionStockOperationUuid?.message}
