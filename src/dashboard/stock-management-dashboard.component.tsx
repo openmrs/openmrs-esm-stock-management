@@ -1,6 +1,7 @@
 import React from "react";
 import { StockManagementHeader } from "../stock-management-header/stock-management-header.component";
 import StockCommodityTabs from "../stock-tabs/commodity-tabs.component";
+import StockMetrics from "../stock-home/stock-home-metrics";
 import Overlay from "../core/components/overlay/overlay.component";
 import styles from "./stock-management-dashboard.scss";
 import StockManagementDashboardSideNav from "./stock-management-dashboard-side-nav.component";
@@ -15,7 +16,8 @@ export default function StockManagementDashboard() {
         <div>
           <StockManagementHeader />
           <Routes>
-            <Route path="overview" element={<StockCommodityTabs />} />
+          <Route path="overview" element={<StockMetrics />} />
+          <Route path="" element={<StockMetrics />} />
             <Route path="orders" element={<StockCommodityTabs />} />
             <Route path="requisitions" element={<StockCommodityTabs />} />
             <Route path="expired-stock" element={<StockCommodityTabs />} />
