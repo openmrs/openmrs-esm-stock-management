@@ -32,6 +32,10 @@
       "component": "deleteUserScopeModal"
     },
     {
+      "name": "stock-management-app-menu-item",
+      "component": "stockManagementAppMenuItem"
+    },
+    {
       "name": "delete-stock-rule-modal",
       "component": "deleteStockRuleModal"
     }
