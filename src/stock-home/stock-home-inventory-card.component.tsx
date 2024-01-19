@@ -19,7 +19,7 @@ const StockHomeInventoryCard = () => {
 
   if (isLoading) return <></>;
 
-  if (stockItems.length === 0) {
+  if (stockItems?.length === 0) {
     return (
       <>
         <p className={styles.content}>
