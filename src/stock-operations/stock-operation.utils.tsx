@@ -30,6 +30,10 @@ export const addOrEditStockOperation = async (
     if (operation.operationType === "requisition") {
       delete payload.destinationName;
     }
+
+    if (operation.operationType === "stockissue") {
+      delete payload.requisitionStockOperationUuid;
+    }
     const response: FetchResponse<StockOperationDTO> = await (isEditing
       ? updateStockOperation
       : createStockOperation)(payload);
