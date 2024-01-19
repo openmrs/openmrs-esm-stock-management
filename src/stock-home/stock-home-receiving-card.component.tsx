@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Layer,
-  Tile,
-  Button,
-} from "@carbon/react";
-import {
-  isDesktop, navigate,
-  useLayoutType
-} from "@openmrs/esm-framework";
+import { Layer, Tile, Button } from "@carbon/react";
+import { isDesktop, navigate, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
 import { Delivery, DeliveryTruck } from "@carbon/react/icons";
 import { ResourceRepresentation } from "../core/api/api";
@@ -18,10 +11,7 @@ const StockHomeReceivingCard = () => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === "tablet";
 
-  const {
-    items,
-    isLoading,
-  } = useStockReceiving({
+  const { items, isLoading } = useStockReceiving({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
@@ -34,9 +24,6 @@ const StockHomeReceivingCard = () => {
         <p className={styles.content}>
           {t("receivedNull", "No received to display")}
         </p>
-        <Button onClick={() => console.log("testing CLick")} kind="ghost">
-          {t("receivedView", "View All")}
-        </Button>
       </>
     );
   }
@@ -52,8 +39,7 @@ const StockHomeReceivingCard = () => {
             </div>
             <div className={styles.cardText}>
               <p>
-                {item?.status} · {item?.sourceName} ·{" "}
-                {item?.destinationName}
+                {item?.status} · {item?.sourceName} · {item?.destinationName}
               </p>
               <p>
                 <strong>{stock?.stockItemName}</strong>{" "}

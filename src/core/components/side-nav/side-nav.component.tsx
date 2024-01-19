@@ -1,10 +1,6 @@
 import React from "react";
 import { SideNavItem } from "./types";
-import {
-  SideNav,
-  SideNavItems,
-  SideNavLink,
-} from "@carbon/react";
+import { SideNav, SideNavItems, SideNavLink } from "@carbon/react";
 import styles from "./side-nav.scss";
 import { navigate } from "@openmrs/esm-framework";
 
@@ -40,7 +36,9 @@ const SideNavItemsList: React.FC<SideNavProps> = ({
                 onClick={() => {
                   onSelectTab(index); // Call onSelectTab to update selectedTab in the parent
                   navigate({
-                    to: `${window.getOpenmrsSpaBase()}stock-management/${tab.link}`,
+                    to: `${window.getOpenmrsSpaBase()}stock-management/${
+                      tab.link
+                    }`,
                   });
                 }}
               >

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Layer, Tile, Button } from "@carbon/react";
-import {navigate, useLayoutType} from "@openmrs/esm-framework";
+import { navigate, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
 import { WarningHex, Warning } from "@carbon/react/icons";
 import { ResourceRepresentation } from "../core/api/api";
@@ -13,7 +13,8 @@ const StockHomeInventoryCard = () => {
   const isTablet = useLayoutType() === "tablet";
 
   // TODO: Pull low on stock
-  const { items: expiryItems, isLoading: inventoryLoading } = useStockInventory();
+  const { items: expiryItems, isLoading: inventoryLoading } =
+    useStockInventory();
   const { items: stockItems, isLoading } = useStockInventoryItems();
 
   if (isLoading) return <></>;
@@ -24,9 +25,6 @@ const StockHomeInventoryCard = () => {
         <p className={styles.content}>
           {t("inventoryAlertNull", "No inventory alerts to display")}
         </p>
-        <Button onClick={() => console.log("testing CLick")} kind="ghost">
-          {t("inventoryAlertView", "View inventory alerts")}
-        </Button>
       </>
     );
   }
@@ -49,27 +47,23 @@ const StockHomeInventoryCard = () => {
     // Include items that have not expired yet or are within the expiry notice period
     return differenceInDays <= expiryNotice || differenceInDays < 0;
   });
-  console.log(filteredData)
 
   return (
     <>
-      {filteredData.map((item, index) =>
+      {filteredData.map((item, index) => (
         <div className={styles.card} key={index}>
           <div className={styles.colorLineRed} />
           <div className={styles.icon}>
             <WarningHex size={40} color={"#DA1E28"} />
           </div>
           <div className={styles.cardText}>
+            <p>EXPIRING STOCK</p>
             <p>
-              EXPIRING STOCK
-            </p>
-            <p>
-              <strong>{item?.drugName}</strong>{" "}
-              {item?.dispensingUnitName}
+              <strong>{item?.drugName}</strong> {item?.dispensingUnitName}
             </p>
           </div>
         </div>
-      )}
+      ))}
       <Button
         onClick={() => {
           navigate({

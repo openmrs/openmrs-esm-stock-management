@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  useLayoutType
-} from "@openmrs/esm-framework";
+import { useLayoutType } from "@openmrs/esm-framework";
 import StockHomeInventoryCard from "./stock-home-inventory-card.component";
 import StockHomeReceivingCard from "./stock-home-receiving-card.component";
 import StockHomeIssuingCard from "./stock-home-issuing-card.component";
@@ -26,7 +24,7 @@ const StockHomeDetailCards = () => {
             >
               <h4>{"Inventory Alerts"}</h4>
             </div>
-            <StockHomeInventoryCard/>
+            <StockHomeInventoryCard />
           </Tile>
         </Layer>
       </div>
@@ -40,7 +38,7 @@ const StockHomeDetailCards = () => {
             >
               <h4>{"Receiving"}</h4>
             </div>
-            <StockHomeReceivingCard/>
+            <StockHomeReceivingCard />
           </Tile>
         </Layer>
       </div>
@@ -54,7 +52,7 @@ const StockHomeDetailCards = () => {
             >
               <h4>{"Issuing"}</h4>
             </div>
-            <StockHomeIssuingCard/>
+            <StockHomeIssuingCard />
           </Tile>
         </Layer>
       </div>

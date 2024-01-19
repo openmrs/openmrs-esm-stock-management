@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Layer,
-  Tile,
-  Button,
-} from "@carbon/react";
-import {navigate, useLayoutType} from "@openmrs/esm-framework";
+import { Layer, Tile, Button } from "@carbon/react";
+import { navigate, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
 import { ResourceRepresentation } from "../core/api/api";
 import { DocumentImport, DeliveryTruck } from "@carbon/react/icons";
@@ -28,9 +24,6 @@ const StockHomeIssuingCard = () => {
         <p className={styles.content}>
           {t("issuingNull", "No issued to display")}
         </p>
-        <Button onClick={() => console.log("testing CLick")} kind="ghost">
-          {t("issuingView", "View All")}
-        </Button>
       </>
     );
   }
@@ -54,7 +47,6 @@ const StockHomeIssuingCard = () => {
   });
 
   const flattenedItemsToDisplay = itemsToDisplay.flat();
-  console.log(flattenedItemsToDisplay)
 
   return (
     <>
@@ -67,8 +59,7 @@ const StockHomeIssuingCard = () => {
             </div>
             <div className={styles.cardText}>
               <p>
-                {item?.status} · {item?.sourceName} ·{" "}
-                {item?.destinationName}
+                {item?.status} · {item?.sourceName} · {item?.destinationName}
               </p>
               <p>
                 <strong>{stock?.stockItemName}</strong>{" "}

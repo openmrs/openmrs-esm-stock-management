@@ -8,14 +8,12 @@ import {
 } from "../stock-items/stock-items.resource";
 
 export function useStockInventory() {
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockBatchFilter>({
+  const [stockItemFilter, setStockItemFilter] = useState<StockBatchFilter>({
     startIndex: 0,
     v: ResourceRepresentation.Default,
     q: null,
     includeStockItemName: "true",
-    });
-
+  });
 
   useEffect(() => {
     setStockItemFilter({
@@ -25,8 +23,6 @@ export function useStockInventory() {
   }, []);
 
   const { items, isLoading, isError } = useStockBatches(stockItemFilter);
-  console.log(items)
-
 
   return {
     items: items.results ?? [],
@@ -34,4 +30,3 @@ export function useStockInventory() {
     isError,
   };
 }
-

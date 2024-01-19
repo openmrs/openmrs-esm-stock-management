@@ -7,6 +7,7 @@ import styles from "./stock-management-dashboard.scss";
 import StockManagementDashboardSideNav from "./stock-management-dashboard-side-nav.component";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import StockHomeDetailCards from "../stock-home/stock-home-detail-cards.component";
+import StockHomeLandingPage from "../stock-home/stock-home-landing-page-component";
 
 export default function StockManagementDashboard() {
   const basePath = `${window.getOpenmrsSpaBase()}stock-management`;
@@ -17,8 +18,8 @@ export default function StockManagementDashboard() {
         <div>
           <StockManagementHeader />
           <Routes>
-          <Route path="overview" element={<StockMetrics />} />
-          <Route path="" element={<StockMetrics />} />
+            <Route path="overview" element={<StockHomeLandingPage />} />
+            <Route path="" element={<StockHomeLandingPage />} />
             <Route path="orders" element={<StockCommodityTabs />} />
             <Route path="requisitions" element={<StockCommodityTabs />} />
             <Route path="expired-stock" element={<StockCommodityTabs />} />

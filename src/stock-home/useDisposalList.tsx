@@ -1,36 +1,18 @@
-import useSWR from 'swr';
-import { openmrsFetch } from '@openmrs/esm-framework';
+import {
+  StockOperationFilter,
+  useStockOperations,
+} from "../stock-operations/stock-operations.resource";
 
+export function useDisposalList(filter: StockOperationFilter) {
+  const { items, isLoading, isError } = useStockOperations(filter);
 
-interface DisposalList {
-  uuid: string;
-  operationType: string;
-  status: string;
-  results: {
-    uuid: string;
-    operationType: string;
-    status: string;
+  const receivedItems = items?.results?.filter(
+    (item) => item?.operationType === "disposed"
+  );
 
-  }
-
+  return {
+    items: receivedItems,
+    isLoading,
+    isError,
+  };
 }
-
-const useDisposalList = () => {
-  const url = `/ws/rest/v1/stockmanagement/stockoperation`;
-
-  const { data, error } = useSWR<{ data: { results: Array<DisposalList> } }>(url, openmrsFetch);
-
-
-  const disposalstocks = data?.data.results.map((disposalstock) => ({
-    uuid: disposalstock.uuid,
-    hasExpiration: disposalstock.operationType,
-    ExpiryNotice: disposalstock.status,
-  }));
-
-
-  
-  return { disposalList: (disposalstocks as Array<any>) ?? [], isLoading: !data && !error, error };
-};
-
-
-export default useDisposalList;

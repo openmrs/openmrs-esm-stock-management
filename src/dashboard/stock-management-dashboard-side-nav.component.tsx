@@ -34,7 +34,13 @@ const StockManagementDashboardSideNav = () => {
     },
   ];
 
-  return <SideNavItemsList tabs={tabs} selectedIndex={selectedTab} onSelectTab={setSelectedTab} />;
+  return (
+    <SideNavItemsList
+      tabs={tabs}
+      selectedIndex={selectedTab}
+      onSelectTab={setSelectedTab}
+    />
+  );
 };
 
 export default StockManagementDashboardSideNav;
