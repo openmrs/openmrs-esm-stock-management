@@ -1,79 +1,86 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Layer, Tile, Button } from "@carbon/react";
-import { useLayoutType } from "@openmrs/esm-framework";
+import {navigate, useLayoutType} from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
-import { DeliveryTruck, Warning } from "@carbon/react/icons";
+import { WarningHex, Warning } from "@carbon/react/icons";
 import { ResourceRepresentation } from "../core/api/api";
-import { useStockInventory } from "./stock-home-inventory.resource";
+import { useStockInventory } from "./stock-home-inventory-expiry.resource";
+import { useStockInventoryItems } from "./stock-home-inventory-items.resource";
 
-interface StockHomeDetailCardProps {
-  title: string;
-}
-const StockHomeInventoryCard: React.FC<StockHomeDetailCardProps> = ({
-  title,
-}) => {
+const StockHomeInventoryCard = () => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === "tablet";
 
-  const { items, isLoading } = useStockInventory({
-    v: ResourceRepresentation.Full,
-    totalCount: true,
-  });
+  // TODO: Pull low on stock
+  const { items: expiryItems, isLoading: inventoryLoading } = useStockInventory();
+  const { items: stockItems, isLoading } = useStockInventoryItems();
 
   if (isLoading) return <></>;
 
-  if (items.length === 0) {
+  if (stockItems.length === 0) {
     return (
-      <Layer className={styles.emptyStateContainer}>
-        <Tile className={styles.tile}>
-          <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-            <h4>{title}</h4>
-          </div>
-          <p className={styles.content}>
-            {t("inventoryAlertNull", "No inventory alerts to display")}
-          </p>
-          <Button onClick={() => console.log("testing CLick")} kind="ghost">
-            {t("inventoryAlertView", "View inventory alerts")}
-          </Button>
-        </Tile>
-      </Layer>
+      <>
+        <p className={styles.content}>
+          {t("inventoryAlertNull", "No inventory alerts to display")}
+        </p>
+        <Button onClick={() => console.log("testing CLick")} kind="ghost">
+          {t("inventoryAlertView", "View inventory alerts")}
+        </Button>
+      </>
     );
   }
 
+  const currentDate: any = new Date();
+  let mergedArray: any[] = expiryItems.map((batch) => {
+    const matchingItem = stockItems.find(
+      (item2) => batch?.stockItemUuid === item2.uuid
+    );
+    return { ...batch, ...matchingItem };
+  });
+  mergedArray = mergedArray.filter((item) => item.hasExpiration);
+  const filteredData = mergedArray.filter((item) => {
+    const expiryNotice = item.expiryNotice || 0; // Default to 0 if expiryNotice is undefined or null
+    const expirationDate: any = new Date(item.expiration);
+    const differenceInDays = Math.ceil(
+      (expirationDate - currentDate) / (1000 * 60 * 60 * 24)
+    );
+
+    // Include items that have not expired yet or are within the expiry notice period
+    return differenceInDays <= expiryNotice || differenceInDays < 0;
+  });
+  console.log(filteredData)
+
   return (
-    <div className={styles.billHistoryContainer}>
-      <Layer>
-        <Tile>
-          <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-            <h4>{title}</h4>
+    <>
+      {filteredData.map((item, index) =>
+        <div className={styles.card} key={index}>
+          <div className={styles.colorLineRed} />
+          <div className={styles.icon}>
+            <WarningHex size={40} color={"#DA1E28"} />
           </div>
-          {items.map((item, index) =>
-            item?.stockOperationItems.map((stock) => (
-              <div className={styles.card} key={index}>
-                <div className={styles.colorLineOrange} />
-                <div className={styles.icon}>
-                  <Warning size={40} color={"#FF832B"} />
-                </div>
-                <div className={styles.cardText}>
-                  <p>
-                    {item?.status} · {item?.sourceName} ·{" "}
-                    {item?.destinationName}
-                  </p>
-                  <p>
-                    <strong>{stock?.stockItemName}</strong>{" "}
-                    {stock?.stockItemPackagingUOMName}, {stock?.quantity}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
-          <Button onClick={() => console.log("testing CLick")} kind="ghost">
-            {t("inventoryView", "View All")}
-          </Button>
-        </Tile>
-      </Layer>
-    </div>
+          <div className={styles.cardText}>
+            <p>
+              EXPIRING STOCK
+            </p>
+            <p>
+              <strong>{item?.drugName}</strong>{" "}
+              {item?.dispensingUnitName}
+            </p>
+          </div>
+        </div>
+      )}
+      <Button
+        onClick={() => {
+          navigate({
+            to: `${window.getOpenmrsSpaBase()}stock-management/expired-stock`,
+          });
+        }}
+        kind="ghost"
+      >
+        View All
+      </Button>
+    </>
   );
 };
 

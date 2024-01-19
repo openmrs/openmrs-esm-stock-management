@@ -29,10 +29,6 @@ const StockManagementDashboardSideNav = () => {
       link: "expired-stock",
     },
     {
-      name: t("stockManagementTransactionHistory", "Transaction History"),
-      link: "transaction-history",
-    },
-    {
       name: t("stockManagementSettings", "Settings"),
       link: "settings",
     },
