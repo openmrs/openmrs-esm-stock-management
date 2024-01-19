@@ -31,7 +31,7 @@ const StockHomeInventoryCard = () => {
 
   const currentDate: any = new Date();
   let mergedArray: any[] = expiryItems.map((batch) => {
-    const matchingItem = stockItems.find(
+    const matchingItem = stockItems?.find(
       (item2) => batch?.stockItemUuid === item2.uuid
     );
     return { ...batch, ...matchingItem };
