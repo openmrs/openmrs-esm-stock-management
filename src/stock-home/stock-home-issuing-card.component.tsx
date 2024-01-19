@@ -46,29 +46,28 @@ const StockHomeIssuingCard = () => {
     return formattedStockItems;
   });
 
-  const flattenedItemsToDisplay = itemsToDisplay.flat();
+  const flattenedItemsToDisplay = itemsToDisplay.flat().slice(0, 10);
 
   return (
     <>
-      {items.map((item, index) =>
-        item?.stockOperationItems.map((stock) => (
-          <div className={styles.card} key={index}>
-            <div className={styles.colorLineGreen} />
-            <div className={styles.icon}>
-              <DocumentImport size={40} color={"#198038"} />
-            </div>
-            <div className={styles.cardText}>
-              <p>
-                {item?.status} · {item?.sourceName} · {item?.destinationName}
-              </p>
-              <p>
-                <strong>{stock?.stockItemName}</strong>{" "}
-                {stock?.stockItemPackagingUOMName}, {stock?.quantity}
-              </p>
-            </div>
+      {flattenedItemsToDisplay.map((item, index) =>(
+        <div className={styles.card} key={index}>
+          <div className={styles.colorLineGreen} />
+          <div className={styles.icon}>
+            <DocumentImport size={40} color={"#198038"} />
           </div>
-        ))
-      )}
+          <div className={styles.cardText}>
+            <p>
+              {item?.status} · {item?.sourceName} ·{" "}
+              {item?.destinationName}
+            </p>
+            <p>
+              <strong>{item?.stockItemName}</strong>{" "}
+              {item?.stockItemPackagingUOMName}, {item?.quantity}
+            </p>
+          </div>
+        </div>
+      ))}
       <Button
         onClick={() => {
           navigate({
