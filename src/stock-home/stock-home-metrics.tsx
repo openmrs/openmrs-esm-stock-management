@@ -23,7 +23,7 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
 
   const currentDate: any = new Date();
   let mergedArray: any[] = expiryItems.map((batch) => {
-    const matchingItem = stockItems.find(
+    const matchingItem = stockItems?.find(
       (item2) => batch?.stockItemUuid === item2.uuid
     );
     return { ...batch, ...matchingItem };
@@ -87,7 +87,7 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
         />
         <MetricsCard
           label={t("outofstock", "Out of Stock")}
-          value={allStocks.length}
+          value={allStocks?.length}
           headerLabel={t("highestServiceVolume", "Out of Stock ")}
           view="items"
           outofstockCount={{
