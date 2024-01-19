@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import StockItemDetails from "./stock-item-details/stock-item-details.component";
+import StockItemRules from "./stock-item-rules/stock-item-rules.component";
 import { TabItem } from "../../core/components/tabs/types";
 import PackagingUnits from "./packaging-units/packaging-units.component";
 import Transactions from "./transactions/transactions.component";
@@ -63,11 +64,11 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
       component: <StockQuantities stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },
-    // {
-    //   name: t("stockRules", "Stock Rules"),
-    //   component: <StockRules />,
-    //   disabled: !isEditing,
-    // },
+    {
+      name: t("stockRules", "Stock Rules"),
+      component: <StockItemRules stockItemUuid={model.uuid} />,
+      disabled: !isEditing,
+    },
   ];
 
   return (
