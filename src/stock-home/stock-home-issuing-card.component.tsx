@@ -50,7 +50,7 @@ const StockHomeIssuingCard = () => {
 
   return (
     <>
-      {flattenedItemsToDisplay.map((item, index) =>(
+      {flattenedItemsToDisplay.map((item, index) => (
         <div className={styles.card} key={index}>
           <div className={styles.colorLineGreen} />
           <div className={styles.icon}>
@@ -58,8 +58,7 @@ const StockHomeIssuingCard = () => {
           </div>
           <div className={styles.cardText}>
             <p>
-              {item?.status} · {item?.sourceName} ·{" "}
-              {item?.destinationName}
+              {item?.status} · {item?.sourceName} · {item?.destinationName}
             </p>
             <p>
               <strong>{item?.stockItemName}</strong>{" "}
