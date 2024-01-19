@@ -40,7 +40,7 @@ const StockHomeIssuingCard = () => {
       stockItemName: stock?.stockItemName,
       stockItemPackagingUOMName: stock?.stockItemPackagingUOMName,
       quantity: stock?.quantity,
-      key: `${index}-${stockIndex}`, // Unique key for React
+      key: `${index}-${stockIndex}`,
     }));
 
     return formattedStockItems;
