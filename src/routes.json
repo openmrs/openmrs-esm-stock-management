@@ -33,7 +33,8 @@
     },
     {
       "name": "stock-management-app-menu-item",
-      "component": "stockManagementAppMenuItem"
+      "component": "stockManagementAppMenuItem",
+      "slot": "app-menu-item-slot"
     },
     {
       "name": "delete-stock-rule-modal",
