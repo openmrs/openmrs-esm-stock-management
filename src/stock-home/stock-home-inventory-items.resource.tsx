@@ -22,7 +22,7 @@ export function useStockInventoryItems(v?: ResourceRepresentation) {
   }, []);
 
   return {
-    items: items.results,
+    items: items.results ?? [],
     isLoading,
     isError,
   };
