@@ -114,9 +114,7 @@ function StockSourcesItems() {
                 >
                   <StockSourcesFilter />
                 </div>
-                <TableToolbarMenu>
-                  <TableToolbarAction onClick={""}>Refresh</TableToolbarAction>
-                </TableToolbarMenu>
+
                 <AddStockSourceActionButton />
               </TableToolbarContent>
             </TableToolbar>

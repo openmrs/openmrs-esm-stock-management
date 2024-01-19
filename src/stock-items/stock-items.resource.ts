@@ -50,6 +50,7 @@ export interface StockItemPackagingUOMFilter extends ResourceFilterCriteria {
 export interface StockBatchFilter extends ResourceFilterCriteria {
   stockItemUuid?: string | null | undefined;
   excludeExpired?: boolean | null;
+  includeStockItemName?: "true" | "false" | "0" | "1";
 }
 
 export interface StockInventoryResult
