@@ -30,6 +30,10 @@
     {
       "name": "delete-stock-user-scope-modal",
       "component": "deleteUserScopeModal"
+    },
+    {
+      "name": "delete-stock-rule-modal",
+      "component": "deleteStockRuleModal"
     }
   ],
   "pages": [

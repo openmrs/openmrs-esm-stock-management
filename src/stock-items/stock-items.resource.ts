@@ -301,6 +301,7 @@ export function importStockItem(item: FormData) {
 // stock rules
 // getStockRules
 export function useStockRules(filter: StockRuleFilter) {
+  console.warn("Rules filter: " + JSON.stringify(filter));
   const apiUrl = `ws/rest/v1/stockmanagement/stockrule${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
@@ -309,8 +310,14 @@ export function useStockRules(filter: StockRuleFilter) {
     Error
   >(apiUrl, openmrsFetch);
 
+  // return {
+  //   items: data.data ? data.data : [],
+  //   isLoading,
+  //   isError: error,
+  // };
+
   return {
-    items: data.data ? data.data : [],
+    items: data?.data || <PageableResult<StockRule>>{},
     isLoading,
     isError: error,
   };
