@@ -11,7 +11,7 @@
   @extend .container;
 }
 
-.billHistoryContainer {
+.tilesContainer {
   background-color: $ui-02;
   border: 1px solid $ui-03;
   border-bottom: none;
@@ -146,7 +146,6 @@
 
 .cardContainer {
   display: flex;
-  max-width: 1200px;
   margin: 0 auto;
 }
 

@@ -24,7 +24,6 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   });
 
   const { items, isLoading, isError } = useStockItems(stockItemFilter);
-
   const pagination = usePagination(items.results, currentPageSize);
 
   useEffect(() => {

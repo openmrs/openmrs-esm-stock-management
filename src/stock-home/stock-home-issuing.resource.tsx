@@ -7,7 +7,7 @@ export function useStockIssuing(filter: StockOperationFilter) {
   const { items, isLoading, isError } = useStockOperations(filter);
 
   const receivedItems = items?.results?.filter(
-    (item) => item?.operationType === "stockissue"
+    (item) => item?.operationType === "stockissue" && item?.status !== "COMPLETED"
   );
   return {
     items: receivedItems,

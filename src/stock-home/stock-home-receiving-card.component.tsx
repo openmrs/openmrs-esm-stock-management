@@ -6,7 +6,7 @@ import {
   Button,
 } from "@carbon/react";
 import {
-  isDesktop,
+  isDesktop, navigate,
   useLayoutType
 } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
@@ -14,12 +14,7 @@ import { Delivery, DeliveryTruck } from "@carbon/react/icons";
 import { ResourceRepresentation } from "../core/api/api";
 import { useStockReceiving } from "./stock-home-receiving.resource";
 
-interface StockHomeReceivingCardProps {
-  title: string;
-}
-const StockHomeReceivingCard: React.FC<StockHomeReceivingCardProps> = ({
-  title,
-}) => {
+const StockHomeReceivingCard = () => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === "tablet";
 
@@ -35,55 +30,50 @@ const StockHomeReceivingCard: React.FC<StockHomeReceivingCardProps> = ({
 
   if (items.length === 0) {
     return (
-      <Layer className={styles.emptyStateContainer}>
-        <Tile className={styles.tile}>
-          <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-            <h4>{title}</h4>
-          </div>
-          <p className={styles.content}>
-            {t("receivedNull", "No received to display")}
-          </p>
-          <Button onClick={() => console.log("testing CLick")} kind="ghost">
-            {t("receivedView", "View All")}
-          </Button>
-        </Tile>
-      </Layer>
+      <>
+        <p className={styles.content}>
+          {t("receivedNull", "No received to display")}
+        </p>
+        <Button onClick={() => console.log("testing CLick")} kind="ghost">
+          {t("receivedView", "View All")}
+        </Button>
+      </>
     );
   }
 
   return (
-    <div className={styles.billHistoryContainer}>
-      <Layer>
-        <Tile>
-          <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-            <h4>{title}</h4>
+    <>
+      {items.map((item, index) =>
+        item?.stockOperationItems.map((stock) => (
+          <div className={styles.card} key={index}>
+            <div className={styles.colorLineBlue} />
+            <div className={styles.icon}>
+              <Delivery size={40} color={"#0F62FE"} />
+            </div>
+            <div className={styles.cardText}>
+              <p>
+                {item?.status} · {item?.sourceName} ·{" "}
+                {item?.destinationName}
+              </p>
+              <p>
+                <strong>{stock?.stockItemName}</strong>{" "}
+                {stock?.stockItemPackagingUOMName}, {stock?.quantity}
+              </p>
+            </div>
           </div>
-          {items.map((item, index) =>
-            item?.stockOperationItems.map((stock) => (
-              <div className={styles.card} key={index}>
-                <div className={styles.colorLineBlue} />
-                <div className={styles.icon}>
-                  <Delivery size={40} color={"#0F62FE"} />
-                </div>
-                <div className={styles.cardText}>
-                  <p>
-                    {item?.status} · {item?.sourceName} ·{" "}
-                    {item?.destinationName}
-                  </p>
-                  <p>
-                    <strong>{stock?.stockItemName}</strong>{" "}
-                    {stock?.stockItemPackagingUOMName}, {stock?.quantity}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
-          <Button onClick={() => console.log("testing CLick")} kind="ghost">
-            {t("receivedView", "View All")}
-          </Button>
-        </Tile>
-      </Layer>
-    </div>
+        ))
+      )}
+      <Button
+        onClick={() => {
+          navigate({
+            to: `${window.getOpenmrsSpaBase()}stock-management/orders`,
+          });
+        }}
+        kind="ghost"
+      >
+        {t("receivedView", "View All")}
+      </Button>
+    </>
   );
 };
 
