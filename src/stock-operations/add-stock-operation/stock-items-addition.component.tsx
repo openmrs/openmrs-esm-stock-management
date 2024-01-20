@@ -20,17 +20,11 @@ import { getStockOperationUniqueId } from "../stock-operation.utils";
 import { useTranslation } from "react-i18next";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  baseStockOperationSchema,
-  stockItemTableSchema,
-  stockOperationItemsSchema,
-  useValidationSchema,
-} from "./validationSchema";
+import { useValidationSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
 import { Add, ArrowRight } from "@carbon/react/icons";
 import styles from "./stock-items-addition.component.scss";
 import { errorAlert } from "../../core/utils/alert";
-import { z } from "zod";
 import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 
 interface StockItemsAdditionProps {
@@ -57,6 +51,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   model,
   onSave,
   operation,
+  isEditing,
 }) => {
   const { t } = useTranslation();
   const { operationType } = operation ?? {};
@@ -70,12 +65,19 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       );
       return;
     }
+    if (isEditing) {
+      const existingItems = model.stockOperationItems || [];
+      item.stockItems.forEach((newItem, index) => {
+        if (existingItems[index]) {
+          newItem.uuid = existingItems[index].uuid;
+        }
+      });
+    }
 
     // const data = Object.assign(model, item);
     model.stockOperationItems = item.stockItems;
     await onSave?.(model);
   };
-
   const {
     handleSubmit,
     control,
