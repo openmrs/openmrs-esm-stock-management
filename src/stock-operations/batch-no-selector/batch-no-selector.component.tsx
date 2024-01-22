@@ -1,8 +1,10 @@
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode, useEffect, useMemo } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { useStockItemBatchNos } from "./batch-no-selector.resource";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
+import { useStockItemBatchInformationHook } from "../../stock-items/add-stock-item/batch-information/batch-information.resource";
+import { ResourceRepresentation } from "../../core/api/api";
 
 interface BatchNoSelectorProps<T> {
   placeholder?: string;
@@ -30,6 +32,26 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       ) ?? "",
     [stockItemBatchNos, props.batchUuid]
   );
+  const { items, setStockItemUuid } = useStockItemBatchInformationHook(
+    ResourceRepresentation.Default
+  );
+
+  useEffect(() => {
+    setStockItemUuid(props.stockItemUuid);
+  }, [props.stockItemUuid, setStockItemUuid]);
+
+  const stockItemBatchesInfo = stockItemBatchNos?.map((item) => {
+    const matchingBatch = items?.find(
+      (batch) => batch.batchNumber === item.batchNo
+    );
+    if (matchingBatch) {
+      return {
+        ...item,
+        quantity: matchingBatch.quantity ?? "",
+      };
+    }
+    return item;
+  });
 
   if (isLoading) return <InlineLoading status="active" />;
 
@@ -54,13 +76,15 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             controllerName={props.controllerName}
             id={props.name}
             size={"sm"}
-            items={stockItemBatchNos || []}
+            items={stockItemBatchesInfo || []}
             onChange={(data: { selectedItem?: StockBatchDTO }) => {
               props.onBatchNoChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockBatchDTO) => s.batchNo}
+            itemToString={(s: StockBatchDTO) =>
+              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? ""}` : ""
+            }
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
