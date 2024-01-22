@@ -1,19 +1,14 @@
-export interface RadioDrugOption {
+export interface RadioOption {
   label: string;
   value: boolean;
 }
 
-export interface RadioExpirationOption {
-  label: string;
-  value: string;
-}
-
-export const radioOptions: RadioDrugOption[] = [
+export const radioOptions: RadioOption[] = [
   { label: "Drug", value: true },
   { label: "Other", value: false },
 ];
 
-export const expirationOptions: RadioExpirationOption[] = [
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" },
+export const expirationOptions: RadioOption[] = [
+  { label: "Yes", value: true },
+  { label: "No", value: false },
 ];

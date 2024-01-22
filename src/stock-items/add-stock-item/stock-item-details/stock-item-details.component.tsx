@@ -58,7 +58,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
 
     const [isSaving, setIsSaving] = useState(false);
     const [isDrug, setIsDrug] = useState(false);
-    const [hasExpiration, setHasExpiration] = useState<boolean | null>();
+    const [hasExpiration, setHasExpiration] = useState(false);
 
     useEffect(() => {
       setIsDrug(model.isDrug ?? false);
@@ -76,6 +76,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         >
           <ControlledRadioButtonGroup
             control={control}
+            name="isDrug"
             controllerName="isDrug"
             legendText=""
             invalid={!!errors.isDrug}
@@ -83,8 +84,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             onChange={(selection: boolean) => {
               setIsDrug(selection);
             }}
-            name="isDrug"
-            options={radioOptions}
+            options={radioOptions} // Pass radioOptions directly
           />
         </FormGroup>
         {isDrug && (
@@ -155,7 +155,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               onChange={(selection: boolean) => {
                 setHasExpiration(selection);
               }}
-              options={expirationOptions}
+              options={expirationOptions} // Pass expirationOptions directly
             />
           </FormGroup>
 

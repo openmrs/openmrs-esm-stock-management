@@ -2,14 +2,13 @@ import React from "react";
 import { RadioButtonGroupProps } from "@carbon/react/lib/components/RadioButtonGroup/RadioButtonGroup";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { RadioButtonGroup, RadioButton } from "@carbon/react";
-import { radioOptions } from "../../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource";
+import { RadioOption } from "../../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource";
 
 interface ControlledRadioButtonGroupProps<T> extends RadioButtonGroupProps {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
-  defaultValue?: string;
-  options: any[];
+  options: RadioOption[]; // Change the type to RadioOption[]
 }
 
 const ControlledRadioButtonGroup = <T,>(
@@ -19,7 +18,6 @@ const ControlledRadioButtonGroup = <T,>(
     <Controller
       name={props.controllerName}
       control={props.control}
-      defaultValue={props.defaultValue}
       render={({ field: { onChange, value, ref } }) => (
         <RadioButtonGroup
           {...props}
@@ -36,10 +34,10 @@ const ControlledRadioButtonGroup = <T,>(
           defaultSelected={props.id}
           value={value}
         >
-          {radioOptions.map((option) => (
+          {props.options.map((option, index) => (
             <RadioButton
-              key={option.value}
-              id={`${name}-${option.value}`}
+              key={`${index}-${props.name}-${option.value}`}
+              id={`${props.name}-${option.value}`}
               labelText={option.label}
               value={option.value}
               checked={value === option.value}
