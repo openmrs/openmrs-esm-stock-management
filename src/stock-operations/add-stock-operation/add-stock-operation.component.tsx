@@ -53,7 +53,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const tabs: TabItem[] = [
     {
       name: isEditing
-        ? `${props.operation.name} Details`
+        ? `${props.model.operationTypeName} Details`
         : `${props.operation.name} Details`,
       component: (
         <BaseOperationDetails
@@ -102,7 +102,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           requiresDispatchAcknowledgement={false}
           actions={{
             onSave: async (model) => {
-              model["uuid"] = props?.operation?.uuid;
+              // TODO: Update
               await addOrEditStockOperation(
                 model,
                 props.isEditing,
