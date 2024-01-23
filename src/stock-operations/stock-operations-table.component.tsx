@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
@@ -26,8 +26,19 @@ import {
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
+  OverflowMenu,
+  OverflowMenuItem,
 } from "@carbon/react";
-import { ArrowRight, Edit, Add } from "@carbon/react/icons";
+import {
+  ArrowRight,
+  Departure,
+  ListChecked,
+  Save,
+  SendFilled,
+  Undo,
+  Edit,
+  Add,
+} from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {
@@ -36,7 +47,7 @@ import {
   StockOperationStatusRejected,
   StockOperationStatusReturned,
 } from "../core/api/types/stockOperation/StockOperationStatus";
-import { isDesktop } from "@openmrs/esm-framework";
+import { isDesktop, showModal } from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
@@ -93,7 +104,14 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   });
 
   let operations: StockOperationType[] | null | undefined;
-
+  const handleOnComplete = () => {
+    const dispose = showModal("stock-operation-dialog", {
+      title: "complete",
+      operation: operation,
+      requireReason: "",
+      closeModal: () => dispose(),
+    });
+  };
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
       ...stockOperation,
@@ -229,14 +247,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </div>
       ),
       actions: (
-        <Tooltip align="bottom" label="Edit Stock Operation">
-          <Button
-            type="button"
-            size="sm"
-            className="submitButton clear-padding-margin"
-            iconDescription={"View"}
-            kind="ghost"
-            renderIcon={Edit}
+        <OverflowMenu flipped={"true"} aria-label="overflow-menu">
+          <OverflowMenuItem itemText="Complete" onClick={handleOnComplete} />
+          <OverflowMenuItem
+            itemText="Edit"
             onClick={() => {
               launchAddOrEditDialog(
                 items[index],
@@ -247,10 +261,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               );
             }}
           />
-        </Tooltip>
+        </OverflowMenu>
       ),
     }));
-  }, [items, operation, operations]);
+  }, [items, operations]);
 
   if (isLoading) {
     return (
@@ -266,10 +280,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>
-        {t("panelDescription", "Stock operations to track movement of stock.")}
-      </TabPanel>
-
+      <TabPanel>Stock operations to track movement of stock.</TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
@@ -370,11 +381,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                 Date Created
                               </StructuredListCell>
                               <StructuredListCell head>
-                                Date Submitted
-                              </StructuredListCell>
-                              <StructuredListCell head>
                                 Date Completed
                               </StructuredListCell>
+                              <StructuredListCell head>
+                                Batch Number
+                              </StructuredListCell>
+                              <StructuredListCell head>Qty</StructuredListCell>
                             </StructuredListRow>
                           </StructuredListHead>
                           <StructuredListBody>
@@ -391,19 +403,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.submittedDate
-                                  ? formatDisplayDate(
-                                      items[index]?.submittedDate
-                                    )
-                                  : ""}
-                                &nbsp;
-                                {items[index]?.submittedDate ? "By" : ""}
-                                &nbsp;
-                                {items[index]?.submittedDate
-                                  ? items[index]?.creatorFamilyName
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
                                 {items[index]?.completedDate
                                   ? formatDisplayDate(
                                       items[index]?.completedDate
@@ -414,6 +413,20 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                 &nbsp;
                                 {items[index]?.completedDate
                                   ? items[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems
+                                      ?.map((item) => item.batchNo)
+                                      .join(" ")
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems
+                                      ?.map((item) => item.quantity)
+                                      .join(" ")
                                   : ""}
                               </StructuredListCell>
                             </StructuredListRow>
