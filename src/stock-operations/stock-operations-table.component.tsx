@@ -50,6 +50,33 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const operation: StockOperationType = useMemo(
+    () => ({
+      uuid: "",
+      name: "",
+      description: "",
+      operationType: "",
+      hasSource: false,
+      sourceType: "Location",
+      hasDestination: false,
+      destinationType: "Location",
+      hasRecipient: false,
+      recipientRequired: false,
+      availableWhenReserved: false,
+      allowExpiredBatchNumbers: false,
+      stockOperationTypeLocationScopes: [],
+      creator: undefined,
+      dateCreated: undefined,
+      changedBy: undefined,
+      dateChanged: undefined,
+      dateVoided: undefined,
+      voidedBy: undefined,
+      voidReason: "",
+      voided: false,
+    }),
+    []
+  );
+
   const {
     items,
     tableHeaders,
@@ -211,45 +238,19 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             kind="ghost"
             renderIcon={Edit}
             onClick={() => {
-              if (items[index]) {
-                // Compose the operation based on the selected stock item
-                const composedOperation: StockOperationType = {
-                  uuid: items[index].uuid,
-                  name: items[index].operationTypeName,
-                  description: "",
-                  operationType: items[index].operationType,
-                  hasSource: false,
-                  sourceType: "Location",
-                  hasDestination: false,
-                  destinationType: "Location",
-                  hasRecipient: false,
-                  recipientRequired: false,
-                  availableWhenReserved: false,
-                  allowExpiredBatchNumbers: false,
-                  stockOperationTypeLocationScopes: [],
-                  creator: undefined,
-                  dateCreated: undefined,
-                  changedBy: undefined,
-                  dateChanged: undefined,
-                  dateVoided: undefined,
-                  voidedBy: undefined,
-                  voidReason: "",
-                  voided: false,
-                };
-                launchAddOrEditDialog(
-                  items[index],
-                  true,
-                  composedOperation,
-                  operations,
-                  false
-                );
-              }
+              launchAddOrEditDialog(
+                items[index],
+                true,
+                operation,
+                operations,
+                false
+              );
             }}
           />
         </Tooltip>
       ),
     }));
-  }, [items, operations]);
+  }, [items, operation, operations]);
 
   if (isLoading) {
     return (
