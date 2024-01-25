@@ -21,8 +21,8 @@ interface QtyUomSelectorProps<T> {
 
 const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
   const { isLoading, isError, item } = useStockItem(props.stockItemUuid);
-  const initialSelectedItem = useMemo(
-    () => (item?.packagingUnits?.length > 0 ? item.packagingUnits[0] : []),
+  const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
+    () => (item?.packagingUnits?.length > 0 ? item.packagingUnits[0] : null),
     [item?.packagingUnits]
   );
 
@@ -33,6 +33,7 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
       <Controller
         name={props.controllerName}
         control={props.control}
+        defaultValue={initialSelectedItem.uuid ?? ""}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
             titleText={props.title}
@@ -41,13 +42,15 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
             controllerName={props.controllerName}
             id={props.name}
             size={"sm"}
-            items={item?.packagingUnits || []}
+            items={item?.packagingUnits ?? []}
             onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
               props.onStockPackageChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockItemPackagingUOMDTO) => s.packagingUomName}
+            itemToString={(s: StockItemPackagingUOMDTO) =>
+              s.packagingUomName ?? ""
+            }
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
