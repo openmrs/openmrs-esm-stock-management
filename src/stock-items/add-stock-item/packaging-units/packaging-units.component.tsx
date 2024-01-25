@@ -124,17 +124,15 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                <div style={{ minHeight: "10rem" }}>
-                  {items.length > 0 ? (
-                    <>
-                      {items.map((row: StockItemPackagingUOMDTO) => {
-                        return <PackagingUnitRow row={row} key={row.uuid} />;
-                      })}
-                    </>
-                  ) : (
-                    <PackagingUnitRow row={{}} key={stockItemUuid} />
-                  )}
-                </div>
+                {items.length > 0 ? (
+                  <>
+                    {items.map((row: StockItemPackagingUOMDTO) => {
+                      return <PackagingUnitRow row={row} key={row.uuid} />;
+                    })}
+                  </>
+                ) : (
+                  <PackagingUnitRow row={{}} key={stockItemUuid} />
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -207,19 +205,13 @@ const PackagingUnitRow: React.FC<{
         />
       </TableCell>
       <TableCell>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr .5fr",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center" }}>
           <ControlledNumberInput
             controllerName="factor"
             name="factor"
             control={control}
             id="factor"
             invalid={!!errors.factor}
-            // invalidText={errors?.factor?.message}
           />
           <Button
             type="button"
