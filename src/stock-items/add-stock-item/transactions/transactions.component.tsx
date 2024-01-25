@@ -4,9 +4,9 @@ import { useStockItemsTransactions } from "./transactions.resource";
 import { DataTableSkeleton, Link, Tile } from "@carbon/react";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
 import { ArrowLeft } from "@carbon/react/icons";
-import { URL_STOCK_OPERATION } from "../../stock-items-table.component";
 import DataList from "../../../core/components/table/table.component";
 import styles from "../../stock-items-table.scss";
+import { URL_STOCK_OPERATION } from "../../../constants";
 
 interface TransactionsProps {
   onSubmit?: () => void;

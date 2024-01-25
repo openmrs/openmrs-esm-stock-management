@@ -202,3 +202,4 @@ export function extractErrorMessagesFromResponse(errorObject) {
     errors.map((error) => error.message)
   );
 }
+

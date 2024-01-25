@@ -22,10 +22,10 @@ import {
   UseFieldArrayRemove,
   UseFormSetValue,
 } from "react-hook-form";
-import { URL_STOCK_ITEM } from "../../stock-items/stock-items-table.component";
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
+  URL_STOCK_ITEM,
   formatForDatePicker,
   today,
 } from "../../constants";
