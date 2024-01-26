@@ -11,6 +11,8 @@ import {
   DatePickerInput,
   DatePicker,
   ComboBox,
+  Select,
+  SelectItem,
 } from "@carbon/react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import styles from "./add-stock-user-role-scope.scss";
@@ -195,7 +197,9 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   };
 
   const onRoleChange = (data: { selectedItem: Role }) => {
-    const rootLocations = locations?.map((x) => x.uuid);
+    const rootLocations = locations
+      ?.filter((x) => !x.parentLocation)
+      ?.map((x) => x.uuid);
     const filteredLocations =
       formModel?.locations?.filter(
         (x) =>
@@ -207,7 +211,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     setFormModel({
       ...formModel,
       role: data.selectedItem?.display,
-      locations: [...filteredLocations],
+      locations: filteredLocations,
     });
   };
 
@@ -299,11 +303,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                     id="userName"
                     size="md"
                     labelText="User"
-                    value={
-                      formModel.userUuid
-                        ? `${formModel.userFamilyName} ${formModel.userGivenName}`
-                        : ``
-                    }
                     items={users?.results}
                     onChange={onUserChanged}
                     shouldFilterItem={(data) => true}
@@ -322,25 +321,30 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           </section>
           <section className={styles.section}>
             <div>
-              {rolesData?.results?.length > 0 && (
-                <>
-                  <span className={styles.subTitle}> Role </span>
-                  <ComboBox
-                    id="userRole"
-                    type="text"
-                    labelText="Role"
-                    size="md"
-                    onChange={onRoleChange}
-                    value={formModel?.role ?? ""}
-                    items={rolesData?.results ?? roles}
-                    shouldFilterItem={() => true}
-                    onFocus={() => rolesData?.results}
-                    onToggleClick={() => rolesData?.results}
-                    itemToString={(item) => (item ? item?.display : "")}
-                    placeholder="Choose a role"
-                  />
-                </>
-              )}
+              <Select
+                name="role"
+                className="select-field"
+                labelText={t("stockmanagement.userrolescope.edit.role")}
+                id="select-role"
+                value={formModel.role ?? "placeholder-item"}
+                onChange={onRoleChange}
+              >
+                <SelectItem
+                  disabled
+                  hidden
+                  value="placeholder-item"
+                  text="Choose a role"
+                />
+                {(user?.roles ?? roles)?.map((role) => {
+                  return (
+                    <SelectItem
+                      key={role.display}
+                      value={role.display}
+                      text={role.display}
+                    />
+                  );
+                })}
+              </Select>
             </div>
           </section>
           <section className={styles.section}>
