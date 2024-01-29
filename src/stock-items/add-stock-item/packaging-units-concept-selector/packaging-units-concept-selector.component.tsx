@@ -43,8 +43,8 @@ const PackagingUnitsConceptSelector = <T,>(
           size={"md"}
           items={dispensingUnits || []}
           onChange={(data: { selectedItem: Concept }) => {
-            props.onPackageUnitChange?.(data.selectedItem);
-            onChange(data.selectedItem.uuid);
+            props.onPackageUnitChange?.(data?.selectedItem);
+            onChange(data?.selectedItem?.uuid);
           }}
           initialSelectedItem={
             dispensingUnits?.find((p) => p.uuid === props.packageUnitUuid) || {}

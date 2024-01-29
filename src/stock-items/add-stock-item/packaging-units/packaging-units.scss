@@ -1,0 +1,21 @@
+@use '@carbon/styles/scss/colors';
+@use "@carbon/styles/scss/spacing";
+@use "@carbon/styles/scss/type";
+
+.packingTable {
+    min-height: 15rem;
+    display: block;
+}
+
+.packingTableCell {
+    display: flex;
+    align-items: center;
+}
+.packagingTableBody {
+    min-height: spacing.$spacing-13;
+
+}
+.packagingTableContainer {
+    min-height: 15rem;
+    display: block;
+}
