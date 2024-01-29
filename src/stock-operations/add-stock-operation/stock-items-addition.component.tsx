@@ -20,12 +20,7 @@ import { getStockOperationUniqueId } from "../stock-operation.utils";
 import { useTranslation } from "react-i18next";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  baseStockOperationSchema,
-  stockItemTableSchema,
-  stockOperationItemsSchema,
-  useValidationSchema,
-} from "./validationSchema";
+import { useValidationSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
 import { Add, ArrowRight } from "@carbon/react/icons";
 import styles from "./stock-items-addition.component.scss";
