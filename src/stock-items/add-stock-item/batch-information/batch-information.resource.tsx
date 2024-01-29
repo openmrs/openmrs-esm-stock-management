@@ -52,32 +52,6 @@ export function useStockItemBatchInformationHook(v?: ResourceRepresentation) {
 
   const { items, isLoading, isError } = useStockItemInventory(stockItemFilter);
 
-  const tableHeaders = useMemo(
-    () => [
-      {
-        key: "location",
-        header: "Location",
-      },
-      {
-        key: "batch",
-        header: "Batch Number",
-      },
-      {
-        key: "quantity",
-        header: "Quantity",
-      },
-      {
-        key: "packaging",
-        header: "Packaging Unit",
-      },
-      {
-        key: "expires",
-        header: "Expires",
-      },
-    ],
-    []
-  );
-
   return {
     items: items.results ?? [],
     totalCount: items.totalCount,
@@ -89,7 +63,6 @@ export function useStockItemBatchInformationHook(v?: ResourceRepresentation) {
     isLoading,
     isError,
     setSearchString,
-    tableHeaders,
     setStockItemUuid,
     setLocationUuid,
     setPartyUuid,

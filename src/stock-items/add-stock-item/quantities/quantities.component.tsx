@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../../../core/api/api";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
 import { DataTableSkeleton, Tile } from "@carbon/react";
@@ -12,19 +13,31 @@ interface StockQuantitiesProps {
 }
 
 const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
-  const {
-    isLoading,
-    items,
-    tableHeaders,
-
-    totalCount,
-    setCurrentPage,
-    setStockItemUuid,
-  } = useStockItemQuantitiesHook(ResourceRepresentation.Default);
+  const { isLoading, items, totalCount, setCurrentPage, setStockItemUuid } =
+    useStockItemQuantitiesHook(ResourceRepresentation.Default);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+
+  const tableHeaders = useMemo(
+    () => [
+      {
+        key: "location",
+        header: t("location", "Location"),
+      },
+      {
+        key: "quantity",
+        header: t("quantity", "Quantity"),
+      },
+      {
+        key: "packaging",
+        header: t("packagingUnit", "Packaging Unit"),
+      },
+    ],
+    []
+  );
 
   const tableRows = useMemo(() => {
     return items?.map((row, index) => ({
@@ -59,7 +72,9 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>No transactions to display</p>
+        <p className={styles.content}>
+          {t("quantityToDisplay", "No quantity to display")}
+        </p>
       </Tile>
     </div>
   );

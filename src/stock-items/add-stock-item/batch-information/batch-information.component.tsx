@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../../../core/api/api";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
 import { DataTableSkeleton, Tile } from "@carbon/react";
@@ -17,16 +18,41 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
   const {
     isLoading,
     items,
-    tableHeaders,
 
     totalCount,
     setCurrentPage,
     setStockItemUuid,
   } = useStockItemBatchInformationHook(ResourceRepresentation.Default);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+  const tableHeaders = useMemo(
+    () => [
+      {
+        key: "location",
+        header: t("location", "Location"),
+      },
+      {
+        key: "batch",
+        header: t("batchNumber", "Batch Number"),
+      },
+      {
+        key: "quantity",
+        header: t("quantity", "Quantity"),
+      },
+      {
+        key: "packaging",
+        header: t("packagingUnit", "Packaging Unit"),
+      },
+      {
+        key: "expires",
+        header: t("expires", "Expires"),
+      },
+    ],
+    []
+  );
 
   const tableRows = useMemo(() => {
     return items?.map((row, index) => ({
@@ -61,7 +87,9 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>No transactions to display</p>
+        <p className={styles.content}>
+          {t("batchInfoToDisplay", "No batch information to display")}
+        </p>
       </Tile>
     </div>
   );
