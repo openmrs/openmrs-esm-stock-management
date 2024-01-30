@@ -196,7 +196,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     console.info(roles);
   };
 
-  const onRoleChange = (data: { selectedItem: Role }) => {
+  const onRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const rootLocations = locations
       ?.filter((x) => !x.parentLocation)
       ?.map((x) => x.uuid);
@@ -210,7 +210,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
     setFormModel({
       ...formModel,
-      role: data.selectedItem?.display,
+      role: e.target.value,
       locations: filteredLocations,
     });
   };
