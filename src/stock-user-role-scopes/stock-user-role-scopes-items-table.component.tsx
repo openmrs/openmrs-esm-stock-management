@@ -17,8 +17,6 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  TableToolbarAction,
-  TableToolbarMenu,
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
 import { ArrowDownLeft, ArrowLeft } from "@carbon/react/icons";

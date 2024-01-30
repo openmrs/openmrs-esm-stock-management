@@ -13,8 +13,6 @@ import {
   TableToolbar,
   TableToolbarContent,
   Tile,
-  TableToolbarAction,
-  TableToolbarMenu,
   DataTableSkeleton,
   TableToolbarSearch,
 } from "@carbon/react";

@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
-  Button,
   DataTable,
   TabPanel,
   DataTableSkeleton,
@@ -21,7 +20,6 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  Tooltip,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,
@@ -29,16 +27,7 @@ import {
   OverflowMenu,
   OverflowMenuItem,
 } from "@carbon/react";
-import {
-  ArrowRight,
-  Departure,
-  ListChecked,
-  Save,
-  SendFilled,
-  Undo,
-  Edit,
-  Add,
-} from "@carbon/react/icons";
+import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {

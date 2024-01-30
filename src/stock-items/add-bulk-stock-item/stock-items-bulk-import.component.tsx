@@ -1,20 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Button,
-  ContentSwitcher,
   Form,
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Select,
-  SelectItem,
-  Switch,
-  TextArea,
-  Grid,
-  Checkbox,
-  TextInput,
-  IconButton,
   FileUploader,
 } from "@carbon/react";
 import { UploadStockItems } from "./stock-items-bulk-import.resource";

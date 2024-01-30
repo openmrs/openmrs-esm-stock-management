@@ -14,7 +14,6 @@ import {
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
-import { boolean } from "zod";
 import { extractErrorMessagesFromResponse } from "../constants";
 import { handleMutate } from "./swr-revalidation";
 export const addOrEditStockOperation = async (
@@ -47,13 +46,6 @@ export const addOrEditStockOperation = async (
 
       // Close overlay and open edit overlay
       closeOverlay();
-
-      // if (!isEditing) {
-      //   closeOverlay();
-
-      //   // launch edit dialog
-      //   // launchAddOrEditDialog(response.data, operation, true, operations);
-      // }
     }
   } catch (error) {
     const errorMessages = extractErrorMessagesFromResponse(error);

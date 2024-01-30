@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutType } from "@openmrs/esm-framework";
 import StockHomeInventoryCard from "./stock-home-inventory-card.component";
@@ -9,8 +9,7 @@ import styles from "./stock-home-detail-card.scss";
 
 const StockHomeDetailCards = () => {
   const isTablet = useLayoutType() === "tablet";
-
-  const cardTitles = ["Inventory Alerts", "Receiving", "Issuing"];
+  const { t } = useTranslation();
 
   return (
     <div className={styles.cardContainer}>
@@ -22,7 +21,7 @@ const StockHomeDetailCards = () => {
                 isTablet ? styles.tabletHeading : styles.desktopHeading
               }
             >
-              <h4>{"Inventory Alerts"}</h4>
+              <h4>{t("Inventory Alerts")}</h4>
             </div>
             <StockHomeInventoryCard />
           </Tile>
@@ -36,7 +35,7 @@ const StockHomeDetailCards = () => {
                 isTablet ? styles.tabletHeading : styles.desktopHeading
               }
             >
-              <h4>{"Receiving"}</h4>
+              <h4>{t("Receiving")}</h4>
             </div>
             <StockHomeReceivingCard />
           </Tile>
@@ -50,7 +49,7 @@ const StockHomeDetailCards = () => {
                 isTablet ? styles.tabletHeading : styles.desktopHeading
               }
             >
-              <h4>{"Issuing"}</h4>
+              <h4>{t("Issuing")}</h4>
             </div>
             <StockHomeIssuingCard />
           </Tile>

@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Save } from "@carbon/react/icons";
 
-import { Button, FormGroup, InlineLoading, RadioButton } from "@carbon/react";
+import { Button, FormGroup, InlineLoading } from "@carbon/react";
 import { StockItemDTO } from "../../../core/api/types/stockItem/StockItem";
 import DrugSelector from "../drug-selector/drug-selector.component";
 import { useForm } from "react-hook-form";

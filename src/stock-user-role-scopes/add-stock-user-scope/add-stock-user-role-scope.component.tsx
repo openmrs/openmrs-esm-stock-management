@@ -19,7 +19,6 @@ import {
   useRoles,
   useStockLocations,
   useStockOperationTypes,
-  useUser,
   useUsers,
 } from "../../stock-lookups/stock-lookups.resource";
 import { ResourceRepresentation } from "../../core/api/api";
@@ -58,28 +57,23 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
   const [roles, setRoles] = useState<Role[]>([]);
 
-  const { data: user } = useUser(model?.uuid);
-
   // operation types
   const {
     types: { results: stockOperations },
     isLoading,
-    isError,
   } = useStockOperationTypes();
 
   // get users
   const {
     items: users,
-    isError: error,
+
     isLoading: loadingUsers,
   } = useUsers({ v: ResourceRepresentation.Default });
 
   // get roles
-  const {
-    items: rolesData,
-    isError: rolesError,
-    isLoading: loadingRoles,
-  } = useRoles({ v: ResourceRepresentation.Default });
+  const { items: rolesData, isLoading: loadingRoles } = useRoles({
+    v: ResourceRepresentation.Default,
+  });
 
   //locations
   const {
