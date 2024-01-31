@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback } from "react";
 
 import { Button } from "@carbon/react";
 import { showModal } from "@openmrs/esm-framework";

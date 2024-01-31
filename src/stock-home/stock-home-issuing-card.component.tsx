@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Layer, Tile, Button } from "@carbon/react";
+import { Button } from "@carbon/react";
 import { navigate, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
 import { ResourceRepresentation } from "../core/api/api";
-import { DocumentImport, DeliveryTruck } from "@carbon/react/icons";
+import { DocumentImport } from "@carbon/react/icons";
 import { useStockIssuing } from "./stock-home-issuing.resource";
 
 const StockHomeIssuingCard = () => {

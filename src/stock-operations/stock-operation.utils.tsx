@@ -46,13 +46,6 @@ export const addOrEditStockOperation = async (
 
       // Close overlay and open edit overlay
       closeOverlay();
-
-      // if (!isEditing) {
-      //   closeOverlay();
-
-      //   // launch edit dialog
-      //   // launchAddOrEditDialog(response.data, operation, true, operations);
-      // }
     }
   } catch (error) {
     const errorMessages = extractErrorMessagesFromResponse(error);

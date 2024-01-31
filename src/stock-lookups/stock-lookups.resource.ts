@@ -1,8 +1,6 @@
 import {
   FetchResponse,
   OpenmrsResource,
-  getCurrentUser,
-  getLoggedInUser,
   openmrsFetch,
   useSession,
 } from "@openmrs/esm-framework";

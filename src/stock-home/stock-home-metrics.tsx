@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { InlineLoading } from "@carbon/react";
-import { ErrorState, formatDate, parseDate } from "@openmrs/esm-framework";
+import { ErrorState } from "@openmrs/esm-framework";
 import styles from "./stock-home.scss";
 import MetricsCard from "../core/components/card/metrics-card-component";
 import useStockList from "./useStockList";

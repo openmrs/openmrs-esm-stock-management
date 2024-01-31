@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Layer, Tile, Button } from "@carbon/react";
+import { Button } from "@carbon/react";
 import { navigate, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
-import { WarningHex, Warning } from "@carbon/react/icons";
-import { ResourceRepresentation } from "../core/api/api";
+import { WarningHex } from "@carbon/react/icons";
 import { useStockInventory } from "./stock-home-inventory-expiry.resource";
 import { useStockInventoryItems } from "./stock-home-inventory-items.resource";
 

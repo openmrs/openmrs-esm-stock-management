@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Layer, Tile, Button } from "@carbon/react";
-import { isDesktop, navigate, useLayoutType } from "@openmrs/esm-framework";
+import { Button } from "@carbon/react";
+import { navigate, useLayoutType } from "@openmrs/esm-framework";
 import styles from "./stock-home-detail-card.scss";
-import { Delivery, DeliveryTruck } from "@carbon/react/icons";
+import { Delivery } from "@carbon/react/icons";
 import { ResourceRepresentation } from "../core/api/api";
 import { useStockReceiving } from "./stock-home-receiving.resource";
 

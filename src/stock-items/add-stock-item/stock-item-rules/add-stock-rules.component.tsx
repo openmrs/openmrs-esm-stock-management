@@ -10,7 +10,6 @@ import {
   FormGroup,
   Checkbox,
   CheckboxGroup,
-  NumberInput,
 } from "@carbon/react";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import styles from "./add-stock-rules.scss";
@@ -58,11 +57,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
     });
   }, [stockItemUuid]);
 
-  const {
-    items: dispensingUnits,
-    isLoading,
-    isError,
-  } = useStockItemPackagingUOMs(stockItemFilter);
+  const { items: dispensingUnits } = useStockItemPackagingUOMs(stockItemFilter);
 
   //locations
   const {

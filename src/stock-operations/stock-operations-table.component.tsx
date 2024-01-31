@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
-  Button,
   DataTable,
   TabPanel,
   DataTableSkeleton,
@@ -21,7 +20,6 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  Tooltip,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,

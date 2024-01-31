@@ -56,7 +56,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
 
   const handleSavePackageUnits = () => {
     const { getValues } = packageUnitForm;
-    const { factor, packagingUomName, packagingUomUuid } = getValues();
+    const { factor, packagingUomUuid } = getValues();
     const payload: StockItemPackagingUOMDTO = {
       factor: factor,
       packagingUomUuid,

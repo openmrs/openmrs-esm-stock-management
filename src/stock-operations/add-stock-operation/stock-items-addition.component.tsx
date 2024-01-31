@@ -55,7 +55,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
 }) => {
   const { t } = useTranslation();
   const { operationType } = operation ?? {};
-  const { formContext, setFormContext } = useStockOperationContext();
+  const { formContext } = useStockOperationContext();
   const validationSchema = useValidationSchema(operationType);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
     if (item.stockItems.length == 0) {
@@ -75,7 +75,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     handleSubmit,
     control,
     setValue,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -86,7 +86,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     mode: "onSubmit",
   });
 
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     name: "stockItems",

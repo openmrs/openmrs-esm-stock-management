@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Tile } from "@carbon/react";
-import { ArrowRight, TextColor } from "@carbon/react/icons";
+import { ArrowRight } from "@carbon/react/icons";
 import styles from "./metrics-card.scss";
 import { ConfigurableLink } from "@openmrs/esm-framework";
 import isEmpty from "lodash-es/isEmpty";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import StockCommodityTabs from "../../../stock-tabs/commodity-tabs.component";
 dayjs.extend(isSameOrBefore);
 
 interface MetricsCardProps {
