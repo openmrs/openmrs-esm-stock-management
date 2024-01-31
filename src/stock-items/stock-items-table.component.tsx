@@ -219,18 +219,3 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 };
 
 export default StockItemsTableComponent;
-
-export const ROUTING_BASE_URL = "/";
-export const URL_STOCK_ITEMS = ROUTING_BASE_URL + "stock-items";
-export const URL_STOCK_ITEM = (uuid: string, tab?: string): string =>
-  `${URL_STOCK_ITEMS}/${uuid}${tab ? `?tab=${tab}` : ""}`;
-
-export const URL_USER_ROLE_SCOPES = ROUTING_BASE_URL + "user-role-scopes";
-export const URL_USER_ROLE_SCOPE = (uuid: string): string =>
-  `${URL_USER_ROLE_SCOPES}/${uuid}`;
-
-// Stock
-export const URL_STOCK_OPERATIONS = ROUTING_BASE_URL + "stock-operations";
-
-export const URL_STOCK_OPERATION = (uuid: string, tab?: string): string =>
-  `${URL_STOCK_OPERATIONS}/${uuid}${tab ? `?tab=${tab}` : ""}`;

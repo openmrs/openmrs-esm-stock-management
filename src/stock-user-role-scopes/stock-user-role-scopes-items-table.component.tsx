@@ -17,19 +17,17 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  TableToolbarAction,
-  TableToolbarMenu,
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
 import { ArrowDownLeft, ArrowLeft } from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
-import { URL_USER_ROLE_SCOPE } from "../stock-items/stock-items-table.component";
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import EditStockUserRoleActionsMenu from "./edit-stock-user-scope/edit-stock-user-scope-action-menu.component";
 import StockUserScopeDeleteActionMenu from "./delete-stock-user-scope/delete-stock-user-scope.component";
+import { URL_USER_ROLE_SCOPE } from "../constants";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();

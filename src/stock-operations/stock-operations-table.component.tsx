@@ -29,16 +29,7 @@ import {
   OverflowMenu,
   OverflowMenuItem,
 } from "@carbon/react";
-import {
-  ArrowRight,
-  Departure,
-  ListChecked,
-  Save,
-  SendFilled,
-  Undo,
-  Edit,
-  Add,
-} from "@carbon/react/icons";
+import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {
@@ -264,7 +255,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [items, operations]);
+  }, [handleOnComplete, items, operation, operations]);
 
   if (isLoading) {
     return (
