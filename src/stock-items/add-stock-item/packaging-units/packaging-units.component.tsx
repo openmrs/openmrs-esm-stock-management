@@ -29,6 +29,7 @@ import {
   showToast,
 } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
+import styles from "./packaging-units.scss";
 
 interface PackagingUnitsProps {
   onSubmit?: () => void;
@@ -104,8 +105,8 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         isSortable={false}
         useZebraStyles={true}
         render={({ headers, getHeaderProps, getTableProps }) => (
-          <TableContainer>
-            <Table {...getTableProps()}>
+          <TableContainer className={styles.packagingTableContainer}>
+            <Table {...getTableProps()} className={styles.packingTable}>
               <TableHead>
                 <TableRow>
                   {headers.map((header: any) => (
@@ -123,7 +124,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
                   <TableHeader style={{ width: "70%" }}></TableHeader>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody className={styles.packingTableBody}>
                 {items.length > 0 ? (
                   <>
                     {items.map((row: StockItemPackagingUOMDTO) => {
@@ -146,7 +147,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         kind="primary"
         renderIcon={Save}
       >
-        Save
+        {t("save", "Save")}
       </Button>
     </FormProvider>
   );
@@ -205,7 +206,7 @@ const PackagingUnitRow: React.FC<{
         />
       </TableCell>
       <TableCell>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div className={styles.packingTableCell}>
           <ControlledNumberInput
             controllerName="factor"
             name="factor"
