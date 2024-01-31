@@ -21,6 +21,7 @@ import {
   useRoles,
   useStockLocations,
   useStockOperationTypes,
+  useUser,
   useUsers,
 } from "../../stock-lookups/stock-lookups.resource";
 import { ResourceRepresentation } from "../../core/api/api";
@@ -58,6 +59,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
 
   const [roles, setRoles] = useState<Role[]>([]);
+
+  const { data: user } = useUser(model?.uuid);
 
   // operation types
   const {
