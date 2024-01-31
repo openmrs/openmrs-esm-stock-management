@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { ButtonSkeleton, OverflowMenu, OverflowMenuItem } from "@carbon/react";
 import { OverflowMenuVertical } from "@carbon/react/icons";
 import {
@@ -21,13 +21,26 @@ const StockOperationTypesSelector: React.FC<
     isError,
   } = useStockOperationTypes();
   const { userRoles } = useUserRoles();
-  const allowedOperationTypeUuids =
-    userRoles?.operationTypes.map((userRole) => userRole.operationTypeUuid) ??
-    [];
+
+  const filterOperationTypes = useMemo(() => {
+    const applicablePrivilegeScopes =
+      userRoles?.operationTypes?.map((p) => p.operationTypeUuid) || [];
+    const uniqueApplicablePrivilegeScopes = [
+      ...new Set(applicablePrivilegeScopes),
+    ];
+
+    return (
+      createOperationTypes?.filter((p) =>
+        uniqueApplicablePrivilegeScopes.includes(p.uuid)
+      ) || []
+    );
+  }, [createOperationTypes, userRoles]);
+
+  useEffect(() => {
+    onOperationLoaded?.(filterOperationTypes);
+  }, [filterOperationTypes, onOperationLoaded]);
 
   if (isLoading || isError) return <ButtonSkeleton />;
-
-  onOperationLoaded(createOperationTypes);
 
   return (
     <OverflowMenu
@@ -49,21 +62,17 @@ const StockOperationTypesSelector: React.FC<
         whiteSpace: "nowrap",
       }}
     >
-      {createOperationTypes
+      {filterOperationTypes
         .sort((a, b) => a.name.localeCompare(b.name))
-        .map((operation) => {
-          if (allowedOperationTypeUuids?.includes(operation.uuid)) {
-            return (
-              <OverflowMenuItem
-                key={operation.uuid}
-                itemText={operation.name}
-                onClick={() => {
-                  onOperationTypeSelected?.(operation);
-                }}
-              />
-            );
-          }
-        })}
+        .map((operation) => (
+          <OverflowMenuItem
+            key={operation.uuid}
+            itemText={operation.name}
+            onClick={() => {
+              onOperationTypeSelected?.(operation);
+            }}
+          />
+        ))}
     </OverflowMenu>
   );
 };
