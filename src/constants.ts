@@ -98,8 +98,8 @@ export const PACKAGING_UNITS_CODED_CONCEPT_ID =
 export const STOCK_ITEM_CATEGORY_CONCEPT_ID =
   "6d24eb6e-b42f-4706-ab2d-ae4472161f6a";
 
-export const STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND = false;
-export const STOCK_OPERATION_PRINT_DISABLE_COSTS = false;
+export const STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND = true;
+export const STOCK_OPERATION_PRINT_DISABLE_COSTS = true;
 export const HEALTH_CENTER_NAME = "Health Center";
 export const PRINT_LOGO =
   "moduleResources/stockmanagement/assets/print-logo.svg";
