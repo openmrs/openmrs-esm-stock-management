@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
+  Button,
   DataTable,
   TabPanel,
   DataTableSkeleton,
@@ -20,6 +21,7 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
+  Tooltip,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,
@@ -27,7 +29,16 @@ import {
   OverflowMenu,
   OverflowMenuItem,
 } from "@carbon/react";
-import { ArrowRight } from "@carbon/react/icons";
+import {
+  ArrowRight,
+  Departure,
+  ListChecked,
+  Save,
+  SendFilled,
+  Undo,
+  Edit,
+  Add,
+} from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {
@@ -44,6 +55,8 @@ import { StockOperationType } from "../core/api/types/stockOperation/StockOperat
 import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
 import { handleMutate } from "./swr-revalidation";
+import { importTranslation } from "../index";
+
 
 interface StockOperationsTableProps {
   status?: string;
@@ -408,16 +421,72 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                               </StructuredListCell>
                               <StructuredListCell>
                                 {items[index]?.stockOperationItems
-                                  ? items[index].stockOperationItems
-                                      ?.map((item) => item.batchNo)
-                                      .join(" ")
+                                  ? items[index].stockOperationItems?.map(
+                                      (item) => item.batchNo
+                                    )[0]
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
                                 {items[index]?.stockOperationItems
-                                  ? items[index].stockOperationItems
-                                      ?.map((item) => item.quantity)
-                                      .join(" ")
+                                  ? items[index].stockOperationItems?.map(
+                                      (item) => item.quantity
+                                    )[0]
+                                  : ""}
+                              </StructuredListCell>
+                            </StructuredListRow>
+                            <StructuredListRow>
+                              <StructuredListCell noWrap>
+                                {items[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? formatDisplayDate(items[index]?.dateCreated)
+                                  : ""}
+                                &nbsp;
+                                {items[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? "By"
+                                  : ""}
+                                &nbsp;
+                                {items[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? formatDisplayDate(
+                                      items[index]?.completedDate
+                                    )
+                                  : ""}
+                                &nbsp;
+                                {items[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? "By"
+                                  : ""}
+                                &nbsp;
+                                {items[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? items[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems?.map(
+                                      (item) => item.batchNo
+                                    )[1]
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems?.map(
+                                      (item) => item.quantity
+                                    )[1]
                                   : ""}
                               </StructuredListCell>
                             </StructuredListRow>
