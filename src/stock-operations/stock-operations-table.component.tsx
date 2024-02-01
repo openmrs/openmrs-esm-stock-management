@@ -43,6 +43,7 @@ import { initialStockOperationValue } from "../core/utils/utils";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
+import { handleMutate } from "./swr-revalidation";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -100,6 +101,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       requireReason: "",
       closeModal: () => dispose(),
     });
+    handleMutate("ws/rest/v1/stockmanagement/stockoperation");
   };
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
