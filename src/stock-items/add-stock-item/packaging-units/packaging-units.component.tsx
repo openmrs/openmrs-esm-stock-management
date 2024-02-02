@@ -198,7 +198,7 @@ const PackagingUnitRow: React.FC<{
     <TableRow>
       <TableCell>
         <PackagingUnitsConceptSelector
-          controllerName="packagingUomUuid"
+          controllerName={row.uuid ?? "packagingUomUuid"}
           name="packagingUomUuid"
           control={control}
           invalid={!!errors.packagingUomUuid}
