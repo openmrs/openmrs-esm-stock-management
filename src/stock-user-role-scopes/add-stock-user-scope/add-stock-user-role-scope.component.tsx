@@ -36,6 +36,11 @@ import { OpenMRSLocation } from "../../core/api/types/Location";
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
+  INVENTORY_ADMNISTRATOR_ROLE_UUID,
+  INVENTORY_CLERK_ROLE_UUID,
+  INVENTORY_DISPENSING_ROLE_UUID,
+  INVENTORY_MANAGER_ROLE_UUID,
+  INVENTORY_REPORTING_ROLE_UUID,
   formatForDatePicker,
   today,
 } from "../../constants";
@@ -79,7 +84,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const { items: rolesData, isLoading: loadingRoles } = useRoles({
     v: ResourceRepresentation.Default,
   });
-
   //locations
   const {
     locations: { results: locations },
@@ -187,8 +191,19 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   );
 
   const onUserChanged = (data: { selectedItem: User }) => {
+    const stockRolesUUIDs = [
+      INVENTORY_CLERK_ROLE_UUID,
+      INVENTORY_MANAGER_ROLE_UUID,
+      INVENTORY_DISPENSING_ROLE_UUID,
+      INVENTORY_REPORTING_ROLE_UUID,
+      INVENTORY_ADMNISTRATOR_ROLE_UUID,
+    ];
+
+    const filteredStockRoles = data.selectedItem?.roles.filter((role) =>
+      stockRolesUUIDs.includes(role.uuid)
+    );
     setFormModel({ ...formModel, userUuid: data.selectedItem?.uuid });
-    setRoles(data.selectedItem?.roles ?? []);
+    setRoles(filteredStockRoles ?? []);
 
     console.info(roles);
   };
@@ -245,8 +260,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const addStockUserRole = async (e) => {
     e.preventDefault();
 
-    // console.info(formModel);
-
     createOrUpdateUserRoleScope(formModel).then(
       (res) => {
         handleMutate("ws/rest/v1/stockmanagement/userrolescope");
@@ -295,11 +308,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
             <div>
               {users?.results?.length > 0 && (
                 <>
-                  <span className={styles.subTitle}>User</span>
+                  <span className={styles.subTitle}>{t("user", "User")}</span>
                   <ComboBox
                     id="userName"
                     size="md"
-                    labelText="User"
+                    labelText={t("user", "User")}
                     items={users?.results}
                     onChange={onUserChanged}
                     shouldFilterItem={(data) => true}
@@ -321,7 +334,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               <Select
                 name="role"
                 className="select-field"
-                labelText={t("stockmanagement.userrolescope.edit.role")}
+                labelText={t("role", "Role")}
                 id="select-role"
                 value={formModel.role ?? "placeholder-item"}
                 onChange={onRoleChange}
@@ -330,7 +343,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                   disabled
                   hidden
                   value="placeholder-item"
-                  text="Choose a role"
+                  text={t("Choose a role")}
                 />
                 {(user?.roles ?? roles)?.map((role) => {
                   return (
@@ -349,7 +362,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               <Checkbox
                 onChange={onEnabledChanged}
                 checked={formModel?.enabled}
-                labelText={`Enabled ?`}
+                labelText={t(`Enabled ?`)}
                 value={model?.enabled}
                 id="chk-userEnabled"
               />
@@ -358,7 +371,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                 name="isPermanent"
                 checked={formModel?.permanent}
                 value={model?.permanent}
-                labelText={`Permanent ?`}
+                labelText={t(`Permanent ?`)}
                 id="chk-userPermanent"
               />
 
@@ -394,10 +407,16 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           <br />
           <section className={styles.section}>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span className={styles.sectionTitle}> Stock Operations</span>
+              <span className={styles.sectionTitle}>
+                {" "}
+                {t("stockOperation", "Stock Operations")}
+              </span>
               <div className={styles.hr} />
               <span className={styles.subTitle}>
-                The role will be applicable to only selected stock operations.
+                {t(
+                  "roleDescription",
+                  "The role will be applicable to only selected stock operations."
+                )}
               </span>
             </div>
           </section>
@@ -429,11 +448,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           <br />
           <section className={styles.section}>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span className={styles.sectionTitle}> Locations</span>
+              <span className={styles.sectionTitle}> {t("Locations")}</span>
               <div className={styles.hr} />
               <span className={styles.subTitle}>
-                Use the toggle to apply this scope to the locations under the
-                selected location.
+                {t(
+                  "Use the toggle to apply this scope to the locations under the selected location."
+                )}
               </span>
             </div>
           </section>
