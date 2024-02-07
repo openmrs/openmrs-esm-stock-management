@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
 import { Select, SelectItem, SelectSkeleton } from "@carbon/react";
@@ -24,6 +24,8 @@ interface DispensingPackageMeasurementProps<T> {
 const DispensingPackageMeasurement = <T,>(
   props: DispensingPackageMeasurementProps<T>
 ) => {
+  const [item, setItem] = useState("");
+
   if (props.isLoading) return <SelectSkeleton />;
 
   if (!(props.packagingUnits && props.packagingUnits.length > 0)) return <></>;
@@ -42,22 +44,27 @@ const DispensingPackageMeasurement = <T,>(
           onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
             props.onDispensingUnitPackagingUoMUuidChange?.(data?.selectedItem);
             onChange(data?.selectedItem?.uuid);
+            setItem(data?.selectedItem?.uuid);
           }}
           ref={ref}
-          value={value || ""}
+          value={item}
           invalid={props.invalid}
           invalidText={props.invalidText}
         >
-          {props.placeholder && (
+          {!item ? (
             <SelectItem disabled hidden value={null} text={props.placeholder} />
+          ) : (
+            ""
           )}
-          {props.packagingUnits?.map((uom) => {
+          {props.packagingUnits?.map((uom, index) => {
             return (
               <SelectItem
-                key={uom.uuid}
+                key={`${index}-${uom.uuid}`}
                 value={uom.uuid}
-                text={uom.packagingUomName ?? ""}
-              />
+                text={uom.packagingUomName}
+              >
+                {uom?.packagingUomName}
+              </SelectItem>
             );
           })}
         </Select>

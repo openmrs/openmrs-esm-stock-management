@@ -64,7 +64,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       stockItemUuid,
     };
     createStockItemPackagingUnit(payload).then(
-      (resp) =>
+      () =>
         showSnackbar({
           title: t("savePackingUnitTitle", "Package Unit"),
           subtitle: t(
@@ -73,7 +73,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
           ),
           kind: "success",
         }),
-      (error) => {
+      () => {
         showSnackbar({
           title: t("savePackagingUnitErrorTitle", "Package Unit"),
           subtitle: t(
@@ -109,36 +109,34 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
             <Table {...getTableProps()} className={styles.packingTable}>
               <TableHead>
                 <TableRow>
-                  {headers.map((header: any) => (
+                  {headers.map((header) => (
                     <TableHeader
                       {...getHeaderProps({
                         header,
                         isSortable: false,
                       })}
-                      style={header?.styles}
-                      key={`${header.key}`}
+                      style={header.styles}
+                      key={header.key}
                     >
                       {header.header?.content ?? header.header}
                     </TableHeader>
                   ))}
-                  <TableHeader style={{ width: "70%" }}></TableHeader>
+                  <TableHeader style={{ width: "70%" }} />
                 </TableRow>
               </TableHead>
               <TableBody className={styles.packingTableBody}>
-                {items.length > 0 ? (
-                  <>
-                    {items.map((row: StockItemPackagingUOMDTO) => {
-                      return <PackagingUnitRow row={row} key={row.uuid} />;
-                    })}
-                  </>
-                ) : (
+                {items?.map((row: StockItemPackagingUOMDTO, index) => (
+                  <PackagingUnitRow row={row} key={`${index}-${row?.uuid}`} />
+                ))}
+                {items?.length === 0 && (
                   <PackagingUnitRow row={{}} key={stockItemUuid} />
                 )}
               </TableBody>
             </Table>
           </TableContainer>
         )}
-      ></DataTable>
+      />
+
       <Button
         name="save"
         type="submit"
@@ -198,22 +196,24 @@ const PackagingUnitRow: React.FC<{
     <TableRow>
       <TableCell>
         <PackagingUnitsConceptSelector
-          controllerName={row.uuid ?? "packagingUomUuid"}
+          row={row}
+          controllerName={"packagingUomUuid"}
           name="packagingUomUuid"
           control={control}
           invalid={!!errors.packagingUomUuid}
-          // invalidText={errors?.packagingUomUuid?.message}
         />
       </TableCell>
       <TableCell>
         <div className={styles.packingTableCell}>
           <ControlledNumberInput
+            row={row}
             controllerName="factor"
             name="factor"
             control={control}
-            id="factor"
+            id={`${row.uuid}-${key}`}
             invalid={!!errors.factor}
           />
+
           <Button
             type="button"
             size="sm"

@@ -4,9 +4,10 @@ import { Control, Controller, FieldValues } from "react-hook-form";
 import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
 import { PACKAGING_UNITS_CODED_CONCEPT_ID } from "../../../constants";
 import { ComboBox, TextInputSkeleton } from "@carbon/react";
+import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
 
 interface PackagingUnitsConceptSelectorProps<T> {
-  packageUnitUuid?: string;
+  row?: StockItemPackagingUOMDTO;
   onPackageUnitChange?: (unit: Concept) => void;
   title?: string;
   placeholder?: string;
@@ -39,23 +40,50 @@ const PackagingUnitsConceptSelector = <T,>(
           name={props.name}
           control={props.control}
           controllerName={props.controllerName}
-          id={props.name}
-          size={"md"}
-          items={dispensingUnits || []}
+          id={`${props.name}-${props.row.id}-${props.row.uuid}`}
+          size="md"
+          items={
+            props.row?.packagingUomUuid !== undefined
+              ? [
+                  ...(dispensingUnits.some(
+                    (x) => x.uuid === props.row?.packagingUomUuid
+                  )
+                    ? []
+                    : [
+                        {
+                          uuid: props.row?.packagingUomUuid,
+                          display: props.row?.packagingUomName,
+                        },
+                      ]),
+                  ...(dispensingUnits ?? []),
+                ]
+              : dispensingUnits || []
+          }
           onChange={(data: { selectedItem: Concept }) => {
             props.onPackageUnitChange?.(data?.selectedItem);
-            onChange(data?.selectedItem?.uuid);
+            onChange(data?.selectedItem?.uuid || ""); // Provide a default value if needed
           }}
           initialSelectedItem={
-            dispensingUnits?.find((p) => p.uuid === props.packageUnitUuid) || {}
+            props.row?.packagingUomUuid !== undefined
+              ? {
+                  uuid: props.row?.packagingUomUuid,
+                  display: props.row?.packagingUomName,
+                }
+              : null
+          }
+          selectedItem={
+            props.row?.packagingUomUuid !== undefined
+              ? {
+                  uuid: props.row?.packagingUomUuid,
+                  display: props.row?.packagingUomName,
+                }
+              : null
           }
           itemToString={(item?: Concept) =>
             item && item?.display ? `${item?.display}` : ""
           }
           shouldFilterItem={() => true}
-          value={dispensingUnits?.find((p) => p.uuid === value)?.display ?? ""}
           placeholder={props.placeholder}
-          ref={ref}
           invalid={props.invalid}
           invalidText={props.invalidText}
         />
