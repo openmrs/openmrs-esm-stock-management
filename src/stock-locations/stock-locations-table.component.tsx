@@ -17,7 +17,7 @@ interface StockLocationsTableProps {
   status?: string;
 }
 
-const StockLocations: React.FC<StockLocationsTableProps> = () => {
+const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
 
   const { tableHeaders, tableRows, items, isLoadingLocations } =
@@ -66,4 +66,4 @@ const StockLocations: React.FC<StockLocationsTableProps> = () => {
   );
 };
 
-export default StockLocations;
+export default StockLocationsItems;
