@@ -34,7 +34,7 @@ const StockManagementDashboardSideNav = () => {
     },
     {
       name: t("stockManagementSettings", "Stock Settings"),
-      link: "stock-settings",
+      link: `admin/maintenance/settings.list?show=Stockmanagement`,
     },
   ];
 
