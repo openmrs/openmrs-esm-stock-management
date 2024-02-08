@@ -100,7 +100,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
   return (
     <FormProvider {...packageUnitForm}>
       <DataTable
-        rows={items}
+        rows={[...items, {}]}
         headers={tableHeaders}
         isSortable={false}
         useZebraStyles={true}
@@ -131,6 +131,8 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
                 {items?.length === 0 && (
                   <PackagingUnitRow row={{}} key={stockItemUuid} />
                 )}
+                {/* Add an entire row at the bottom */}
+                <PackagingUnitRow row={{}} key="bottom-row" />
               </TableBody>
             </Table>
           </TableContainer>
