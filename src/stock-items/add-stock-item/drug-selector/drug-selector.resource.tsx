@@ -10,7 +10,6 @@ export function useDrugsHook(filter?: ConceptFilterCriteria) {
   const [conceptFilter, setConceptFilter] = useState<ConceptFilterCriteria>(
     filter || {
       v: ResourceRepresentation.Default,
-      limit: 10,
       startIndex: 0,
     }
   );
@@ -20,7 +19,7 @@ export function useDrugsHook(filter?: ConceptFilterCriteria) {
     isLoading,
   } = useDrugs(conceptFilter);
 
-  const [searchString, setSearchString] = useState(null);
+  const [searchString, setSearchString] = useState("");
 
   // Drug filter type
   const [limit, setLimit] = useState(filter?.limit || 10);

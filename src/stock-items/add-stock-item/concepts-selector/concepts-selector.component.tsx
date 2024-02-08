@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo, useState } from "react";
 import { Concept } from "../../../core/api/types/concept/Concept";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { useConcepts } from "../../../stock-lookups/stock-lookups.resource";
@@ -23,6 +23,20 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
     items: { results: concepts },
     isLoading,
   } = useConcepts({});
+  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (value) => {
+    setInputValue(value);
+  };
+
+  const filteredConcepts = useMemo(() => {
+    return inputValue.trim() === ""
+      ? concepts
+      : concepts.filter((concept) =>
+          concept.display
+            .toLowerCase()
+            .includes(inputValue.trim().toLowerCase())
+        );
+  }, [inputValue, concepts]);
 
   if (isLoading) return <TextInputSkeleton />;
 
@@ -30,7 +44,7 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
     <Controller
       name={props.controllerName}
       control={props.control}
-      render={({ field: { onChange, value, ref } }) => (
+      render={({ field: { onChange, ref } }) => (
         <ComboBox
           titleText={props.title}
           name={props.name}
@@ -38,7 +52,7 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}
-          items={concepts || []}
+          items={filteredConcepts}
           onChange={(data: { selectedItem: Concept }) => {
             props.onConceptUuidChange?.(data.selectedItem);
             onChange(data.selectedItem.uuid);
@@ -50,7 +64,8 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
             item && item?.display ? `${item?.display}` : ""
           }
           shouldFilterItem={() => true}
-          value={concepts?.find((p) => p.uuid === value)?.display ?? ""}
+          onInputChange={(event) => handleInputChange(event)}
+          inputValue={inputValue}
           placeholder={props.placeholder}
           ref={ref}
           invalid={props.invalid}

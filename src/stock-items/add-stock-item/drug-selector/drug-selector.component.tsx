@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo, useState } from "react";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { Drug } from "../../../core/api/types/concept/Drug";
 import { Control, Controller, FieldValues } from "react-hook-form";
@@ -19,14 +19,26 @@ interface DrugSelectorProps<T> {
 }
 
 const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
-  const { isLoading, drugList, setSearchString } = useDrugsHook();
+  const { isLoading, drugList } = useDrugsHook();
+
+  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (value) => {
+    setInputValue(value);
+  };
+  const filteredDrugs = useMemo(() => {
+    return inputValue.trim() === ""
+      ? drugList
+      : drugList.filter((drug) =>
+          drug.name.toLowerCase().includes(inputValue.trim().toLowerCase())
+        );
+  }, [inputValue, drugList]);
 
   return (
     <div>
       <Controller
         name={props.controllerName}
         control={props.control}
-        render={({ field: { onChange, value, ref } }) => (
+        render={({ field: { onChange, ref } }) => (
           <ComboBox
             titleText={props.title}
             name={props.name}
@@ -34,17 +46,17 @@ const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
             controllerName={props.controllerName}
             id={props.name}
             size={"md"}
-            items={drugList || []}
-            onChange={(data: { selectedItem: Drug }) => {
-              props.onDrugChanged?.(data.selectedItem);
-              onChange(data.selectedItem.uuid);
-            }}
+            items={filteredDrugs || []}
             initialSelectedItem={
               drugList?.find((p) => p.uuid === props.drugUuid) ?? ""
             }
             itemToString={drugName}
-            value={drugList?.find((p) => p.uuid === value)?.display ?? ""}
-            onInputChange={setSearchString}
+            onChange={(data: { selectedItem: Drug }) => {
+              props.onDrugChanged?.(data.selectedItem);
+              onChange(data.selectedItem.uuid);
+            }}
+            onInputChange={(event) => handleInputChange(event)}
+            inputValue={inputValue}
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
@@ -62,7 +74,6 @@ const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
     </div>
   );
 };
-
 function drugName(item: Drug): string {
   return item
     ? `${item.name}${item.concept ? ` (${item.concept.display})` : ""}`

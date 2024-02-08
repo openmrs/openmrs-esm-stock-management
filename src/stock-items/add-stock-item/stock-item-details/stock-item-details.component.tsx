@@ -33,7 +33,7 @@ interface StockItemDetailsProps {
 }
 
 const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
-  ({ model, onSave, isEditing, handleTabChange }, ref) => {
+  ({ model, onSave, isEditing, handleTabChange }) => {
     const { t } = useTranslation();
     const { handleSubmit, control, formState } = useForm<StockItemFormData>({
       defaultValues: model,
