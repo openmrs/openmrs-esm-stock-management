@@ -67,7 +67,7 @@ export const launchAddOrEditDialog = (
 ) => {
   launchOverlay(
     `${isEditing ? "Edit" : "New: "} ${
-      isEditing ? stockOperation.operationTypeName : operation.name
+      isEditing ? stockOperation?.operationTypeName : operation?.name
     }`,
     <AddStockOperation
       model={stockOperation}
@@ -77,7 +77,7 @@ export const launchAddOrEditDialog = (
       isEditing={isEditing}
       operation={operation}
       canEdit={
-        isEditing ? (stockOperation.status === "NEW" ? true : false) : true
+        isEditing ? (stockOperation?.status === "NEW" ? true : false) : true
       }
     />
   );

@@ -63,7 +63,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             onChange={(selectedItem: boolean) => {
               model.approvalRequired = selectedItem;
             }}
-            defaultSelected={model.approvalRequired}
+            defaultSelected={model?.approvalRequired}
           >
             <RadioButton
               value={true}
@@ -83,7 +83,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
           <TextInput
             style={{ margin: "5px" }}
             id="rbgApproveRequiredLbl"
-            value={model.approvalRequired ? t("yes", "Yes") : t("no", "No")}
+            value={model?.approvalRequired ? t("yes", "Yes") : t("no", "No")}
             readOnly={true}
             labelText={t(
               "doesThisTransactionRequireApproval",
@@ -95,9 +95,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
 
       {canEdit && !locked && (
         <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
-          {model.approvalRequired != null && (
+          {model?.approvalRequired != null && (
             <>
-              {!requiresDispatchAcknowledgement && !model.approvalRequired && (
+              {!requiresDispatchAcknowledgement && !model?.approvalRequired && (
                 <Button
                   name="complete"
                   type="button"
@@ -105,7 +105,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   className="submitButton"
                   kind="primary"
                   onClick={async () => {
-                    delete model.dateCreated;
+                    delete model?.dateCreated;
                     model.status = "COMPLETED";
                     setIsSaving(true);
                     await actions.onComplete(model);
@@ -116,7 +116,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   {t("complete", "Complete")}
                 </Button>
               )}
-              {requiresDispatchAcknowledgement && !model.approvalRequired && (
+              {requiresDispatchAcknowledgement && !model?.approvalRequired && (
                 <Button
                   name="dispatch"
                   type="button"
@@ -129,7 +129,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   {t("dispatch", "Dispatch")}
                 </Button>
               )}
-              {model.approvalRequired && (
+              {model?.approvalRequired && (
                 <Button
                   name="submit"
                   type="button"
@@ -151,8 +151,8 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             style={{ margin: "4px" }}
             disabled={isSaving}
             onClick={async () => {
-              delete model.dateCreated;
-              delete model.status;
+              delete model?.dateCreated;
+              delete model?.status;
               setIsSaving(true);
               await actions.onSave(model);
               setIsSaving(false);

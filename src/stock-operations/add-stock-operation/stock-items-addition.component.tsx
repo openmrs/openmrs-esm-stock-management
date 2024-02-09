@@ -79,7 +79,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      stockItems: model.stockOperationItems ?? [
+      stockItems: model?.stockOperationItems ?? [
         { uuid: `new-item-1`, id: `new-item-1` },
       ],
     },
@@ -171,7 +171,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       <div className={styles.tableContainer}>
         <DataTable
           rows={
-            model.stockOperationItems ?? [
+            model?.stockOperationItems ?? [
               { uuid: `new-item-1`, id: `new-item-1` },
             ]
           }
@@ -238,7 +238,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                 <TableBody>
                   <StockItemsAdditionRow
                     rows={
-                      model.stockOperationItems ?? [
+                      model?.stockOperationItems ?? [
                         { uuid: `new-item-1`, id: `new-item-1` },
                       ]
                     }

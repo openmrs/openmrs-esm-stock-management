@@ -7,6 +7,8 @@ import { ArrowLeft } from "@carbon/react/icons";
 import DataList from "../../../core/components/table/table.component";
 import styles from "../../stock-items-table.scss";
 import { URL_STOCK_OPERATION } from "../../../constants";
+import { StockOperationType } from "../../../core/api/types/stockOperation/StockOperationType";
+import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -28,6 +30,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
 
+  let operations: StockOperationType[] | null | undefined;
   const tableRows = useMemo(() => {
     return items?.map((stockItemTransaction) => ({
       ...stockItemTransaction,
@@ -96,10 +99,11 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
           }`
         : "",
       reference: stockItemTransaction?.stockOperationUuid ? (
-        <Link
-          to={URL_STOCK_OPERATION(stockItemTransaction?.stockOperationUuid)}
-          target={"_blank"}
-        >{`${stockItemTransaction?.stockOperationNumber}`}</Link>
+        <EditStockOperationActionMenu
+          operationUuid={stockItemTransaction?.stockOperationUuid}
+          operationNumber={stockItemTransaction?.stockOperationNumber}
+          operations={operations}
+        />
       ) : (
         <></>
       ),
@@ -117,7 +121,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
             }`
           : "",
     }));
-  }, [items]);
+  }, [items, operations]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
