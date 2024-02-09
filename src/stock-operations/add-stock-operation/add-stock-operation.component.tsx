@@ -23,6 +23,7 @@ import StockOperationCompleteDispatchButton from "../stock-operations-dialog/sto
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
 import { StockOperation } from "./stock-operation-context/useStockOperationContext";
 import { showToast } from "@openmrs/esm-framework";
+import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -46,6 +47,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     });
     return;
   }
+
+  let operations: StockOperationType[] | null | undefined;
 
   const tabs: TabItem[] = [
     {
@@ -257,7 +260,10 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.permission?.isRequisitionAndCanIssueStock && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationIssueStockButton operation={props?.model} />
+                  <StockOperationIssueStockButton
+                    operation={props.model}
+                    operations={operations}
+                  />
                 </div>
               )}
               {(props?.model?.permission?.isRequisitionAndCanIssueStock ||
