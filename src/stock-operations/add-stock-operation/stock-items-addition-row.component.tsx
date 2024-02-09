@@ -132,15 +132,15 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
 
   return (
     <>
-      {fields.map((row, index) => {
+      {fields?.map((row, index) => {
         const stockItemId = `stockItems.${index}.stockItemUuid`;
         return (
           <TableRow
             className={isDesktop ? styles.desktopRow : styles.tabletRow}
-            key={row.uuid}
+            key={row?.uuid}
           >
             <TableCell>
-              {canEdit && row.uuid.startsWith("new-item") && (
+              {canEdit && row?.uuid.startsWith("new-item") && (
                 <StockItemSelector
                   placeholder="Select an item"
                   controllerName={`stockItems.${index}.stockItemUuid`}
@@ -257,7 +257,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 <NumberInput
                   className="small-placeholder-text"
                   size="sm"
-                  id={`qty-${row.uuid}`}
+                  id={`qty-${row?.uuid}`}
                   allowEmpty={true}
                   onChange={(e: any) =>
                     setValue(`stockItems.${index}.quantity`, e?.target?.value)
