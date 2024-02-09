@@ -18,7 +18,7 @@ const StockOperationIssueStockButton: React.FC<
   const { t } = useTranslation();
   const type: StockOperationType = {
     uuid: "",
-    name: "",
+    name: "Stock Issue",
     description: "",
     operationType: "",
     hasSource: false,
@@ -41,7 +41,7 @@ const StockOperationIssueStockButton: React.FC<
   };
 
   const handleButtonClick = () => {
-    launchAddOrEditDialog(operation, true, type, operations, false);
+    launchAddOrEditDialog(operation, false, type, operations, false);
   };
 
   return (
