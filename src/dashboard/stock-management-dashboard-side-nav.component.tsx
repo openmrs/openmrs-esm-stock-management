@@ -13,24 +13,28 @@ const StockManagementDashboardSideNav = () => {
       link: "overview",
     },
     {
-      name: t("stockManagementOrders", "Orders"),
-      link: "orders",
+      name: t("stockManagementStockItems", "Stock Items"),
+      link: "stock-items",
     },
     {
-      name: t("stockManagementRequisitions", "Requisitions"),
-      link: "requisitions",
+      name: t("stockManagementOperations", "Stock Operations"),
+      link: "stock-operations",
     },
     {
-      name: t("stockManagementStockList", "Stock List"),
-      link: "stock-list",
+      name: t("stockManagementStockUserScopes", "Stock User Role Scopes"),
+      link: "stock-user-scopes",
     },
     {
-      name: t("stockManagementExpiredStock", "Expired Stock"),
-      link: "expired-stock",
+      name: t("stockManagementStockSources", "Stock Sources"),
+      link: "stock-sources",
     },
     {
-      name: t("stockManagementSettings", "Settings"),
-      link: "settings",
+      name: t("stockManagementLocations", "Stock Locations"),
+      link: "stock-locations",
+    },
+    {
+      name: t("stockManagementSettings", "Stock Settings"),
+      link: `admin/maintenance/settings.list?show=Stockmanagement`,
     },
   ];
 

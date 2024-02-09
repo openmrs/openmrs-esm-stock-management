@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import StockSourcesDeleteActionMenu from "./stock-sources-delete/stock-sources-delete.component";
 import EditStockSourceActionsMenu from "./edit-stock-source/edit-stock-source.component";
 
-function StockSourcesItems() {
+const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
 
   // get sourcess
@@ -197,6 +197,6 @@ function StockSourcesItems() {
       />
     </div>
   );
-}
+};
 
 export default StockSourcesItems;

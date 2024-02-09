@@ -34,12 +34,19 @@ const SideNavItemsList: React.FC<SideNavProps> = ({
                 key={index}
                 isActive={index === selectedIndex}
                 onClick={() => {
-                  onSelectTab(index); // Call onSelectTab to update selectedTab in the parent
-                  navigate({
-                    to: `${window.getOpenmrsSpaBase()}stock-management/${
-                      tab.link
-                    }`,
-                  });
+                  if (index === tabs.length - 1) {
+                    // Check if it's the last item in the list
+                    navigate({
+                      to: "/openmrs/admin/maintenance/settings.list?show=Stockmanagement",
+                    });
+                  } else {
+                    onSelectTab(index); // Call onSelectTab to update selectedTab in the parent
+                    navigate({
+                      to: `${window.getOpenmrsSpaBase()}stock-management/${
+                        tab.link
+                      }`,
+                    });
+                  }
                 }}
               >
                 {tab.name}
