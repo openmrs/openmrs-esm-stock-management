@@ -54,6 +54,7 @@ interface StockOperationsTableProps {
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
   const [operationTypeFilter, setOperationTypeFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const operation: StockOperationType = useMemo(
     () => ({
       uuid: "",
@@ -117,8 +118,22 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     return Array.from(types);
   }, [items]);
 
-  const handleDropdownChange = (event) => {
+  const statusList = useMemo(() => {
+    const types = new Set();
+    items?.forEach((item) => {
+      if (item?.status) {
+        types.add({ id: item.uuid, text: item.status });
+      }
+    });
+    return Array.from(types);
+  }, [items]);
+
+  const handleFilterTypeDropdownChange = (event) => {
     setOperationTypeFilter(event);
+  };
+
+  const handleStatusDropdownChange = (event) => {
+    setStatusFilter(event);
   };
 
   const tableRows = useMemo(() => {
@@ -324,7 +339,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     size="sm"
                     items={operationTypesList}
                     initialSelectedItem={operationTypesList[0]}
-                    onChange={handleDropdownChange}
+                    onChange={handleFilterTypeDropdownChange}
                     type="inline"
                     className={styles.toolbarDropdown}
                   />
@@ -332,12 +347,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 <Layer style={{ margin: "4px", display: "flex" }}>
                   <Dropdown
                     id="filterByStatus"
-                    titleText={t("filterByType", "Filter by Type:")}
+                    titleText={t("filterByStatus", "Filter by Status:")}
                     itemToString={(item) => (item ? item.text : "")}
                     size="sm"
                     items={operationTypesList}
                     initialSelectedItem={operationTypesList[0]}
-                    onChange={handleDropdownChange}
+                    onChange={handleStatusDropdownChange}
                     type="inline"
                     className={styles.toolbarDropdown}
                   />
