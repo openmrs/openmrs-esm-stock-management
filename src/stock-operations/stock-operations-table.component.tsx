@@ -1,10 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
   DataTable,
   TabPanel,
   DataTableSkeleton,
+  Dropdown,
+  Layer,
   Pagination,
   Table,
   TableBody,
@@ -29,7 +31,7 @@ import {
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
-import styles from "../stock-items/stock-items-table.scss";
+import styles from "./stock-operations-table.scss";
 import {
   StockOperationStatusCancelled,
   StockOperationStatusNew,
@@ -51,6 +53,7 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const [operationTypeFilter, setOperationTypeFilter] = useState("");
   const operation: StockOperationType = useMemo(
     () => ({
       uuid: "",
@@ -94,7 +97,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   });
 
   let operations: StockOperationType[] | null | undefined;
-  const handleOnComplete = () => {
+  const handleOnComplete = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "complete",
       operation: operation,
@@ -102,7 +105,22 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       closeModal: () => dispose(),
     });
     handleMutate("ws/rest/v1/stockmanagement/stockoperation");
+  }, [operation]);
+
+  const operationTypesList = useMemo(() => {
+    const types = new Set();
+    items?.forEach((item) => {
+      if (item?.operationTypeName) {
+        types.add({ id: item.uuid, text: item.operationTypeName });
+      }
+    });
+    return Array.from(types);
+  }, [items]);
+
+  const handleDropdownChange = (event) => {
+    setOperationTypeFilter(event);
   };
+
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
       ...stockOperation,
@@ -298,9 +316,35 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
+                <Layer style={{ margin: "4px", display: "flex" }}>
+                  <Dropdown
+                    id="filterByType"
+                    titleText={t("filterByType", "Filter by Type:")}
+                    itemToString={(item) => (item ? item.text : "")}
+                    size="sm"
+                    items={operationTypesList}
+                    initialSelectedItem={operationTypesList[0]}
+                    onChange={handleDropdownChange}
+                    type="inline"
+                    className={styles.toolbarDropdown}
+                  />
+                </Layer>
+                <Layer style={{ margin: "4px", display: "flex" }}>
+                  <Dropdown
+                    id="filterByStatus"
+                    titleText={t("filterByType", "Filter by Type:")}
+                    itemToString={(item) => (item ? item.text : "")}
+                    size="sm"
+                    items={operationTypesList}
+                    initialSelectedItem={operationTypesList[0]}
+                    onChange={handleDropdownChange}
+                    type="inline"
+                    className={styles.toolbarDropdown}
+                  />
+                </Layer>
                 <TableToolbarSearch
                   className={styles.patientListSearch}
-                  expanded
+                  // expanded
                   onChange={onInputChange}
                   placeholder="Filter Table"
                   size="sm"
@@ -326,7 +370,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 <TableRow>
                   <TableExpandHeader />
                   {headers.map(
-                    (header: any) =>
+                    (header) =>
                       header.key !== "details" && (
                         <TableHeader
                           {...getHeaderProps({
@@ -348,7 +392,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any, index) => {
+                {rows.map((row, index) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableExpandRow
@@ -358,7 +402,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                         {...getRowProps({ row })}
                       >
                         {row.cells.map(
-                          (cell: any) =>
+                          (cell) =>
                             cell?.info?.header !== "details" && (
                               <TableCell key={cell.id}>{cell.value}</TableCell>
                             )

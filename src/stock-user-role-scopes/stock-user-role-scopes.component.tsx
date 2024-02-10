@@ -4,7 +4,7 @@ import StockUserRoleScopesItems from "./stock-user-role-scopes-items-table.compo
 function StockUserScopes() {
   return (
     <div style={{ margin: "5px" }}>
-      <StockUserRoleScopesItems />;
+      <StockUserRoleScopesItems />
     </div>
   );
 }

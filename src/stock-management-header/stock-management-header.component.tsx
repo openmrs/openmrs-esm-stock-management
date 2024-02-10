@@ -15,8 +15,10 @@ export const StockManagementHeader: React.FC = () => {
       <div className={styles["left-justified-items"]}>
         <StockManagementIllustration />
         <div className={styles["page-labels"]}>
-          <p>{t("stockManagement", "Stock Management")}</p>
-          <p className={styles["page-name"]}>{t("home", "Home")}</p>
+          <p>{t("home", "Home")}</p>
+          <p className={styles["page-name"]}>
+            {t("stockManagement", "Stock Management")}
+          </p>
         </div>
       </div>
       <div className={styles["right-justified-items"]}>

@@ -143,7 +143,7 @@ function StockUserRoleScopesItems() {
               <TableHead>
                 <TableRow>
                   {headers.map(
-                    (header: any) =>
+                    (header) =>
                       header.key !== "details" && (
                         <TableHeader
                           {...getHeaderProps({
@@ -165,7 +165,7 @@ function StockUserRoleScopesItems() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any) => {
+                {rows.map((row) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableRow
@@ -175,7 +175,7 @@ function StockUserRoleScopesItems() {
                         {...getRowProps({ row })}
                       >
                         {row.cells.map(
-                          (cell: any) =>
+                          (cell) =>
                             cell?.info?.header !== "details" && (
                               <TableCell key={cell.id}>{cell.value}</TableCell>
                             )
