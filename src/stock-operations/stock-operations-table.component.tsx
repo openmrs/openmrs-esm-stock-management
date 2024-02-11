@@ -109,186 +109,191 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   }, [operation]);
 
   const operationTypesList = useMemo(() => {
-    const types = new Set();
-    items?.forEach((item) => {
-      if (item?.operationTypeName) {
-        types.add({ id: item.uuid, text: item.operationTypeName });
-      }
-    });
-    return Array.from(types);
+    const types = new Set(items?.map((item) => item.operationTypeName));
+    return Array.from(types).map((type) => ({ id: type, text: type }));
   }, [items]);
 
   const statusList = useMemo(() => {
-    const types = new Set();
-    items?.forEach((item) => {
-      if (item?.status) {
-        types.add({ id: item.uuid, text: item.status });
-      }
-    });
-    return Array.from(types);
+    const types = new Set(items?.map((item) => item.status));
+    return Array.from(types).map((type) => ({ id: type, text: type }));
   }, [items]);
 
-  const handleFilterTypeDropdownChange = (event) => {
-    setOperationTypeFilter(event);
+  const handleFilterTypeDropdownChange = (selectedItem) => {
+    setOperationTypeFilter(selectedItem ? selectedItem.text : "");
   };
 
-  const handleStatusDropdownChange = (event) => {
-    setStatusFilter(event);
+  const handleStatusDropdownChange = (selectedItem) => {
+    setStatusFilter(selectedItem ? selectedItem.text : "");
   };
 
   const tableRows = useMemo(() => {
-    return items?.map((stockOperation, index) => ({
-      ...stockOperation,
-      id: stockOperation?.uuid,
-      key: `key-${stockOperation?.uuid}`,
-      operationTypeName: `${stockOperation?.operationTypeName}`,
-      operationNumber: (
-        <EditStockOperationActionMenu
-          model={items[index]}
-          operations={operations}
-        />
-      ),
-      status: `${stockOperation?.status}`,
-      source: `${stockOperation?.sourceName ?? ""}`,
-      destination: `${stockOperation?.destinationName ?? ""}`,
-      location: (
-        <>
-          {" "}
-          {stockOperation?.sourceName ?? ""}{" "}
-          {stockOperation?.sourceName && stockOperation?.destinationName ? (
-            <ArrowRight size={16} />
-          ) : (
-            ""
-          )}{" "}
-          {stockOperation?.destinationName ?? ""}{" "}
-        </>
-      ),
-      responsiblePerson: `${
-        stockOperation?.responsiblePersonFamilyName ??
-        stockOperation?.responsiblePersonOther ??
-        ""
-      } ${stockOperation?.responsiblePersonGivenName ?? ""}`,
-      operationDate: formatDisplayDate(stockOperation?.operationDate),
-      details: (
-        <div className="tbl-expand-display-fields">
-          <div className="field-label">
-            <span className="field-title">Created</span>
-            <span className="field-desc">
-              <span className="action-date">
-                {formatDisplayDate(stockOperation?.dateCreated)}
-              </span>{" "}
-              By
-              <span className="action-by">
-                {stockOperation.creatorFamilyName ?? ""}{" "}
-                {stockOperation.creatorGivenName ?? ""}
+    return items
+      ?.filter((item) => {
+        return (
+          (operationTypeFilter
+            ? item.operationTypeName === operationTypeFilter
+            : true) && (statusFilter ? item.status === statusFilter : true)
+        );
+      })
+      .map((stockOperation, index) => ({
+        ...stockOperation,
+        id: stockOperation?.uuid,
+        key: `key-${stockOperation?.uuid}`,
+        operationTypeName: `${stockOperation?.operationTypeName}`,
+        operationNumber: (
+          <EditStockOperationActionMenu
+            model={items[index]}
+            operations={operations}
+          />
+        ),
+        status: `${stockOperation?.status}`,
+        source: `${stockOperation?.sourceName ?? ""}`,
+        destination: `${stockOperation?.destinationName ?? ""}`,
+        location: (
+          <>
+            {" "}
+            {stockOperation?.sourceName ?? ""}{" "}
+            {stockOperation?.sourceName && stockOperation?.destinationName ? (
+              <ArrowRight size={16} />
+            ) : (
+              ""
+            )}{" "}
+            {stockOperation?.destinationName ?? ""}{" "}
+          </>
+        ),
+        responsiblePerson: `${
+          stockOperation?.responsiblePersonFamilyName ??
+          stockOperation?.responsiblePersonOther ??
+          ""
+        } ${stockOperation?.responsiblePersonGivenName ?? ""}`,
+        operationDate: formatDisplayDate(stockOperation?.operationDate),
+        details: (
+          <div className="tbl-expand-display-fields">
+            <div className="field-label">
+              <span className="field-title">Created</span>
+              <span className="field-desc">
+                <span className="action-date">
+                  {formatDisplayDate(stockOperation?.dateCreated)}
+                </span>{" "}
+                By
+                <span className="action-by">
+                  {stockOperation.creatorFamilyName ?? ""}{" "}
+                  {stockOperation.creatorGivenName ?? ""}
+                </span>
               </span>
-            </span>
-          </div>
-          {stockOperation?.status !== StockOperationStatusNew &&
-            stockOperation?.status !== StockOperationStatusReturned &&
-            stockOperation?.submittedDate && (
+            </div>
+            {stockOperation?.status !== StockOperationStatusNew &&
+              stockOperation?.status !== StockOperationStatusReturned &&
+              stockOperation?.submittedDate && (
+                <div className="field-label">
+                  <span className="field-title">Submitted</span>
+                  <span className="field-desc">
+                    <span className="action-date">
+                      {formatDisplayDate(stockOperation?.submittedDate)}
+                    </span>{" "}
+                    By
+                    <span className="action-by">
+                      {stockOperation.submittedByFamilyName ?? ""}{" "}
+                      {stockOperation.submittedByGivenName ?? ""}
+                    </span>
+                  </span>
+                </div>
+              )}
+
+            {stockOperation?.completedDate && (
               <div className="field-label">
-                <span className="field-title">Submitted</span>
+                <span className="field-title">Completed</span>
                 <span className="field-desc">
                   <span className="action-date">
-                    {formatDisplayDate(stockOperation?.submittedDate)}
+                    {formatDisplayDate(stockOperation?.completedDate)}
                   </span>{" "}
                   By
                   <span className="action-by">
-                    {stockOperation.submittedByFamilyName ?? ""}{" "}
-                    {stockOperation.submittedByGivenName ?? ""}
+                    {stockOperation.completedByFamilyName ?? ""}{" "}
+                    {stockOperation.completedByGivenName ?? ""}
                   </span>
                 </span>
               </div>
             )}
 
-          {stockOperation?.completedDate && (
-            <div className="field-label">
-              <span className="field-title">Completed</span>
-              <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.completedDate)}
-                </span>{" "}
-                By
-                <span className="action-by">
-                  {stockOperation.completedByFamilyName ?? ""}{" "}
-                  {stockOperation.completedByGivenName ?? ""}
+            {stockOperation?.status === StockOperationStatusCancelled && (
+              <div className="field-label">
+                <span className="field-title">Cancelled</span>
+                <span className="field-desc">
+                  <span className="action-date">
+                    {formatDisplayDate(stockOperation?.cancelledDate)}
+                  </span>{" "}
+                  By
+                  <span className="action-by">
+                    {stockOperation.cancelledByFamilyName ?? ""}{" "}
+                    {stockOperation.cancelledByGivenName ?? ""}
+                  </span>
+                  <p>{stockOperation.cancelReason}</p>
                 </span>
-              </span>
-            </div>
-          )}
+              </div>
+            )}
 
-          {stockOperation?.status === StockOperationStatusCancelled && (
-            <div className="field-label">
-              <span className="field-title">Cancelled</span>
-              <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.cancelledDate)}
-                </span>{" "}
-                By
-                <span className="action-by">
-                  {stockOperation.cancelledByFamilyName ?? ""}{" "}
-                  {stockOperation.cancelledByGivenName ?? ""}
+            {stockOperation?.status === StockOperationStatusRejected && (
+              <div className="field-label">
+                <span className="field-title">Rejected</span>
+                <span className="field-desc">
+                  <span className="action-date">
+                    {formatDisplayDate(stockOperation?.rejectedDate)}
+                  </span>{" "}
+                  By
+                  <span className="action-by">
+                    {stockOperation.rejectedByFamilyName ?? ""}{" "}
+                    {stockOperation.rejectedByGivenName ?? ""}
+                  </span>
+                  <p>{stockOperation.rejectionReason}</p>
                 </span>
-                <p>{stockOperation.cancelReason}</p>
-              </span>
-            </div>
-          )}
+              </div>
+            )}
 
-          {stockOperation?.status === StockOperationStatusRejected && (
-            <div className="field-label">
-              <span className="field-title">Rejected</span>
-              <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.rejectedDate)}
-                </span>{" "}
-                By
-                <span className="action-by">
-                  {stockOperation.rejectedByFamilyName ?? ""}{" "}
-                  {stockOperation.rejectedByGivenName ?? ""}
+            {stockOperation?.status === StockOperationStatusReturned && (
+              <div className="field-label">
+                <span className="field-title">Returned</span>
+                <span className="field-desc">
+                  <span className="action-date">
+                    {formatDisplayDate(stockOperation?.returnedDate)}
+                  </span>{" "}
+                  By
+                  <span className="action-by">
+                    {stockOperation.returnedByFamilyName ?? ""}{" "}
+                    {stockOperation.returnedByGivenName ?? ""}
+                  </span>
+                  <p>{stockOperation.returnReason}</p>
                 </span>
-                <p>{stockOperation.rejectionReason}</p>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusReturned && (
-            <div className="field-label">
-              <span className="field-title">Returned</span>
-              <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.returnedDate)}
-                </span>{" "}
-                By
-                <span className="action-by">
-                  {stockOperation.returnedByFamilyName ?? ""}{" "}
-                  {stockOperation.returnedByGivenName ?? ""}
-                </span>
-                <p>{stockOperation.returnReason}</p>
-              </span>
-            </div>
-          )}
-        </div>
-      ),
-      actions: (
-        <OverflowMenu flipped={"true"} aria-label="overflow-menu">
-          <OverflowMenuItem itemText="Complete" onClick={handleOnComplete} />
-          <OverflowMenuItem
-            itemText="Edit"
-            onClick={() => {
-              launchAddOrEditDialog(
-                items[index],
-                true,
-                operation,
-                operations,
-                false
-              );
-            }}
-          />
-        </OverflowMenu>
-      ),
-    }));
-  }, [handleOnComplete, items, operation, operations]);
+              </div>
+            )}
+          </div>
+        ),
+        actions: (
+          <OverflowMenu flipped={"true"} aria-label="overflow-menu">
+            <OverflowMenuItem itemText="Complete" onClick={handleOnComplete} />
+            <OverflowMenuItem
+              itemText="Edit"
+              onClick={() => {
+                launchAddOrEditDialog(
+                  items[index],
+                  true,
+                  operation,
+                  operations,
+                  false
+                );
+              }}
+            />
+          </OverflowMenu>
+        ),
+      }));
+  }, [
+    handleOnComplete,
+    items,
+    operation,
+    operationTypeFilter,
+    operations,
+    statusFilter,
+  ]);
 
   if (isLoading) {
     return (
@@ -338,8 +343,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     itemToString={(item) => (item ? item.text : "")}
                     size="sm"
                     items={operationTypesList}
-                    initialSelectedItem={operationTypesList[0]}
-                    onChange={handleFilterTypeDropdownChange}
+                    onChange={(event) =>
+                      handleFilterTypeDropdownChange(event.selectedItem)
+                    }
                     type="inline"
                     className={styles.toolbarDropdown}
                   />
@@ -350,16 +356,16 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     titleText={t("filterByStatus", "Filter by Status:")}
                     itemToString={(item) => (item ? item.text : "")}
                     size="sm"
-                    items={operationTypesList}
-                    initialSelectedItem={operationTypesList[0]}
-                    onChange={handleStatusDropdownChange}
+                    items={statusList}
+                    onChange={(event) =>
+                      handleStatusDropdownChange(event.selectedItem)
+                    }
                     type="inline"
                     className={styles.toolbarDropdown}
                   />
                 </Layer>
                 <TableToolbarSearch
                   className={styles.patientListSearch}
-                  // expanded
                   onChange={onInputChange}
                   placeholder="Filter Table"
                   size="sm"
