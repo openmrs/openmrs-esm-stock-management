@@ -1,6 +1,7 @@
 import {
   FetchResponse,
   OpenmrsResource,
+  fhirBaseUrl,
   openmrsFetch,
   useSession,
 } from "@openmrs/esm-framework";
@@ -18,6 +19,8 @@ import { Concept } from "../core/api/types/concept/Concept";
 import { Party } from "../core/api/types/Party";
 import { Drug } from "../core/api/types/concept/Drug";
 import { Patient } from "../core/api/types/identity/Patient";
+import { useMemo } from "react";
+import { uniqBy } from "lodash-es";
 
 export type PatientFilterCriteria = ResourceFilterCriteria;
 
@@ -28,6 +31,12 @@ export type DrugFilterCriteria = ResourceFilterCriteria;
 export type ConceptFilterCriteria = ResourceFilterCriteria;
 
 export type LocationFilterCriteria = ResourceFilterCriteria;
+interface FHIRResponse {
+  entry: Array<{ resource: fhir.Location }>;
+  total: number;
+  type: string;
+  resourceType: string;
+}
 
 // getLocations
 export function useStockLocations(filter: LocationFilterCriteria) {
@@ -42,6 +51,25 @@ export function useStockLocations(filter: LocationFilterCriteria) {
     locations: data?.data || <PageableResult<OpenMRSLocation>>{},
     isErrorLocation: error,
     isLoadingLocations: isLoading,
+  };
+}
+/* Get locations tagged to perform stock related activities.
+   Unless a location is tag as main store, main pharmacy or dispensing, it will not be fetched.
+*/
+export function useStockTagLocations() {
+  const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary `;
+  const { data, error, isLoading } = useSWR<{ data: FHIRResponse }>(
+    apiUrl,
+    openmrsFetch
+  );
+  const stockLocations = useMemo(
+    () => data?.data?.entry?.map((response) => response.resource) ?? [],
+    [data?.data?.entry]
+  );
+  return {
+    stockLocations: uniqBy(stockLocations, "id") ?? [],
+    isLoading,
+    error,
   };
 }
 
