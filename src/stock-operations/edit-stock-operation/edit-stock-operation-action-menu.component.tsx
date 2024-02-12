@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@carbon/react";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { launchAddOrEditDialog } from "../stock-operation.utils";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
+import { getStockOperation } from "../stock-operations.resource";
 interface EditStockOperationActionMenuProps {
-  model: StockOperationDTO;
+  operationUuid?: string;
+  operationNumber?: string;
+  model?: StockOperationDTO;
   operations: StockOperationType[];
 }
 const EditStockOperationActionMenu: React.FC<
   EditStockOperationActionMenuProps
-> = ({ model, operations }) => {
+> = ({ operationUuid, operationNumber, model, operations }) => {
+  const [operation, setOperation] = useState<StockOperationDTO | null>(null);
+
+  if (operationUuid && !operation) {
+    getStockOperation(operationUuid)
+      .then((res) => setOperation(res.data))
+      .catch((error) =>
+        console.error("Error fetching stock operation:", error)
+      );
+  }
   const type: StockOperationType = {
     uuid: "",
     name: "",
@@ -43,10 +55,16 @@ const EditStockOperationActionMenu: React.FC<
         iconDescription={"View"}
         kind="ghost"
         onClick={() => {
-          launchAddOrEditDialog(model, true, type, operations, false);
+          launchAddOrEditDialog(
+            model ?? operation,
+            true,
+            type,
+            operations,
+            false
+          );
         }}
       >
-        {`${model?.operationNumber}`}
+        {operationNumber ? operationNumber : `${model?.operationNumber}`}
       </Button>
     </>
   );

@@ -50,15 +50,15 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const tabs: TabItem[] = [
     {
       name: isEditing
-        ? `${props.model.operationTypeName} Details`
-        : `${props.operation.name} Details`,
+        ? `${props.model?.operationTypeName} Details`
+        : `${props.operation?.name} Details`,
       component: (
         <BaseOperationDetails
           {...props}
           isEditing={isEditing}
           setup={result}
           canEdit={canEdit}
-          model={isEditing ? props?.model : result.dto}
+          model={isEditing ? props?.model : result?.dto}
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -75,7 +75,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           isEditing={isEditing}
           setup={result}
           canEdit={canEdit}
-          model={isEditing ? props?.model : result.dto}
+          model={isEditing ? props?.model : result?.dto}
           onSave={async () => {
             setManageSubmitOrComplete(true);
             setSelectedIndex(2);
@@ -95,7 +95,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           setup={result}
           canEdit={canEdit}
           locked={false}
-          model={isEditing ? props?.model : result.dto}
+          model={isEditing ? props?.model : result?.dto}
           requiresDispatchAcknowledgement={false}
           actions={{
             onSave: async (model) => {
@@ -143,49 +143,49 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         <div style={{ margin: "10px" }}>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <span style={{ margin: "4px" }}>Status :</span>
-            <span style={{ margin: "4px" }}>{props.model.status}</span>
+            <span style={{ margin: "4px" }}>{props?.model?.status}</span>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
-            {props.model.status === "NEW" && (
+            {props?.model?.status === "NEW" && (
               <div style={{ margin: "4px" }}>
                 <span>Started : </span>
                 <span>By </span>
                 <span>
-                  {props.model.creatorFamilyName} {""}
-                  {props.model.creatorGivenName}
+                  {props?.model?.creatorFamilyName} {""}
+                  {props?.model?.creatorGivenName}
                 </span>
               </div>
             )}
-            {props.model.status === "SUBMITTED" && (
+            {props?.model?.status === "SUBMITTED" && (
               <div style={{ margin: "4px" }}>
                 <span>Submitted : </span>
                 <span>By </span>
                 <span>
-                  {props.model.submittedByFamilyName} {""}
-                  {props.model.submittedByGivenName}
+                  {props?.model?.submittedByFamilyName} {""}
+                  {props?.model?.submittedByGivenName}
                 </span>
               </div>
             )}
-            {props.model.status === "COMPLETED" && (
+            {props?.model?.status === "COMPLETED" && (
               <div style={{ margin: "4px" }}>
                 <span>Completed : </span>
                 <span>By </span>
                 <span>
-                  {props.model.completedByFamilyName} {""}
-                  {props.model.completedByGivenName}
+                  {props?.model?.completedByFamilyName} {""}
+                  {props?.model?.completedByGivenName}
                 </span>
               </div>
             )}
           </div>
         </div>
 
-        {((!props.model?.permission?.canEdit &&
-          (props.model?.permission?.canApprove ||
-            props.model?.permission?.canReceiveItems)) ||
-          props.model?.permission?.canEdit ||
+        {((!props?.model?.permission?.canEdit &&
+          (props?.model?.permission?.canApprove ||
+            props?.model?.permission?.canReceiveItems)) ||
+          props?.model?.permission?.canEdit ||
           canPrint ||
-          props.model?.permission?.isRequisitionAndCanIssueStock) && (
+          props?.model?.permission?.isRequisitionAndCanIssueStock) && (
           <div
             style={{
               margin: "10px",
@@ -194,72 +194,74 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             }}
           >
             <>
-              {!props.model?.permission?.canEdit &&
-                props.model?.permission?.canApprove && (
+              {!props?.model?.permission?.canEdit &&
+                props?.model?.permission?.canApprove && (
                   <>
-                    {!(props.model
-                      ? props.model?.operationTypeName === "return" ||
-                        props.model?.operationTypeName === "stockissue"
+                    {!(props?.model
+                      ? props?.model?.operationTypeName === "return" ||
+                        props?.model?.operationTypeName === "stockissue"
                       : false) && (
                       <div style={{ margin: "2px" }}>
-                        <StockOperationApprovalButton operation={props.model} />
+                        <StockOperationApprovalButton
+                          operation={props?.model}
+                        />
                       </div>
                     )}
-                    {(props.model
-                      ? props.model?.operationTypeName === "return" ||
-                        props.model?.operationTypeName === "stockissue"
+                    {(props?.model
+                      ? props?.model?.operationTypeName === "return" ||
+                        props?.model?.operationTypeName === "stockissue"
                       : false) && (
                       <div style={{ margin: "2px" }}>
                         <StockOperationApproveDispatchButton
-                          operation={props.model}
+                          operation={props?.model}
                         />
                       </div>
                     )}
 
                     <div style={{ margin: "2px" }}>
-                      <StockOperationRejectButton operation={props.model} />
+                      <StockOperationRejectButton operation={props?.model} />
                     </div>
                     <div style={{ margin: "2px" }}>
-                      <StockOperationReturnButton operation={props.model} />
+                      <StockOperationReturnButton operation={props?.model} />
                     </div>
                     <div style={{ margin: "2px" }}>
-                      <StockOperationCancelButton operation={props.model} />
+                      <StockOperationCancelButton operation={props?.model} />
                     </div>
                   </>
                 )}
 
-              {!props.model?.permission?.canEdit &&
-                props.model?.permission?.canReceiveItems && (
+              {!props?.model?.permission?.canEdit &&
+                props?.model?.permission?.canReceiveItems && (
                   <>
                     <div style={{ margin: "2px" }}>
                       <StockOperationCompleteDispatchButton
-                        operation={props.model}
+                        operation={props?.model}
                       />
                     </div>
                     <div style={{ margin: "2px" }}>
-                      <StockOperationReturnButton operation={props.model} />
+                      <StockOperationReturnButton operation={props?.model} />
                     </div>
                   </>
                 )}
 
-              {props.model?.permission?.canEdit && (
+              {props?.model?.permission?.canEdit && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationCancelButton operation={props.model} />
+                  <StockOperationCancelButton operation={props?.model} />
                 </div>
               )}
 
-              {props.model?.permission?.isRequisitionAndCanIssueStock && (
+              {props?.model?.permission?.isRequisitionAndCanIssueStock && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationIssueStockButton operation={props.model} />
+                  <StockOperationIssueStockButton operation={props?.model} />
                 </div>
               )}
-              {(props.model?.permission?.isRequisitionAndCanIssueStock ||
-                props.model?.operationType === "stockissue" ||
-                props.model?.operationType === "requisition" ||
-                props.model?.operationType === "receipt" ||
-                props.model?.operationType === "transferout") && (
+              {(props?.model?.permission?.isRequisitionAndCanIssueStock ||
+                props?.model?.operationType === "stockissue" ||
+                props?.model?.operationType === "requisition" ||
+                props?.model?.operationType === "receipt" ||
+                props?.model?.operationType === "transferout") && (
                 <div style={{ margin: "2px" }}>
-                  <StockOperationPrintButton operation={props.model} />
+                  <StockOperationPrintButton operation={props?.model} />
                 </div>
               )}
             </>

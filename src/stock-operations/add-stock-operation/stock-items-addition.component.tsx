@@ -25,7 +25,6 @@ import StockItemsAdditionRow from "./stock-items-addition-row.component";
 import { Add, ArrowRight } from "@carbon/react/icons";
 import styles from "./stock-items-addition.component.scss";
 import { errorAlert } from "../../core/utils/alert";
-import { z } from "zod";
 import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 
 interface StockItemsAdditionProps {
@@ -67,7 +66,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     }
 
     // const data = Object.assign(model, item);
-    model.stockOperationItems = item.stockItems;
+    model.stockOperationItems = item?.stockItems;
     await onSave?.(model);
   };
 
@@ -79,7 +78,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      stockItems: model.stockOperationItems ?? [
+      stockItems: model?.stockOperationItems ?? [
         { uuid: `new-item-1`, id: `new-item-1` },
       ],
     },
@@ -171,7 +170,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       <div className={styles.tableContainer}>
         <DataTable
           rows={
-            model.stockOperationItems ?? [
+            model?.stockOperationItems ?? [
               { uuid: `new-item-1`, id: `new-item-1` },
             ]
           }
@@ -198,7 +197,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                         style={header?.styles}
                         key={`${header.key}`}
                       >
-                        {header.header?.content ?? header.header}
+                        {header.header?.content ?? header?.header}
                       </TableHeader>
                     ))}
                     {canEdit && (
@@ -238,7 +237,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                 <TableBody>
                   <StockItemsAdditionRow
                     rows={
-                      model.stockOperationItems ?? [
+                      model?.stockOperationItems ?? [
                         { uuid: `new-item-1`, id: `new-item-1` },
                       ]
                     }

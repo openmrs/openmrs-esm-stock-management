@@ -79,7 +79,7 @@ export function useStockOperation(id: string) {
 export function getStockOperation(
   id: string
 ): Promise<FetchResponse<StockOperationDTO>> {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${id}`;
+  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${id}?v=full`;
 
   return openmrsFetch(apiUrl);
 }
