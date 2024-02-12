@@ -22,8 +22,9 @@ import StockOperationApproveDispatchButton from "../stock-operations-dialog/stoc
 import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
 import { StockOperation } from "./stock-operation-context/useStockOperationContext";
-import { showToast } from "@openmrs/esm-framework";
+import { formatDate, parseDate, showToast } from "@openmrs/esm-framework";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
+import { operationStatusColor } from "../stock-operations.resource";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -151,38 +152,119 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         <div style={{ margin: "10px" }}>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <span style={{ margin: "4px" }}>Status :</span>
-            <span style={{ margin: "4px" }}>{props?.model?.status}</span>
+            <span style={{ margin: "4px" }}>
+              {operationStatusColor(props?.model?.status)}
+            </span>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             {props?.model?.status === "NEW" && (
-              <div style={{ margin: "4px" }}>
-                <span>Started : </span>
-                <span>By </span>
-                <span>
-                  {props?.model?.creatorFamilyName} {""}
-                  {props?.model?.creatorGivenName}
-                </span>
+              <div>
+                <span>Started: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    margin: "4px",
+                  }}
+                >
+                  <span>
+                    {formatDate(
+                      parseDate(props?.model?.dateCreated.toString()),
+                      {
+                        time: true,
+                        mode: "wide",
+                      }
+                    )}
+                  </span>
+                  <span>By </span>
+                  <span>
+                    {props?.model?.creatorFamilyName} {""}
+                    {props?.model?.creatorGivenName}
+                  </span>
+                </div>
               </div>
             )}
+            ,
             {props?.model?.status === "SUBMITTED" && (
-              <div style={{ margin: "4px" }}>
-                <span>Submitted : </span>
-                <span>By </span>
-                <span>
-                  {props?.model?.submittedByFamilyName} {""}
-                  {props?.model?.submittedByGivenName}
-                </span>
+              <div>
+                <span>Submitted: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    margin: "4px",
+                  }}
+                >
+                  <span>
+                    {formatDate(
+                      parseDate(props?.model?.submittedDate.toString()),
+                      {
+                        time: true,
+                        mode: "wide",
+                      }
+                    )}
+                  </span>{" "}
+                  <span>By </span>
+                  <span>
+                    {props?.model?.submittedByFamilyName} {""}
+                    {props?.model?.submittedByGivenName}
+                  </span>
+                </div>
+              </div>
+            )}
+            {props?.model?.status === "DISPATCHED" && (
+              <div>
+                <span>Dispatched: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    margin: "4px",
+                  }}
+                >
+                  <span>
+                    {formatDate(
+                      parseDate(props?.model?.dispatchedDate.toString()),
+                      {
+                        time: true,
+                        mode: "wide",
+                      }
+                    )}
+                  </span>{" "}
+                  <span>By </span>
+                  <span>
+                    {props?.model?.dispatchedByFamilyName} {""}
+                    {props?.model?.dispatchedByGivenName}
+                  </span>
+                </div>
               </div>
             )}
             {props?.model?.status === "COMPLETED" && (
-              <div style={{ margin: "4px" }}>
-                <span>Completed : </span>
-                <span>By </span>
-                <span>
-                  {props?.model?.completedByFamilyName} {""}
-                  {props?.model?.completedByGivenName}
-                </span>
+              <div>
+                <span>Completed: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    margin: "4px",
+                  }}
+                >
+                  <span>
+                    {formatDate(
+                      parseDate(props?.model?.completedBy.toString()),
+                      {
+                        time: true,
+                        mode: "wide",
+                      }
+                    )}
+                  </span>{" "}
+                  <span>By </span>
+                  <span>
+                    {props?.model?.completedByFamilyName} {""}
+                    {props?.model?.completedByGivenName}
+                  </span>
+                </div>
               </div>
             )}
           </div>

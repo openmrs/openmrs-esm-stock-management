@@ -217,3 +217,20 @@ export function getStockItemInventory(filter: StockItemInventoryFilter) {
     signal: abortController.signal,
   });
 }
+
+export const operationStatusColor = (status: string) => {
+  switch (status) {
+    case "STARTED":
+      return "blue";
+    case "SUBMITTED":
+      return "blue";
+    case "DISPATCHED":
+      return "purple";
+    case "COMPLETED":
+      return "green";
+    case "CANCELLED":
+      return "red";
+    default:
+      break;
+  }
+};
