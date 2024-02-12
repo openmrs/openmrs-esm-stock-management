@@ -8,6 +8,7 @@ import stockOperationDialogComponent from "./stock-operations/stock-operations-d
 import stockManagementDashboardComponent from "./dashboard/stock-management-dashboard.component";
 import stockManagementComponent from "./stock-management.component";
 import stockManagementAdminCardLinkComponent from "./stock-management-admin-card-link.component";
+import AdvancedFiltersList from "./stock-operations/advanced-filters/advanced-filters-menu.component";
 
 const moduleName = "@ugandaemr/esm-stock-management-app";
 
@@ -58,6 +59,11 @@ export const importBulkStockItemsDialog = getSyncLifecycle(
 );
 
 export const stockManagementAppMenuItem = getSyncLifecycle(appMenu, options);
+
+export const showAdvancedFilters = getSyncLifecycle(
+  AdvancedFiltersList,
+  options
+);
 
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);

@@ -1,53 +1,54 @@
 {
-  "$schema": "https://json.openmrs.org/routes.schema.json",
-  "backendDependencies": {
-    "fhir2": "^1.2.0",
-    "webservices.rest": "^2.24.0"
-  },
-  "extensions": [
-    {
-      "name": "stock-management-dashboard",
-      "slot": "stock-management-dashboard-slot",
-      "component": "stockManagementDashboard"
+    "$schema": "https://json.openmrs.org/routes.schema.json",
+    "backendDependencies": {
+        "fhir2": "^1.2.0",
+        "webservices.rest": "^2.24.0"
     },
-    {
-      "name": "stock-management-admin-card-link",
-      "slot": "system-admin-page-card-link-slot",
-      "component": "stockManagementAdminCardLink"
-    },
-    {
-      "name": "stock-operation-dialog",
-      "component": "stockOperationDialog"
-    },
-    {
-      "name": "import-bulk-stock-items",
-      "component": "importBulkStockItemsDialog"
-    },
-    {
-      "name": "delete-stock-modal",
-      "component": "deleteStockModal"
-    },
-    {
-      "name": "delete-stock-user-scope-modal",
-      "component": "deleteUserScopeModal"
-    },
-    {
-      "name": "stock-management-app-menu-item",
-      "component": "stockManagementAppMenuItem",
-      "slot": "app-menu-item-slot",
-      "meta": {
-        "name": " Stock Management"
-      }
-    },
-    {
-      "name": "delete-stock-rule-modal",
-      "component": "deleteStockRuleModal"
-    }
-  ],
-  "pages": [
-    {
-      "component": "stockManagement",
-      "route": "stock-management"
-    }
-  ]
+    "extensions": [{
+            "name": "stock-management-dashboard",
+            "slot": "stock-management-dashboard-slot",
+            "component": "stockManagementDashboard"
+        },
+        {
+            "name": "stock-management-admin-card-link",
+            "slot": "system-admin-page-card-link-slot",
+            "component": "stockManagementAdminCardLink"
+        },
+        {
+            "name": "stock-operation-dialog",
+            "component": "stockOperationDialog"
+        },
+        {
+            "name": "import-bulk-stock-items",
+            "component": "importBulkStockItemsDialog"
+        },
+        {
+            "name": "delete-stock-modal",
+            "component": "deleteStockModal"
+        },
+        {
+            "name": "delete-stock-user-scope-modal",
+            "component": "deleteUserScopeModal"
+        },
+        {
+            "name": "advanced-filters-menu",
+            "component": "AdvancedFiltersList"
+        },
+        {
+            "name": "stock-management-app-menu-item",
+            "component": "stockManagementAppMenuItem",
+            "slot": "app-menu-item-slot",
+            "meta": {
+                "name": " Stock Management"
+            }
+        },
+        {
+            "name": "delete-stock-rule-modal",
+            "component": "deleteStockRuleModal"
+        }
+    ],
+    "pages": [{
+        "component": "stockManagement",
+        "route": "stock-management"
+    }]
 }

@@ -21,6 +21,5 @@
     "resources": "Resources",
     "usefulLinks": "Below are some links to useful resources",
     "welcomeText": "Welcome to the O3 Template app",
-    "filterByType": "Filter by Type:",
-    "filterByStatus": "Filter by Status:"
+    "advancedFilters": "Advanced Filters"
 }
