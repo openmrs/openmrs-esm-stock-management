@@ -19,8 +19,8 @@ import styles from "./add-stock-user-role-scope.scss";
 import {
   UserFilterCriteria,
   useRoles,
-  useStockLocations,
   useStockOperationTypes,
+  useStockTagLocations,
   useUser,
   useUsers,
 } from "../../stock-lookups/stock-lookups.resource";
@@ -32,7 +32,6 @@ import { createOrUpdateUserRoleScope } from "../stock-user-role-scopes.resource"
 import { showNotification, showToast } from "@openmrs/esm-framework";
 import { UserRoleScopeOperationType } from "../../core/api/types/identity/UserRoleScopeOperationType";
 import { UserRoleScopeLocation } from "../../core/api/types/identity/UserRoleScopeLocation";
-import { OpenMRSLocation } from "../../core/api/types/Location";
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
@@ -84,11 +83,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const { items: rolesData, isLoading: loadingRoles } = useRoles({
     v: ResourceRepresentation.Default,
   });
-  //locations
-  const {
-    locations: { results: locations },
-  } = useStockLocations({ v: ResourceRepresentation.Default });
 
+  /* Only load locations tagged to perform stock related activities.
+     Unless a location is tag as main store, main pharmacy or dispensing, it will not be listed here.
+
+   */
+  const { stockLocations } = useStockTagLocations();
   const onEnabledChanged = (
     cvt: React.ChangeEvent<HTMLInputElement>,
     data: { checked: boolean; id: string }
@@ -155,10 +155,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       ];
       setFormModel({ ...formModel, locations: newLocations });
     } else {
-      const loc = locations?.find((x) => x.uuid === event?.target?.value);
+      const loc = stockLocations?.find((x) => x.id === event?.target?.value);
       const newLocation: UserRoleScopeLocation = {
-        locationName: loc?.display,
-        locationUuid: loc?.uuid,
+        locationName: loc?.name,
+        locationUuid: loc?.id,
         enableDescendants: false,
       } as unknown as UserRoleScopeLocation;
       const newLocations = [...(formModel?.locations ?? []), newLocation];
@@ -167,10 +167,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   };
 
   const findCheckedLocation = (
-    location: OpenMRSLocation
+    location: fhir.Location
   ): UserRoleScopeLocation | null => {
     const result = formModel?.locations?.filter(
-      (x) => x.locationUuid === location.uuid
+      (x) => x.locationUuid === location.id
     );
     return result && result.length > 0 ? result[0] : null;
   };
@@ -209,9 +209,9 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   };
 
   const onRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const rootLocations = locations
-      ?.filter((x) => !x.parentLocation)
-      ?.map((x) => x.uuid);
+    const rootLocations = stockLocations
+      ?.filter((x) => !x.id)
+      ?.map((x) => x.id);
     const filteredLocations =
       formModel?.locations?.filter(
         (x) =>
@@ -459,8 +459,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           </section>
           <section className={styles.section}>
             <CheckboxGroup className={styles.checkboxGrid}>
-              {locations?.length > 0 &&
-                locations.map((type) => {
+              {stockLocations?.length > 0 &&
+                stockLocations.map((type) => {
                   const checkedLocation = findCheckedLocation(type);
 
                   const getToggledValue = (locationUuid) => {
@@ -482,11 +482,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                     >
                       <Checkbox
                         name="location"
-                        key={`chk-loc-child-key-${type.uuid}`}
-                        id={`chk-loc-child-${type.uuid}`}
-                        value={type.uuid}
+                        key={`chk-loc-child-key-${type.id}`}
+                        id={`chk-loc-child-${type.id}`}
+                        value={type.id}
                         onChange={(event) =>
-                          onLocationCheckBoxChanged(event, type.uuid)
+                          onLocationCheckBoxChanged(event, type.id)
                         }
                         className={styles.checkbox}
                         labelText={type.name}
@@ -494,13 +494,13 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                       />
                       {checkedLocation && (
                         <Toggle
-                          value={type.uuid}
+                          value={type.id}
                           hideLabel
                           className={styles.toggle}
                           size={"sm"}
-                          onToggleClick={getToggledValue(type.uuid)}
-                          key={`tg-loc-child-key-${type.uuid}`}
-                          id={`tg-loc-child-${type.uuid}`}
+                          onToggleClick={getToggledValue(type.id)}
+                          key={`tg-loc-child-key-${type.id}`}
+                          id={`tg-loc-child-${type.id}`}
                         />
                       )}
                     </div>
