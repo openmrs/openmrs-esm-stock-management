@@ -21,5 +21,8 @@
     "resources": "Resources",
     "usefulLinks": "Below are some links to useful resources",
     "welcomeText": "Welcome to the O3 Template app",
-    "advancedFilters": "Advanced Filters"
+    "advancedFilters": "Advanced Filters",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "chooseOption": "Choose an Option"
 }

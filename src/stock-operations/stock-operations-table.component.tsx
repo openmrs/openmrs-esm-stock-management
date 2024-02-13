@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
@@ -45,6 +45,7 @@ import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
 import { handleMutate } from "./swr-revalidation";
 import AdvancedFiltersList from "./advanced-filters/advanced-filters-menu.component";
+import AdvancedFiltersMenuModal from "./advanced-filters/advanced-filters-menu-modal.component";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -52,6 +53,23 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    header: "",
+    type: false,
+    status: false,
+    date: false,
+  });
+
+  const openModalWithConfig = (config, header) => {
+    setModalConfig({ ...config, header });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const operation: StockOperationType = useMemo(
     () => ({
       uuid: "",
@@ -299,7 +317,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
-                <AdvancedFiltersList />
+                <AdvancedFiltersList onFilterSelect={openModalWithConfig} />
+                {isModalOpen && (
+                  <AdvancedFiltersMenuModal
+                    config={modalConfig}
+                    closeModal={closeModal}
+                  />
+                )}
                 <TableToolbarSearch
                   className={styles.patientListSearch}
                   onChange={onInputChange}
