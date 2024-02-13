@@ -9,13 +9,19 @@ interface AdvancedFiltersListProps {
       type: boolean;
       status: boolean;
       date: boolean;
+      operationTypes: string[];
+      statuses: string[];
     },
     header: string
   ) => void;
+  operationTypes: string[];
+  statuses: string[];
 }
 
 const AdvancedFiltersList: React.FC<AdvancedFiltersListProps> = ({
   onFilterSelect,
+  operationTypes = [],
+  statuses = [],
 }) => {
   const { t } = useTranslation();
 
@@ -27,7 +33,13 @@ const AdvancedFiltersList: React.FC<AdvancedFiltersListProps> = ({
         header: t("filterByType", "Filter by Type"),
         action: () =>
           onFilterSelect(
-            { type: true, status: false, date: false },
+            {
+              type: true,
+              status: false,
+              date: false,
+              operationTypes,
+              statuses: [],
+            },
             t("filterByType", "Filter by Type")
           ),
       },
@@ -37,7 +49,13 @@ const AdvancedFiltersList: React.FC<AdvancedFiltersListProps> = ({
         header: t("filterByStatus", "Filter by Status"),
         action: () =>
           onFilterSelect(
-            { type: false, status: true, date: false },
+            {
+              type: false,
+              status: true,
+              date: false,
+              operationTypes: [],
+              statuses,
+            },
             t("filterByStatus", "Filter by Status")
           ),
       },
@@ -45,14 +63,14 @@ const AdvancedFiltersList: React.FC<AdvancedFiltersListProps> = ({
         key: "filterByDate",
         label: t("filterByDate", "Filter by Date"),
         header: t("filterByDate", "Filter by Date"),
-        action: () =>
-          onFilterSelect(
-            { type: false, status: false, date: true },
-            t("filterByDate", "Filter by Date")
-          ),
+        // action: () =>
+        //   onFilterSelect(
+        //     { type: false, status: false, date: true },
+        //     t("filterByDate", "Filter by Date")
+        //   ),
       },
     ],
-    [t, onFilterSelect]
+    [t, onFilterSelect, operationTypes, statuses]
   );
 
   return (

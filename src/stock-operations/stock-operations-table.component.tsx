@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
@@ -59,16 +59,20 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     type: false,
     status: false,
     date: false,
+    operationTypes: [],
+    statuses: [],
+    onApplyFilter: () => {
+      //empty function
+    },
   });
-
-  const openModalWithConfig = (config, header) => {
-    setModalConfig({ ...config, header });
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const [filterOptions, setFilterOptions] = useState({
+    operationTypes: [],
+    statuses: [],
+  });
+  const [filters, setFilters] = useState({
+    type: "",
+    status: "",
+  });
 
   const operation: StockOperationType = useMemo(
     () => ({
@@ -111,6 +115,50 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
+
+  useEffect(() => {
+    const operationTypesSet = new Set(
+      items?.map((item) => item.operationTypeName)
+    );
+    const statusesSet = new Set(items?.map((item) => item.status));
+
+    const operationTypes = Array.from(operationTypesSet).sort();
+    const statuses = Array.from(statusesSet).sort();
+
+    setFilterOptions({ operationTypes, statuses });
+  }, [filterOptions, items]);
+
+  const handleApplyFilter = (newFilters) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters, ...newFilters };
+      return updatedFilters;
+    });
+  };
+
+  const openModalWithConfig = (config, header) => {
+    setModalConfig({
+      ...config,
+      header,
+      operationTypes: filterOptions.operationTypes,
+      statuses: filterOptions.statuses,
+      onApplyFilter: handleApplyFilter,
+    });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const filteredItems = useMemo(() => {
+    return items?.filter((item) => {
+      return (
+        (!filters.type || item.operationTypeName === filters.type) &&
+        (!filters.status || item.status === filters.status)
+      );
+    });
+  }, [items, filters]);
+  // console.info(filteredItems);
 
   let operations: StockOperationType[] | null | undefined;
   const handleOnComplete = () => {
@@ -274,7 +322,14 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [handleOnComplete, items, operation, operations]);
+  }, [
+    items,
+    filters.type,
+    filters.status,
+    operations,
+    handleOnComplete,
+    operation,
+  ]);
 
   if (isLoading) {
     return (
@@ -317,7 +372,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
-                <AdvancedFiltersList onFilterSelect={openModalWithConfig} />
+                <AdvancedFiltersList
+                  onFilterSelect={openModalWithConfig}
+                  operationTypes={filterOptions.operationTypes}
+                  statuses={filterOptions.statuses}
+                />
                 {isModalOpen && (
                   <AdvancedFiltersMenuModal
                     config={modalConfig}
