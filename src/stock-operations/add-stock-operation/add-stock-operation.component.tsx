@@ -150,17 +150,19 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         }}
       >
         <div style={{ margin: "10px" }}>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <span>Status:</span>
-            <span
-              style={{
-                marginLeft: "2px",
-                color: `${operationStatusColor(props?.model?.status)}`,
-              }}
-            >
-              {props?.model?.status}
-            </span>
-          </div>
+          {isEditing && (
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <span>Status:</span>
+              <span
+                style={{
+                  marginLeft: "2px",
+                  color: `${operationStatusColor(props?.model?.status)}`,
+                }}
+              >
+                {props?.model?.status}
+              </span>
+            </div>
+          )}
           <div
             style={{ display: "flex", flexDirection: "row", marginTop: "4px" }}
           >
