@@ -220,16 +220,18 @@ export function getStockItemInventory(filter: StockItemInventoryFilter) {
 
 export const operationStatusColor = (status: string) => {
   switch (status) {
-    case "STARTED":
-      return "blue";
+    case "NEW":
+      return "#0f62fe";
     case "SUBMITTED":
-      return "blue";
+      return "#4589ff";
     case "DISPATCHED":
-      return "purple";
+      return "#8a3ffc";
     case "COMPLETED":
-      return "green";
+      return "#24a148";
     case "CANCELLED":
-      return "red";
+      return "#da1e28";
+    case "RETURNED":
+      return "#eb6200";
     default:
       break;
   }

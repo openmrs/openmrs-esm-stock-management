@@ -32,7 +32,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { isLoading, isError, result } = useInitializeStockOperations(props);
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
-    props.isEditing
+    props?.isEditing
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -54,8 +54,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const tabs: TabItem[] = [
     {
       name: isEditing
-        ? `${props.model?.operationTypeName} Details`
-        : `${props.operation?.name} Details`,
+        ? `${props?.model?.operationTypeName} Details`
+        : `${props?.operation?.name} Details`,
       component: (
         <BaseOperationDetails
           {...props}
@@ -89,7 +89,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(isEditing || manageStockItems),
     },
     {
-      name: result.requiresDispatchAcknowledgement
+      name: result?.requiresDispatchAcknowledgement
         ? "Submit/Dispatch"
         : "Submit/Complete",
       component: (
@@ -151,118 +151,238 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       >
         <div style={{ margin: "10px" }}>
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <span style={{ margin: "4px" }}>Status :</span>
-            <span style={{ margin: "4px" }}>
-              {operationStatusColor(props?.model?.status)}
+            <span>Status:</span>
+            <span
+              style={{
+                marginLeft: "2px",
+                color: `${operationStatusColor(props?.model?.status)}`,
+              }}
+            >
+              {props?.model?.status}
             </span>
           </div>
-
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            {props?.model?.status === "NEW" && (
+          <div
+            style={{ display: "flex", flexDirection: "row", marginTop: "4px" }}
+          >
+            {props?.model?.dateCreated && (
               <div>
                 <span>Started: </span>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    margin: "4px",
+                    marginTop: "4px",
+                    width: "300px",
                   }}
                 >
-                  <span>
+                  <span style={{ fontSize: "12px" }}>
                     {formatDate(
                       parseDate(props?.model?.dateCreated.toString()),
                       {
                         time: true,
-                        mode: "wide",
+                        mode: "standard",
                       }
                     )}
                   </span>
-                  <span>By </span>
-                  <span>
-                    {props?.model?.creatorFamilyName} {""}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.creatorFamilyName} &nbsp;
                     {props?.model?.creatorGivenName}
                   </span>
                 </div>
               </div>
             )}
-            ,
-            {props?.model?.status === "SUBMITTED" && (
+
+            {props?.model?.submittedDate && (
               <div>
                 <span>Submitted: </span>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    margin: "4px",
+                    marginTop: "4px",
+                    width: "300px",
                   }}
                 >
-                  <span>
+                  <span style={{ fontSize: "12px" }}>
                     {formatDate(
                       parseDate(props?.model?.submittedDate.toString()),
                       {
                         time: true,
-                        mode: "wide",
+                        mode: "standard",
                       }
                     )}
                   </span>{" "}
-                  <span>By </span>
-                  <span>
-                    {props?.model?.submittedByFamilyName} {""}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;{" "}
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.submittedByFamilyName} &nbsp;
                     {props?.model?.submittedByGivenName}
                   </span>
                 </div>
               </div>
             )}
-            {props?.model?.status === "DISPATCHED" && (
+
+            {props?.model?.dispatchedDate && (
               <div>
                 <span>Dispatched: </span>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    margin: "4px",
+                    marginTop: "4px",
+                    width: "300px",
                   }}
                 >
-                  <span>
+                  <span style={{ fontSize: "12px" }}>
                     {formatDate(
                       parseDate(props?.model?.dispatchedDate.toString()),
                       {
                         time: true,
-                        mode: "wide",
+                        mode: "standard",
                       }
                     )}
                   </span>{" "}
-                  <span>By </span>
-                  <span>
-                    {props?.model?.dispatchedByFamilyName} {""}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;{" "}
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.dispatchedByFamilyName} &nbsp;
                     {props?.model?.dispatchedByGivenName}
                   </span>
                 </div>
               </div>
             )}
-            {props?.model?.status === "COMPLETED" && (
+
+            {props?.model?.returnedDate && (
+              <div>
+                <span>Returned: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "4px",
+                    width: "300px",
+                  }}
+                >
+                  <span style={{ fontSize: "12px" }}>
+                    {formatDate(
+                      parseDate(props?.model?.returnedDate.toString()),
+                      {
+                        time: true,
+                        mode: "standard",
+                      }
+                    )}
+                  </span>{" "}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;{" "}
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.returnedByFamilyName} &nbsp;
+                    {props?.model?.returnedByGivenName}
+                  </span>
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.returnReason}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {props?.model?.completedDate && (
               <div>
                 <span>Completed: </span>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    margin: "4px",
+                    marginTop: "4px",
+                    width: "300px",
                   }}
                 >
-                  <span>
+                  <span style={{ fontSize: "12px" }}>
                     {formatDate(
-                      parseDate(props?.model?.completedBy.toString()),
+                      parseDate(props?.model?.completedDate.toString()),
                       {
                         time: true,
-                        mode: "wide",
+                        mode: "standard",
                       }
                     )}
                   </span>{" "}
-                  <span>By </span>
-                  <span>
-                    {props?.model?.completedByFamilyName} {""}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.completedByFamilyName} &nbsp;
                     {props?.model?.completedByGivenName}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {props?.model?.status === "CANCELLED" && (
+              <div>
+                <span>Cancelled: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "4px",
+                    width: "300px",
+                  }}
+                >
+                  <span style={{ fontSize: "12px" }}>
+                    {formatDate(
+                      parseDate(props?.model?.cancelledDate.toString()),
+                      {
+                        time: true,
+                        mode: "standard",
+                      }
+                    )}
+                  </span>{" "}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.cancelledByFamilyName} &nbsp;
+                    {props?.model?.cancelledByGivenName}
+                    <span style={{ fontSize: "12px" }}>
+                      {props?.model?.cancelReason}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {props?.model?.status === "REJECTED" && (
+              <div>
+                <span>Rejected: </span>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "4px",
+                    width: "300px",
+                  }}
+                >
+                  <span style={{ fontSize: "12px" }}>
+                    {formatDate(
+                      parseDate(props?.model?.rejectedDate.toString()),
+                      {
+                        time: true,
+                        mode: "standard",
+                      }
+                    )}
+                  </span>{" "}
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>By </span>
+                  &nbsp;
+                  <span style={{ fontSize: "12px" }}>
+                    {props?.model?.rejectedByFamilyName} &nbsp;
+                    {props?.model?.rejectedByGivenName}
+                    <span>{props?.model?.rejectionReason}</span>
                   </span>
                 </div>
               </div>
@@ -343,7 +463,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               {props?.model?.permission?.isRequisitionAndCanIssueStock && (
                 <div style={{ margin: "2px" }}>
                   <StockOperationIssueStockButton
-                    operation={props.model}
+                    operation={props?.model}
                     operations={operations}
                   />
                 </div>
