@@ -32,12 +32,14 @@ import { useTranslation } from "react-i18next";
 import styles from "./packaging-units.scss";
 
 interface PackagingUnitsProps {
+  isEditing?: boolean;
   onSubmit?: () => void;
   stockItemUuid: string;
   handleTabChange: (index) => void;
 }
 
 const PackagingUnits: React.FC<PackagingUnitsProps> = ({
+  isEditing,
   stockItemUuid,
   handleTabChange,
 }) => {
@@ -128,11 +130,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
                 {items?.map((row: StockItemPackagingUOMDTO, index) => (
                   <PackagingUnitRow row={row} key={`${index}-${row?.uuid}`} />
                 ))}
-                {items?.length === 0 && (
-                  <PackagingUnitRow row={{}} key={stockItemUuid} />
-                )}
-                {/* Add an entire row at the bottom */}
-                <PackagingUnitRow row={{}} key="bottom-row" />
+                <PackagingUnitRow row={{}} key="bottom-row" isEditing />
               </TableBody>
             </Table>
           </TableContainer>
@@ -156,9 +154,10 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
 export default PackagingUnits;
 
 const PackagingUnitRow: React.FC<{
+  isEditing?: boolean;
   row: StockItemPackagingUOMDTO;
   key?: string;
-}> = ({ row, key }) => {
+}> = ({ isEditing, row, key }) => {
   const { t } = useTranslation();
 
   const {
@@ -197,24 +196,33 @@ const PackagingUnitRow: React.FC<{
   return (
     <TableRow>
       <TableCell>
-        <PackagingUnitsConceptSelector
-          row={row}
-          controllerName={"packagingUomUuid"}
-          name="packagingUomUuid"
-          control={control}
-          invalid={!!errors.packagingUomUuid}
-        />
+        {isEditing ? (
+          <PackagingUnitsConceptSelector
+            row={row}
+            controllerName={"packagingUomUuid"}
+            name="packagingUomUuid"
+            control={control}
+            invalid={!!errors.packagingUomUuid}
+          />
+        ) : (
+          (!isEditing || !row.uuid.startsWith("new-item")) &&
+          row?.packagingUomName
+        )}
       </TableCell>
       <TableCell>
         <div className={styles.packingTableCell}>
-          <ControlledNumberInput
-            row={row}
-            controllerName="factor"
-            name="factor"
-            control={control}
-            id={`${row.uuid}-${key}`}
-            invalid={!!errors.factor}
-          />
+          {isEditing ? (
+            <ControlledNumberInput
+              row={row}
+              controllerName="factor"
+              name="factor"
+              control={control}
+              id={`${row.uuid}-${key}`}
+              invalid={!!errors.factor}
+            />
+          ) : (
+            !isEditing && row?.factor?.toLocaleString()
+          )}
 
           <Button
             type="button"
