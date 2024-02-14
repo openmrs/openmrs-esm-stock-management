@@ -465,13 +465,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                 &nbsp;
                                 {items[index]?.stockOperationItems.map(
                                   (item) => item.quantity
-                                )[1]
+                                )[1] && items[index]?.completedDate
                                   ? "By"
                                   : ""}
                                 &nbsp;
                                 {items[index]?.stockOperationItems.map(
                                   (item) => item.quantity
-                                )[1]
+                                )[1] && items[index]?.completedDate
                                   ? items[index]?.creatorFamilyName
                                   : ""}
                               </StructuredListCell>
