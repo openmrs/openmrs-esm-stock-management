@@ -49,6 +49,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
 }) => {
   const { t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
+  const [approvalRequired, setApprovalRequired] = useState<boolean | null>(
+    null
+  );
+
+  const handleRadioButtonChange = (selectedItem: boolean) => {
+    setApprovalRequired(selectedItem);
+  };
 
   return (
     <div style={{ margin: "10px" }}>
@@ -60,10 +67,8 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
               "doesThisTransactionRequireApproval",
               "Does the transaction require approval ?"
             )}
-            onChange={(selectedItem: boolean) => {
-              model.approvalRequired = selectedItem;
-            }}
-            defaultSelected={model?.approvalRequired}
+            onChange={handleRadioButtonChange}
+            defaultSelected={approvalRequired}
           >
             <RadioButton
               value={true}
@@ -83,7 +88,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
           <TextInput
             style={{ margin: "5px" }}
             id="rbgApproveRequiredLbl"
-            value={model?.approvalRequired ? t("yes", "Yes") : t("no", "No")}
+            value={approvalRequired ? t("yes", "Yes") : t("no", "No")}
             readOnly={true}
             labelText={t(
               "doesThisTransactionRequireApproval",
@@ -95,9 +100,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
 
       {canEdit && !locked && (
         <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
-          {model?.approvalRequired != null && (
+          {approvalRequired != null && (
             <>
-              {!requiresDispatchAcknowledgement && !model?.approvalRequired && (
+              {!requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="complete"
                   type="button"
@@ -116,7 +121,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   {t("complete", "Complete")}
                 </Button>
               )}
-              {requiresDispatchAcknowledgement && !model?.approvalRequired && (
+              {requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="dispatch"
                   type="button"
@@ -129,7 +134,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   {t("dispatch", "Dispatch")}
                 </Button>
               )}
-              {model?.approvalRequired && (
+              {approvalRequired && (
                 <Button
                   name="submit"
                   type="button"
