@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
-  Button,
   DataTable,
   TabPanel,
   DataTableSkeleton,
@@ -21,7 +20,6 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  Tooltip,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,
@@ -29,16 +27,7 @@ import {
   OverflowMenu,
   OverflowMenuItem,
 } from "@carbon/react";
-import {
-  ArrowRight,
-  Departure,
-  ListChecked,
-  Save,
-  SendFilled,
-  Undo,
-  Edit,
-  Add,
-} from "@carbon/react/icons";
+import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {
@@ -55,7 +44,6 @@ import { StockOperationType } from "../core/api/types/stockOperation/StockOperat
 import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
 import { handleMutate } from "./swr-revalidation";
-import { importTranslation } from "../index";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -283,7 +271,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>Stock operations to track movement of stock.</TabPanel>
+      <TabPanel>{t("Stock operations to track movement of stock.")}</TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
@@ -381,13 +369,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                           <StructuredListHead>
                             <StructuredListRow head>
                               <StructuredListCell head>
-                                Date Created
+                                {t("dateCreated", "Date Created")}
                               </StructuredListCell>
                               <StructuredListCell head>
-                                Date Completed
+                                {t("dateCompleted", "Date Completed")}
                               </StructuredListCell>
                               <StructuredListCell head>
-                                Batch Number
+                                {t("batchNumber", "Batch Number")}
                               </StructuredListCell>
                               <StructuredListCell head>Qty</StructuredListCell>
                             </StructuredListRow>
