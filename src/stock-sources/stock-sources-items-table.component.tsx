@@ -76,7 +76,7 @@ const StockSourcesItems: React.FC = () => {
     return tableRows.filter((row) => row.sourceType === selectedSourceType);
   }, [tableRows, selectedSourceType]);
 
-  if (isLoading || items.length === 0) {
+  if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
