@@ -230,30 +230,25 @@ const PackagingUnitRow: React.FC<{
       </TableCell>
       <TableCell>
         <div className={styles.packingTableCell}>
-          {isEditing ? (
-            <ControlledNumberInput
-              row={row}
-              controllerName="factor"
-              name="factor"
-              control={control}
-              id={`${row.uuid}-${key}`}
-              invalid={!!errors.factor}
-            />
-          ) : (
-            !isEditing && row?.factor?.toLocaleString()
-          )}
+          <ControlledNumberInput
+            row={row}
+            controllerName="factor"
+            name="factor"
+            control={control}
+            id={`${row.uuid}-${key}`}
+            invalid={!!errors.factor}
+          />
+
+          <Button
+            type="button"
+            size="sm"
+            className="submitButton clear-padding-margin"
+            iconDescription={"Delete"}
+            kind="ghost"
+            renderIcon={TrashCan}
+            onClick={(e) => handleDelete(e)}
+          />
         </div>
-      </TableCell>
-      <TableCell>
-        <Button
-          type="button"
-          size="sm"
-          className="submitButton clear-padding-margin"
-          iconDescription={"Delete"}
-          kind="ghost"
-          renderIcon={TrashCan}
-          onClick={(e) => handleDelete(e)}
-        />
       </TableCell>
     </TableRow>
   );
