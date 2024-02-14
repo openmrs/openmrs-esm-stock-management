@@ -36,7 +36,6 @@ function StockUserRoleScopesItems() {
   const {
     items,
     totalItems,
-    tableHeaders,
     currentPage,
     pageSizes,
     goTo,
@@ -47,6 +46,57 @@ function StockUserRoleScopesItems() {
     v: ResourceRepresentation.Default,
     totalCount: true,
   });
+  const tableHeaders = useMemo(
+    () => [
+      {
+        id: 0,
+        header: t("user", "User"),
+        key: "user",
+      },
+
+      {
+        id: 1,
+        header: t("role", "Role"),
+        key: "role",
+      },
+      {
+        id: 2,
+        header: t("location", "Location(s)"),
+        key: "locations",
+      },
+      {
+        id: 3,
+        header: t("stockOperations", "Stock Operations"),
+        key: "stockOperations",
+      },
+      {
+        id: 4,
+        header: t("permanent", "Permanent ?"),
+        key: "permanent",
+      },
+      {
+        id: 5,
+        header: t("ActiveFrom", "Active From "),
+        key: "activeFrom",
+      },
+      {
+        id: 6,
+        header: t("activeTo", "Active To"),
+        key: "activeTo",
+      },
+      {
+        id: 7,
+        header: t("enabled", "Enabled ?"),
+        key: "enabled",
+      },
+      {
+        id: 8,
+        header: t("actions", "Actions"),
+        key: "actions",
+      },
+    ],
+    []
+  );
 
   const tableRows = useMemo(() => {
     return items?.map((userRoleScope, index) => {

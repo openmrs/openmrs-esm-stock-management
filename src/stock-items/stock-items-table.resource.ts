@@ -37,52 +37,6 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
     });
   }, [searchString, currentPage, currentPageSize, isDrug]);
 
-  const tableHeaders = useMemo(
-    () => [
-      {
-        id: 0,
-        header: t("type", "Type"),
-        key: "type",
-      },
-      {
-        id: 1,
-        header: t("genericName", "Generic Name"),
-        key: "genericName",
-      },
-      {
-        id: 2,
-        header: t("commonName", "Common Name"),
-        key: "commonName",
-      },
-      {
-        id: 3,
-        header: t("tradeName", "Trade Name"),
-        key: "tradeName",
-      },
-      {
-        id: 4,
-        header: t("dispensingUnitName", "Dispensing UoM"),
-        key: "dispensingUnitName",
-      },
-      {
-        id: 5,
-        header: t("defaultStockOperationsUoMName", "Bulk Packaging"),
-        key: "defaultStockOperationsUoMName",
-      },
-      {
-        id: 6,
-        header: t("reorderLevel", "Reorder Level"),
-        key: "reorderLevel",
-      },
-      {
-        id: 7,
-        key: "actions",
-        header: "Actions",
-      },
-    ],
-    [t]
-  );
-
   return {
     items: pagination.results,
     pagination,
@@ -100,6 +54,5 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
       setDrug(drug);
     },
     setSearchString,
-    tableHeaders,
   };
 }
