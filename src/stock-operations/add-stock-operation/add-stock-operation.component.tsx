@@ -118,7 +118,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           isEditing={isEditing}
           setup={result}
           canEdit={canEdit}
-          locked={true}
+          locked={false}
           model={isEditing ? props?.model : result?.dto}
           requiresDispatchAcknowledgement={
             isEditing
@@ -147,11 +147,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               await showActionDialogButton("Submit", true, props?.model);
             },
             onDispatch: async () => {
-              await showActionDialogButton(
-                "Dispatch Approval",
-                true,
-                props?.model
-              );
+              await showActionDialogButton("Dispatch", true, props?.model);
             },
           }}
         />
