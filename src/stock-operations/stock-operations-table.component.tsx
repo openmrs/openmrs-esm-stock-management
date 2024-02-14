@@ -57,7 +57,6 @@ import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-oper
 import { handleMutate } from "./swr-revalidation";
 import { importTranslation } from "../index";
 
-
 interface StockOperationsTableProps {
   status?: string;
 }
