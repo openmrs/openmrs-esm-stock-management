@@ -28,6 +28,7 @@ import {
   StockOperationType,
 } from "../../core/api/types/stockOperation/StockOperationType";
 import { operationStatusColor } from "../stock-operations.resource";
+import styles from "./add-stock-operation.scss";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -117,7 +118,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           isEditing={isEditing}
           setup={result}
           canEdit={canEdit}
-          locked={false}
+          locked={true}
           model={isEditing ? props?.model : result?.dto}
           requiresDispatchAcknowledgement={
             isEditing
@@ -140,15 +141,15 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               setSelectedIndex(1);
             },
             onComplete: async () => {
-              await showActionDialogButton("Complete", false, props?.model);
+              await showActionDialogButton("Complete", true, props?.model);
             },
             onSubmit: async () => {
-              await showActionDialogButton("Submit", false, props?.model);
+              await showActionDialogButton("Submit", true, props?.model);
             },
             onDispatch: async () => {
               await showActionDialogButton(
                 "Dispatch Approval",
-                false,
+                true,
                 props?.model
               );
             },
@@ -174,7 +175,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           <div style={{ margin: "10px" }}>
             {isEditing && (
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <span>Status:</span>
+                <span className={styles.textHeading}>
+                  {t("status", "Status ")}:
+                </span>
                 <span
                   style={{
                     marginLeft: "2px",
@@ -185,25 +188,14 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 </span>
               </div>
             )}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                marginTop: "4px",
-              }}
-            >
+            <div className={styles.statusContainer}>
               {props?.model?.dateCreated && (
                 <div>
-                  <span>Started: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("started", "Started")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.dateCreated.toString()),
                         {
@@ -212,10 +204,10 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                         }
                       )}
                     </span>
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.creatorFamilyName} &nbsp;
                       {props?.model?.creatorGivenName}
                     </span>
@@ -225,16 +217,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.submittedDate && (
                 <div>
-                  <span>Submitted: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("submitted", "Submitted")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.submittedDate.toString()),
                         {
@@ -242,11 +229,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                           mode: "standard",
                         }
                       )}
-                    </span>{" "}
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;{" "}
-                    <span style={{ fontSize: "12px" }}>
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.submittedByFamilyName} &nbsp;
                       {props?.model?.submittedByGivenName}
                     </span>
@@ -256,16 +243,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.dispatchedDate && (
                 <div>
-                  <span>Dispatched: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("dispatched", "Dispatched")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.dispatchedDate.toString()),
                         {
@@ -273,11 +255,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                           mode: "standard",
                         }
                       )}
-                    </span>{" "}
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;{" "}
-                    <span style={{ fontSize: "12px" }}>
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.dispatchedByFamilyName} &nbsp;
                       {props?.model?.dispatchedByGivenName}
                     </span>
@@ -287,16 +269,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.returnedDate && (
                 <div>
-                  <span>Returned: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("returned", "Returned")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.returnedDate.toString()),
                         {
@@ -304,15 +281,15 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                           mode: "standard",
                         }
                       )}
-                    </span>{" "}
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;{" "}
-                    <span style={{ fontSize: "12px" }}>
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.returnedByFamilyName} &nbsp;
                       {props?.model?.returnedByGivenName}
                     </span>
-                    <span style={{ fontSize: "12px" }}>
+                    <span className={styles.text}>
                       {props?.model?.returnReason}
                     </span>
                   </div>
@@ -321,16 +298,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.completedDate && (
                 <div>
-                  <span>Completed: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("completed", "Completed")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.completedDate.toString()),
                         {
@@ -338,11 +310,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                           mode: "standard",
                         }
                       )}
-                    </span>{" "}
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.completedByFamilyName} &nbsp;
                       {props?.model?.completedByGivenName}
                     </span>
@@ -352,16 +324,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.status === "CANCELLED" && (
                 <div>
-                  <span>Cancelled: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("cancelled", "Cancelled")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.cancelledDate.toString()),
                         {
@@ -369,14 +336,14 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                           mode: "standard",
                         }
                       )}
-                    </span>{" "}
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.cancelledByFamilyName} &nbsp;
                       {props?.model?.cancelledByGivenName}
-                      <span style={{ fontSize: "12px" }}>
+                      <span className={styles.text}>
                         {props?.model?.cancelReason}
                       </span>
                     </span>
@@ -386,16 +353,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
               {props?.model?.status === "REJECTED" && (
                 <div>
-                  <span>Rejected: </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "4px",
-                      width: "300px",
-                    }}
-                  >
-                    <span style={{ fontSize: "12px" }}>
+                  <span className={styles.textHeading}>
+                    {t("rejected", "Rejected")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
                       {formatDate(
                         parseDate(props?.model?.rejectedDate.toString()),
                         {
@@ -403,11 +365,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                           mode: "standard",
                         }
                       )}
-                    </span>{" "}
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>By </span>
-                    &nbsp;
-                    <span style={{ fontSize: "12px" }}>
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
                       {props?.model?.rejectedByFamilyName} &nbsp;
                       {props?.model?.rejectedByGivenName}
                       <span>{props?.model?.rejectionReason}</span>
@@ -440,7 +402,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                             OperationType.RETURN_OPERATION_TYPE ||
                           props?.model?.operationTypeName ===
                             OperationType.STOCK_ISSUE_OPERATION_TYPE
-                        : false) && (
+                        : true) && (
                         <div style={{ margin: "2px" }}>
                           <StockOperationApprovalButton
                             operation={props?.model}
@@ -452,7 +414,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                             OperationType.RETURN_OPERATION_TYPE ||
                           props?.model?.operationTypeName ===
                             OperationType.STOCK_ISSUE_OPERATION_TYPE
-                        : false) && (
+                        : true) && (
                         <div style={{ margin: "2px" }}>
                           <StockOperationApproveDispatchButton
                             operation={props?.model}
