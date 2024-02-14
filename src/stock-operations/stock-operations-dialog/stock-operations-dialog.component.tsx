@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   TextArea,
+  InlineLoading,
 } from "@carbon/react";
 import styles from "./stock-operations-dialog.scss";
 import {
@@ -152,7 +153,11 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
           <Button kind="secondary" onClick={closeModal}>
             {t("cancel", "Cancel")}
           </Button>
-          <Button type="submit">{t("submit", "Submit")}</Button>
+          {isApproving ? (
+            <InlineLoading />
+          ) : (
+            <Button type="submit">{t("submit", "Submit")}</Button>
+          )}
         </ModalFooter>
       </Form>
     </div>
