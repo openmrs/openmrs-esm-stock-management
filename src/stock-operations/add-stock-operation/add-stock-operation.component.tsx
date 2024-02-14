@@ -96,7 +96,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           canEdit={canEdit}
           locked={false}
           model={isEditing ? props?.model : result?.dto}
-          requiresDispatchAcknowledgement={false}
+          requiresDispatchAcknowledgement={
+            isEditing
+              ? props?.model?.operationType === "return" ||
+                props?.model?.operationType === "issuestock"
+              : result.requiresDispatchAcknowledgement
+          }
           actions={{
             onSave: async (model) => {
               // TODO: Update
@@ -197,7 +202,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               {!props?.model?.permission?.canEdit &&
                 props?.model?.permission?.canApprove && (
                   <>
-                    {!(props?.model
+                    {(props?.model
                       ? props?.model?.operationTypeName === "return" ||
                         props?.model?.operationTypeName === "stockissue"
                       : false) && (
@@ -207,7 +212,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                         />
                       </div>
                     )}
-                    {(props?.model
+                    {!(props?.model
                       ? props?.model?.operationTypeName === "return" ||
                         props?.model?.operationTypeName === "stockissue"
                       : false) && (
