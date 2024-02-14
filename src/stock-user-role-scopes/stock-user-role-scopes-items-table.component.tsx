@@ -97,7 +97,7 @@ function StockUserRoleScopesItems() {
     });
   }, [items, t]);
 
-  if (isLoading || items?.length === 0) {
+  if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 

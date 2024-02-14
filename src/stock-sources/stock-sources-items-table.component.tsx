@@ -65,7 +65,7 @@ const StockSourcesItems: React.FC = () => {
     });
   }, [items]);
 
-  if (isLoading || items.length === 0) {
+  if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
@@ -82,7 +82,7 @@ const StockSourcesItems: React.FC = () => {
         <div className="right-filters"></div>
       </div>
       <DataTable
-        rows={tableRows}
+        rows={tableRows ?? []}
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
