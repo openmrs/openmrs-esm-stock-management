@@ -28,6 +28,7 @@ import EditStockSourceActionsMenu from "./edit-stock-source/edit-stock-source.co
 
 const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
+  const [selectedSourceType, setSelectedSourceType] = React.useState("");
 
   // get sourcess
   const {
@@ -64,6 +65,16 @@ const StockSourcesItems: React.FC = () => {
       };
     });
   }, [items]);
+  const handleFilterChange = (selectedSourceType: string) => {
+    setSelectedSourceType(selectedSourceType);
+  };
+
+  const filteredTableRows = useMemo(() => {
+    if (!selectedSourceType) {
+      return tableRows;
+    }
+    return tableRows.filter((row) => row.sourceType === selectedSourceType);
+  }, [tableRows, selectedSourceType]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -82,7 +93,7 @@ const StockSourcesItems: React.FC = () => {
         <div className="right-filters"></div>
       </div>
       <DataTable
-        rows={tableRows ?? []}
+        rows={filteredTableRows}
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
@@ -110,7 +121,7 @@ const StockSourcesItems: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-                  <StockSourcesFilter />
+                  <StockSourcesFilter onFilterChange={handleFilterChange} />
                 </div>
 
                 <AddStockSourceActionButton />
@@ -120,7 +131,7 @@ const StockSourcesItems: React.FC = () => {
               <TableHead>
                 <TableRow>
                   {headers.map(
-                    (header: any) =>
+                    (header) =>
                       header.key !== "details" && (
                         <TableHeader
                           {...getHeaderProps({
@@ -142,7 +153,7 @@ const StockSourcesItems: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any) => {
+                {rows.map((row) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableRow
@@ -152,7 +163,7 @@ const StockSourcesItems: React.FC = () => {
                         {...getRowProps({ row })}
                       >
                         {row.cells.map(
-                          (cell: any) =>
+                          (cell) =>
                             cell?.info?.header !== "details" && (
                               <TableCell key={cell.id}>{cell.value}</TableCell>
                             )
