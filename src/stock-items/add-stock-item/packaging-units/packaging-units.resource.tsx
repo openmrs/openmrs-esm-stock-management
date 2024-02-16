@@ -1,5 +1,5 @@
 import { ResourceRepresentation } from "../../../core/api/api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StockItemInventoryFilter,
   useStockItemPackagingUOMs,
@@ -28,28 +28,11 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
   const { items, isLoading, isError } =
     useStockItemPackagingUOMs(stockItemFilter);
 
-  const tableHeaders = useMemo(
-    () => [
-      {
-        key: "packaging",
-        header: "Packaging Unit",
-        styles: { width: "50%" },
-      },
-      {
-        key: "quantity",
-        header: "Quantity",
-        styles: { width: "50%" },
-      },
-    ],
-    []
-  );
-
   return {
     items: items.results,
     totalCount: items.totalCount,
     isLoading,
     isError,
-    tableHeaders,
     setStockItemUuid,
   };
 }
