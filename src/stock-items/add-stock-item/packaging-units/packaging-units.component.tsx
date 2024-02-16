@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
 import {
   Button,
@@ -43,13 +43,32 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
   stockItemUuid,
   handleTabChange,
 }) => {
-  const { items, isLoading, tableHeaders, setStockItemUuid } =
-    useStockItemPackageUnitsHook();
+  const { items, isLoading, setStockItemUuid } = useStockItemPackageUnitsHook();
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
 
   const { t } = useTranslation();
+  const tableHeaders = useMemo(
+    () => [
+      {
+        key: "packaging",
+        header: t("packagingUnit", "Packaging Unit"),
+        styles: { width: "50%" },
+      },
+      {
+        key: "quantity",
+        header: t("quantity", "Quantity"),
+        styles: { width: "50%" },
+      },
+      {
+        key: "action",
+        header: t("action", "Actions"),
+        styles: { width: "50%" },
+      },
+    ],
+    []
+  );
 
   const packageUnitForm = useForm<PackageUnitFormData>({
     defaultValues: {},
@@ -223,17 +242,18 @@ const PackagingUnitRow: React.FC<{
           ) : (
             !isEditing && row?.factor?.toLocaleString()
           )}
-
-          <Button
-            type="button"
-            size="sm"
-            className="submitButton clear-padding-margin"
-            iconDescription={"Delete"}
-            kind="ghost"
-            renderIcon={TrashCan}
-            onClick={(e) => handleDelete(e)}
-          />
         </div>
+      </TableCell>
+      <TableCell>
+        <Button
+          type="button"
+          size="sm"
+          className="submitButton clear-padding-margin"
+          iconDescription={"Delete"}
+          kind="ghost"
+          renderIcon={TrashCan}
+          onClick={(e) => handleDelete(e)}
+        />
       </TableCell>
     </TableRow>
   );
