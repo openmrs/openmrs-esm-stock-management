@@ -368,7 +368,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 backgroundColor: "color",
               }}
             >
-              <TableToolbarContent>
+              <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch
                   className={styles.patientListSearch}
                   expanded
