@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
@@ -26,6 +26,8 @@ import {
   StructuredListBody,
   OverflowMenu,
   OverflowMenuItem,
+  DatePickerInput,
+  DatePicker,
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -44,6 +46,13 @@ import { StockOperationType } from "../core/api/types/stockOperation/StockOperat
 import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
 import { handleMutate } from "./swr-revalidation";
+import StockOperationsFilters from "./stock-operations-filters.component";
+import {
+  DATE_PICKER_CONTROL_FORMAT,
+  DATE_PICKER_FORMAT,
+  STOCK_SOURCE_TYPE_CODED_CONCEPT_ID,
+  StockFilters,
+} from "../constants";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -93,6 +102,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     totalCount: true,
   });
 
+  const [filteredItems, setFilteredItems] = useState(items);
+  const [selectedFromDate, setSelectedFromDate] = useState(null);
+  const [selectedToDate, setSelectedToDate] = useState(null);
+
   let operations: StockOperationType[] | null | undefined;
   const handleOnComplete = () => {
     const dispose = showModal("stock-operation-dialog", {
@@ -103,15 +116,73 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     });
     handleMutate("ws/rest/v1/stockmanagement/stockoperation");
   };
+
+  useEffect(() => {
+    setFilteredItems(items);
+  }, [items]);
+
+  useEffect(() => {
+    if (selectedFromDate && selectedToDate) {
+      setFilteredItems(
+        filteredItems.filter(
+          (item) =>
+            new Date(item.operationDate) >= new Date(selectedFromDate) &&
+            new Date(item.operationDate) <= new Date(selectedToDate)
+        )
+      );
+    } else if (selectedFromDate && !selectedToDate) {
+      setFilteredItems(
+        filteredItems.filter(
+          (item) => new Date(item.operationDate) >= new Date(selectedFromDate)
+        )
+      );
+    } else if (!selectedFromDate && selectedToDate) {
+      setFilteredItems(
+        filteredItems.filter(
+          (item) => new Date(item.operationDate) <= new Date(selectedToDate)
+        )
+      );
+    }
+  }, [filteredItems, selectedFromDate, selectedToDate]);
+
+  const handleOnFilterChange = useCallback(
+    (selectedItems, filterType) => {
+      let newFilteredRows = [...filteredItems];
+
+      switch (filterType) {
+        case StockFilters.SOURCES:
+          newFilteredRows = newFilteredRows.filter((row) =>
+            selectedItems.includes(row.sourceName)
+          );
+          break;
+        case StockFilters.STATUS:
+          newFilteredRows = newFilteredRows.filter((row) =>
+            selectedItems.includes(row.status)
+          );
+          break;
+        case StockFilters.OPERATION:
+          newFilteredRows = newFilteredRows.filter((row) =>
+            selectedItems.includes(row.operationTypeName)
+          );
+          break;
+        default:
+          break;
+      }
+
+      setFilteredItems(newFilteredRows);
+    },
+    [filteredItems]
+  );
+
   const tableRows = useMemo(() => {
-    return items?.map((stockOperation, index) => ({
+    return filteredItems?.map((stockOperation, index) => ({
       ...stockOperation,
       id: stockOperation?.uuid,
       key: `key-${stockOperation?.uuid}`,
       operationTypeName: `${stockOperation?.operationTypeName}`,
       operationNumber: (
         <EditStockOperationActionMenu
-          model={items[index]}
+          model={filteredItems[index]}
           operations={operations}
         />
       ),
@@ -244,7 +315,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             itemText="Edit"
             onClick={() => {
               launchAddOrEditDialog(
-                items[index],
+                filteredItems[index],
                 true,
                 operation,
                 operations,
@@ -255,7 +326,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [handleOnComplete, items, operation, operations]);
+  }, [handleOnComplete, filteredItems, operation, operations]);
 
   if (isLoading) {
     return (
@@ -297,7 +368,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 backgroundColor: "color",
               }}
             >
-              <TableToolbarContent className={styles.toolbarContent}>
+              <TableToolbarContent>
                 <TableToolbarSearch
                   className={styles.patientListSearch}
                   expanded
@@ -305,6 +376,48 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   placeholder="Filter Table"
                   size="sm"
                 />
+                <div className={styles.filterContainer}>
+                  <DatePicker
+                    className={styles.datePickers}
+                    datePickerType="range"
+                    dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                    value={[selectedFromDate, selectedToDate]}
+                    onChange={([startDate, endDate]) => {
+                      if (endDate < startDate && startDate !== null) {
+                        setSelectedFromDate(endDate);
+                        setSelectedToDate(startDate);
+                      } else {
+                        setSelectedFromDate(startDate);
+                        setSelectedToDate(endDate);
+                      }
+                    }}
+                  >
+                    <DatePickerInput
+                      //labelText={t("startDate", "Start date")}
+                      placeholder={DATE_PICKER_FORMAT}
+                    />
+                    <DatePickerInput
+                      //labelText={t("endDate", "End date")}
+                      placeholder={DATE_PICKER_FORMAT}
+                    />
+                  </DatePicker>
+                  <StockOperationsFilters
+                    conceptUuid={STOCK_SOURCE_TYPE_CODED_CONCEPT_ID}
+                    filterName={StockFilters.SOURCES}
+                    onFilterChange={handleOnFilterChange}
+                  />
+
+                  <StockOperationsFilters
+                    filterName={StockFilters.STATUS}
+                    onFilterChange={handleOnFilterChange}
+                  />
+
+                  <StockOperationsFilters
+                    filterName={StockFilters.OPERATION}
+                    onFilterChange={handleOnFilterChange}
+                  />
+                </div>
+
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
@@ -383,27 +496,31 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                           <StructuredListBody>
                             <StructuredListRow>
                               <StructuredListCell noWrap>
-                                {items[index]?.dateCreated
-                                  ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ""}
-                                &nbsp;
-                                {items[index]?.dateCreated ? "By" : ""}
-                                &nbsp;
-                                {items[index]?.dateCreated
-                                  ? items[index]?.creatorFamilyName
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.completedDate
+                                {filteredItems[index]?.dateCreated
                                   ? formatDisplayDate(
-                                      items[index]?.completedDate
+                                      filteredItems[index]?.dateCreated
                                     )
                                   : ""}
                                 &nbsp;
-                                {items[index]?.completedDate ? "By" : ""}
+                                {filteredItems[index]?.dateCreated ? "By" : ""}
                                 &nbsp;
-                                {items[index]?.completedDate
-                                  ? items[index]?.creatorFamilyName
+                                {filteredItems[index]?.dateCreated
+                                  ? filteredItems[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {filteredItems[index]?.completedDate
+                                  ? formatDisplayDate(
+                                      filteredItems[index]?.completedDate
+                                    )
+                                  : ""}
+                                &nbsp;
+                                {filteredItems[index]?.completedDate
+                                  ? "By"
+                                  : ""}
+                                &nbsp;
+                                {filteredItems[index]?.completedDate
+                                  ? filteredItems[index]?.creatorFamilyName
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>

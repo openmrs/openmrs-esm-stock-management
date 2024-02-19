@@ -64,3 +64,23 @@
       margin-right: -50%;
     }
   }
+
+  .toolbarContent {
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  .filterContainer {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .filterContainer > * {
+    flex: 1; 
+    margin-right: 8px; 
+  }
