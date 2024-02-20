@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
 import { Concept } from "../../../core/api/types/concept/Concept";
 import { Control, Controller, FieldValues } from "react-hook-form";
-import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
-import { PACKAGING_UNITS_CODED_CONCEPT_ID } from "../../../constants";
+import { useConcept } from "../../../stock-lookups/stock-lookups.resource";
 import { ComboBox, TextInputSkeleton } from "@carbon/react";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
+import { useConfig } from "@openmrs/esm-framework";
+import { type ConfigObject } from "../../../config-schema";
 
 interface PackagingUnitsConceptSelectorProps<T> {
   row?: StockItemPackagingUOMDTO;
@@ -23,10 +24,12 @@ interface PackagingUnitsConceptSelectorProps<T> {
 const PackagingUnitsConceptSelector = <T,>(
   props: PackagingUnitsConceptSelectorProps<T>
 ) => {
+  const { packagingUnitsUUID } = useConfig<ConfigObject>();
+
   const {
     items: { answers: dispensingUnits },
     isLoading,
-  } = useConceptById(PACKAGING_UNITS_CODED_CONCEPT_ID);
+  } = useConcept(packagingUnitsUUID);
 
   if (isLoading) return <TextInputSkeleton />;
 

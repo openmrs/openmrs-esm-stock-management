@@ -11,13 +11,13 @@ import {
 import React, { ChangeEvent, useCallback, useState } from "react";
 import { handleMutate } from "../swr-revalidation";
 import styles from "./add-stock-sources.scss";
-import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
-import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
+import { useConcept } from "../../stock-lookups/stock-lookups.resource";
 import { StockSource } from "../../core/api/types/stockOperation/StockSource";
 import { createOrUpdateStockSource } from "../stock-sources.resource";
-import { showNotification, showToast } from "@openmrs/esm-framework";
+import { showNotification, showToast, useConfig } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
+import { type ConfigObject } from "../../config-schema";
 
 interface AddStockSourceProps {
   model?: StockSource;
@@ -25,9 +25,10 @@ interface AddStockSourceProps {
 
 const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
   const { t } = useTranslation();
+  const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
   // get stock sources
-  const { items } = useConceptById(STOCK_SOURCE_TYPE_CODED_CONCEPT_ID);
+  const { items } = useConcept(stockSourceTypeUUID);
 
   const [formModel, setFormModel] = useState<StockSource>({ ...model });
 

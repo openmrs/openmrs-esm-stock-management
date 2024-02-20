@@ -191,9 +191,8 @@ export function useUser(id: string) {
   };
 }
 
-// getConceptById
-export function useConceptById(id: string) {
-  const apiUrl = `ws/rest/v1/concept/${id}`;
+export function useConcept(conceptUuid: string) {
+  const apiUrl = `ws/rest/v1/concept/${conceptUuid}`;
   const { data, error, isLoading } = useSWR<
     {
       data: Concept;
