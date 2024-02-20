@@ -1,13 +1,13 @@
 {
-  "name": "@ugandaemr/esm-stock-management-app",
-  "version": "3.0.0",
+  "name": "@openmrs/esm-stock-management-app",
+  "version": "1.0.0",
   "license": "MPL-2.0",
-  "description": "A frontend module that handles stock management in UgandaEMR+",
-  "browser": "dist/esm-ugandaemr-stock-management-app.js",
+  "description": "Stock management microfrontend for OpenMRS 3.x",
+  "browser": "dist/openmrs-esm-stock-management-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
-    "start": "openmrs develop --backend http://194.163.171.253:8282",
+    "start": "openmrs develop",
     "serve": "webpack serve --mode=development",
     "build": "webpack --mode production",
     "analyze": "webpack --mode=production --env analyze=true",
@@ -30,6 +30,7 @@
   ],
   "keywords": [
     "openmrs",
+    "stock-management",
     "microfrontends"
   ],
   "repository": {
@@ -50,7 +51,6 @@
     "lodash-es": "^4.17.21",
     "react-hook-form": "^7.45.4",
     "react-image-annotate": "^1.8.0",
-    "swr": "^2.2.1",
     "yup": "^1.2.0",
     "zod": "^3.22.2"
   },
@@ -60,7 +60,8 @@
     "react": "18.x",
     "react-i18next": "11.x",
     "react-router-dom": "6.x",
-    "rxjs": "6.x"
+    "rxjs": "6.x",
+    "swr": "2.x"
   },
   "devDependencies": {
     "@openmrs/esm-framework": "next",
@@ -109,5 +110,5 @@
     "webpack-cli": "^5.1.4",
     "yup": "^1.2.0"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@4.1.0"
 }

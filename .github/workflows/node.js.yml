@@ -1,7 +1,6 @@
-name: UgandaEMR CI
+name: Node CI
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
@@ -11,8 +10,8 @@ on:
       - created
 
 env:
-  ESM_NAME: "@ugandaemr/esm-stock-management-app"
-  JS_NAME: "esm-ugandaemr-stock-management-app.js"
+  ESM_NAME: "@openmrs/esm-stock-management-app"
+  JS_NAME: "openmrs-esm-stock-management-app.js"
 
 jobs:
   build:
@@ -36,11 +35,11 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-            
+
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --immutable
-      
+
       - name: Setup local cache server for Turborepo
         uses: felixmosh/turborepo-gh-artifacts@v2
         with:
@@ -85,7 +84,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --immutable
-        
+
       - name: Setup local cache server for Turborepo
         uses: felixmosh/turborepo-gh-artifacts@v2
         with:
@@ -98,7 +97,7 @@ jobs:
       - name: Build
         run: yarn turbo build --color --concurrency=5
 
-      - run: git config user.email "<>" && git config user.name "UgandaEMR CI"
+      - run: git config user.email "<>" && git config user.name "OpenMRS CI"
       - run: git add . && git commit -m "Prerelease version" --no-verify
 
       - name: Pre-release
