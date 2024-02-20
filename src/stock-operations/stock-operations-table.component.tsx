@@ -105,6 +105,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const [filteredItems, setFilteredItems] = useState(items);
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedOperations, setSelectedOperations] = useState<string[]>([]);
 
   let operations: StockOperationType[] | null | undefined;
   const handleOnComplete = () => {
@@ -118,61 +121,75 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   };
 
   useEffect(() => {
-    setFilteredItems(items);
-  }, [items]);
+    filterItems();
+  }, [
+    selectedFromDate,
+    selectedToDate,
+    selectedSources,
+    selectedStatus,
+    selectedOperations,
+  ]);
 
-  useEffect(() => {
-    if (selectedFromDate && selectedToDate) {
-      setFilteredItems(
-        filteredItems.filter(
-          (item) =>
-            new Date(item.operationDate) >= new Date(selectedFromDate) &&
-            new Date(item.operationDate) <= new Date(selectedToDate)
-        )
-      );
-    } else if (selectedFromDate && !selectedToDate) {
-      setFilteredItems(
-        filteredItems.filter(
-          (item) => new Date(item.operationDate) >= new Date(selectedFromDate)
-        )
-      );
-    } else if (!selectedFromDate && selectedToDate) {
-      setFilteredItems(
-        filteredItems.filter(
-          (item) => new Date(item.operationDate) <= new Date(selectedToDate)
-        )
+  const handleOnFilterChange = useCallback((selectedItems, filterType) => {
+    if (filterType === StockFilters.SOURCES) {
+      setSelectedSources(selectedItems);
+    } else if (filterType === StockFilters.OPERATION) {
+      setSelectedOperations(selectedItems);
+    } else {
+      setSelectedStatus(selectedItems);
+    }
+  }, []);
+
+  const handleDateFilterChange = ([startDate, endDate]) => {
+    if (startDate) {
+      setSelectedFromDate(startDate);
+      if (selectedToDate && startDate && selectedToDate < startDate) {
+        setSelectedToDate(startDate);
+      }
+    }
+    if (endDate) {
+      setSelectedToDate(endDate);
+      if (selectedFromDate && endDate && selectedFromDate > endDate) {
+        setSelectedFromDate(endDate);
+      }
+    }
+  };
+
+  const filterItems = () => {
+    let filtered = items;
+
+    if (selectedSources.length > 0) {
+      filtered = filtered.filter((row) =>
+        selectedSources.includes(row.sourceName)
       );
     }
-  }, [filteredItems, selectedFromDate, selectedToDate]);
+    if (selectedOperations.length > 0) {
+      filtered = filtered.filter((row) =>
+        selectedOperations.includes(row.operationTypeName)
+      );
+    }
+    if (selectedStatus.length > 0) {
+      filtered = filtered.filter((row) => selectedStatus.includes(row.status));
+    }
+    if (selectedFromDate && selectedToDate) {
+      filtered = filtered.filter((row) => {
+        const itemDate = new Date(row.operationDate);
+        return itemDate >= selectedFromDate && itemDate <= selectedToDate;
+      });
+    } else if (selectedFromDate) {
+      filtered = filtered.filter((row) => {
+        const itemDate = new Date(row.operationDate);
+        return itemDate >= selectedFromDate;
+      });
+    } else if (selectedToDate) {
+      filtered = filtered.filter((row) => {
+        const itemDate = new Date(row.operationDate);
+        return itemDate <= selectedToDate;
+      });
+    }
 
-  const handleOnFilterChange = useCallback(
-    (selectedItems, filterType) => {
-      let newFilteredRows = [...filteredItems];
-
-      switch (filterType) {
-        case StockFilters.SOURCES:
-          newFilteredRows = newFilteredRows.filter((row) =>
-            selectedItems.includes(row.sourceName)
-          );
-          break;
-        case StockFilters.STATUS:
-          newFilteredRows = newFilteredRows.filter((row) =>
-            selectedItems.includes(row.status)
-          );
-          break;
-        case StockFilters.OPERATION:
-          newFilteredRows = newFilteredRows.filter((row) =>
-            selectedItems.includes(row.operationTypeName)
-          );
-          break;
-        default:
-          break;
-      }
-
-      setFilteredItems(newFilteredRows);
-    },
-    [filteredItems]
-  );
+    setFilteredItems(filtered);
+  };
 
   const tableRows = useMemo(() => {
     return filteredItems?.map((stockOperation, index) => ({
@@ -378,29 +395,18 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 />
                 <div className={styles.filterContainer}>
                   <DatePicker
-                    className={styles.datePickers}
+                    className={styles.dateAlign}
                     datePickerType="range"
                     dateFormat={DATE_PICKER_CONTROL_FORMAT}
                     value={[selectedFromDate, selectedToDate]}
                     onChange={([startDate, endDate]) => {
-                      if (endDate < startDate && startDate !== null) {
-                        setSelectedFromDate(endDate);
-                        setSelectedToDate(startDate);
-                      } else {
-                        setSelectedFromDate(startDate);
-                        setSelectedToDate(endDate);
-                      }
+                      handleDateFilterChange([startDate, endDate]);
                     }}
                   >
-                    <DatePickerInput
-                      //labelText={t("startDate", "Start date")}
-                      placeholder={DATE_PICKER_FORMAT}
-                    />
-                    <DatePickerInput
-                      //labelText={t("endDate", "End date")}
-                      placeholder={DATE_PICKER_FORMAT}
-                    />
+                    <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
+                    <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
                   </DatePicker>
+
                   <StockOperationsFilters
                     conceptUuid={STOCK_SOURCE_TYPE_CODED_CONCEPT_ID}
                     filterName={StockFilters.SOURCES}

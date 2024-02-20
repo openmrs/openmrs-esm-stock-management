@@ -6,6 +6,7 @@ import {
 import { DropdownSkeleton, MultiSelect } from "@carbon/react";
 import { StockFilters } from "../constants";
 import { StockOperationStatusTypes } from "../core/api/types/stockOperation/StockOperationStatus";
+import styles from "../stock-items/stock-items-table.scss";
 
 interface StockOperationFiltersProps {
   conceptUuid?: string;
@@ -64,8 +65,10 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
 
   return (
     <MultiSelect
+      className={styles.filtersAlign}
       id="multiSelect"
       label={filterName}
+      size="md"
       labelInline={true}
       items={dataItems}
       itemToString={(item) => (item ? item.display : "Not Set")}

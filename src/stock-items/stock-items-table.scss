@@ -69,18 +69,22 @@
     display: flex;
     align-items: center;
   }
-  
-  
-  .filterContainer {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    width: 100%;
-    padding: 0 16px;
-    box-sizing: border-box;
-  }
 
-  .filterContainer > * {
-    flex: 1; 
-    margin-right: 8px; 
+  .filterContainer{
+    display: flex;
+    align-items: center;
   }
+  .dateAlign{
+    padding-top: 8px;
+    height: 100%;
+  }
+  .filtersAlign{
+    padding-bottom: 8px;
+
+    :global(.cds--list-box__menu) {
+      min-width: 15rem;
+      z-index: 1;
+    }
+  }
+  
+
