@@ -2,10 +2,6 @@
 @use '@carbon/styles/scss/type';
 @import '~@openmrs/esm-styleguide/src/vars';
 
-section {
-  margin: spacing.$spacing-03;
-}
-
 .sectionTitle {
   @include type.type-style('heading-compact-02');
   color: $text-02;
@@ -14,4 +10,35 @@ section {
 
 .modalBody {
   padding-bottom: spacing.$spacing-05;
+}
+
+.actionsContainer {
+  display: "flex";
+  justify-content: space-between;
+  margin: "5px";
+}
+
+.statusDescriptions {
+  display: "flex";
+  flex-direction: "row";
+}
+
+.statusContainer {
+  display: "flex";
+  flex-direction: "row";
+  margin-top: "4px";
+}
+
+.text {
+  font-size: "8px";
+}
+.textHeading {
+  font-size: "10px";
+  font-weight: bold;
+}
+
+.actionButtons {
+  margin: "10px";
+  display: "flex";
+  flex-direction: "row";
 }

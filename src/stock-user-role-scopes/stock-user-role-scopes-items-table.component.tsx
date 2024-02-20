@@ -20,7 +20,7 @@ import {
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
 import { ArrowDownLeft, ArrowLeft } from "@carbon/react/icons";
-import { isDesktop } from "@openmrs/esm-framework";
+import { isDesktop, useSession } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
@@ -31,6 +31,8 @@ import { URL_USER_ROLE_SCOPE } from "../constants";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
+
+  const currentUser = useSession();
 
   // get user scopes
   const {
@@ -105,11 +107,15 @@ function StockUserRoleScopesItems() {
         id: userRoleScope?.uuid,
         key: `key-${userRoleScope?.uuid}`,
         uuid: `${userRoleScope?.uuid}`,
-        user: (
-          <Link
-            to={URL_USER_ROLE_SCOPE(userRoleScope?.uuid)}
-          >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
-        ),
+        user:
+          currentUser.user.uuid === userRoleScope.userUuid ? (
+            `${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`
+          ) : (
+            <Link
+              to={URL_USER_ROLE_SCOPE(userRoleScope?.uuid)}
+            >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
+          ),
+
         roleName: userRoleScope?.role,
         locations: userRoleScope?.locations?.map((location) => {
           const key = `loc-${userRoleScope?.uuid}-${location.locationUuid}`;
@@ -145,7 +151,7 @@ function StockUserRoleScopesItems() {
         ),
       };
     });
-  }, [items, t]);
+  }, [currentUser.user.uuid, items, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
