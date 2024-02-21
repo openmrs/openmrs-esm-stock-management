@@ -1,4 +1,4 @@
-name: UgandaEMR CI
+name: KenyaEMR CI
 
 on:
   workflow_dispatch:
@@ -11,8 +11,8 @@ on:
       - created
 
 env:
-  ESM_NAME: "@ugandaemr/esm-stock-management-app"
-  JS_NAME: "esm-ugandaemr-stock-management-app.js"
+  ESM_NAME: "@kenyaemr/esm-stock-management-app"
+  JS_NAME: "esm-kenyaemr-stock-management-app.js"
 
 jobs:
   build:
@@ -98,7 +98,7 @@ jobs:
       - name: Build
         run: yarn turbo build --color --concurrency=5
 
-      - run: git config user.email "<>" && git config user.name "UgandaEMR CI"
+      - run: git config user.email "<>" && git config user.name "kenyaemr CI"
       - run: git add . && git commit -m "Prerelease version" --no-verify
 
       - name: Pre-release

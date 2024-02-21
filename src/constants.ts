@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { formatDisplayDate } from "./core/utils/datetimeUtils";
 
-export const moduleName = "@ugandaemr/esm-stock-management-app";
+export const moduleName = "@kenyaemr/esm-stock-management-app";
 export const spaRoot = `${window["getOpenmrsSpaBase"]}`;
 export const omrsDateFormat = "YYYY-MM-DDTHH:mm:ss.SSSZZ";
 export const startOfDay = dayjs(new Date().setUTCHours(0, 0, 0, 0)).format(

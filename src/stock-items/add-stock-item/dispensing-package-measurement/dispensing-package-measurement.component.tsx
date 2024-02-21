@@ -28,8 +28,6 @@ const DispensingPackageMeasurement = <T,>(
 
   if (props.isLoading) return <SelectSkeleton />;
 
-  console.log("PROSLD ", props);
-
   if (!(props.packagingUnits && props.packagingUnits.length > 0)) return <></>;
   return (
     <Controller

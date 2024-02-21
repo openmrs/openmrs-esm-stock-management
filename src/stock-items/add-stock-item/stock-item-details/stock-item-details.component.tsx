@@ -45,7 +45,6 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     const { errors } = formState;
     const handleSave = async (item: StockItemDTO) => {
       try {
-        console.log("ITEM TO SAVE ", item);
         setIsSaving(true);
 
         // Restore uuid
