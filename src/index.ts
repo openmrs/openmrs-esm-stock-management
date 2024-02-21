@@ -9,7 +9,7 @@ import stockManagementDashboardComponent from "./dashboard/stock-management-dash
 import stockManagementComponent from "./stock-management.component";
 import stockManagementAdminCardLinkComponent from "./stock-management-admin-card-link.component";
 
-const moduleName = "@ugandaemr/esm-stock-management-app";
+const moduleName = "@openmrs/esm-stock-management-app";
 
 const options = {
   featureName: "stock-management",
