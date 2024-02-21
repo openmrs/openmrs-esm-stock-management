@@ -28,6 +28,8 @@ const DispensingPackageMeasurement = <T,>(
 
   if (props.isLoading) return <SelectSkeleton />;
 
+  console.log("PROSLD ", props);
+
   if (!(props.packagingUnits && props.packagingUnits.length > 0)) return <></>;
   return (
     <Controller
@@ -41,13 +43,23 @@ const DispensingPackageMeasurement = <T,>(
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}
-          onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
-            props.onDispensingUnitPackagingUoMUuidChange?.(data?.selectedItem);
-            onChange(data?.selectedItem?.uuid);
-            setItem(data?.selectedItem?.uuid);
-          }}
+          onChange={onChange}
+          value={value}
           ref={ref}
-          value={item}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // onChange={(data: any) => {
+          //   console.log("ITEM ", data.selectedItem);
+          //   console.log("ITEM ", data?.value);
+
+          //   console.log("onDispensingUnitPackagingUoMUuidChange ", data);
+          //   props.onDispensingUnitPackagingUoMUuidChange?.(data?.selectedItem);
+          //   onChange(data?.selectedItem?.uuid);
+          //   setItem(data?.selectedItem?.uuid);
+          // }}
+          // value={item}
+          // value={
+          //   props.packagingUnits?.find((p) => p.uuid === value)?.uuid ?? ""
+          // }
           invalid={props.invalid}
           invalidText={props.invalidText}
         >
