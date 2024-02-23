@@ -1,16 +1,16 @@
 import styles from "./stock-sources-filter.scss";
 import { Dropdown, DropdownSkeleton } from "@carbon/react";
 import React from "react";
-import { STOCK_SOURCE_TYPE_CODED_CONCEPT_ID } from "../../constants";
-import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
+import { useConcept } from "../../stock-lookups/stock-lookups.resource";
+import { type ConfigObject } from "../../config-schema";
+import { useConfig } from "@openmrs/esm-framework";
 
 const StockSourcesFilter: React.FC<{
   onFilterChange: (selectedSourceType: string) => void;
 }> = ({ onFilterChange }) => {
+  const { stockSourceTypeUUID } = useConfig<ConfigObject>();
   // get stock sources
-  const { items, isLoading, isError } = useConceptById(
-    STOCK_SOURCE_TYPE_CODED_CONCEPT_ID
-  );
+  const { items, isLoading, isError } = useConcept(stockSourceTypeUUID);
   if (isLoading || isError) {
     return <DropdownSkeleton />;
   }

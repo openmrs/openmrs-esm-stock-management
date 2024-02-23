@@ -2,8 +2,9 @@ import React, { ReactNode } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { Concept } from "../../core/api/types/concept/Concept";
 import { ComboBox, SelectSkeleton } from "@carbon/react";
-import { useConceptById } from "../../stock-lookups/stock-lookups.resource";
-import { STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID } from "../../constants";
+import { useConcept } from "../../stock-lookups/stock-lookups.resource";
+import { type ConfigObject } from "../../config-schema";
+import { useConfig } from "@openmrs/esm-framework";
 
 interface StockOperationReasonSelectorProps<T> {
   reasonUuid?: string;
@@ -22,11 +23,13 @@ interface StockOperationReasonSelectorProps<T> {
 const StockOperationReasonSelector = <T,>(
   props: StockOperationReasonSelectorProps<T>
 ) => {
+  const { stockAdjustmentReasonUUID } = useConfig<ConfigObject>();
+
   const {
     isLoading,
     isError,
     items: { answers: reasons },
-  } = useConceptById(STOCK_ADJUSTMENT_REASON_CODED_CONCEPT_ID);
+  } = useConcept(stockAdjustmentReasonUUID);
 
   if (isLoading || isError) return <SelectSkeleton />;
 

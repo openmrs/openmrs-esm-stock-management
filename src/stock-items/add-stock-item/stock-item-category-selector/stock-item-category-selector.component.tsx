@@ -2,8 +2,9 @@ import React, { ReactNode } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { Concept } from "../../../core/api/types/concept/Concept";
 import { ComboBox, TextInputSkeleton } from "@carbon/react";
-import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
-import { STOCK_ITEM_CATEGORY_CONCEPT_ID } from "../../../constants";
+import { useConcept } from "../../../stock-lookups/stock-lookups.resource";
+import { type ConfigObject } from "../../../config-schema";
+import { useConfig } from "@openmrs/esm-framework";
 
 interface StockItemCategorySelectorProps<T> {
   categoryUuid?: string;
@@ -22,10 +23,11 @@ interface StockItemCategorySelectorProps<T> {
 const StockItemCategorySelector = <T,>(
   props: StockItemCategorySelectorProps<T>
 ) => {
+  const { stockItemCategoryUUID } = useConfig<ConfigObject>();
   const {
     items: { answers: categories },
     isLoading,
-  } = useConceptById(STOCK_ITEM_CATEGORY_CONCEPT_ID);
+  } = useConcept(stockItemCategoryUUID);
 
   if (isLoading) return <TextInputSkeleton />;
 

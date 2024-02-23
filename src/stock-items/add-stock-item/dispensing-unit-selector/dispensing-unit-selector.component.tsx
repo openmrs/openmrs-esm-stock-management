@@ -1,9 +1,10 @@
 import React, { ReactNode } from "react";
 import { ComboBox, TextInputSkeleton } from "@carbon/react";
-import { useConceptById } from "../../../stock-lookups/stock-lookups.resource";
-import { DISPENSING_UNITS_CONCEPT_ID } from "../../../constants";
+import { useConcept } from "../../../stock-lookups/stock-lookups.resource";
 import { Concept } from "../../../core/api/types/concept/Concept";
 import { Control, Controller, FieldValues } from "react-hook-form";
+import { type ConfigObject } from "../../../config-schema";
+import { useConfig } from "@openmrs/esm-framework";
 
 interface DispensingUnitSelectorProps<T> {
   dispensingUnitUuid?: string;
@@ -20,10 +21,11 @@ interface DispensingUnitSelectorProps<T> {
 }
 
 const DispensingUnitSelector = <T,>(props: DispensingUnitSelectorProps<T>) => {
+  const { dispensingUnitsUUID } = useConfig<ConfigObject>();
   const {
     items: { setMembers: dispensingUnits },
     isLoading,
-  } = useConceptById(DISPENSING_UNITS_CONCEPT_ID);
+  } = useConcept(dispensingUnitsUUID);
 
   if (isLoading) return <TextInputSkeleton />;
 
