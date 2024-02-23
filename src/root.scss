@@ -155,20 +155,28 @@ nav :global(.bx--accordion__content) > a {
 }
 
 .formContainer {
-  height: calc(100vh - 100px) !important;
-  overflow: scroll;
   padding: 0 1rem;
 }
 
 .verticalForm {
   display: flex;
   grid-row-gap: 2em;
-  padding-top: 1rem;
   align-content: space-between;
   flex-direction: column;
+  padding-top: 1rem;
 
   :global(.cds--form-item) {
     flex: none !important;
+  }
+  :global(.cds--label) {
+    color: black;
+    display: inline-block;
+    font-size: var(--cds-label-01-font-size);
+    font-weight: bold;
+    letter-spacing: var(--cds-label-01-letter-spacing, .32px);
+    line-height: 1rem;
+    margin-bottom: 0.5rem;
+    vertical-align: baseline;
   }
 }
 

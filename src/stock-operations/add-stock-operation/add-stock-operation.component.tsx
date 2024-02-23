@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabItem } from "../../core/components/tabs/types";
-import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
+import HorizontalTabs from "../../core/components/tabs/horizontal-tabs.component";
 import BaseOperationDetails from "./base-operation-details.component";
 import StockItemsAddition from "./stock-items-addition.component";
 import StockOperationSubmission from "./stock-operation-submission.component";
@@ -170,13 +170,19 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         >
           <div style={{ margin: "10px" }}>
             {isEditing && (
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginBottom: "0.5rem",
+                }}
+              >
                 <span className={styles.textHeading}>
-                  {t("status", "Status ")}:
+                  {t("status", "Status: ")}
                 </span>
                 <span
                   style={{
-                    marginLeft: "2px",
+                    marginLeft: "4px",
                     color: `${operationStatusColor(props?.model?.status)}`,
                   }}
                 >
@@ -478,7 +484,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       )}
 
       <StockOperation>
-        <VerticalTabs
+        <HorizontalTabs
           tabs={tabs}
           selectedIndex={selectedIndex}
           onChange={setSelectedIndex}

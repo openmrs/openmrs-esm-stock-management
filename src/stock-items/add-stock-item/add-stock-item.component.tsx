@@ -7,7 +7,7 @@ import PackagingUnits from "./packaging-units/packaging-units.component";
 import Transactions from "./transactions/transactions.component";
 import BatchInformation from "./batch-information/batch-information.component";
 import StockQuantities from "./quantities/quantities.component";
-import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
+import HorizontalTabs from "../../core/components/tabs/horizontal-tabs.component";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import { SaveStockItem } from "../types";
 
@@ -73,7 +73,7 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
   ];
 
   return (
-    <VerticalTabs
+    <HorizontalTabs
       onChange={handleTabChange}
       tabs={tabs}
       selectedIndex={selectedTab}

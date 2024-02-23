@@ -1,9 +1,9 @@
 import React from "react";
 import { TabItem } from "./types";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
-import styles from "./vertical-tabs.scss";
+import styles from "./horizontal-tabs.scss";
 
-interface VerticalTabsProps {
+interface HorizontalTabsProps {
   tabs: TabItem[];
   title?: string;
   hasContainer?: boolean;
@@ -11,7 +11,7 @@ interface VerticalTabsProps {
   onChange?: (index: number) => void;
 }
 
-const VerticalTabs: React.FC<VerticalTabsProps> = ({
+const HorizontalTabs: React.FC<HorizontalTabsProps> = ({
   tabs,
   title,
   hasContainer,
@@ -50,4 +50,4 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
   );
 };
 
-export default VerticalTabs;
+export default HorizontalTabs;
