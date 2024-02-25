@@ -38,7 +38,7 @@ import {
   StockOperationStatusRejected,
   StockOperationStatusReturned,
 } from "../core/api/types/stockOperation/StockOperationStatus";
-import { isDesktop, showModal } from "@openmrs/esm-framework";
+import { isDesktop, showModal, useConfig } from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
@@ -50,7 +50,6 @@ import StockOperationsFilters from "./stock-operations-filters.component";
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
-  STOCK_SOURCE_TYPE_CODED_CONCEPT_ID,
   StockFilters,
 } from "../constants";
 
@@ -109,6 +108,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [selectedOperations, setSelectedOperations] = useState<string[]>([]);
 
+  const config = useConfig();
+
   let operations: StockOperationType[] | null | undefined;
   const handleOnComplete = () => {
     const dispose = showModal("stock-operation-dialog", {
@@ -128,6 +129,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     selectedSources,
     selectedStatus,
     selectedOperations,
+    currentPage,
+    currentPageSize,
   ]);
 
   const handleOnFilterChange = useCallback((selectedItems, filterType) => {
@@ -408,7 +411,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   </DatePicker>
 
                   <StockOperationsFilters
-                    conceptUuid={STOCK_SOURCE_TYPE_CODED_CONCEPT_ID}
+                    conceptUuid={config.stockSourceTypeUUID}
                     filterName={StockFilters.SOURCES}
                     onFilterChange={handleOnFilterChange}
                   />

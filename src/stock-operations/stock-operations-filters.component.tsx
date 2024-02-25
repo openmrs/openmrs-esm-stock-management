@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   getStockOperationTypes,
-  useConceptById,
+  useConcept,
 } from "../stock-lookups/stock-lookups.resource";
 import { DropdownSkeleton, MultiSelect } from "@carbon/react";
 import { StockFilters } from "../constants";
@@ -19,7 +19,7 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
   onFilterChange,
   filterName,
 }) => {
-  const { items, isLoading } = useConceptById(conceptUuid);
+  const { items, isLoading } = useConcept(conceptUuid);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [dataItems, setDataItems] = useState([]);
 
