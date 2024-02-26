@@ -64,3 +64,27 @@
       margin-right: -50%;
     }
   }
+
+  .toolbarContent {
+    display: flex;
+    align-items: center;
+  }
+
+  .filterContainer{
+    display: flex;
+    align-items: center;
+  }
+  .dateAlign{
+    padding-top: 8px;
+    height: 100%;
+  }
+  .filtersAlign{
+    padding-bottom: 8px;
+
+    :global(.cds--list-box__menu) {
+      min-width: 15rem;
+      z-index: 1;
+    }
+  }
+  
+

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useStockOperationPages } from "./stock-operations-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import {
@@ -26,6 +26,8 @@ import {
   StructuredListBody,
   OverflowMenu,
   OverflowMenuItem,
+  DatePickerInput,
+  DatePicker,
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -36,7 +38,7 @@ import {
   StockOperationStatusRejected,
   StockOperationStatusReturned,
 } from "../core/api/types/stockOperation/StockOperationStatus";
-import { isDesktop, showModal } from "@openmrs/esm-framework";
+import { isDesktop, showModal, useConfig } from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
@@ -44,6 +46,12 @@ import { StockOperationType } from "../core/api/types/stockOperation/StockOperat
 import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
 import { handleMutate } from "./swr-revalidation";
+import StockOperationsFilters from "./stock-operations-filters.component";
+import {
+  DATE_PICKER_CONTROL_FORMAT,
+  DATE_PICKER_FORMAT,
+  StockFilters,
+} from "../constants";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -93,6 +101,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     totalCount: true,
   });
 
+  const [filteredItems, setFilteredItems] = useState(items);
+  const [selectedFromDate, setSelectedFromDate] = useState(null);
+  const [selectedToDate, setSelectedToDate] = useState(null);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedOperations, setSelectedOperations] = useState<string[]>([]);
+
+  const config = useConfig();
+
   let operations: StockOperationType[] | null | undefined;
   const handleOnComplete = () => {
     const dispose = showModal("stock-operation-dialog", {
@@ -103,15 +120,89 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     });
     handleMutate("ws/rest/v1/stockmanagement/stockoperation");
   };
+
+  useEffect(() => {
+    filterItems();
+  }, [
+    selectedFromDate,
+    selectedToDate,
+    selectedSources,
+    selectedStatus,
+    selectedOperations,
+    currentPage,
+    currentPageSize,
+  ]);
+
+  const handleOnFilterChange = useCallback((selectedItems, filterType) => {
+    if (filterType === StockFilters.SOURCES) {
+      setSelectedSources(selectedItems);
+    } else if (filterType === StockFilters.OPERATION) {
+      setSelectedOperations(selectedItems);
+    } else {
+      setSelectedStatus(selectedItems);
+    }
+  }, []);
+
+  const handleDateFilterChange = ([startDate, endDate]) => {
+    if (startDate) {
+      setSelectedFromDate(startDate);
+      if (selectedToDate && startDate && selectedToDate < startDate) {
+        setSelectedToDate(startDate);
+      }
+    }
+    if (endDate) {
+      setSelectedToDate(endDate);
+      if (selectedFromDate && endDate && selectedFromDate > endDate) {
+        setSelectedFromDate(endDate);
+      }
+    }
+  };
+
+  const filterItems = () => {
+    let filtered = items;
+
+    if (selectedSources.length > 0) {
+      filtered = filtered.filter((row) =>
+        selectedSources.includes(row.sourceName)
+      );
+    }
+    if (selectedOperations.length > 0) {
+      filtered = filtered.filter((row) =>
+        selectedOperations.includes(row.operationTypeName)
+      );
+    }
+    if (selectedStatus.length > 0) {
+      filtered = filtered.filter((row) => selectedStatus.includes(row.status));
+    }
+    if (selectedFromDate && selectedToDate) {
+      filtered = filtered.filter((row) => {
+        const itemDate = new Date(row.operationDate);
+        return itemDate >= selectedFromDate && itemDate <= selectedToDate;
+      });
+    } else if (selectedFromDate) {
+      filtered = filtered.filter((row) => {
+        const itemDate = new Date(row.operationDate);
+        return itemDate >= selectedFromDate;
+      });
+    } else if (selectedToDate) {
+      filtered = filtered.filter((row) => {
+        const itemDate = new Date(row.operationDate);
+        return itemDate <= selectedToDate;
+      });
+    }
+
+    setFilteredItems(filtered);
+  };
+
   const tableRows = useMemo(() => {
-    return items?.map((stockOperation, index) => ({
+    return filteredItems?.map((stockOperation, index) => ({
       ...stockOperation,
       id: stockOperation?.uuid,
       key: `key-${stockOperation?.uuid}`,
       operationTypeName: `${stockOperation?.operationTypeName}`,
       operationNumber: (
         <EditStockOperationActionMenu
-          model={items[index]}
+          model={filteredItems[index]}
           operations={operations}
         />
       ),
@@ -244,7 +335,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             itemText="Edit"
             onClick={() => {
               launchAddOrEditDialog(
-                items[index],
+                filteredItems[index],
                 true,
                 operation,
                 operations,
@@ -255,7 +346,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [handleOnComplete, items, operation, operations]);
+  }, [handleOnComplete, filteredItems, operation, operations]);
 
   if (isLoading) {
     return (
@@ -305,6 +396,37 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   placeholder="Filter Table"
                   size="sm"
                 />
+                <div className={styles.filterContainer}>
+                  <DatePicker
+                    className={styles.dateAlign}
+                    datePickerType="range"
+                    dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                    value={[selectedFromDate, selectedToDate]}
+                    onChange={([startDate, endDate]) => {
+                      handleDateFilterChange([startDate, endDate]);
+                    }}
+                  >
+                    <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
+                    <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
+                  </DatePicker>
+
+                  <StockOperationsFilters
+                    conceptUuid={config.stockSourceTypeUUID}
+                    filterName={StockFilters.SOURCES}
+                    onFilterChange={handleOnFilterChange}
+                  />
+
+                  <StockOperationsFilters
+                    filterName={StockFilters.STATUS}
+                    onFilterChange={handleOnFilterChange}
+                  />
+
+                  <StockOperationsFilters
+                    filterName={StockFilters.OPERATION}
+                    onFilterChange={handleOnFilterChange}
+                  />
+                </div>
+
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
@@ -383,39 +505,47 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                           <StructuredListBody>
                             <StructuredListRow>
                               <StructuredListCell noWrap>
-                                {items[index]?.dateCreated
-                                  ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ""}
-                                &nbsp;
-                                {items[index]?.dateCreated ? "By" : ""}
-                                &nbsp;
-                                {items[index]?.dateCreated
-                                  ? items[index]?.creatorFamilyName
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.completedDate
+                                {filteredItems[index]?.dateCreated
                                   ? formatDisplayDate(
-                                      items[index]?.completedDate
+                                      filteredItems[index]?.dateCreated
                                     )
                                   : ""}
                                 &nbsp;
-                                {items[index]?.completedDate ? "By" : ""}
+                                {filteredItems[index]?.dateCreated ? "By" : ""}
                                 &nbsp;
-                                {items[index]?.completedDate
-                                  ? items[index]?.creatorFamilyName
+                                {filteredItems[index]?.dateCreated
+                                  ? filteredItems[index]?.creatorFamilyName
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.stockOperationItems
-                                  ? items[index].stockOperationItems?.map(
+                                {filteredItems[index]?.completedDate
+                                  ? formatDisplayDate(
+                                      filteredItems[index]?.completedDate
+                                    )
+                                  : ""}
+                                &nbsp;
+                                {filteredItems[index]?.completedDate
+                                  ? "By"
+                                  : ""}
+                                &nbsp;
+                                {filteredItems[index]?.completedDate
+                                  ? filteredItems[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {filteredItems[index]?.stockOperationItems
+                                  ? filteredItems[
+                                      index
+                                    ].stockOperationItems?.map(
                                       (item) => item.batchNo
                                     )[0]
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.stockOperationItems
-                                  ? items[index].stockOperationItems?.map(
+                                {filteredItems[index]?.stockOperationItems
+                                  ? filteredItems[
+                                      index
+                                    ].stockOperationItems?.map(
                                       (item) => item.quantity
                                     )[0]
                                   : ""}
@@ -423,55 +553,61 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                             </StructuredListRow>
                             <StructuredListRow>
                               <StructuredListCell noWrap>
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
-                                  ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ""}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
-                                  ? "By"
-                                  : ""}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
-                                  ? items[index]?.creatorFamilyName
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.stockOperationItems.map(
+                                {filteredItems[index]?.stockOperationItems.map(
                                   (item) => item.quantity
                                 )[1]
                                   ? formatDisplayDate(
-                                      items[index]?.completedDate
+                                      filteredItems[index]?.dateCreated
                                     )
                                   : ""}
                                 &nbsp;
-                                {items[index]?.stockOperationItems.map(
+                                {filteredItems[index]?.stockOperationItems.map(
                                   (item) => item.quantity
-                                )[1] && items[index]?.completedDate
+                                )[1]
                                   ? "By"
                                   : ""}
                                 &nbsp;
-                                {items[index]?.stockOperationItems.map(
+                                {filteredItems[index]?.stockOperationItems.map(
                                   (item) => item.quantity
-                                )[1] && items[index]?.completedDate
+                                )[1]
+                                  ? filteredItems[index]?.creatorFamilyName
+                                  : ""}
+                              </StructuredListCell>
+                              <StructuredListCell>
+                                {filteredItems[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1]
+                                  ? formatDisplayDate(
+                                      filteredItems[index]?.completedDate
+                                    )
+                                  : ""}
+                                &nbsp;
+                                {filteredItems[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1] && filteredItems[index]?.completedDate
+                                  ? "By"
+                                  : ""}
+                                &nbsp;
+                                {filteredItems[index]?.stockOperationItems.map(
+                                  (item) => item.quantity
+                                )[1] && filteredItems[index]?.completedDate
                                   ? items[index]?.creatorFamilyName
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.stockOperationItems
-                                  ? items[index].stockOperationItems?.map(
+                                {filteredItems[index]?.stockOperationItems
+                                  ? filteredItems[
+                                      index
+                                    ].stockOperationItems?.map(
                                       (item) => item.batchNo
                                     )[1]
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.stockOperationItems
-                                  ? items[index].stockOperationItems?.map(
+                                {filteredItems[index]?.stockOperationItems
+                                  ? filteredItems[
+                                      index
+                                    ].stockOperationItems?.map(
                                       (item) => item.quantity
                                     )[1]
                                   : ""}

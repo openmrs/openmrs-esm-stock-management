@@ -22,6 +22,12 @@ export const today = () => {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 };
 
+export const StockFilters = Object.freeze({
+  SOURCES: "Sources",
+  OPERATION: "Operation",
+  STATUS: "Status",
+});
+
 // privileges
 /** @type {string}: App: stockmanagement.dashboard, Able to view stock management application dashboard*/
 export const APP_STOCKMANAGEMENT_DASHBOARD = "App: stockmanagement.dashboard";
