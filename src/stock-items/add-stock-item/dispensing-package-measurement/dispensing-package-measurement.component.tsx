@@ -1,7 +1,7 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useMemo, useState } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import { Select, SelectItem, SelectSkeleton } from "@carbon/react";
+import { ComboBox, SelectSkeleton } from "@carbon/react";
 
 interface DispensingPackageMeasurementProps<T> {
   dispensingUnitPackagingUoMUuid?: string;
@@ -24,52 +24,48 @@ interface DispensingPackageMeasurementProps<T> {
 const DispensingPackageMeasurement = <T,>(
   props: DispensingPackageMeasurementProps<T>
 ) => {
-  const [item, setItem] = useState("");
+  const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
+    () => (props?.packagingUnits.length > 0 ? props?.packagingUnits[0] : null),
+    [props?.packagingUnits]
+  );
 
   if (props.isLoading) return <SelectSkeleton />;
 
-  if (!(props.packagingUnits && props.packagingUnits.length > 0)) return <></>;
+  if (!(props?.packagingUnits && props?.packagingUnits.length > 0))
+    return <></>;
   return (
-    <Controller
-      name={props.controllerName}
-      control={props.control}
-      render={({ field: { onChange, value, ref } }) => (
-        <Select
-          labelText={props.title}
-          name={props.name}
-          control={props.control}
-          controllerName={props.controllerName}
-          id={props.name}
-          size={"md"}
-          onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
-            props.onDispensingUnitPackagingUoMUuidChange?.(data?.selectedItem);
-            onChange(data?.selectedItem?.uuid);
-            setItem(data?.selectedItem?.uuid);
-          }}
-          ref={ref}
-          value={item}
-          invalid={props.invalid}
-          invalidText={props.invalidText}
-        >
-          {!item ? (
-            <SelectItem disabled hidden value={null} text={props.placeholder} />
-          ) : (
-            ""
-          )}
-          {props.packagingUnits?.map((uom, index) => {
-            return (
-              <SelectItem
-                key={`${index}-${uom.uuid}`}
-                value={uom.uuid}
-                text={uom.packagingUomName}
-              >
-                {uom?.packagingUomName}
-              </SelectItem>
-            );
-          })}
-        </Select>
-      )}
-    />
+    <div>
+      <Controller
+        name={props.controllerName}
+        control={props.control}
+        defaultValue={initialSelectedItem.uuid ?? ""}
+        render={({ field: { onChange, ref } }) => (
+          <ComboBox
+            titleText={props.title}
+            name={props.name}
+            control={props.control}
+            controllerName={props.controllerName}
+            id={props.name}
+            size={"sm"}
+            items={props.packagingUnits ?? []}
+            onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
+              props.onDispensingUnitPackagingUoMUuidChange?.(
+                data?.selectedItem
+              );
+              onChange(data?.selectedItem?.uuid);
+            }}
+            initialSelectedItem={initialSelectedItem}
+            itemToString={(s: StockItemPackagingUOMDTO) =>
+              s.packagingUomName ?? ""
+            }
+            placeholder={props.placeholder}
+            invalid={props.invalid}
+            invalidText={props.invalidText}
+            ref={ref}
+          />
+        )}
+      />
+    </div>
   );
 };
 

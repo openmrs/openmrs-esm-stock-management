@@ -18,7 +18,7 @@ const StockHomeReceivingCard = () => {
 
   if (isLoading) return <></>;
 
-  if (items.length === 0) {
+  if (items?.length === 0) {
     return (
       <>
         <p className={styles.content}>
