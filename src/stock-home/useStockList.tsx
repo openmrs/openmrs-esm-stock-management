@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
 
 interface StockList {
   uuid: string;
@@ -13,7 +13,7 @@ interface StockList {
 }
 
 const useStockList = () => {
-  const url = `/ws/rest/v1/stockmanagement/stockitem`;
+  const url = `${restBaseUrl}/stockmanagement/stockitem`;
 
   const { data, error } = useSWR<{ data: { results: Array<StockList> } }>(
     url,
