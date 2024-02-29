@@ -30,7 +30,7 @@ const StockHomeReceivingCard = () => {
 
   return (
     <>
-      {items.map((item, index) =>
+      {items?.map((item, index) =>
         item?.stockOperationItems.map((stock) => (
           <div className={styles.card} key={index}>
             <div className={styles.colorLineBlue} />
