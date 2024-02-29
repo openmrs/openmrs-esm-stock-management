@@ -4,6 +4,7 @@ import {
   fhirBaseUrl,
   openmrsFetch,
   useSession,
+  restBaseUrl,
 } from "@openmrs/esm-framework";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
@@ -289,7 +290,7 @@ type UserRole = {
 
 export const useUserRoles = () => {
   const { user: loggedInUser } = useSession();
-  const url = `/ws/rest/v1/stockmanagement/userrolescope`;
+  const url = `${restBaseUrl}/stockmanagement/userrolescope`;
   const { data, isLoading, error } = useSWR<{ data: UserRole }>(
     url,
     openmrsFetch
