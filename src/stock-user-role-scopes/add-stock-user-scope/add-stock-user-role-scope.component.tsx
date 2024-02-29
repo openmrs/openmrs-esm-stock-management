@@ -422,7 +422,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           </section>
           <section className={styles.section}>
             <CheckboxGroup className={styles.checkboxGrid}>
-              {stockOperations.length > 0 &&
+              {stockOperations?.length > 0 &&
                 stockOperations.map((type) => {
                   return (
                     <div style={{ display: "flex", flexDirection: "row" }}>
