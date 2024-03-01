@@ -2,7 +2,7 @@
 @use '@carbon/styles/scss/type';
 @import '~@openmrs/esm-styleguide/src/vars';
 
-section {
+.section {
   margin: spacing.$spacing-03;
 }
 
@@ -26,12 +26,15 @@ section {
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust the values as needed */
   gap: 16px; /* Adjust the gap between checkboxes */
 }
+
 .hr {
   border: 1px solid #000;
 }
+
 .toggle {
   margin: 5px;
 }
+
 .checkbox{
   width: 100%;
 }
