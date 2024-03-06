@@ -58,6 +58,7 @@ export const getReportEndDateLabel = (
 export interface ReportType {
   order: number;
   name: string;
+  uuid: string;
   systemName: string;
   parameters: ReportParameter[];
 }
