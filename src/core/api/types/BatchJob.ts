@@ -10,7 +10,7 @@ export interface BatchJobOwner {
 }
 
 export interface BatchJob {
-  uuid: string;
+  uuid?: string;
   batchJobType?: string;
   status?: string;
   description?: string;
@@ -38,7 +38,7 @@ export interface BatchJob {
   outputArtifactFileExt?: string;
   outputArtifactViewable?: boolean;
   owners?: BatchJobOwner[];
-  permission: RecordPermission | null | undefined;
+  permission?: RecordPermission | null | undefined;
 }
 
 export const BatchJobTypeReport = "Report";

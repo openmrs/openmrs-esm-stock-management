@@ -17,6 +17,7 @@ import {
   TableToolbarSearch,
   Tile,
   Button,
+  InlineLoading,
 } from "@carbon/react";
 import { isDesktop } from "@openmrs/esm-framework";
 import NewReportActionButton from "./new-report-button.component";
@@ -30,7 +31,6 @@ import {
   BatchJobStatusExpired,
   BatchJobStatusFailed,
   BatchJobStatusPending,
-  BatchJobStatusRunning,
 } from "../../core/api/types/BatchJob";
 import {
   CheckmarkOutline,
@@ -118,6 +118,13 @@ const StockReports: React.FC = () => {
       )),
       status: (
         <>
+          {batchJob.status === BatchJobStatusPending && (
+            <InlineLoading
+              status="active"
+              iconDescription="Loading"
+              description="Generating report..."
+            />
+          )}
           {batchJob.status === BatchJobStatusFailed && (
             <WarningAltFilled
               className="report-failed"

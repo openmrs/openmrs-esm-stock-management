@@ -23,7 +23,8 @@ export function useGetReports() {
   const apiUrl = `${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default&limit=10&totalCount=true`;
   const { data, error, isLoading } = useSWR<{ data: { results: any } }, Error>(
     apiUrl,
-    openmrsFetch
+    openmrsFetch,
+    { refreshInterval: 5000 }
   );
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);

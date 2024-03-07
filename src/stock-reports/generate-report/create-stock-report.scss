@@ -2,8 +2,15 @@
 @use '@carbon/styles/scss/type';
 @import '~@openmrs/esm-styleguide/src/vars';
 
-.section {
-  // margin: spacing.$spacing-03;
+.reportContainer {
+  min-height: 15rem;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding: 1rem;
+}
+.reportButton {
+  padding: 1rem
 }
 
 .sectionTitle {
