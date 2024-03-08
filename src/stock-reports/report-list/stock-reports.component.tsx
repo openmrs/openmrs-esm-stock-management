@@ -1,9 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   DataTable,
   DataTableSkeleton,
-  Link,
   TabPanel,
   Pagination,
   Table,
@@ -17,14 +16,44 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
+  Button,
 } from "@carbon/react";
-import styles from "./stock-reports.scss";
 import { isDesktop } from "@openmrs/esm-framework";
-
 import NewReportActionButton from "./new-report-button.component";
+import styles from "./stock-reports.scss";
+import { useGetReports } from "../stock-reports.resource";
+import { URL_BATCH_JOB_ARTIFACT } from "../../constants";
+import { formatDisplayDateTime } from "../../core/utils/datetimeUtils";
+import {
+  BatchJobStatusCancelled,
+  BatchJobStatusCompleted,
+  BatchJobStatusExpired,
+  BatchJobStatusFailed,
+  BatchJobStatusPending,
+  BatchJobStatusRunning,
+} from "../../core/api/types/BatchJob";
+import {
+  CheckmarkOutline,
+  Copy,
+  Download,
+  IncompleteCancel,
+  MisuseOutline,
+  View,
+  WarningAltFilled,
+} from "@carbon/react/icons";
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
+  const {
+    reports,
+    isLoading,
+    currentPage,
+    pageSizes,
+    totalItems,
+    goTo,
+    currentPageSize,
+    setPageSize,
+  } = useGetReports();
   const tableHeaders = useMemo(
     () => [
       {
@@ -40,8 +69,8 @@ const StockReports: React.FC = () => {
       },
       {
         id: 2,
-        header: t("DateRequested", "Date Requested"),
-        key: "DateRequested",
+        header: t("dateRequested", "Date Requested"),
+        key: "dateRequested",
       },
       {
         id: 3,
@@ -62,9 +91,112 @@ const StockReports: React.FC = () => {
     []
   );
 
+  const onDownloadReportClick = useCallback(
+    (uuid: string, fileExit: string | undefined | null) => {
+      if (uuid) {
+        window.open(URL_BATCH_JOB_ARTIFACT(uuid, true), "_blank");
+      }
+    },
+    []
+  );
+
   const tableRows = useMemo(() => {
-    return [];
-  }, []);
+    return reports?.map((batchJob, index) => ({
+      ...batchJob,
+      checkbox: "isBatchJobActive",
+      id: batchJob?.uuid,
+      key: `key-${batchJob?.uuid}`,
+      uuid: `${batchJob?.uuid}`,
+      batchJobType: batchJob.batchJobType,
+      dateRequested: formatDisplayDateTime(batchJob.dateCreated),
+      parameters: "",
+      report: batchJob.description,
+      requestedBy: batchJob?.owners?.map((p, index) => (
+        <div
+          key={`${batchJob.uuid}-owner-${index}`}
+        >{`${p.ownerFamilyName} ${p.ownerGivenName}`}</div>
+      )),
+      status: (
+        <>
+          {batchJob.status === BatchJobStatusFailed && (
+            <WarningAltFilled
+              className="report-failed"
+              title={batchJob.status}
+            />
+          )}
+          {batchJob.status === BatchJobStatusCancelled && (
+            <MisuseOutline
+              className="report-cancelled"
+              title={batchJob.status}
+            />
+          )}
+          {batchJob.status === BatchJobStatusCompleted && (
+            <CheckmarkOutline
+              className="report-completed"
+              title={batchJob.status}
+              size={16}
+            />
+          )}
+          {batchJob.status === BatchJobStatusExpired && (
+            <IncompleteCancel
+              className="report-expired"
+              title={batchJob.status}
+            />
+          )}
+        </>
+      ),
+      actions: (
+        <div
+          key={`${batchJob?.uuid}-actions`}
+          style={{ display: "inline-block", whiteSpace: "nowrap" }}
+        >
+          {batchJob.outputArtifactViewable &&
+            batchJob.batchJobType === "hide" && (
+              <Button
+                key={`${batchJob?.uuid}-actions-view`}
+                type="button"
+                size="sm"
+                className="submitButton clear-padding-margin"
+                iconDescription={"Edit"}
+                kind="ghost"
+                renderIcon={View}
+                // onClick={(e) => onViewItem(batchJob.uuid, e)}
+              />
+            )}
+          <Button
+            type="button"
+            size="sm"
+            className="submitButton clear-padding-margin"
+            iconDescription={"Copy"}
+            kind="ghost"
+            renderIcon={Copy}
+            // onClick={() => onCloneReportClick(batchJob.uuid)}
+          />
+          {batchJob?.status === BatchJobStatusCompleted &&
+            (batchJob.outputArtifactSize ?? 0) > 0 && (
+              <Button
+                type="button"
+                size="sm"
+                className="submitButton clear-padding-margin"
+                iconDescription={"Download"}
+                kind="ghost"
+                renderIcon={Download}
+                onClick={() =>
+                  onDownloadReportClick(
+                    batchJob.uuid,
+                    batchJob.outputArtifactFileExt
+                  )
+                }
+              />
+            )}
+        </div>
+      ),
+    }));
+  }, [reports, onDownloadReportClick]);
+
+  if (isLoading) {
+    return <DataTableSkeleton role="progressbar" />;
+  }
 
   return (
     <div className={styles.tableOverride}>
@@ -76,7 +208,7 @@ const StockReports: React.FC = () => {
         <div className="right-filters"></div>
       </div>
       <DataTable
-        rows={tableRows ?? []}
+        rows={tableRows}
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
@@ -165,6 +297,21 @@ const StockReports: React.FC = () => {
           </TableContainer>
         )}
       ></DataTable>
+      <Pagination
+        page={currentPage}
+        pageSize={currentPageSize}
+        pageSizes={pageSizes}
+        totalItems={totalItems}
+        onChange={({ pageSize, page }) => {
+          if (pageSize !== currentPageSize) {
+            setPageSize(pageSize);
+          }
+          if (page !== currentPage) {
+            goTo(page);
+          }
+        }}
+        className={styles.paginationOverride}
+      />
     </div>
   );
 };
