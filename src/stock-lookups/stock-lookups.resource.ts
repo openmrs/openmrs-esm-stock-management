@@ -41,7 +41,7 @@ interface FHIRResponse {
 
 // getLocations
 export function useStockLocations(filter: LocationFilterCriteria) {
-  const apiUrl = `ws/rest/v1/location${toQueryParams(filter, false)}`;
+  const apiUrl = `${restBaseUrl}/location${toQueryParams(filter, false)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<OpenMRSLocation>;
@@ -76,7 +76,7 @@ export function useStockTagLocations() {
 
 // getLocationWithIdByUuid
 export function useLocationWithIdByUuid(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/location/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/location/${id}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<OpenMRSLocation>;
@@ -92,7 +92,7 @@ export function useLocationWithIdByUuid(id: string) {
 
 //  deleteLocation
 export function deleteLocation(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/location/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/location/${id}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "DELETE",
@@ -105,7 +105,7 @@ export function deleteLocation(id: string) {
 
 // getLocationTags
 export function useLocationTags(q: string) {
-  const apiUrl = `ws/rest/v1/locationtag?v=default${
+  const apiUrl = `${restBaseUrl}/locationtag?v=default${
     q && q.length > 0 ? "&q=" + encodeURIComponent(q) : ""
   }`;
   const { data, error, isLoading } = useSWR<
@@ -123,7 +123,7 @@ export function useLocationTags(q: string) {
 
 // getRoles
 export function useRoles(filter: ResourceFilterCriteria) {
-  const apiUrl = `ws/rest/v1/role${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/role${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<Role>;
@@ -139,7 +139,7 @@ export function useRoles(filter: ResourceFilterCriteria) {
 
 // getStockOperationTypes
 export function useStockOperationTypes() {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationtype?v=default`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationtype?v=default`;
   const { data, isLoading, error } = useSWR<
     {
       data: PageableResult<StockOperationType>;
@@ -156,13 +156,13 @@ export function useStockOperationTypes() {
 export function getStockOperationTypes(): Promise<
   FetchResponse<PageableResult<StockOperationType>>
 > {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationtype?v=default`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationtype?v=default`;
   return openmrsFetch(apiUrl);
 }
 
 // getUsers
 export function useUsers(filter: UserFilterCriteria) {
-  const apiUrl = `ws/rest/v1/user${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/user${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<User>;
@@ -178,7 +178,7 @@ export function useUsers(filter: UserFilterCriteria) {
 
 // getUser
 export function useUser(id: string) {
-  const apiUrl = `ws/rest/v1/user${id}`;
+  const apiUrl = `${restBaseUrl}/user${id}`;
   const { data, error, isLoading } = useSWR<
     {
       data: User;
@@ -193,7 +193,7 @@ export function useUser(id: string) {
 }
 
 export function useConcept(conceptUuid: string) {
-  const apiUrl = `ws/rest/v1/concept/${conceptUuid}`;
+  const apiUrl = `${restBaseUrl}/concept/${conceptUuid}`;
   const { data, error, isLoading } = useSWR<
     {
       data: Concept;
@@ -209,7 +209,7 @@ export function useConcept(conceptUuid: string) {
 
 // getParties
 export function useParties() {
-  const apiUrl = `ws/rest/v1/stockmanagement/party?v=default`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/party?v=default`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<Party>;
@@ -224,13 +224,13 @@ export function useParties() {
 }
 
 export function getParties(): Promise<FetchResponse<PageableResult<Party>>> {
-  const apiUrl = `ws/rest/v1/stockmanagement/party?v=default`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/party?v=default`;
   return openmrsFetch(apiUrl);
 }
 
 // getDrugs
 export function useDrugs(filter: DrugFilterCriteria) {
-  const apiUrl = `ws/rest/v1/drug${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/drug${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<Drug>;
@@ -246,7 +246,7 @@ export function useDrugs(filter: DrugFilterCriteria) {
 
 // getConcepts
 export function useConcepts(filter: ConceptFilterCriteria) {
-  const apiUrl = `ws/rest/v1/concept${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/concept${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<Concept>;
@@ -262,7 +262,7 @@ export function useConcepts(filter: ConceptFilterCriteria) {
 
 // getPatients
 export function usePatients(filter: ConceptFilterCriteria) {
-  const apiUrl = `ws/rest/v1/patient${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/patient${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<Patient>;

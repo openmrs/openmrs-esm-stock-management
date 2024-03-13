@@ -2,13 +2,13 @@ import useSWR from "swr";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import { UserRoleScope } from "../core/api/types/identity/UserRoleScope";
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
 
 export type UserRoleScopeFilter = ResourceFilterCriteria;
 
 // getUserRoleScopes
 export function useUserRoleScopes(filter: UserRoleScopeFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/userrolescope${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/userrolescope${toQueryParams(
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
@@ -24,7 +24,7 @@ export function useUserRoleScopes(filter: UserRoleScopeFilter) {
 
 // getUserRoleScope
 export function useUserRoleScope(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/userrolescope/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/userrolescope/${id}`;
   const { data, error, isLoading } = useSWR<{ data: UserRoleScope }, Error>(
     apiUrl,
     openmrsFetch
@@ -46,7 +46,7 @@ export function deleteUserRoleScopes(ids: string[]) {
   if (otherIds.length > 0) {
     otherIds = "?ids=" + otherIds;
   }
-  const apiUrl = `ws/rest/v1/stockmanagement/userrolescope/${ids[0]}${otherIds}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/userrolescope/${ids[0]}${otherIds}`;
   const abortController = new AbortController();
 
   return openmrsFetch(apiUrl, {
@@ -62,7 +62,7 @@ export function deleteUserRoleScopes(ids: string[]) {
 export function createOrUpdateUserRoleScope(item: UserRoleScope) {
   const abortController = new AbortController();
   const isNew = item.uuid != null;
-  const apiUrl = `ws/rest/v1/stockmanagement/userrolescope${
+  const apiUrl = `${restBaseUrl}/stockmanagement/userrolescope${
     isNew ? "/" + item.uuid : ""
   }`;
   return openmrsFetch(apiUrl, {
