@@ -24,6 +24,7 @@ import rootStyles from "../../../root.scss";
 import { closeOverlay } from "../../../core/components/overlay/hook";
 import { expirationOptions, radioOptions } from "./stock-item-details.resource";
 import { handleMutate } from "../../../stock-operations/swr-revalidation";
+import { useStockItem } from "../../stock-items.resource";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
