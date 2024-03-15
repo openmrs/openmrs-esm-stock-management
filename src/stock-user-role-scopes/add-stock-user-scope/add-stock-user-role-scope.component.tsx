@@ -311,7 +311,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       }
     );
   };
-
   if (isLoading || loadingRoles || loadingUsers) {
     return (
       <InlineLoading
@@ -321,7 +320,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       />
     );
   }
-
   return (
     <div>
       <Form>
@@ -448,6 +446,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                       <Checkbox
                         value={type.uuid}
                         checked={isOperationChecked(type)}
+                        className={styles.checkbox}
                         onChange={(event) =>
                           onStockOperationTypeChanged(
                             event,
@@ -455,7 +454,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                             isOperationChecked(type)
                           )
                         }
-                        className={styles.checkbox}
                         labelText={type.name}
                         id={type.uuid}
                       />
