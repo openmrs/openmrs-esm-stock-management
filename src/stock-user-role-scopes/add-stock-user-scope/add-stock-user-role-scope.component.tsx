@@ -65,6 +65,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const [roles, setRoles] = useState<Role[]>([]);
 
   const { data: user } = useUser(model?.uuid);
+  const [showItems, setShowItems] = useState(false);
 
   // operation types
   const {
@@ -110,6 +111,28 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     });
   };
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredItems, setFilteredItems] = useState<any[]>([]);
+
+  const usersResults = users?.results ?? [];
+
+  const filterItems = (query: string) => {
+    if (query.trim() === "") {
+      setShowItems(false);
+    } else {
+      setShowItems(true);
+      const filtered = usersResults.filter((item: any) => {
+        const displayName = item?.person?.display ?? item?.display ?? "";
+        return displayName.toLowerCase().includes(query.toLowerCase());
+      });
+      setFilteredItems(filtered);
+    }
+  };
+
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+    filterItems(query);
+  };
   const onStockOperationTypeChanged = (
     event: React.ChangeEvent<HTMLInputElement>,
     uuid: string,
@@ -186,7 +209,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           v: ResourceRepresentation.Default,
           q: searchTerm,
         } as any as UserFilterCriteria);
-      }, 300),
+      }, 3),
     []
   );
 
@@ -313,16 +336,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                     id="userName"
                     size="md"
                     labelText={t("user", "User")}
-                    items={users?.results}
-                    onChange={onUserChanged}
-                    shouldFilterItem={(data) => true}
-                    onFocus={() => users?.results || handleUsersSearch("")}
-                    onToggleClick={() =>
-                      users?.results || handleUsersSearch("")
-                    }
+                    items={filteredItems}
+                    shouldFilterItem={() => true}
                     itemToString={(item) =>
                       `${item?.person?.display ?? item?.display ?? ""}`
                     }
+                    onInputChange={handleSearchQueryChange}
                     placeholder="Filter..."
                   />
                 </>
