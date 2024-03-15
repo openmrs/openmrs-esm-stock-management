@@ -22,7 +22,13 @@ import StockOperationApproveDispatchButton from "../stock-operations-dialog/stoc
 import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
 import { StockOperation } from "./stock-operation-context/useStockOperationContext";
-import { showToast } from "@openmrs/esm-framework";
+import { formatDate, parseDate, showToast } from "@openmrs/esm-framework";
+import {
+  OperationType,
+  StockOperationType,
+} from "../../core/api/types/stockOperation/StockOperationType";
+import { operationStatusColor } from "../stock-operations.resource";
+import styles from "./add-stock-operation.scss";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -30,7 +36,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { isLoading, isError, result } = useInitializeStockOperations(props);
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
-    props.isEditing
+    props?.isEditing
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -47,18 +53,30 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     return;
   }
 
+  let operations: StockOperationType[] | null | undefined;
+
   const tabs: TabItem[] = [
     {
       name: isEditing
-        ? `${props.model?.operationTypeName} Details`
-        : `${props.operation?.name} Details`,
+        ? `${props?.model?.operationTypeName} Details`
+        : `${props?.operation?.name} Details`,
       component: (
         <BaseOperationDetails
           {...props}
-          isEditing={isEditing}
+          isEditing={
+            props?.operation?.name === "Stock Issue" ? !isEditing : isEditing
+          }
           setup={result}
-          canEdit={canEdit}
-          model={isEditing ? props?.model : result?.dto}
+          canEdit={
+            props?.operation?.name === "Stock Issue" ? !canEdit : canEdit
+          }
+          model={
+            isEditing
+              ? props?.model
+              : props?.operation?.name === "Stock Issue"
+              ? props?.model
+              : result?.dto
+          } // check if type is stockIssue and pass requistion data
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -75,7 +93,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           isEditing={isEditing}
           setup={result}
           canEdit={canEdit}
-          model={isEditing ? props?.model : result?.dto}
+          model={
+            isEditing
+              ? props?.model
+              : props?.operation?.name === "Stock Issue"
+              ? props?.model
+              : result?.dto
+          } // check if type is stockIssue and pass requistion data
           onSave={async () => {
             setManageSubmitOrComplete(true);
             setSelectedIndex(2);
@@ -85,7 +109,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(isEditing || manageStockItems),
     },
     {
-      name: result.requiresDispatchAcknowledgement
+      name: result?.requiresDispatchAcknowledgement
         ? "Submit/Dispatch"
         : "Submit/Complete",
       component: (
@@ -117,17 +141,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               setSelectedIndex(1);
             },
             onComplete: async () => {
-              await showActionDialogButton("Complete", false, props?.model);
+              await showActionDialogButton("Complete", true, props?.model);
             },
             onSubmit: async () => {
-              await showActionDialogButton("Submit", false, props?.model);
+              await showActionDialogButton("Submit", true, props?.model);
             },
             onDispatch: async () => {
-              await showActionDialogButton(
-                "Dispatch Approval",
-                false,
-                props?.model
-              );
+              await showActionDialogButton("Dispatch", true, props?.model);
             },
           }}
         />
@@ -138,141 +158,325 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "5px",
-        }}
-      >
-        <div style={{ margin: "10px" }}>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <span style={{ margin: "4px" }}>Status :</span>
-            <span style={{ margin: "4px" }}>{props?.model?.status}</span>
+      {!isEditing && props.operation.name === "Stock Issue" ? (
+        <></>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "5px",
+          }}
+        >
+          <div style={{ margin: "10px" }}>
+            {isEditing && (
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <span className={styles.textHeading}>
+                  {t("status", "Status ")}:
+                </span>
+                <span
+                  style={{
+                    marginLeft: "2px",
+                    color: `${operationStatusColor(props?.model?.status)}`,
+                  }}
+                >
+                  {props?.model?.status}
+                </span>
+              </div>
+            )}
+            <div className={styles.statusContainer}>
+              {props?.model?.dateCreated && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("started", "Started")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.dateCreated.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.creatorFamilyName} &nbsp;
+                      {props?.model?.creatorGivenName}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {props?.model?.submittedDate && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("submitted", "Submitted")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.submittedDate.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.submittedByFamilyName} &nbsp;
+                      {props?.model?.submittedByGivenName}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {props?.model?.dispatchedDate && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("dispatched", "Dispatched")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.dispatchedDate.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.dispatchedByFamilyName} &nbsp;
+                      {props?.model?.dispatchedByGivenName}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {props?.model?.returnedDate && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("returned", "Returned")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.returnedDate.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.returnedByFamilyName} &nbsp;
+                      {props?.model?.returnedByGivenName}
+                    </span>
+                    <span className={styles.text}>
+                      {props?.model?.returnReason}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {props?.model?.completedDate && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("completed", "Completed")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.completedDate.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.completedByFamilyName} &nbsp;
+                      {props?.model?.completedByGivenName}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {props?.model?.status === "CANCELLED" && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("cancelled", "Cancelled")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.cancelledDate.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.cancelledByFamilyName} &nbsp;
+                      {props?.model?.cancelledByGivenName}
+                      <span className={styles.text}>
+                        {props?.model?.cancelReason}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {props?.model?.status === "REJECTED" && (
+                <div>
+                  <span className={styles.textHeading}>
+                    {t("rejected", "Rejected")}:
+                  </span>
+                  <div className={styles.statusDescriptions}>
+                    <span className={styles.text}>
+                      {formatDate(
+                        parseDate(props?.model?.rejectedDate.toString()),
+                        {
+                          time: true,
+                          mode: "standard",
+                        }
+                      )}
+                    </span>
+
+                    <span className={styles.text}>By</span>
+
+                    <span className={styles.text}>
+                      {props?.model?.rejectedByFamilyName} &nbsp;
+                      {props?.model?.rejectedByGivenName}
+                      <span>{props?.model?.rejectionReason}</span>
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            {props?.model?.status === "NEW" && (
-              <div style={{ margin: "4px" }}>
-                <span>Started : </span>
-                <span>By </span>
-                <span>
-                  {props?.model?.creatorFamilyName} {""}
-                  {props?.model?.creatorGivenName}
-                </span>
-              </div>
-            )}
-            {props?.model?.status === "SUBMITTED" && (
-              <div style={{ margin: "4px" }}>
-                <span>Submitted : </span>
-                <span>By </span>
-                <span>
-                  {props?.model?.submittedByFamilyName} {""}
-                  {props?.model?.submittedByGivenName}
-                </span>
-              </div>
-            )}
-            {props?.model?.status === "COMPLETED" && (
-              <div style={{ margin: "4px" }}>
-                <span>Completed : </span>
-                <span>By </span>
-                <span>
-                  {props?.model?.completedByFamilyName} {""}
-                  {props?.model?.completedByGivenName}
-                </span>
-              </div>
-            )}
-          </div>
+          {((!props?.model?.permission?.canEdit &&
+            (props?.model?.permission?.canApprove ||
+              props?.model?.permission?.canReceiveItems)) ||
+            props?.model?.permission?.canEdit ||
+            canPrint ||
+            props?.model?.permission?.isRequisitionAndCanIssueStock) && (
+            <div
+              style={{
+                margin: "10px",
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <>
+                {!props?.model?.permission?.canEdit &&
+                  props?.model?.permission?.canApprove && (
+                    <>
+                      {(props?.model
+                        ? props?.model?.operationTypeName ===
+                            OperationType.RETURN_OPERATION_TYPE ||
+                          props?.model?.operationTypeName ===
+                            OperationType.STOCK_ISSUE_OPERATION_TYPE
+                        : true) && (
+                        <div style={{ margin: "2px" }}>
+                          <StockOperationApprovalButton
+                            operation={props?.model}
+                          />
+                        </div>
+                      )}
+                      {!(props?.model
+                        ? props?.model?.operationTypeName ===
+                            OperationType.RETURN_OPERATION_TYPE ||
+                          props?.model?.operationTypeName ===
+                            OperationType.STOCK_ISSUE_OPERATION_TYPE
+                        : true) && (
+                        <div style={{ margin: "2px" }}>
+                          <StockOperationApproveDispatchButton
+                            operation={props?.model}
+                          />
+                        </div>
+                      )}
+
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationRejectButton operation={props?.model} />
+                      </div>
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationReturnButton operation={props?.model} />
+                      </div>
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationCancelButton operation={props?.model} />
+                      </div>
+                    </>
+                  )}
+
+                {!props?.model?.permission?.canEdit &&
+                  props?.model?.permission?.canReceiveItems && (
+                    <>
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationCompleteDispatchButton
+                          operation={props?.model}
+                        />
+                      </div>
+                      <div style={{ margin: "2px" }}>
+                        <StockOperationReturnButton operation={props?.model} />
+                      </div>
+                    </>
+                  )}
+
+                {props?.model?.permission?.canEdit && (
+                  <div style={{ margin: "2px" }}>
+                    <StockOperationCancelButton operation={props?.model} />
+                  </div>
+                )}
+
+                {props?.model?.permission?.isRequisitionAndCanIssueStock && (
+                  <div style={{ margin: "2px" }}>
+                    <StockOperationIssueStockButton
+                      operation={props?.model}
+                      operations={operations}
+                    />
+                  </div>
+                )}
+                {(props?.model?.permission?.isRequisitionAndCanIssueStock ||
+                  props?.model?.operationType ===
+                    OperationType.STOCK_ISSUE_OPERATION_TYPE ||
+                  props?.model?.operationType ===
+                    OperationType.REQUISITION_OPERATION_TYPE ||
+                  props?.model?.operationType ===
+                    OperationType.RECEIPT_OPERATION_TYPE ||
+                  props?.model?.operationType ===
+                    OperationType.TRANSFER_OUT_OPERATION_TYPE) && (
+                  <div style={{ margin: "2px" }}>
+                    <StockOperationPrintButton operation={props?.model} />
+                  </div>
+                )}
+              </>
+            </div>
+          )}
         </div>
+      )}
 
-        {((!props?.model?.permission?.canEdit &&
-          (props?.model?.permission?.canApprove ||
-            props?.model?.permission?.canReceiveItems)) ||
-          props?.model?.permission?.canEdit ||
-          canPrint ||
-          props?.model?.permission?.isRequisitionAndCanIssueStock) && (
-          <div
-            style={{
-              margin: "10px",
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <>
-              {!props?.model?.permission?.canEdit &&
-                props?.model?.permission?.canApprove && (
-                  <>
-                    {(props?.model
-                      ? props?.model?.operationTypeName === "return" ||
-                        props?.model?.operationTypeName === "stockissue"
-                      : false) && (
-                      <div style={{ margin: "2px" }}>
-                        <StockOperationApprovalButton
-                          operation={props?.model}
-                        />
-                      </div>
-                    )}
-                    {!(props?.model
-                      ? props?.model?.operationTypeName === "return" ||
-                        props?.model?.operationTypeName === "stockissue"
-                      : false) && (
-                      <div style={{ margin: "2px" }}>
-                        <StockOperationApproveDispatchButton
-                          operation={props?.model}
-                        />
-                      </div>
-                    )}
-
-                    <div style={{ margin: "2px" }}>
-                      <StockOperationRejectButton operation={props?.model} />
-                    </div>
-                    <div style={{ margin: "2px" }}>
-                      <StockOperationReturnButton operation={props?.model} />
-                    </div>
-                    <div style={{ margin: "2px" }}>
-                      <StockOperationCancelButton operation={props?.model} />
-                    </div>
-                  </>
-                )}
-
-              {!props?.model?.permission?.canEdit &&
-                props?.model?.permission?.canReceiveItems && (
-                  <>
-                    <div style={{ margin: "2px" }}>
-                      <StockOperationCompleteDispatchButton
-                        operation={props?.model}
-                      />
-                    </div>
-                    <div style={{ margin: "2px" }}>
-                      <StockOperationReturnButton operation={props?.model} />
-                    </div>
-                  </>
-                )}
-
-              {props?.model?.permission?.canEdit && (
-                <div style={{ margin: "2px" }}>
-                  <StockOperationCancelButton operation={props?.model} />
-                </div>
-              )}
-
-              {props?.model?.permission?.isRequisitionAndCanIssueStock && (
-                <div style={{ margin: "2px" }}>
-                  <StockOperationIssueStockButton operation={props?.model} />
-                </div>
-              )}
-              {(props?.model?.permission?.isRequisitionAndCanIssueStock ||
-                props?.model?.operationType === "stockissue" ||
-                props?.model?.operationType === "requisition" ||
-                props?.model?.operationType === "receipt" ||
-                props?.model?.operationType === "transferout") && (
-                <div style={{ margin: "2px" }}>
-                  <StockOperationPrintButton operation={props?.model} />
-                </div>
-              )}
-            </>
-          </div>
-        )}
-      </div>
       <StockOperation>
         <VerticalTabs
           tabs={tabs}

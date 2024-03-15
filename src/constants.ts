@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { formatDisplayDate } from "./core/utils/datetimeUtils";
 
-export const moduleName = "@kenyaemr/esm-stock-management-app";
+export const moduleName = "@openmrs/esm-stock-management-app";
 export const spaRoot = `${window["getOpenmrsSpaBase"]}`;
 export const omrsDateFormat = "YYYY-MM-DDTHH:mm:ss.SSSZZ";
 export const startOfDay = dayjs(new Date().setUTCHours(0, 0, 0, 0)).format(
@@ -21,6 +21,12 @@ export const today = () => {
   const date = new Date();
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 };
+
+export const StockFilters = Object.freeze({
+  SOURCES: "Sources",
+  OPERATION: "Operation",
+  STATUS: "Status",
+});
 
 // privileges
 /** @type {string}: App: stockmanagement.dashboard, Able to view stock management application dashboard*/

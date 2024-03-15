@@ -33,6 +33,10 @@ const StockManagementDashboardSideNav = () => {
       link: "stock-locations",
     },
     {
+      name: t("stockManagementReports", "Stock Reports"),
+      link: "stock-reports",
+    },
+    {
       name: t("stockManagementSettings", "Stock Settings"),
       link: `admin/maintenance/settings.list?show=Stockmanagement`,
     },

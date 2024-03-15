@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { BatchJob, BatchJobType } from "../core/api/types/BatchJob";
 import { PageableResult } from "../core/api/types/PageableResult";
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
 import { ReportType } from "../stock-reports/ReportType";
 
 export interface BatchJobFilter extends ResourceFilterCriteria {
@@ -17,7 +17,9 @@ export interface BatchJobFilter extends ResourceFilterCriteria {
 
 // getBatchJobs
 export function useBatchJobs(filter: BatchJobFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/batchjob${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/batchjob${toQueryParams(
+    filter
+  )}`;
   const { data, error, isLoading } = useSWR<
     { data: PageableResult<BatchJob> },
     Error
@@ -40,7 +42,7 @@ export function cancelBatchJobs(ids: string[]) {
   if (otherIds.length > 0) {
     otherIds = "?ids=" + otherIds;
   }
-  const apiUrl = `ws/rest/v1/stockmanagement/batchjob/${ids[0]}${otherIds}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/batchjob/${ids[0]}${otherIds}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "DELETE",
@@ -53,7 +55,7 @@ export function cancelBatchJobs(ids: string[]) {
 
 // createBatchJob
 export function createBatchJob(item: BatchJob) {
-  const apiUrl = `ws/rest/v1/stockmanagement/batchjob`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/batchjob`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -66,7 +68,7 @@ export function createBatchJob(item: BatchJob) {
 }
 // getReportTypes
 export function useReportTypes() {
-  const apiUrl = `ws/rest/v1/stockmanagement/report?v=default`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/report?v=default`;
   const { data, error, isLoading } = useSWR<
     { data: PageableResult<ReportType> },
     Error

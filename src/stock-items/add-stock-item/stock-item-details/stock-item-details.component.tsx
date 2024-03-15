@@ -163,17 +163,25 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           </FormGroup>
 
           {hasExpiration && (
-            <ControlledNumberInput
-              id="expiryNotice"
-              name="expiryNotice"
-              control={control}
-              controllerName="expiryNotice"
-              size={"md"}
-              allowEmpty={true}
-              label={t("expiryNoticeDays", "Expiration Notice (days)")}
-              invalid={!!errors.expiryNotice}
-              invalidText={errors.expiryNotice && errors?.expiryNotice?.message}
-            />
+            <FormGroup
+              className="clear-margin-bottom"
+              legendText={t("expirationNotice", "Expiration Notice (days)")}
+              title={t("expirationNotice", "Expiration Notice (days)")}
+            >
+              <ControlledNumberInput
+                id="expiryNotice"
+                name="expiryNotice"
+                control={control}
+                controllerName="expiryNotice"
+                size={"md"}
+                allowEmpty={true}
+                label={t("expiryNoticeDays", "Expiration Notice (days)")}
+                invalid={!!errors.expiryNotice}
+                invalidText={
+                  errors.expiryNotice && errors?.expiryNotice?.message
+                }
+              />
+            </FormGroup>
           )}
         </div>
         <PreferredVendorSelector

@@ -23,8 +23,7 @@ export const addOrEditStockOperation = async (
   operations?: StockOperationType[],
   canPrint?: boolean
 ) => {
-  // eslint-disable-next-line prefer-const
-  let payload = stockOperation;
+  const payload = stockOperation;
   try {
     if (operation.operationType === "requisition") {
       delete payload.destinationName;

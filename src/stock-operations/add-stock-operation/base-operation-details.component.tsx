@@ -182,7 +182,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             id="operationNoLbl"
             value={model?.operationNumber}
             readOnly={true}
-            labelText={"Operation Number:"}
+            labelText={"Operation Number"}
           />
         )}
 
@@ -193,8 +193,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             control={control}
             title={
               operation?.hasDestination
-                ? t("from:", "From:")
-                : t("location:", "Location:")
+                ? t("from", "From")
+                : t("location:", "Location")
             }
             placeholder={
               operation.hasDestination
@@ -212,7 +212,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             id="sourceUuidLbl"
             value={model?.sourceName ?? ""}
             readOnly={true}
-            labelText={operation?.hasDestination ? "From:" : "From:"}
+            labelText={operation?.hasDestination ? "From" : "From"}
           />
         )}
         {canEdit && !lockDestination && operation?.hasDestination && (
@@ -220,7 +220,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="destinationUuid"
             name="destinationUuid"
             control={control}
-            title={operation?.hasSource ? "To:" : "Location:"}
+            title={operation?.hasSource ? "To" : "Location"}
             placeholder={
               operation?.hasSource
                 ? t("chooseADestination", "Choose a destination")
@@ -239,7 +239,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             id="destinationUuidLbl"
             value={model?.destinationName ?? ""}
             readOnly={true}
-            labelText={operation?.hasSource ? "To:" : "To:"}
+            labelText={operation?.hasSource ? "To" : "To"}
           />
         )}
 
@@ -248,7 +248,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
-            title={t("responsiblePerson:", "Responsible Person:")}
+            title={t("responsiblePerson:", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             invalidText={
@@ -272,8 +272,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             maxLength={255}
             size={"md"}
             value={`${model?.responsiblePersonOther ?? ""}`}
-            labelText={t("responsiblePerson", "Responsible Person:")}
-            placeholder={t("pleaseSpecify", "Please Specify:")}
+            labelText={t("responsiblePerson", "Responsible Person")}
+            placeholder={t("pleaseSpecify", "Please Specify")}
             invalid={!!errors.responsiblePersonOther}
             invalidText={
               errors.responsiblePersonOther &&
@@ -302,7 +302,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             name="reasonUuid"
             control={control}
             placeholder={t("chooseAReason", "Choose a reason")}
-            title={t("reason", "Reason:")}
+            title={t("reason", "Reason")}
             invalid={!!errors.reasonUuid}
             invalidText={errors.reasonUuid && errors?.reasonUuid?.message}
             onReasonChange={(reason) => {
@@ -327,7 +327,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           controllerName="remarks"
           maxLength={255}
           value={`${model?.remarks ?? ""}`}
-          labelText={t("remarks:", "Remarks:")}
+          labelText={t("remarks:", "Remarks")}
           invalid={!!errors.remarks}
           invalidText={errors.remarks && errors?.remarks?.message}
         />

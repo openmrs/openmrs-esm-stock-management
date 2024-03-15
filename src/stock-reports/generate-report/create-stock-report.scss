@@ -3,7 +3,7 @@
 @import '~@openmrs/esm-styleguide/src/vars';
 
 .section {
-  margin: spacing.$spacing-03;
+  // margin: spacing.$spacing-03;
 }
 
 .sectionTitle {
@@ -19,22 +19,4 @@
 
 .modalBody {
   padding-bottom: spacing.$spacing-05;
-}
-
-.checkboxGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust the values as needed */
-  gap: 16px; /* Adjust the gap between checkboxes */
-}
-
-.hr {
-  border: 1px solid #000;
-}
-
-.toggle {
-  margin: 5px;
-}
-
-.checkbox{
-  width: 100%;
 }

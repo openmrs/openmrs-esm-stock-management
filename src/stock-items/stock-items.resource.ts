@@ -1,4 +1,4 @@
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import {
@@ -65,7 +65,9 @@ export interface StockRuleFilter extends ResourceFilterCriteria {
 
 // getStockItems
 export function useStockItems(filter: StockItemFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem${toQueryParams(
+    filter
+  )}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<StockItemDTO>;
@@ -82,7 +84,7 @@ export function useStockItems(filter: StockItemFilter) {
 
 // getStockItemTransactions
 export function useStockItemTransactions(filter: StockItemTransactionFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitemtransaction${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitemtransaction${toQueryParams(
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
@@ -101,7 +103,7 @@ export function useStockItemTransactions(filter: StockItemTransactionFilter) {
 
 // getStockItemInventory
 export function useStockItemInventory(filter: StockItemInventoryFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockiteminventory${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockiteminventory${toQueryParams(
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
@@ -120,7 +122,7 @@ export function useStockItemInventory(filter: StockItemInventoryFilter) {
 
 // getStockOperationItemsCost
 export function useStockOperationItemsCost(filter: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<StockOperationItemCost>;
@@ -136,7 +138,7 @@ export function useStockOperationItemsCost(filter: string) {
 
 // getStockBatches
 export function useStockBatches(filter: StockBatchFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockbatch${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockbatch${toQueryParams(
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
@@ -154,7 +156,7 @@ export function useStockBatches(filter: StockBatchFilter) {
 
 // getStockItemPackagingUOMs
 export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitempackaginguom${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom${toQueryParams(
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
@@ -173,7 +175,7 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
 
 // getStockItem
 export function useStockItem(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem/${id}?v=full`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${id}?v=full`;
   const { data, error, isLoading } = useSWR<
     {
       data: StockItemDTO;
@@ -198,7 +200,7 @@ export function deleteStockItems(ids: string[]) {
     otherIds = "?ids=" + otherIds;
   }
 
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem/${ids[0]}${otherIds}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${ids[0]}${otherIds}`;
 
   const abortController = new AbortController();
 
@@ -213,7 +215,7 @@ export function deleteStockItems(ids: string[]) {
 
 // deleteStockItemPackagingUnit
 export function deleteStockItemPackagingUnit(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitempackaginguom/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom/${id}`;
   const abortController = new AbortController();
 
   return openmrsFetch(apiUrl, {
@@ -227,7 +229,7 @@ export function deleteStockItemPackagingUnit(id: string) {
 
 // createStockItem
 export function createStockItem(item: StockItemDTO) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem`;
   const abortController = new AbortController();
   delete item.isDrug;
   return openmrsFetch(apiUrl, {
@@ -242,7 +244,7 @@ export function createStockItem(item: StockItemDTO) {
 
 // updateStockItem
 export function updateStockItem(item: StockItemDTO) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitem/${item.uuid}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${item.uuid}`;
   const abortController = new AbortController();
   delete item.isDrug;
   delete item.dateCreated;
@@ -258,7 +260,7 @@ export function updateStockItem(item: StockItemDTO) {
 
 // createStockItemPackagingUnit
 export function createStockItemPackagingUnit(item: StockItemPackagingUOMDTO) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitempackaginguom`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -272,7 +274,7 @@ export function createStockItemPackagingUnit(item: StockItemPackagingUOMDTO) {
 
 // updateStockItemPackagingUnit
 export function updateStockItemPackagingUnit(item: StockItemDTO, uuid: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitempackaginguom/${uuid}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom/${uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -286,7 +288,7 @@ export function updateStockItemPackagingUnit(item: StockItemDTO, uuid: string) {
 
 // importStockItem
 export function importStockItem(item: FormData) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockitemimport`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitemimport`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -302,7 +304,9 @@ export function importStockItem(item: FormData) {
 // getStockRules
 export function useStockRules(filter: StockRuleFilter) {
   console.warn("Rules filter: " + JSON.stringify(filter));
-  const apiUrl = `ws/rest/v1/stockmanagement/stockrule${toQueryParams(filter)}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockrule${toQueryParams(
+    filter
+  )}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<StockRule>;
@@ -325,7 +329,7 @@ export function useStockRules(filter: StockRuleFilter) {
 
 // createStockRule
 export function createStockRule(item: StockRule) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockrule`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockrule`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -339,7 +343,7 @@ export function createStockRule(item: StockRule) {
 
 // updateStockRule
 export function updateStockRule(item: StockRule, uuid: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockrule/${uuid}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockrule/${uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -353,7 +357,7 @@ export function updateStockRule(item: StockRule, uuid: string) {
 
 // deleteStockRule
 export function deleteStockRule(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockrule/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockrule/${id}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "DELETE",

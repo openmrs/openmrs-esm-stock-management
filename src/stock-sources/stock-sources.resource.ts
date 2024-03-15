@@ -1,4 +1,4 @@
-import { openmrsFetch } from "@openmrs/esm-framework";
+import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import useSWR from "swr";
 import { PageableResult } from "../core/api/types/PageableResult";
@@ -10,7 +10,7 @@ export interface StockSourceFilter extends ResourceFilterCriteria {
 
 // getStockSources
 export function useStockSources(filter: StockSourceFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stocksource${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource${toQueryParams(
     filter
   )}`;
 
@@ -28,7 +28,7 @@ export function useStockSources(filter: StockSourceFilter) {
 
 // getStockSource
 export function useStockSource(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stocksource/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource/${id}`;
   const { data, error, isLoading } = useSWR<{ data: StockSource }, Error>(
     apiUrl,
     openmrsFetch
@@ -50,7 +50,7 @@ export function deleteStockSource(ids: string[]) {
   if (otherIds.length > 0) {
     otherIds = "?ids=" + otherIds;
   }
-  const apiUrl = `ws/rest/v1/stockmanagement/stocksource/${ids[0]}${otherIds}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource/${ids[0]}${otherIds}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "DELETE",
@@ -65,7 +65,7 @@ export function deleteStockSource(ids: string[]) {
 export function createOrUpdateStockSource(item: StockSource) {
   const isNew = item.uuid != null;
 
-  const apiUrl = `ws/rest/v1/stockmanagement/stocksource${
+  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource${
     isNew ? "/" + item.uuid : ""
   }`;
   const abortController = new AbortController();

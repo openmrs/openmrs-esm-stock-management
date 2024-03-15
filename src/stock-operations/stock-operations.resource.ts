@@ -1,4 +1,8 @@
-import { FetchResponse, openmrsFetch } from "@openmrs/esm-framework";
+import {
+  FetchResponse,
+  openmrsFetch,
+  restBaseUrl,
+} from "@openmrs/esm-framework";
 import useSWR from "swr";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
@@ -34,7 +38,7 @@ export interface StockItemInventoryFilter extends ResourceFilterCriteria {
 
 // getStockOperations
 export function useStockOperations(filter: StockOperationFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation${toQueryParams(
     filter
   )}`;
   const { data, error, isLoading } = useSWR<
@@ -51,7 +55,7 @@ export function useStockOperations(filter: StockOperationFilter) {
 
 // getStockOperationLinks
 export function useStockOperationLinks(filter: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationlink?v=default&q=${filter}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationlink?v=default&q=${filter}`;
   const { data, error, isLoading } = useSWR<
     { data: PageableResult<StockOperationLinkDTO> },
     Error
@@ -65,7 +69,7 @@ export function useStockOperationLinks(filter: string) {
 
 // getStockOperation
 export function useStockOperation(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}`;
   const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(
     apiUrl,
     openmrsFetch
@@ -79,14 +83,14 @@ export function useStockOperation(id: string) {
 export function getStockOperation(
   id: string
 ): Promise<FetchResponse<StockOperationDTO>> {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${id}?v=full`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
 
   return openmrsFetch(apiUrl);
 }
 
 // getStockOperationAndItems
 export function useStockOperationAndItems(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${id}?v=full`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
   const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(
     apiUrl,
     openmrsFetch
@@ -108,7 +112,7 @@ export function deleteStockOperations(ids: string[]) {
   if (otherIds.length > 0) {
     otherIds = "?ids=" + otherIds;
   }
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${ids[0]}${otherIds}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${ids[0]}${otherIds}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "DELETE",
@@ -121,7 +125,7 @@ export function deleteStockOperations(ids: string[]) {
 
 // deleteStockOperationItem
 export function deleteStockOperationItem(id: string) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationitem/${id}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationitem/${id}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "DELETE",
@@ -134,7 +138,7 @@ export function deleteStockOperationItem(id: string) {
 
 // createStockOperation
 export function createStockOperation(item: StockOperationDTO) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -148,7 +152,7 @@ export function createStockOperation(item: StockOperationDTO) {
 
 // updateStockOperation
 export function updateStockOperation(item: StockOperationDTO) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperation/${item.uuid}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${item.uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -162,7 +166,7 @@ export function updateStockOperation(item: StockOperationDTO) {
 
 // executeStockOperationAction
 export function executeStockOperationAction(item: StopOperationAction) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationaction`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationaction`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -179,7 +183,7 @@ export function updateStockOperationBatchNumbers(
   item: StockOperationDTO,
   uuid: string
 ) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationbatchnumbers/${uuid}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationbatchnumbers/${uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "POST",
@@ -193,7 +197,7 @@ export function updateStockOperationBatchNumbers(
 
 // get stock operation itemcosts
 export function getStockOperationItemsCost(filter: StockOperationFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "GET",
@@ -205,7 +209,7 @@ export function getStockOperationItemsCost(filter: StockOperationFilter) {
 }
 // get stockiteminvoentory
 export function getStockItemInventory(filter: StockItemInventoryFilter) {
-  const apiUrl = `ws/rest/v1/stockmanagement/stockiteminventory${toQueryParams(
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockiteminventory${toQueryParams(
     filter
   )}`;
   const abortController = new AbortController();
@@ -217,3 +221,22 @@ export function getStockItemInventory(filter: StockItemInventoryFilter) {
     signal: abortController.signal,
   });
 }
+
+export const operationStatusColor = (status: string) => {
+  switch (status) {
+    case "NEW":
+      return "#0f62fe";
+    case "SUBMITTED":
+      return "#4589ff";
+    case "DISPATCHED":
+      return "#8a3ffc";
+    case "COMPLETED":
+      return "#24a148";
+    case "CANCELLED":
+      return "#da1e28";
+    case "RETURNED":
+      return "#eb6200";
+    default:
+      break;
+  }
+};

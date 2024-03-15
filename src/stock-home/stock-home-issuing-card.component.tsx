@@ -18,7 +18,7 @@ const StockHomeIssuingCard = () => {
 
   if (isLoading) return <></>;
 
-  if (items.length === 0) {
+  if (items?.length === 0) {
     return (
       <>
         <p className={styles.content}>
@@ -28,7 +28,7 @@ const StockHomeIssuingCard = () => {
     );
   }
 
-  const itemsToDisplay = items.map((item, index) => {
+  const itemsToDisplay = items?.map((item, index) => {
     // Assuming you are using 'stockOperationItems' from each 'item'
     const stockItems = item?.stockOperationItems || [];
 
@@ -46,11 +46,11 @@ const StockHomeIssuingCard = () => {
     return formattedStockItems;
   });
 
-  const flattenedItemsToDisplay = itemsToDisplay.flat().slice(0, 10);
+  const flattenedItemsToDisplay = itemsToDisplay?.flat().slice(0, 10);
 
   return (
     <>
-      {flattenedItemsToDisplay.map((item, index) => (
+      {flattenedItemsToDisplay?.map((item, index) => (
         <div className={styles.card} key={index}>
           <div className={styles.colorLineGreen} />
           <div className={styles.icon}>
