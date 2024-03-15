@@ -22,7 +22,12 @@ import StockOperationApproveDispatchButton from "../stock-operations-dialog/stoc
 import StockOperationCompleteDispatchButton from "../stock-operations-dialog/stock-operations-completed-dispatch-button.component";
 import StockOperationIssueStockButton from "../stock-operations-dialog/stock-operations-issue-stock-button.component";
 import { StockOperation } from "./stock-operation-context/useStockOperationContext";
-import { formatDate, parseDate, showToast } from "@openmrs/esm-framework";
+import {
+  formatDate,
+  parseDate,
+  showSnackbar,
+  showToast,
+} from "@openmrs/esm-framework";
 import {
   OperationType,
   StockOperationType,
@@ -43,12 +48,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
     closeOverlay();
-    showToast({
+    showSnackbar({
       kind: "error",
       title: t("error", "Error"),
-      description: t("errorLoadingStockOperation", "Error loading stock item"),
-      millis: 5000,
-      critical: true,
+      subtitle: t("errorLoadingStockOperation", "Error loading stock item"),
+      timeoutInMs: 5000,
+      isLowContrast: true,
     });
     return;
   }
