@@ -109,7 +109,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                     <TextInput
                       id="location"
                       labelText={t("location", "Location Name")}
-                      placeholder={t("locationPlaceholder", "")}
+                      placeholder={t("locationPlaceholder", "Add a location")}
                       invalidText={fieldState.error?.message}
                       {...field}
                     />
@@ -123,7 +123,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                   render={({ field, fieldState }) => (
                     <FilterableMultiSelect
                       id="tag"
-                      titleText="Multiselect title"
+                      titleText="Select tag(s)"
                       helperText="This is helper text"
                       items={Tags ?? []}
                       {...field}

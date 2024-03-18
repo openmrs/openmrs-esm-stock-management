@@ -2,9 +2,9 @@ import { StockOperationFilter } from "../stock-operations/stock-operations.resou
 import { useMemo, useState } from "react";
 import {
   FetchResponse,
-  openmrsFetch,
+  openmrsFetch, restBaseUrl,
   showToast,
-  usePagination,
+  usePagination
 } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import {
@@ -85,7 +85,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
 }
 
 export const useLocationTags = () => {
-  const url = `ws/rest/v1/locationtag/`;
+  const url = `${restBaseUrl}/locationtag/`;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data, error, isLoading, isValidating, mutate } = useSWR<
@@ -107,7 +107,7 @@ export async function saveLocation({
 }): Promise<FetchResponse<LocationName>> {
   try {
     const response: FetchResponse = await openmrsFetch(
-      `/ws/rest/v1/location/`,
+      `${restBaseUrl}/location/`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
