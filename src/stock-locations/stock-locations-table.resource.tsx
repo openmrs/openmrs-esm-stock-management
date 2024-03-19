@@ -1,12 +1,22 @@
 import { StockOperationFilter } from "../stock-operations/stock-operations.resource";
 import { useMemo, useState } from "react";
-import { usePagination } from "@openmrs/esm-framework";
+import {
+  FetchResponse,
+  openmrsFetch,
+  restBaseUrl,
+  showToast,
+  usePagination,
+} from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
-import { useStockLocations } from "../stock-lookups/stock-lookups.resource";
+import {
+  useStockLocations,
+  useStockTagLocations,
+} from "../stock-lookups/stock-lookups.resource";
+import useSWR from "swr";
+import { extractErrorMessagesFromResponse } from "../constants";
 
 export function useStockLocationPages(filter: StockOperationFilter) {
-  const { locations, isErrorLocation, isLoadingLocations } =
-    useStockLocations(filter);
+  const { stockLocations, error, isLoading } = useStockTagLocations();
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -15,7 +25,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
     goTo,
     results: paginatedQueueEntries,
     currentPage,
-  } = usePagination(locations.results, currentPageSize);
+  } = usePagination(stockLocations, currentPageSize);
 
   const { t } = useTranslation();
 
@@ -46,28 +56,73 @@ export function useStockLocationPages(filter: StockOperationFilter) {
   );
 
   const tableRows = useMemo(() => {
-    return locations?.results?.map((location) => ({
+    return stockLocations.map((location) => ({
       id: location?.uuid,
       key: `key-${location?.uuid}`,
       uuid: `${location?.uuid}`,
       name: `${location?.name}`,
-      tags: location?.tags?.map((p) => p.display)?.join(", ") ?? "",
+      tags:
+        location?.meta.tag
+          ?.filter((tag) => tag.code !== "SUBSETTED")
+          .map((p) => p.code)
+          ?.join(", ") ?? "",
       childLocations:
         location?.childLocations?.map((p) => p.display)?.join(", ") ?? "",
     }));
-  }, [locations?.results]);
-
+  }, [stockLocations]);
   return {
-    items: locations.results,
+    items: stockLocations,
     currentPage,
     currentPageSize,
     paginatedQueueEntries,
     goTo,
     pageSizes,
-    isLoadingLocations,
-    isErrorLocation,
+    isLoading,
+    error,
     setPageSize,
     tableHeaders,
     tableRows,
   };
+}
+
+export const useLocationTags = () => {
+  const url = `${restBaseUrl}/locationtag/`;
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { data, error, isLoading, isValidating, mutate } = useSWR<
+    { data },
+    Error
+  >(url, openmrsFetch);
+  const results = data?.data?.results ? data?.data?.results : [];
+  return {
+    locationTagList: results,
+    loading: isLoading,
+    mutate,
+  };
+};
+interface LocationName {
+  name: string;
+}
+export async function saveLocation({
+  locationPayload,
+}): Promise<FetchResponse<LocationName>> {
+  try {
+    const response: FetchResponse = await openmrsFetch(
+      `${restBaseUrl}/location/`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: locationPayload,
+      }
+    );
+    return response;
+  } catch (error) {
+    const errorMessages = extractErrorMessagesFromResponse(error);
+    showToast({
+      description: errorMessages.join(", "),
+      title: "Error on saving form",
+      kind: "error",
+      critical: true,
+    });
+  }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useStockLocationPages } from "./stock-locations-table.resource";
 import {
   Button,
@@ -12,6 +12,9 @@ import styles from "../stock-items/stock-items-table.scss";
 import { ResourceRepresentation } from "../core/api/api";
 import DataList from "../core/components/table/table.component";
 import { useTranslation } from "react-i18next";
+import { mutate } from "swr";
+import NewLocationForm from "./add-locations-form.component";
+import { Add } from "@carbon/react/icons";
 
 interface StockLocationsTableProps {
   status?: string;
@@ -20,20 +23,29 @@ interface StockLocationsTableProps {
 const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
 
-  const { tableHeaders, tableRows, items, isLoadingLocations } =
-    useStockLocationPages({
-      v: ResourceRepresentation.Full,
-    });
+  const [showLocationModal, setAddLocationModal] = useState(false);
+
+  const { tableHeaders, tableRows, items, isLoading } = useStockLocationPages({
+    v: ResourceRepresentation.Full,
+  });
 
   const handleRefresh = () => {
     // search.refetch()
   };
 
-  const createStockItem = () => {
-    // search.refetch()
+  const createStockLocation = () => {
+    {
+      showLocationModal ? (
+        <NewLocationForm
+          onModalChange={setAddLocationModal}
+          showModal={showLocationModal}
+          mutate={mutate}
+        />
+      ) : null;
+    }
   };
 
-  if (isLoadingLocations) {
+  if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
 
@@ -48,8 +60,19 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
                 Refresh
               </TableToolbarAction>
             </TableToolbarMenu>
-            <Button onClick={createStockItem} size="md" kind="primary">
-              {t("stockmanagement.addnewlocation", "Add Location")}
+            {showLocationModal ? (
+              <NewLocationForm
+                onModalChange={setAddLocationModal}
+                showModal={showLocationModal}
+                mutate={mutate}
+              />
+            ) : null}
+            <Button
+              kind="ghost"
+              renderIcon={(props) => <Add size={16} {...props} />}
+              onClick={() => setAddLocationModal(true)}
+            >
+              {t("createLocation", "Create Location")}
             </Button>
           </>
         )}
