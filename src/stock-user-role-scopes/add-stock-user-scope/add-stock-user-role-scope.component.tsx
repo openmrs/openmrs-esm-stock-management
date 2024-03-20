@@ -335,6 +335,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                     size="md"
                     labelText={t("user", "User")}
                     items={filteredItems}
+                    onChange={onUserChanged}
                     shouldFilterItem={() => true}
                     itemToString={(item) =>
                       `${item?.person?.display ?? item?.display ?? ""}`
