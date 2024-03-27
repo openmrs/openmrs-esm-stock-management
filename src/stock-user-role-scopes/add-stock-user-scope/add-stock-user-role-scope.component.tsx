@@ -14,10 +14,9 @@ import {
   Select,
   SelectItem,
 } from "@carbon/react";
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import styles from "./add-stock-user-role-scope.scss";
 import {
-  UserFilterCriteria,
   useRoles,
   useStockOperationTypes,
   useStockTagLocations,
@@ -64,7 +63,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
   const [roles, setRoles] = useState<Role[]>([]);
 
-  const { data: user } = useUser(model?.uuid);
   const [showItems, setShowItems] = useState(false);
 
   // operation types
@@ -79,6 +77,9 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
     isLoading: loadingUsers,
   } = useUsers({ v: ResourceRepresentation.Default });
+
+  const [selectedUserUuid, setSelectedUserUuid] = useState<string | null>(null);
+  const { data: user, isError } = useUser(selectedUserUuid);
 
   // get roles
   const { items: rolesData, isLoading: loadingRoles } = useRoles({
@@ -201,17 +202,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const onActiveDatesChange = (dates: Date[]): void => {
     setFormModel({ ...formModel, activeFrom: dates[0], activeTo: dates[1] });
   };
-  const handleUsersSearch = useMemo(
-    () =>
-      debounce((searchTerm) => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useUsers({
-          v: ResourceRepresentation.Default,
-          q: searchTerm,
-        } as any as UserFilterCriteria);
-      }, 3),
-    []
-  );
 
   const onUserChanged = (data: { selectedItem: User }) => {
     const stockRolesUUIDs = [
@@ -227,8 +217,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     );
     setFormModel({ ...formModel, userUuid: data.selectedItem?.uuid });
     setRoles(filteredStockRoles ?? []);
-
-    console.info(roles);
+    setSelectedUserUuid(data?.selectedItem?.uuid);
   };
 
   const onRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
