@@ -178,7 +178,7 @@ export function useUsers(filter: UserFilterCriteria) {
 
 // getUser
 export function useUser(id: string) {
-  const apiUrl = `${restBaseUrl}/user${id}`;
+  const apiUrl = `${restBaseUrl}/user/${id}`;
   const { data, error, isLoading } = useSWR<
     {
       data: User;
