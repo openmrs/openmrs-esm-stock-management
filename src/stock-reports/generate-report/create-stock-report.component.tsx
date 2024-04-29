@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Button,
   InlineLoading,
@@ -9,8 +10,9 @@ import {
   RadioButtonGroup,
   RadioButton,
   Form,
+  Checkbox,
+  NumberInput,
 } from "@carbon/react";
-import React, { useEffect, useMemo, useState } from "react";
 import styles from "./create-stock-report.scss";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
@@ -547,23 +549,130 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             })}
           </Select>
         )}
+        {displayChildLocations && (
+          <Controller
+            control={control}
+            name="childLocations"
+            render={({ field: { onChange, value } }) => (
+              <Checkbox
+                id="childLocations"
+                onChange={onChange}
+                value={value}
+                labelText={t(
+                  "IncludeChildLocations",
+                  "Include Child Locations"
+                )}
+              />
+            )}
+          />
+        )}
         {displayMostLeastMoving && (
-          <RadioButtonGroup
+          <Controller
+            control={control}
             name="mostLeastMoving"
-            legendText={t("rank", "Rank")}
-            // onChange={onMostLeastMovingChange}
-          >
-            <RadioButton
-              value="MostMoving"
-              id="mostLeastMovingMost"
-              labelText={t("mostMoving", "Most Moving")}
+            render={({ field: { onChange, value } }) => (
+              <RadioButtonGroup
+                name="mostLeastMoving"
+                legendText={t("rank", "Rank")}
+                onChange={onChange}
+                value={value}
+              >
+                <RadioButton
+                  value="MostMoving"
+                  id="mostLeastMovingMost"
+                  labelText={t("mostMoving", "Most Moving")}
+                />
+                <RadioButton
+                  value="LeastMoving"
+                  id="mostLeastMovingLeast"
+                  labelText={t("LeastMoving", "Least Moving")}
+                />
+              </RadioButtonGroup>
+            )}
+          />
+        )}
+        {displayLimit && (
+          <Controller
+            control={control}
+            name="limit"
+            render={({ field: { onChange, value } }) => (
+              <NumberInput
+                id="limitTop"
+                allowEmpty={true}
+                value={value}
+                onchange={onChange}
+                label={t("limit", "Limit")}
+                defaultValue={20}
+              />
+            )}
+          />
+        )}
+        {displayFulfillment && (
+          <div style={{ display: "flex", flexDirection: "row", gap: "0 1rem" }}>
+            <Controller
+              control={control}
+              name="fullFillment"
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Checkbox
+                    id="allFulfillment"
+                    checked={value?.includes("All")}
+                    onChange={(event) => {
+                      const isChecked = event.target.checked;
+                      if (isChecked) {
+                        onChange(["All"]);
+                      } else {
+                        onChange(value.filter((item) => item !== "All"));
+                      }
+                    }}
+                    labelText={t("all", "All")}
+                  />
+                  <Checkbox
+                    id="fullFulfillment"
+                    checked={value?.includes("Full")}
+                    onChange={(event) => {
+                      const isChecked = event.target.checked;
+                      onChange(
+                        isChecked
+                          ? [...value.filter((item) => item !== "All"), "Full"]
+                          : value.filter((item) => item !== "Full")
+                      );
+                    }}
+                    labelText={t("fullFulfillment", "Full Fulfillment")}
+                  />
+                  <Checkbox
+                    id="partialFulfillment"
+                    checked={value?.includes("Partial")}
+                    onChange={(event) => {
+                      const isChecked = event.target.checked;
+                      onChange(
+                        isChecked
+                          ? [
+                              ...value.filter((item) => item !== "All"),
+                              "Partial",
+                            ]
+                          : value.filter((item) => item !== "Partial")
+                      );
+                    }}
+                    labelText={t("partialFulfillment", "Partial Fulfillment")}
+                  />
+                  <Checkbox
+                    id="noneFulfillment"
+                    checked={value?.includes("None")}
+                    onChange={(event) => {
+                      const isChecked = event.target.checked;
+                      onChange(
+                        isChecked
+                          ? [...value.filter((item) => item !== "All"), "None"]
+                          : value.filter((item) => item !== "None")
+                      );
+                    }}
+                    labelText={t("noneFulfillment", "Non Fulfillment")}
+                  />
+                </>
+              )}
             />
-            <RadioButton
-              value="LeastMoving"
-              id="mostLeastMovingLeast"
-              labelText={t("LeastMoving", "Least Moving")}
-            />
-          </RadioButtonGroup>
+          </div>
         )}
       </div>
       <div className={styles.reportButton}>
