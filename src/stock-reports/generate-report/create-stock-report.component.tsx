@@ -496,7 +496,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
                   placeholder={DATE_PICKER_FORMAT}
                   labelText={t("startDate", "Start Date")}
                   defaultValue=""
-                  invalid={errors.startDate}
+                  invalid={errors?.startDate?.message}
                   invalidText={errors?.startDate?.message}
                 />
               </DatePicker>
@@ -522,7 +522,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
                   placeholder={DATE_PICKER_FORMAT}
                   labelText={t("endDate", "End Date")}
                   defaultValue=""
-                  invalid={errors.endDate}
+                  invalid={errors?.endDate?.message}
                   invalidText={errors?.endDate?.message}
                 />
               </DatePicker>
