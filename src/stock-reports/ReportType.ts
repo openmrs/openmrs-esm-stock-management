@@ -44,7 +44,7 @@ export const getReportStartDateLabel = (
 ) => {
   return isForecastReport(reportSystemName)
     ? "stockmanagement.report.edit.historicalstartdate"
-    : "stockmanagement.report.edit.startdate";
+    : "Start Date";
 };
 
 export const getReportEndDateLabel = (
@@ -52,7 +52,7 @@ export const getReportEndDateLabel = (
 ) => {
   return isForecastReport(reportSystemName)
     ? "stockmanagement.report.edit.historicalenddate"
-    : "stockmanagement.report.edit.enddate";
+    : "End Date";
 };
 
 export interface ReportType {
