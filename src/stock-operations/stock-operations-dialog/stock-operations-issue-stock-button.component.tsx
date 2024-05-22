@@ -20,7 +20,7 @@ const StockOperationIssueStockButton: React.FC<
     uuid: "",
     name: "Stock Issue",
     description: "",
-    operationType: "",
+    operationType: "stockissue",
     hasSource: false,
     sourceType: "Location",
     hasDestination: false,
@@ -40,8 +40,9 @@ const StockOperationIssueStockButton: React.FC<
     voided: false,
   };
 
+  const modifiedOperation = addRequisitionStockOperation(operation);
   const handleButtonClick = () => {
-    launchAddOrEditDialog(operation, false, type, operations, false);
+    launchAddOrEditDialog(modifiedOperation, false, type, operations, false);
   };
 
   return (
@@ -54,5 +55,12 @@ const StockOperationIssueStockButton: React.FC<
     </Button>
   );
 };
+function addRequisitionStockOperation(stockOperation) {
+  const { uuid } = stockOperation;
+  return {
+    ...stockOperation,
+    requisitionStockOperationUuid: uuid,
+  };
+}
 
 export default StockOperationIssueStockButton;

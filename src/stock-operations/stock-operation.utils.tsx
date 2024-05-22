@@ -12,7 +12,10 @@ import {
   updateStockOperation,
 } from "./stock-operations.resource";
 import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
-import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
+import {
+  OperationType,
+  StockOperationType,
+} from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
 import { extractErrorMessagesFromResponse } from "../constants";
 import { handleMutate } from "./swr-revalidation";
@@ -27,6 +30,17 @@ export const addOrEditStockOperation = async (
   try {
     if (operation.operationType === "requisition") {
       delete payload.destinationName;
+    }
+    if (operation.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE) {
+      const stockIssueOpsTypeUuid = "66666666-6666-6666-6666-666666666666";
+      delete payload.completedDate;
+      delete payload.completedBy;
+      delete payload.completedByFamilyName;
+      delete payload.completedByGivenName;
+      delete payload.operationTypeUuid;
+      delete payload.permission;
+      delete payload.locked;
+      payload["operationTypeUuid"] = stockIssueOpsTypeUuid;
     }
     const response: FetchResponse<StockOperationDTO> = await (isEditing
       ? updateStockOperation
