@@ -36,10 +36,7 @@ import rootStyles from "../../root.scss";
 import { ResourceRepresentation } from "../../core/api/api";
 import { useStockOperationPages } from "../stock-operations-table.resource";
 import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
-import {
-  createBaseOperationPayload,
-  getRequisitionStockOperations,
-} from "./add-stock-utils";
+import { createBaseOperationPayload } from "./add-stock-utils";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -70,8 +67,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
-  const requisitionStockOperations = getRequisitionStockOperations(items);
-  const operationType = operationFromString(operation.operationType);
+  const operationType = operationFromString(operation?.operationType);
+  const issueStockOperation = mapIssueStockLocations(model);
 
   const {
     handleSubmit,
@@ -79,7 +76,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     formState: { errors },
     setValue,
   } = useForm<StockOperationFormData>({
-    defaultValues: model,
+    defaultValues: operationType === "stockissue" ? issueStockOperation : model,
     mode: "all",
     resolver: zodResolver(operationSchema(operationType)),
   });
@@ -112,34 +109,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       <form
         className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
       >
-        {operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && (
-          <Controller
-            control={control}
-            name="requisitionStockOperationUuid"
-            render={({ field }) => (
-              <ComboBox
-                id="requisitionStockOperationUuid"
-                items={requisitionStockOperations}
-                onChange={(data: { selectedItem: StockOperationDTO }) => {
-                  field.onChange(data.selectedItem.uuid);
-                  Object.assign(
-                    model.stockOperationItems,
-                    data.selectedItem.stockOperationItems
-                  );
-                  setFormContext({
-                    stockItems: data.selectedItem.stockOperationItems,
-                  });
-                }}
-                itemToString={(item) => `${item?.operationNumber}` ?? ""}
-                titleText={t("requisitionStockOperation", "Requisition")}
-                invalid={!!errors.requisitionStockOperationUuid}
-                invalidText={errors.requisitionStockOperationUuid?.message}
-                placeholder={t("chooseARequisition", "Choose a requisition")}
-              />
-            )}
-          />
-        )}
-
         {canEdit && (
           <Controller
             control={control}
@@ -210,7 +179,11 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         {(!canEdit || isEditing || lockSource) && (
           <TextInput
             id="sourceUuidLbl"
-            value={model?.sourceName ?? ""}
+            value={
+              operationType === "stockissue"
+                ? issueStockOperation.sourceName
+                : model?.sourceName ?? ""
+            }
             readOnly={true}
             labelText={operation?.hasDestination ? "From" : "From"}
           />
@@ -237,7 +210,11 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         {(!canEdit || isEditing || lockDestination) && (
           <TextInput
             id="destinationUuidLbl"
-            value={model?.destinationName ?? ""}
+            value={
+              operationType === "stockissue"
+                ? issueStockOperation.destinationName
+                : model?.destinationName ?? ""
+            }
             readOnly={true}
             labelText={operation?.hasSource ? "To" : "To"}
           />
@@ -348,5 +325,19 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     </div>
   );
 };
+function mapIssueStockLocations(stockOperation) {
+  /** Since we are using requisition information to issue stock,
+      please note that the locations will be inverted: the destination listed on the requisition will become the issuing location.
+  */
+  const { sourceUuid, sourceName, destinationUuid, destinationName } =
+    stockOperation;
+  return {
+    ...stockOperation,
+    sourceUuid: destinationUuid,
+    sourceName: destinationName,
+    destinationUuid: sourceUuid,
+    destinationName: sourceName,
+  };
+}
 
 export default BaseOperationDetails;

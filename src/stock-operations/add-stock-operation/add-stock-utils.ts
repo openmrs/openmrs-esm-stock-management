@@ -58,7 +58,6 @@ function shouldDeleteDestinationUuid(operationType) {
 
 export function createBaseOperationPayload(model, item, operationType) {
   const req = Object.assign(model, item);
-
   const propertiesToDelete = [
     "submitted",
     "cancelledByFamilyName",
@@ -105,6 +104,5 @@ export function createBaseOperationPayload(model, item, operationType) {
   if (shouldDeleteDestinationUuid(operationType)) {
     delete req.destinationUuid;
   }
-
   return req;
 }

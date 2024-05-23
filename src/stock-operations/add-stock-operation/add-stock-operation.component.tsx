@@ -59,7 +59,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   }
 
   let operations: StockOperationType[] | null | undefined;
-
   const tabs: TabItem[] = [
     {
       name: isEditing
@@ -86,7 +85,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             setManageStockItems(true);
             setSelectedIndex(1);
           }}
-          operation={props.operation}
+          operation={props?.operation}
         />
       ),
     },
@@ -124,7 +123,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           setup={result}
           canEdit={canEdit}
           locked={false}
-          model={isEditing ? props?.model : result?.dto}
+          model={
+            isEditing
+              ? props?.model
+              : props?.operation?.name === "Stock Issue"
+              ? props?.model
+              : result?.dto
+          }
           requiresDispatchAcknowledgement={
             isEditing
               ? props?.model?.operationType === "return" ||
