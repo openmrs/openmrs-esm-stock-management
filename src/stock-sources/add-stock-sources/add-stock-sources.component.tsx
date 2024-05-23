@@ -14,7 +14,12 @@ import styles from "./add-stock-sources.scss";
 import { useConcept } from "../../stock-lookups/stock-lookups.resource";
 import { StockSource } from "../../core/api/types/stockOperation/StockSource";
 import { createOrUpdateStockSource } from "../stock-sources.resource";
-import { showNotification, showToast, useConfig } from "@openmrs/esm-framework";
+import {
+  restBaseUrl,
+  showNotification,
+  showToast,
+  useConfig,
+} from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { type ConfigObject } from "../../config-schema";
@@ -68,7 +73,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               ),
             });
 
-            handleMutate("ws/rest/v1/stockmanagement/stocksource");
+            handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
 
             closeOverlay();
           },

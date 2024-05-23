@@ -38,7 +38,12 @@ import {
   StockOperationStatusRejected,
   StockOperationStatusReturned,
 } from "../core/api/types/stockOperation/StockOperationStatus";
-import { isDesktop, showModal, useConfig } from "@openmrs/esm-framework";
+import {
+  isDesktop,
+  restBaseUrl,
+  showModal,
+  useConfig,
+} from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
@@ -114,6 +119,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       title: "complete",
       closeModal: () => dispose(),
     });
+    handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
   };
 
   useEffect(() => {
