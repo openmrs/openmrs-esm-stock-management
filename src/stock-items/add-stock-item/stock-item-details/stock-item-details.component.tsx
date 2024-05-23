@@ -24,6 +24,7 @@ import rootStyles from "../../../root.scss";
 import { closeOverlay } from "../../../core/components/overlay/hook";
 import { expirationOptions, radioOptions } from "./stock-item-details.resource";
 import { handleMutate } from "../../../stock-operations/swr-revalidation";
+import { restBaseUrl } from "@openmrs/esm-framework";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
@@ -50,7 +51,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         item.uuid = model.uuid;
         await onSave(item);
         handleTabChange(1);
-        handleMutate("ws/rest/v1/stockmanagement/stockitem");
+        handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
       } catch (e) {
         // Show notification
       } finally {
