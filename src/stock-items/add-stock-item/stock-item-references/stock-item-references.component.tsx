@@ -20,10 +20,7 @@ import { useStockItemReferencesHook } from "./stock-item-references.resource";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StockItemReferenceData } from "./validation-schema";
 import { stockItemDetailsSchema } from "../../validationSchema";
-import {
-  StockItemReference,
-  StockItemReferenceDTO,
-} from "../../../core/api/types/stockItem/StockItemReference";
+import { StockItemReferenceDTO } from "../../../core/api/types/stockItem/StockItemReference";
 import ControlledTextInput from "../../../core/components/carbon/controlled-text-input/controlled-text-input.component";
 import {
   createStockItemReference,
@@ -34,6 +31,7 @@ import {
   showSnackbar,
   showToast,
 } from "@openmrs/esm-framework";
+import { extractErrorMessagesFromResponse } from "../../../constants";
 
 interface StockReferencesProps {
   isEditing?: boolean;
@@ -84,19 +82,10 @@ const StockReferences: React.FC<StockReferencesProps> = ({
     const { getValues } = stockReferenceForm;
     const { code, references } = getValues();
 
-    const payload: StockItemReference = {
-      referenceCode: "",
-      stockSource: undefined,
-      stockItem: undefined,
-      uuid: "",
-      creator: undefined,
-      dateCreated: undefined,
-      changedBy: undefined,
-      dateChanged: undefined,
-      dateVoided: undefined,
-      voidedBy: undefined,
-      voidReason: "",
-      voided: false,
+    const payload: StockItemReferenceDTO = {
+      referenceCode: code,
+      stockItemUuid: stockItemUuid,
+      stockSourceUuid: references,
     };
 
     createStockItemReference(payload).then(
@@ -109,12 +98,13 @@ const StockReferences: React.FC<StockReferencesProps> = ({
           ),
           kind: "success",
         }),
-      () => {
+      (error) => {
+        const err = extractErrorMessagesFromResponse(error);
         showSnackbar({
           title: t("saveStockItemReferenceErrorTitle", "StockItem Reference"),
           subtitle: t(
             "saveStockItemReferenceErrorMessage",
-            "Error saving stock item reference"
+            "Error saving stock item reference" + err.join(",")
           ),
           kind: "error",
         });
@@ -203,23 +193,24 @@ const StockReferencesRow: React.FC<{
       () => {
         showToast({
           critical: true,
-          title: t("deletePackagingUnitTitle", `Delete stock item reference`),
+          title: t("deletePackagingUnitTitle", `Delete StockItem reference`),
           kind: "success",
           description: t(
             "deleteStockItemReferenceMesaage",
-            `Stock Item reference deleted Successfully`
+            `StockItem reference deleted Successfully`
           ),
         });
       },
       (error) => {
+        const err = extractErrorMessagesFromResponse(error);
         showNotification({
           title: t(
             "deleteStockItemReferenceTitle",
-            `Error Deleting a stock item reference`
+            `Error Deleting a stockitem reference`
           ),
           kind: "error",
           critical: true,
-          description: error?.message,
+          description: err.join(","),
         });
       }
     );
@@ -248,7 +239,7 @@ const StockReferencesRow: React.FC<{
             name="code"
             control={control}
             size={"md"}
-            value={row?.referenceCode}
+            value={row?.referenceCode ?? ""}
             controllerName="code"
             labelText={""}
           />

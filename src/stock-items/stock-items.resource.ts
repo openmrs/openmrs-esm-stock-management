@@ -396,7 +396,7 @@ export function useStockItemReferences(filter: StockItemReferenceFilter) {
 }
 
 // create stockItemReference
-export function createStockItemReference(item: StockItemReference) {
+export function createStockItemReference(item: StockItemReferenceDTO) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitemreference`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
