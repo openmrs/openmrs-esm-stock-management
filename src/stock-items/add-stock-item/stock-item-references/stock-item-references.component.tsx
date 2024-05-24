@@ -163,11 +163,7 @@ const StockReferences: React.FC<StockReferencesProps> = ({
                 {items?.map((row: StockItemReferenceDTO, index) => (
                   <StockReferencesRow row={row} key={`${index}-${row?.uuid}`} />
                 ))}
-                <StockReferencesRow
-                  row={{}}
-                  key="bottom-row"
-                  isEditing={isEditing}
-                />
+                <StockReferencesRow row={{}} key="bottom-row" isEditing />
               </TableBody>
             </Table>
           </TableContainer>
@@ -236,7 +232,7 @@ const StockReferencesRow: React.FC<{
           <StockSourceSelector
             row={row}
             name="references"
-            controllerName="references"
+            controllerName={"references"}
             control={control}
             placeholder={t("filter", "Filter...")}
           />
