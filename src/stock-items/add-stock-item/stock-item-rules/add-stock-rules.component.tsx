@@ -65,14 +65,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
 
   const { items: dispensingUnits } = useStockItemPackagingUOMs(stockItemFilter);
 
-  //locations
-  // const {
-  //   locations: { results: locations },
-  // } = useStockLocations({ v: ResourceRepresentation.Default });
-
   const { stockLocations } = useStockTagLocations();
-
-  console.info(stockLocations);
 
   //Roles
   const {
