@@ -45,7 +45,6 @@ import { initialStockOperationValue } from "../core/utils/utils";
 import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
 import { useTranslation } from "react-i18next";
 import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
-import { handleMutate } from "./swr-revalidation";
 import StockOperationsFilters from "./stock-operations-filters.component";
 import {
   DATE_PICKER_CONTROL_FORMAT,
@@ -107,18 +106,14 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [selectedOperations, setSelectedOperations] = useState<string[]>([]);
-
   const config = useConfig();
 
   let operations: StockOperationType[] | null | undefined;
   const handleOnComplete = () => {
     const dispose = showModal("stock-operation-dialog", {
       title: "complete",
-      operation: operation,
-      requireReason: "",
       closeModal: () => dispose(),
     });
-    handleMutate("ws/rest/v1/stockmanagement/stockoperation");
   };
 
   useEffect(() => {
@@ -131,6 +126,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     selectedOperations,
     currentPage,
     currentPageSize,
+    items,
   ]);
 
   const handleOnFilterChange = useCallback((selectedItems, filterType) => {
@@ -230,12 +226,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       details: (
         <div className="tbl-expand-display-fields">
           <div className="field-label">
-            <span className="field-title">Created</span>
+            <span className="field-title"> {t("created", "Created")}</span>
             <span className="field-desc">
               <span className="action-date">
                 {formatDisplayDate(stockOperation?.dateCreated)}
               </span>{" "}
-              By
+              {t("by", "By")}
               <span className="action-by">
                 {stockOperation.creatorFamilyName ?? ""}{" "}
                 {stockOperation.creatorGivenName ?? ""}
@@ -246,12 +242,14 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             stockOperation?.status !== StockOperationStatusReturned &&
             stockOperation?.submittedDate && (
               <div className="field-label">
-                <span className="field-title">Submitted</span>
+                <span className="field-title">
+                  {t("submitted", "Submitted")}
+                </span>
                 <span className="field-desc">
                   <span className="action-date">
                     {formatDisplayDate(stockOperation?.submittedDate)}
                   </span>{" "}
-                  By
+                  {t("by", "By")}
                   <span className="action-by">
                     {stockOperation.submittedByFamilyName ?? ""}{" "}
                     {stockOperation.submittedByGivenName ?? ""}
@@ -262,12 +260,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
           {stockOperation?.completedDate && (
             <div className="field-label">
-              <span className="field-title">Completed</span>
+              <span className="field-title">{t("completed", "Completed")}</span>
               <span className="field-desc">
                 <span className="action-date">
                   {formatDisplayDate(stockOperation?.completedDate)}
                 </span>{" "}
-                By
+                {t("by", "By")}
                 <span className="action-by">
                   {stockOperation.completedByFamilyName ?? ""}{" "}
                   {stockOperation.completedByGivenName ?? ""}
@@ -278,12 +276,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
           {stockOperation?.status === StockOperationStatusCancelled && (
             <div className="field-label">
-              <span className="field-title">Cancelled</span>
+              <span className="field-title">
+                {" "}
+                {t("cancelled", "Cancelled")}
+              </span>
               <span className="field-desc">
                 <span className="action-date">
                   {formatDisplayDate(stockOperation?.cancelledDate)}
                 </span>{" "}
-                By
+                {t("by", "By")}
                 <span className="action-by">
                   {stockOperation.cancelledByFamilyName ?? ""}{" "}
                   {stockOperation.cancelledByGivenName ?? ""}
@@ -300,7 +301,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 <span className="action-date">
                   {formatDisplayDate(stockOperation?.rejectedDate)}
                 </span>{" "}
-                By
+                {t("by", "By")}
                 <span className="action-by">
                   {stockOperation.rejectedByFamilyName ?? ""}{" "}
                   {stockOperation.rejectedByGivenName ?? ""}
@@ -346,7 +347,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [handleOnComplete, filteredItems, operation, operations]);
+  }, [handleOnComplete, filteredItems, operation, operations, items]);
 
   if (isLoading) {
     return (

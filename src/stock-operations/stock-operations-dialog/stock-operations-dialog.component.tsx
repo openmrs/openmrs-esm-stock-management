@@ -16,9 +16,10 @@ import {
   StopOperationActionType,
 } from "../../core/api/types/stockOperation/StockOperationAction";
 import { executeStockOperationAction } from "../stock-operations.resource";
-import { showNotification, showToast } from "@openmrs/esm-framework";
+import { restBaseUrl, showSnackbar } from "@openmrs/esm-framework";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { extractErrorMessagesFromResponse } from "../../constants";
+import { handleMutate } from "../swr-revalidation";
 
 interface StockOperationDialogProps {
   title: string;
@@ -92,28 +93,27 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
     executeStockOperationAction(payload).then(
       () => {
         setIsApproving(false);
-        showToast({
-          critical: true,
+        showSnackbar({
           title: t("title", `${title} Operation`),
-          kind: "success",
-          description: t(
+          subtitle: t(
             "successMessage",
             `You have successfully ${title} operation `
           ),
-        });
-        closeModal();
+          kind: "success",
+        }),
+          closeModal();
         closeOverlay();
+        handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
       },
       (err) => {
         setIsApproving(false);
         const errorMessages = extractErrorMessagesFromResponse(err);
-        showNotification({
-          description: t("errorDescription", errorMessages.join(", ")),
+        showSnackbar({
           title: t("errorDescriptionTitle", "Error on saving form"),
+          subtitle: t("errorDescription", errorMessages.join(", ")),
           kind: "error",
-          critical: true,
-        });
-        closeModal();
+        }),
+          closeModal();
         closeOverlay();
       }
     );
