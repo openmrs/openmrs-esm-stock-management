@@ -20,7 +20,13 @@ import {
 } from "@carbon/react";
 import { Edit } from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
-import React, { useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
 import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
@@ -37,6 +43,8 @@ interface StockItemsTableProps {
 
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
+  const [searchInput, setSearchInput] = useState("");
+  const searchInputRef = useRef(null);
 
   const {
     isLoading,
@@ -48,7 +56,14 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     setCurrentPage,
     isDrug,
     setDrug,
+    setSearchString,
   } = useStockItemsPages(ResourceRepresentation.Full);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   const tableHeaders = useMemo(
     () => [
@@ -133,6 +148,11 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     }));
   }, [items, t]);
 
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    setSearchString(e.target.value);
+  };
+
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
@@ -158,7 +178,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
           getTableProps,
           getRowProps,
           getBatchActionProps,
-          onInputChange,
         }) => (
           <TableContainer>
             <TableToolbar
@@ -175,7 +194,12 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   alignItems: "center",
                 }}
               >
-                <TableToolbarSearch persistent onChange={onInputChange} />
+                <TableToolbarSearch
+                  persistent
+                  onChange={handleSearchChange}
+                  value={searchInput}
+                  ref={searchInputRef}
+                />
                 <FilterStockItems
                   filterType={isDrug}
                   changeFilterType={setDrug}

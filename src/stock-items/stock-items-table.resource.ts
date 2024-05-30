@@ -53,6 +53,6 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
       setCurrentPage(1);
       setDrug(drug);
     },
-    setSearchString,
+    setSearchString, // Return setSearchString function
   };
 }
