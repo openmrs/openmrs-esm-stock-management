@@ -16,19 +16,21 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   const [isDrug, setDrug] = useState("");
 
   const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
-    startIndex: currentPage - 1,
+    startIndex: 0,
     v: v || ResourceRepresentation.Default,
-    limit: 10,
-    q: null,
+    limit: currentPageSize,
+    q: searchString,
     totalCount: true,
+    isDrug: isDrug,
   });
 
   const { items, isLoading, isError } = useStockItems(stockItemFilter);
   const pagination = usePagination(items.results, currentPageSize);
 
   useEffect(() => {
+    const startIndex = (currentPage - 1) * currentPageSize;
     setStockItemFilter({
-      startIndex: currentPage - 1,
+      startIndex,
       v: ResourceRepresentation.Default,
       limit: currentPageSize,
       q: searchString,
