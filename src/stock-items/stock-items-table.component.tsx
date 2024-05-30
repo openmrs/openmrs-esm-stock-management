@@ -59,7 +59,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
-  }, 1500);
+  }, 1000);
 
   useEffect(() => {
     debouncedSearch(searchInput);
