@@ -33,7 +33,7 @@ import EditStockItemActionsMenu from "./edit-stock-item/edit-stock-item-action-m
 import { useDebounce } from "../core/hooks/debounce-hook";
 
 interface StockItemsTableProps {
-  q?: string;
+  from?: string;
 }
 
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
@@ -48,20 +48,18 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     pageSizes,
     currentPage,
     setCurrentPage,
-    setPageSize,
     isDrug,
     setDrug,
     setSearchString,
   } = useStockItemsPages(ResourceRepresentation.Full);
 
-  // Use debounce hook
   const handleSearch = (query: string) => {
     setSearchInput(query);
   };
 
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
-  }, 3000);
+  }, 1500);
 
   useEffect(() => {
     debouncedSearch(searchInput);
