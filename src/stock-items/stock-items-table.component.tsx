@@ -20,7 +20,7 @@ import {
 } from "@carbon/react";
 import { Edit } from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
 import AddStockItemActionButton from "./add-stock-item/add-stock-action-button.component";
@@ -30,6 +30,7 @@ import { useStockItemsPages } from "./stock-items-table.resource";
 import styles from "./stock-items-table.scss";
 import AddStockItemsBulktImportActionButton from "./add-bulk-stock-item/add-stock-items-bulk-import-action-button.component";
 import EditStockItemActionsMenu from "./edit-stock-item/edit-stock-item-action-menu.component";
+import { useDebounce } from "../core/hooks/debounce-hook";
 
 interface StockItemsTableProps {
   from?: string;
@@ -37,6 +38,7 @@ interface StockItemsTableProps {
 
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
+  const [searchInput, setSearchInput] = useState("");
 
   const {
     isLoading,
@@ -48,7 +50,20 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     setCurrentPage,
     isDrug,
     setDrug,
+    setSearchString,
   } = useStockItemsPages(ResourceRepresentation.Full);
+
+  const handleSearch = (query: string) => {
+    setSearchInput(query);
+  };
+
+  const debouncedSearch = useDebounce((query: string) => {
+    setSearchString(query);
+  }, 1000);
+
+  useEffect(() => {
+    debouncedSearch(searchInput);
+  }, [searchInput, debouncedSearch]);
 
   const tableHeaders = useMemo(
     () => [
@@ -158,7 +173,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
           getTableProps,
           getRowProps,
           getBatchActionProps,
-          onInputChange,
         }) => (
           <TableContainer>
             <TableToolbar
@@ -175,7 +189,12 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   alignItems: "center",
                 }}
               >
-                <TableToolbarSearch persistent onChange={onInputChange} />
+                <TableToolbarSearch
+                  persistent
+                  value={searchInput}
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
+
                 <FilterStockItems
                   filterType={isDrug}
                   changeFilterType={setDrug}
