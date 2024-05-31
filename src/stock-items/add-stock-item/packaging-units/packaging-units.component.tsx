@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
 import {
   Button,
   DataTable,
   DataTableSkeleton,
+  Modal,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TextArea,
 } from "@carbon/react";
 import PackagingUnitsConceptSelector from "../packaging-units-concept-selector/packaging-units-concept-selector.component";
 import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
@@ -119,54 +121,56 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
     );
 
   return (
-    <FormProvider {...packageUnitForm}>
-      <DataTable
-        rows={[...items, {}]}
-        headers={tableHeaders}
-        isSortable={false}
-        useZebraStyles={true}
-        render={({ headers, getHeaderProps, getTableProps }) => (
-          <TableContainer className={styles.packagingTableContainer}>
-            <Table {...getTableProps()} className={styles.packingTable}>
-              <TableHead>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader
-                      {...getHeaderProps({
-                        header,
-                        isSortable: false,
-                      })}
-                      style={header.styles}
-                      key={header.key}
-                    >
-                      {header.header?.content ?? header.header}
-                    </TableHeader>
+    <>
+      <FormProvider {...packageUnitForm}>
+        <DataTable
+          rows={[...items, {}]}
+          headers={tableHeaders}
+          isSortable={false}
+          useZebraStyles={true}
+          render={({ headers, getHeaderProps, getTableProps }) => (
+            <TableContainer className={styles.packagingTableContainer}>
+              <Table {...getTableProps()} className={styles.packingTable}>
+                <TableHead>
+                  <TableRow>
+                    {headers.map((header) => (
+                      <TableHeader
+                        {...getHeaderProps({
+                          header,
+                          isSortable: false,
+                        })}
+                        style={header.styles}
+                        key={header.key}
+                      >
+                        {header.header?.content ?? header.header}
+                      </TableHeader>
+                    ))}
+                    <TableHeader style={{ width: "70%" }} />
+                  </TableRow>
+                </TableHead>
+                <TableBody className={styles.packingTableBody}>
+                  {items?.map((row: StockItemPackagingUOMDTO, index) => (
+                    <PackagingUnitRow row={row} key={`${index}-${row?.uuid}`} />
                   ))}
-                  <TableHeader style={{ width: "70%" }} />
-                </TableRow>
-              </TableHead>
-              <TableBody className={styles.packingTableBody}>
-                {items?.map((row: StockItemPackagingUOMDTO, index) => (
-                  <PackagingUnitRow row={row} key={`${index}-${row?.uuid}`} />
-                ))}
-                <PackagingUnitRow row={{}} key="bottom-row" isEditing />
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      />
+                  <PackagingUnitRow row={{}} key="bottom-row" isEditing />
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        />
 
-      <Button
-        name="save"
-        type="submit"
-        className="submitButton"
-        onClick={handleSavePackageUnits}
-        kind="primary"
-        renderIcon={Save}
-      >
-        {t("save", "Save")}
-      </Button>
-    </FormProvider>
+        <Button
+          name="save"
+          type="submit"
+          className="submitButton"
+          onClick={handleSavePackageUnits}
+          kind="primary"
+          renderIcon={Save}
+        >
+          {t("save", "Save")}
+        </Button>
+      </FormProvider>
+    </>
   );
 };
 
@@ -178,6 +182,23 @@ const PackagingUnitRow: React.FC<{
   key?: string;
 }> = ({ isEditing, row, key }) => {
   const { t } = useTranslation();
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalLabel, setModalLabel] = useState("");
+  const [reason, setReason] = useState("");
+
+  const handleReasonChange = (e) => {
+    setReason(e.target.value);
+  };
+
+  const launchDeleteModal = (packagingName) => {
+    setModalLabel(packagingName);
+    setShowModal(true);
+  };
+
+  const closeModal = useCallback(() => {
+    setShowModal(false);
+  }, []);
 
   const {
     control,
@@ -213,43 +234,73 @@ const PackagingUnitRow: React.FC<{
   };
 
   return (
-    <TableRow>
-      <TableCell>
-        {isEditing ? (
-          <PackagingUnitsConceptSelector
-            row={row}
-            controllerName={"packagingUomUuid"}
-            name="packagingUomUuid"
-            control={control}
-            invalid={!!errors.packagingUomUuid}
-          />
-        ) : (
-          (!isEditing || !row.uuid.startsWith("new-item")) &&
-          row?.packagingUomName
-        )}
-      </TableCell>
-      <TableCell>
-        <div className={styles.packingTableCell}>
-          <ControlledNumberInput
-            row={row}
-            controllerName="factor"
-            name="factor"
-            control={control}
-            id={`${row.uuid}-${key}`}
-            invalid={!!errors.factor}
-          />
+    <>
+      <TableRow>
+        <TableCell>
+          {isEditing ? (
+            <PackagingUnitsConceptSelector
+              row={row}
+              controllerName={"packagingUomUuid"}
+              name="packagingUomUuid"
+              control={control}
+              invalid={!!errors.packagingUomUuid}
+            />
+          ) : (
+            (!isEditing || !row.uuid.startsWith("new-item")) &&
+            row?.packagingUomName
+          )}
+        </TableCell>
+        <TableCell>
+          <div className={styles.packingTableCell}>
+            <ControlledNumberInput
+              row={row}
+              controllerName="factor"
+              name="factor"
+              control={control}
+              id={`${row.uuid}-${key}`}
+              invalid={!!errors.factor}
+            />
 
-          <Button
-            type="button"
-            size="sm"
-            className="submitButton clear-padding-margin"
-            iconDescription={"Delete"}
-            kind="ghost"
-            renderIcon={TrashCan}
-            onClick={(e) => handleDelete(e)}
+            <Button
+              type="button"
+              size="sm"
+              className="submitButton clear-padding-margin"
+              iconDescription={"Delete"}
+              kind="ghost"
+              renderIcon={TrashCan}
+              onClick={() => launchDeleteModal(row.packagingUomName)}
+            />
+          </div>
+        </TableCell>
+      </TableRow>
+      {showModal && (
+        <Modal
+          open
+          size="sm"
+          modalLabel={modalLabel}
+          modalHeading="Remove Packaging Unit"
+          secondaryButtonText="No"
+          primaryButtonText="Yes"
+          primaryButtonDisabled={reason.length < 1}
+          preventCloseOnClickOutside={true}
+          hasScrollingContent={false}
+          onRequestClose={closeModal}
+          onRequestSubmit={handleDelete}
+          className={styles.deleteModal}
+        >
+          <span>
+            Would you really like to remove the packaging unit {modalLabel} from
+            the stock item
+          </span>
+          <TextArea
+            id="reason"
+            labelText={`Please explain the reason:`}
+            onChange={handleReasonChange}
+            maxCount={500}
+            placeholder="Enter reason here"
           />
-        </div>
-      </TableCell>
-    </TableRow>
+        </Modal>
+      )}
+    </>
   );
 };
