@@ -19,7 +19,7 @@ import { executeStockOperationAction } from "../stock-operations.resource";
 import { restBaseUrl, showSnackbar } from "@openmrs/esm-framework";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { extractErrorMessagesFromResponse } from "../../constants";
-import { handleMutate } from "../swr-revalidation";
+import { handleMutate } from "../../utils";
 
 interface StockOperationDialogProps {
   title: string;

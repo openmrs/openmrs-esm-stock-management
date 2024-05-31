@@ -1,4 +1,5 @@
 import { showNotification } from "@openmrs/esm-framework";
+import { mutate } from "swr";
 
 export function errorAlert(msg: string, error?: Error) {
   showNotification({
@@ -8,3 +9,9 @@ export function errorAlert(msg: string, error?: Error) {
     description: error?.message,
   });
 }
+
+export const handleMutate = (url: string) => {
+  mutate((key) => typeof key === "string" && key.startsWith(url), undefined, {
+    revalidate: true,
+  });
+};

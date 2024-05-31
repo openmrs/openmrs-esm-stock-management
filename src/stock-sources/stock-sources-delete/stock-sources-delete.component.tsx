@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { handleMutate } from "../swr-revalidation";
 import { Button, InlineLoading } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
@@ -10,6 +9,7 @@ import {
   showNotification,
   showToast,
 } from "@openmrs/esm-framework";
+import { handleMutate } from "../../utils";
 
 interface StockSourcesDeleteActionMenuProps {
   uuid: string;

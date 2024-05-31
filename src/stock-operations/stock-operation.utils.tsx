@@ -19,7 +19,7 @@ import {
 } from "../core/api/types/stockOperation/StockOperationType";
 import { useLocation } from "react-router-dom";
 import { extractErrorMessagesFromResponse } from "../constants";
-import { handleMutate } from "./swr-revalidation";
+import { handleMutate } from "../utils";
 export const addOrEditStockOperation = async (
   stockOperation: StockOperationDTO,
   isEditing: boolean,

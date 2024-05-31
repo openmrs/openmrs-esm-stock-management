@@ -23,8 +23,8 @@ import ConceptsSelector from "../concepts-selector/concepts-selector.component";
 import rootStyles from "../../../root.scss";
 import { closeOverlay } from "../../../core/components/overlay/hook";
 import { expirationOptions, radioOptions } from "./stock-item-details.resource";
-import { handleMutate } from "../../../stock-operations/swr-revalidation";
 import { restBaseUrl } from "@openmrs/esm-framework";
+import { handleMutate } from "../../../utils";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;

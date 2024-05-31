@@ -9,7 +9,7 @@ import {
   showNotification,
   showToast,
 } from "@openmrs/esm-framework";
-import { handleMutate } from "../swr-revalidation";
+import { handleMutate } from "../../utils";
 
 interface StockUserScopDeleteActionMenuProps {
   uuid: string;
