@@ -1,5 +1,5 @@
 import { StockItemFilter, useStockItems } from "./stock-items.resource";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
 import { usePagination } from "@openmrs/esm-framework";
@@ -16,21 +16,19 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   const [isDrug, setDrug] = useState("");
 
   const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
-    startIndex: 0,
+    startIndex: currentPage - 1,
     v: v || ResourceRepresentation.Default,
-    limit: currentPageSize,
-    q: searchString,
+    limit: 10,
+    q: null,
     totalCount: true,
-    isDrug: isDrug,
   });
 
   const { items, isLoading, isError } = useStockItems(stockItemFilter);
   const pagination = usePagination(items.results, currentPageSize);
 
   useEffect(() => {
-    const startIndex = (currentPage - 1) * currentPageSize;
     setStockItemFilter({
-      startIndex,
+      startIndex: currentPage - 1,
       v: ResourceRepresentation.Default,
       limit: currentPageSize,
       q: searchString,
