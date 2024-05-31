@@ -9,7 +9,6 @@ import {
   SelectItem,
 } from "@carbon/react";
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { handleMutate } from "../swr-revalidation";
 import styles from "./add-stock-sources.scss";
 import { useConcept } from "../../stock-lookups/stock-lookups.resource";
 import { StockSource } from "../../core/api/types/stockOperation/StockSource";
@@ -23,6 +22,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { type ConfigObject } from "../../config-schema";
+import { handleMutate } from "../../utils";
 
 interface AddStockSourceProps {
   model?: StockSource;

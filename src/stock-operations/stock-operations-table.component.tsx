@@ -56,6 +56,7 @@ import {
   DATE_PICKER_FORMAT,
   StockFilters,
 } from "../constants";
+import { handleMutate } from "../utils";
 
 interface StockOperationsTableProps {
   status?: string;
