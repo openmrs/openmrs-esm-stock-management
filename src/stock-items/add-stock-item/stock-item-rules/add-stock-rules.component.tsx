@@ -15,7 +15,6 @@ import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import styles from "./add-stock-rules.scss";
 import {
   useRoles,
-  useStockLocations,
   useStockTagLocations,
 } from "../../../stock-lookups/stock-lookups.resource";
 import { createOrUpdateStockRule } from "./stock-rules.resource";
@@ -28,12 +27,6 @@ import {
   StockItemInventoryFilter,
   useStockItemPackagingUOMs,
 } from "../../stock-items.resource";
-import {
-  APP_STOCKMANAGEMENT_STOCKITEMS,
-  DISPENSARY_LOCATION_TAG,
-  MAIN_PHARMACY_LOCATION_TAG,
-  MAIN_STORE_LOCATION_TAG,
-} from "../../../constants";
 
 interface AddStockRuleProps {
   model?: StockRule;

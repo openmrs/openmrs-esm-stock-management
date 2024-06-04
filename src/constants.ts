@@ -110,9 +110,6 @@ export const PRINT_LOGO =
 export const PRINT_LOGO_TEXT = "Ministry of Health";
 
 export const MAIN_STORE_LOCATION_TAG = "Main Store";
-export const MAIN_PHARMACY_LOCATION_TAG = "Main Pharmacy";
-export const DISPENSARY_LOCATION_TAG = "Dispensary";
-export const INVENTORY_ROLE_NAME = "Inventory Reporting";
 export const BASE_OPENMRS_APP_URL = "/openmrs/";
 
 export const STOCKMGMT_RESOURCE_URL = "/openmrs/stockmanagement/spa.page/";
