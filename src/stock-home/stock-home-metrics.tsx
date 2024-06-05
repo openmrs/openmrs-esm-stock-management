@@ -16,27 +16,32 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
   const { t } = useTranslation();
 
   const { stockList: allStocks, isLoading, error } = useStockList();
-
-  const { items: expiryItems, isLoading: inventoryLoading } =
-    useStockInventory();
+  const { items: expiryItems, isLoading: inventoryLoading } =useStockInventory();
   const { items: stockItems } = useStockInventoryItems();
+  console.log("stockItems", stockItems);
+  console.log("allStocks", JSON.stringify(allStocks[0]));
+  console.log("expiryItems", JSON.stringify(expiryItems[0]));
 
-  const currentDate: any = new Date();
-  let mergedArray: any[] = expiryItems.map((batch) => {
-    const matchingItem = stockItems?.find(
-      (item2) => batch?.stockItemUuid === item2.uuid
+
+  const currentDate = new Date();
+  const mergedArray = allStocks.map((stock) => {
+    const matchingBatch = expiryItems.find(
+      (batch) => batch.stockItemUuid === stock.uuid
     );
-    return { ...batch, ...matchingItem };
+    return {
+      ...stock,
+      expiration: matchingBatch ? matchingBatch.expiration : null,
+    };
   });
-  mergedArray = mergedArray.filter((item) => item.hasExpiration);
-  const filteredData = mergedArray.filter((item) => {
-    const expiryNotice = item.expiryNotice || 0;
-    const expirationDate: any = new Date(item.expiration);
-    const differenceInDays = Math.ceil(
-      (expirationDate - currentDate) / (1000 * 60 * 60 * 24)
-    );
+  console.log("mergedArray", mergedArray);
 
-    return differenceInDays <= expiryNotice || differenceInDays < 0;
+ const expiringStocks = mergedArray.filter((stock) => stock.hasExpiration);
+  const stocksExpiringIn180Days = expiringStocks.filter((stock) => {
+    const expirationDate = new Date(stock.expiration).getTime(); // Convert to number
+    const differenceInDays = Math.ceil(
+      (expirationDate - currentDate.getTime()) / (1000 * 60 * 60 * 24) // Convert to number
+    );
+    return differenceInDays <= 180 && differenceInDays >= 0;
   });
 
   const { items } = useDisposalList({
@@ -77,12 +82,11 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
       <div className={styles.cardContainer}>
         <MetricsCard
           label={t("stocks", "Expiring stock")}
-          value={filteredData?.length || 0}
+          value={stocksExpiringIn180Days?.length || 0}
           headerLabel={t("expiringStock", "Expiring Stock")}
           view="items"
           count={{
-            expiry7days: sevenDaysExpiryStocks,
-            expiry30days: thirtyDaysExpiryStocks,
+            expiry6months: stocksExpiringIn180Days,
           }}
         />
         <MetricsCard

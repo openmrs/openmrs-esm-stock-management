@@ -13,7 +13,7 @@ interface StockList {
 }
 
 const useStockList = () => {
-  const url = `${restBaseUrl}/stockmanagement/stockitem`;
+  const url = `${restBaseUrl}/stockmanagement/stockitem?v=full&totalCount=true`;
 
   const { data, error } = useSWR<{ data: { results: Array<StockList> } }>(
     url,

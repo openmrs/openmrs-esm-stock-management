@@ -15,7 +15,7 @@ interface MetricsCardProps {
   headerLabel: string;
   children?: React.ReactNode;
   view: string;
-  count?: { expiry7days: Array<any>; expiry30days: Array<any> };
+  count?: { expiry6months: Array<any>;  };
   outofstockCount?: { itemsbelowmin: Array<any>; itemsabovemax: Array<any> };
   disposedCount?: { expired: Array<any>; poorquality: Array<any> };
 }
@@ -58,13 +58,13 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         {!isEmpty(count) && (
           <div className={styles.countGrid}>
             <span style={{ color: "#DA1E28" }}>
-              {t("in7days", "In 7 days")}
+              {t("in6months", "In 6 months")}
             </span>
-            <span style={{ color: " #FABA5F" }}>
+            {/* <span style={{ color: " #FABA5F" }}>
               {t("in30days", "In 30 days")}
-            </span>
-            <p style={{ color: "#DA1E28" }}>{count.expiry7days?.length}</p>
-            <p style={{ color: "#FABA5F" }}>{count.expiry30days?.length}</p>
+            </span> */}
+            <p style={{ color: "#DA1E28" }}>{count.expiry6months?.length}</p>
+            {/* <p style={{ color: "#FABA5F" }}>{count.expiry30days?.length}</p> */}
           </div>
         )}
         {!isEmpty(outofstockCount) && (
