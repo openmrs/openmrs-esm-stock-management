@@ -14,22 +14,16 @@ import {
 } from "@carbon/react";
 import PackagingUnitsConceptSelector from "../packaging-units-concept-selector/packaging-units-concept-selector.component";
 import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
-import { Save, TrashCan } from "@carbon/react/icons";
+import { Save } from "@carbon/react/icons";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import {
-  createStockItemPackagingUnit,
-  deleteStockItemPackagingUnit,
-} from "../../stock-items.resource";
-import {
-  showNotification,
-  showSnackbar,
-  showToast,
-} from "@openmrs/esm-framework";
+import { createStockItemPackagingUnit } from "../../stock-items.resource";
+import { showSnackbar } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import styles from "./packaging-units.scss";
+import DeleteModalButton from "./packaging-units-delete-modal-button.component";
 
 interface PackagingUnitsProps {
   isEditing?: boolean;
@@ -39,7 +33,6 @@ interface PackagingUnitsProps {
 }
 
 const PackagingUnits: React.FC<PackagingUnitsProps> = ({
-  isEditing,
   stockItemUuid,
   handleTabChange,
 }) => {
@@ -67,7 +60,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         styles: { width: "50%" },
       },
     ],
-    []
+    [t]
   );
 
   const packageUnitForm = useForm<PackageUnitFormData>({
@@ -177,79 +170,43 @@ const PackagingUnitRow: React.FC<{
   row: StockItemPackagingUOMDTO;
   key?: string;
 }> = ({ isEditing, row, key }) => {
-  const { t } = useTranslation();
-
   const {
     control,
     formState: { errors },
   } = useFormContext();
 
-  const handleDelete = (e) => {
-    e.preventDefault();
-    deleteStockItemPackagingUnit(row.uuid).then(
-      () => {
-        showToast({
-          critical: true,
-          title: t("deletePackagingUnitTitle", `Delete packing item `),
-          kind: "success",
-          description: t(
-            "deletePackagingUnitMesaage",
-            `Stock Item packing unit deleted Successfully`
-          ),
-        });
-      },
-      (error) => {
-        showNotification({
-          title: t(
-            "deletePackingUnitErrorTitle",
-            `Error Deleting a stock item packing unit`
-          ),
-          kind: "error",
-          critical: true,
-          description: error?.message,
-        });
-      }
-    );
-  };
-
   return (
-    <TableRow>
-      <TableCell>
-        {isEditing ? (
-          <PackagingUnitsConceptSelector
-            row={row}
-            controllerName={"packagingUomUuid"}
-            name="packagingUomUuid"
-            control={control}
-            invalid={!!errors.packagingUomUuid}
-          />
-        ) : (
-          (!isEditing || !row.uuid.startsWith("new-item")) &&
-          row?.packagingUomName
-        )}
-      </TableCell>
-      <TableCell>
-        <div className={styles.packingTableCell}>
-          <ControlledNumberInput
-            row={row}
-            controllerName="factor"
-            name="factor"
-            control={control}
-            id={`${row.uuid}-${key}`}
-            invalid={!!errors.factor}
-          />
+    <>
+      <TableRow>
+        <TableCell>
+          {isEditing ? (
+            <PackagingUnitsConceptSelector
+              row={row}
+              controllerName={"packagingUomUuid"}
+              name="packagingUomUuid"
+              control={control}
+              invalid={!!errors.packagingUomUuid}
+            />
+          ) : (
+            (!isEditing || !row.uuid.startsWith("new-item")) &&
+            row?.packagingUomName
+          )}
+        </TableCell>
+        <TableCell>
+          <div className={styles.packingTableCell}>
+            <ControlledNumberInput
+              row={row}
+              controllerName="factor"
+              name="factor"
+              control={control}
+              id={`${row.uuid}-${key}`}
+              invalid={!!errors.factor}
+            />
 
-          <Button
-            type="button"
-            size="sm"
-            className="submitButton clear-padding-margin"
-            iconDescription={"Delete"}
-            kind="ghost"
-            renderIcon={TrashCan}
-            onClick={(e) => handleDelete(e)}
-          />
-        </div>
-      </TableCell>
-    </TableRow>
+            <DeleteModalButton closeModal={() => true} row={row} />
+          </div>
+        </TableCell>
+      </TableRow>
+    </>
   );
 };

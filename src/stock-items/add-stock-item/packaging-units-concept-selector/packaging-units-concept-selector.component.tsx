@@ -37,7 +37,7 @@ const PackagingUnitsConceptSelector = <T,>(
     <Controller
       name={props.controllerName}
       control={props.control}
-      render={({ field: { onChange, value, ref } }) => (
+      render={({ field: { onChange } }) => (
         <ComboBox
           titleText={props.title}
           name={props.name}
