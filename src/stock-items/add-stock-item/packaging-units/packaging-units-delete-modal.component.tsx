@@ -56,7 +56,7 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
       }
     );
   };
-  console.info(row.packagingUomName);
+
   return (
     <div>
       <ModalHeader
