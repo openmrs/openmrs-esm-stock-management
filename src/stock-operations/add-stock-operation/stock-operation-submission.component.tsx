@@ -111,10 +111,15 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   kind="primary"
                   onClick={async () => {
                     delete model?.dateCreated;
-                    model.status = "COMPLETED";
+                    delete model?.status;
                     setIsSaving(true);
-                    await actions.onComplete(model);
-                    setIsSaving(false);
+                    await actions.onSave(model).then(() => {
+                      delete model?.dateCreated;
+                      model.status = "COMPLETED";
+                      setIsSaving(true);
+                      actions.onComplete(model);
+                      setIsSaving(false);
+                    });
                   }}
                   renderIcon={ListChecked}
                 >
