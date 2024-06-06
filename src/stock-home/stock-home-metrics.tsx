@@ -16,33 +16,33 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
   const { t } = useTranslation();
 
   const { stockList: allStocks, isLoading, error } = useStockList();
-  const { items: expiryItems, isLoading: inventoryLoading } =useStockInventory();
+  const { items: expiryItems, isLoading: inventoryLoading } =
+    useStockInventory();
   const { items: stockItems } = useStockInventoryItems();
-  console.log("stockItems", stockItems);
-  console.log("allStocks", JSON.stringify(allStocks[0]));
-  console.log("expiryItems", JSON.stringify(expiryItems[0]));
-
-
+  
   const currentDate = new Date();
-  const mergedArray = allStocks.map((stock) => {
-    const matchingBatch = expiryItems.find(
-      (batch) => batch.stockItemUuid === stock.uuid
-    );
-    return {
-      ...stock,
-      expiration: matchingBatch ? matchingBatch.expiration : null,
-    };
-  });
-  console.log("mergedArray", mergedArray);
 
- const expiringStocks = mergedArray.filter((stock) => stock.hasExpiration);
-  const stocksExpiringIn180Days = expiringStocks.filter((stock) => {
-    const expirationDate = new Date(stock.expiration).getTime(); // Convert to number
-    const differenceInDays = Math.ceil(
-      (expirationDate - currentDate.getTime()) / (1000 * 60 * 60 * 24) // Convert to number
+  let mergedArray = expiryItems.map((batch) => {
+    const matchingItem = stockItems?.find(
+      (item) => batch?.stockItemUuid === item.uuid
     );
-    return differenceInDays <= 180 && differenceInDays >= 0;
+    return { ...batch, ...matchingItem };
   });
+
+  mergedArray = mergedArray.filter((item) => item.hasExpiration);
+
+  const filteredData = mergedArray.filter((item) => {
+    const expiryNotice = item.expiryNotice || 0;
+    const expirationDate = new Date(item.expiration);
+    const differenceInDays = Math.ceil(
+      (expirationDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    return differenceInDays <= expiryNotice || differenceInDays < 0;
+  });
+
+  const sixMonthsExpiryStocks = filteredData.filter(
+    (stock) => stock.hasExpiration && stock.expiryNotice <= 180
+  );
 
   const { items } = useDisposalList({
     v: ResourceRepresentation.Full,
@@ -61,13 +61,6 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
     return <ErrorState headerTitle={t("errorStockMetric")} error={error} />;
   }
 
-  const sevenDaysExpiryStocks = allStocks.filter(
-    (stock) => stock.hasExpiration && stock.ExpiryNotice <= 7
-  );
-  const thirtyDaysExpiryStocks = allStocks.filter(
-    (stock) => stock.hasExpiration && stock.ExpiryNotice <= 30
-  );
-
   const filteredItems =
     items &&
     items.filter(
@@ -82,11 +75,11 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
       <div className={styles.cardContainer}>
         <MetricsCard
           label={t("stocks", "Expiring stock")}
-          value={stocksExpiringIn180Days?.length || 0}
+          value={filteredData?.length || 0}
           headerLabel={t("expiringStock", "Expiring Stock")}
           view="items"
           count={{
-            expiry6months: stocksExpiringIn180Days,
+            expiry6months: sixMonthsExpiryStocks,
           }}
         />
         <MetricsCard
@@ -95,8 +88,8 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
           headerLabel={t("highestServiceVolume", "Out of Stock ")}
           view="items"
           outofstockCount={{
-            itemsbelowmin: sevenDaysExpiryStocks,
-            itemsabovemax: thirtyDaysExpiryStocks,
+            itemsbelowmin: ["0"],
+            itemsabovemax: ["0"],
           }}
         />
         <MetricsCard
