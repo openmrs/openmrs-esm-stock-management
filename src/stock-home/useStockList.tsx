@@ -4,16 +4,16 @@ import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
 interface StockList {
   uuid: string;
   hasExpiration: boolean;
-  ExpiryNotice: number;
+  expiryNotice: number;
   results: {
     uuid: string;
     hasExpiration: boolean;
-    ExpiryNotice: number;
+    expiryNotice: number;
   };
 }
 
 const useStockList = () => {
-  const url = `${restBaseUrl}/stockmanagement/stockitem`;
+  const url = `${restBaseUrl}/stockmanagement/stockitem?v=default&totalCount=true`;
 
   const { data, error } = useSWR<{ data: { results: Array<StockList> } }>(
     url,
@@ -23,7 +23,7 @@ const useStockList = () => {
   const stocks = data?.data.results.map((stock) => ({
     uuid: stock.uuid,
     hasExpiration: stock.hasExpiration,
-    ExpiryNotice: stock.ExpiryNotice,
+    expiryNotice: stock.expiryNotice,
   }));
 
   return {

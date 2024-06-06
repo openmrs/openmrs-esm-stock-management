@@ -11,12 +11,11 @@ const StockHomeInventoryCard = () => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === "tablet";
 
-  // TODO: Pull low on stock
   const { items: expiryItems, isLoading: inventoryLoading } =
     useStockInventory();
   const { items: stockItems, isLoading } = useStockInventoryItems();
 
-  if (isLoading) return <></>;
+  if (isLoading || inventoryLoading) return <></>;
 
   if (stockItems?.length === 0) {
     return (
@@ -28,23 +27,23 @@ const StockHomeInventoryCard = () => {
     );
   }
 
-  const currentDate: any = new Date();
-  let mergedArray: any[] = expiryItems.map((batch) => {
+  const currentDate = new Date();
+
+  let mergedArray = expiryItems.map((batch) => {
     const matchingItem = stockItems?.find(
-      (item2) => batch?.stockItemUuid === item2.uuid
+      (item) => batch?.stockItemUuid === item.uuid
     );
     return { ...batch, ...matchingItem };
   });
-  mergedArray = mergedArray.filter((item) => item.hasExpiration);
-  const filteredData = mergedArray.filter((item) => {
-    const expiryNotice = item.expiryNotice || 0; // Default to 0 if expiryNotice is undefined or null
-    const expirationDate: any = new Date(item.expiration);
-    const differenceInDays = Math.ceil(
-      (expirationDate - currentDate) / (1000 * 60 * 60 * 24)
-    );
 
-    // Include items that have not expired yet or are within the expiry notice period
-    return differenceInDays <= expiryNotice || differenceInDays < 0;
+  mergedArray = mergedArray.filter((item) => item.hasExpiration);
+
+  const filteredData = mergedArray.filter((item) => {
+    const expirationDate = new Date(item.expiration);
+    const differenceInDays = Math.ceil(
+      (expirationDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    return differenceInDays <= 180 && differenceInDays >= 0;
   });
 
   return (
