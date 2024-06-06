@@ -11,7 +11,6 @@ const StockHomeInventoryCard = () => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === "tablet";
 
-  // TODO: Pull low on stock
   const { items: expiryItems, isLoading: inventoryLoading } =
     useStockInventory();
   const { items: stockItems, isLoading } = useStockInventoryItems();

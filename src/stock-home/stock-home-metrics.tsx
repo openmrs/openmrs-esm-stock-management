@@ -19,7 +19,7 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
   const { items: expiryItems, isLoading: inventoryLoading } =
     useStockInventory();
   const { items: stockItems } = useStockInventoryItems();
-  
+
   const currentDate = new Date();
 
   let mergedArray = expiryItems.map((batch) => {
