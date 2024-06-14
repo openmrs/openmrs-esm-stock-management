@@ -133,7 +133,18 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
-                  onClick={actions.onDispatch}
+                  onClick={async () => {
+                    delete model?.dateCreated;
+                    delete model?.status;
+                    setIsSaving(true);
+                    await actions.onSave(model).then(() => {
+                      delete model?.dateCreated;
+                      model.status = "COMPLETED";
+                      setIsSaving(true);
+                      actions.onDispatch(model);
+                      setIsSaving(false);
+                    });
+                  }}
                   renderIcon={Departure}
                 >
                   {t("dispatch", "Dispatch")}
