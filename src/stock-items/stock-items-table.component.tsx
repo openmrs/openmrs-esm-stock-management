@@ -48,6 +48,8 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     pageSizes,
     currentPage,
     setCurrentPage,
+    goTo,
+    setPageSize,
     isDrug,
     setDrug,
     setSearchString,
@@ -124,7 +126,9 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       preferredVendorName: stockItem?.preferredVendorName,
       dispensingUoM: stockItem?.defaultStockOperationsUoMName,
       dispensingUnitName: stockItem?.dispensingUnitName,
+      
       defaultStockOperationsUoMName: stockItem?.defaultStockOperationsUoMName,
+
       reorderLevel:
         stockItem?.reorderLevelUoMName && stockItem?.reorderLevel
           ? `${stockItem?.reorderLevel?.toLocaleString()} ${
@@ -162,7 +166,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       </TabPanel>
 
       <DataTable
-        rows={tableRows}
+        rows={tableRows}    
         headers={tableHeaders}
         isSortable
         useZebraStyles
@@ -275,7 +279,16 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         pageSize={currentPageSize}
         pageSizes={pageSizes}
         totalItems={totalCount}
-        onChange={({ page }) => setCurrentPage(page)}
+        onChange={({ pageSize, page }) => {
+          if (pageSize !== currentPageSize) {
+            setPageSize(pageSize);
+          }
+          if (page !== currentPage) {
+           //add go to page
+           goTo(page);
+          }
+        }}
+      
         className={styles.paginationOverride}
       />
     </>
