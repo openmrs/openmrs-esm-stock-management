@@ -23,10 +23,11 @@ interface StockItemCategorySelectorProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const {t}=useTranslation();
 const StockItemCategorySelector = <T,>(
   props: StockItemCategorySelectorProps<T>
 ) => {
+  const {t}=useTranslation();
+
   const { stockItemCategoryUUID } = useConfig<ConfigObject>();
   const {
     items: { answers: categories },
