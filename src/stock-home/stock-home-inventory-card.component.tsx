@@ -48,7 +48,7 @@ const StockHomeInventoryCard = () => {
 
   return (
     <>
-      {filteredData.map((item, index) => (
+      {filteredData.slice(0,5).map((item, index) => (
         <div className={styles.card} key={index}>
           <div className={styles.colorLineRed} />
           <div className={styles.icon}>
