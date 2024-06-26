@@ -5,6 +5,9 @@ import { ComboBox, TextInputSkeleton } from "@carbon/react";
 import { useConcept } from "../../../stock-lookups/stock-lookups.resource";
 import { type ConfigObject } from "../../../config-schema";
 import { useConfig } from "@openmrs/esm-framework";
+import { useTranslation } from "react-i18next";
+
+
 
 interface StockItemCategorySelectorProps<T> {
   categoryUuid?: string;
@@ -20,6 +23,7 @@ interface StockItemCategorySelectorProps<T> {
   control: Control<FieldValues, T>;
 }
 
+const {t}=useTranslation();
 const StockItemCategorySelector = <T,>(
   props: StockItemCategorySelectorProps<T>
 ) => {
@@ -52,10 +56,10 @@ const StockItemCategorySelector = <T,>(
             categories?.find((p) => p.uuid === props.categoryUuid) || {}
           }
           itemToString={(item?: Concept) =>
-            item && item?.display ? `${item?.display}` : ""
+            item && item?.display ? `${t(item?.display)}` : ""
           }
           shouldFilterItem={() => true}
-          value={categories?.find((p) => p.uuid === value)?.display ?? ""}
+          value={t(categories?.find((p) => p.uuid === value)?.display) ?? ""}
           placeholder={props.placeholder}
           ref={ref}
           invalid={props.invalid}

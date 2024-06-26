@@ -20,5 +20,7 @@
   "patientGetterExplainer": "Try clicking the button below to fetch a patient from the backend",
   "resources": "Resources",
   "usefulLinks": "Below are some links to useful resources",
-  "welcomeText": "Welcome to the O3 Template app"
+  "welcomeText": "Welcome to the O3 Template app",
+  "Is a Drug": "Pharmaceuticals",
+  "Non Drug": "Non Pharmaceuticals"
 }
