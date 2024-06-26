@@ -4,8 +4,8 @@ export interface RadioOption {
 }
 
 export const radioOptions: RadioOption[] = [
-  { label: "Drug", value: true },
-  { label: "Other", value: false },
+  { label: "Pharmaceuticals", value: true },
+  { label: "Non Pharmaceuticals", value: false },
 ];
 
 export const expirationOptions: RadioOption[] = [
