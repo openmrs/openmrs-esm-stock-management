@@ -7,9 +7,12 @@ import { usePagination } from "@openmrs/esm-framework";
 export function useStockItemsPages(v?: ResourceRepresentation) {
   const { t } = useTranslation();
 
-  const pageSizes = [10, 20, 30, 40, 50];
-  const [currentPage, setCurrentPage] = useState(1);
+  const pageSizes = [10, 20, 30, 40, 50, 100];
   const [currentPageSize, setPageSize] = useState(10);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+
+ 
   const [searchString, setSearchString] = useState(null);
 
   // Drug filter type
@@ -24,7 +27,14 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   });
 
   const { items, isLoading, isError } = useStockItems(stockItemFilter);
-  const pagination = usePagination(items.results, currentPageSize);
+
+  // const pagination = usePagination(items.results,goTo, currentPageSize);
+
+  const  {
+    goTo,
+    results: paginatedItems,
+  } = usePagination(items.results, currentPageSize);
+
 
   useEffect(() => {
     setStockItemFilter({
@@ -38,12 +48,13 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   }, [searchString, currentPage, currentPageSize, isDrug]);
 
   return {
-    items: pagination.results,
-    pagination,
+    items: paginatedItems,
+    paginatedItems,
     totalCount: items.totalCount,
     currentPageSize,
     currentPage,
     setCurrentPage,
+    goTo,
     setPageSize,
     pageSizes,
     isLoading,
