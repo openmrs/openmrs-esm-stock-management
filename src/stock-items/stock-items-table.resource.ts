@@ -18,7 +18,7 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
     startIndex: currentPage - 1,
     v: v || ResourceRepresentation.Default,
-    limit: 10,
+    limit: currentPageSize,
     q: null,
     totalCount: true,
   });

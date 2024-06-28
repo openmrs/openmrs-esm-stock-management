@@ -45,6 +45,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
     items,
     totalCount,
     currentPageSize,
+    setPageSize,
     pageSizes,
     currentPage,
     setCurrentPage,
@@ -275,7 +276,10 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         pageSize={currentPageSize}
         pageSizes={pageSizes}
         totalItems={totalCount}
-        onChange={({ page }) => setCurrentPage(page)}
+        onChange={({ page, pageSize }) => {
+          setCurrentPage(page);
+          setPageSize(pageSize);
+        }}
         className={styles.paginationOverride}
       />
     </>
