@@ -7,8 +7,6 @@ import { type ConfigObject } from "../../../config-schema";
 import { useConfig } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 
-
-
 interface StockItemCategorySelectorProps<T> {
   categoryUuid?: string;
   onCategoryUuidChange?: (unit: Concept) => void;
@@ -26,7 +24,7 @@ interface StockItemCategorySelectorProps<T> {
 const StockItemCategorySelector = <T,>(
   props: StockItemCategorySelectorProps<T>
 ) => {
-  const {t}=useTranslation();
+  const { t } = useTranslation();
 
   const { stockItemCategoryUUID } = useConfig<ConfigObject>();
   const {
