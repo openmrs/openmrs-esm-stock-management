@@ -20,7 +20,7 @@ const FilterStockItems: React.FC<FilterStockItemsProps> = ({
     >
       <RadioButton labelText="All" value="" id="is-drug-all" />
       <RadioButton labelText="Pharmaceuticals" value="true" id="is-drug-drug" />
-      <RadioButton labelText="Non-Pharms" value="false" id="is-drug-other" />
+      <RadioButton labelText="Non Pharmaceuticals" value="false" id="is-drug-other" />
     </RadioButtonGroup>
   );
 };
