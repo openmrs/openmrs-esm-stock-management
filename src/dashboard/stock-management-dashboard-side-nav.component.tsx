@@ -13,7 +13,7 @@ const StockManagementDashboardSideNav = () => {
       link: "overview",
     },
     {
-      name: t("stockManagementStockItems", "All Items"),
+      name: t("stockManagementStockItems", "Items"),
       link: "stock-items",
     },
     {
