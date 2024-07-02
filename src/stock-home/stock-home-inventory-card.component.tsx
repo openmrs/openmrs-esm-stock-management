@@ -38,17 +38,20 @@ const StockHomeInventoryCard = () => {
 
   mergedArray = mergedArray.filter((item) => item.hasExpiration);
 
-  const filteredData = mergedArray.filter((item) => {
-    const expirationDate = new Date(item.expiration);
-    const differenceInDays = Math.ceil(
-      (expirationDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    return differenceInDays <= 180 && differenceInDays >= 0;
-  }).slice(0, 5);
+  const filteredData = mergedArray
+    .filter((item) => {
+      const expirationDate = new Date(item.expiration);
+      const differenceInDays = Math.ceil(
+        (expirationDate.getTime() - currentDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+      return differenceInDays <= 180 && differenceInDays >= 0;
+    })
+    .slice(0, 5);
 
   return (
     <>
-      { filteredData.map( (item, index) => (
+      {filteredData.map((item, index) => (
         <div className={styles.card} key={index}>
           <div className={styles.colorLineRed} />
           <div className={styles.icon}>
