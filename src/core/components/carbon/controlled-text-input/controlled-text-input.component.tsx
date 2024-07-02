@@ -25,9 +25,9 @@ const ControlledTextInput = <T,>(props: ControlledTextInputProps<T>) => {
               props.onChange(e);
             }
           }}
-          id={props.name}
+          id={props.id}
           ref={ref}
-          value={value}
+          value={value ?? props.value}
         />
       )}
     />

@@ -1,0 +1,23 @@
+@use '@carbon/styles/scss/colors';
+@use "@carbon/styles/scss/spacing";
+@use "@carbon/styles/scss/type";
+
+.referencesTable {
+  min-height: 15rem;
+  display: block;
+}
+
+.referencesTableCell {
+  display: flex;
+  align-items: center;
+}
+
+.referencesTableBody {
+  min-height: spacing.$spacing-13;
+
+}
+
+.referencesTableContainer {
+  min-height: 15rem;
+  display: block;
+}

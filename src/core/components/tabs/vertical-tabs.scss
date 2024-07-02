@@ -6,7 +6,8 @@
 .heading {
   @include type.type-style('productive-heading-02');
   color: colors.$gray-70;
-  margin-bottom: spacing.$spacing-05;;
+  margin-bottom: spacing.$spacing-05;
+  ;
 }
 
 .heading:after {
@@ -78,7 +79,9 @@
   }
 
   :global(.cds--tabs__nav-link) {
-    &:active, &:focus {
+
+    &:active,
+    &:focus {
       outline: 0 !important;
       outline-offset: 0 !important;
     }
