@@ -191,11 +191,10 @@ const StockReferencesRow: React.FC<{
     e.preventDefault();
     deleteStockItemReference(row.uuid).then(
       () => {
-        showToast({
-          critical: true,
+        showSnackbar({
           title: t("deletePackagingUnitTitle", `Delete StockItem reference`),
           kind: "success",
-          description: t(
+          subtitle: t(
             "deleteStockItemReferenceMesaage",
             `StockItem reference deleted Successfully`
           ),
@@ -203,14 +202,13 @@ const StockReferencesRow: React.FC<{
       },
       (error) => {
         const err = extractErrorMessagesFromResponse(error);
-        showNotification({
+        showSnackbar({
           title: t(
             "deleteStockItemReferenceTitle",
             `Error Deleting a stockitem reference`
           ),
           kind: "error",
-          critical: true,
-          description: err.join(","),
+          subtitle: err.join(","),
         });
       }
     );
