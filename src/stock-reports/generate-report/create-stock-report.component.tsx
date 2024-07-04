@@ -355,7 +355,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
       if (displayDate) {
         parameters += getReportParameter(
           ReportParameter.Date,
-          JSON.stringify(report.date).replaceAll('"', ""),
+          report.date ? JSON.stringify(report.date).replaceAll('"', "") : "",
           formatDisplayDate(report.date) ?? "",
           t("stockmanagement.report.edit.date"),
           newLine
@@ -364,7 +364,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
       if (displayStartDate) {
         parameters += getReportParameter(
           ReportParameter.StartDate,
-          JSON.stringify(report.startDate).replaceAll('"', ""),
+          report.startDate
+            ? JSON.stringify(report.startDate).replaceAll('"', "")
+            : "",
           formatDisplayDate(report.startDate) ?? "",
           t(getReportStartDateLabel(report.reportSystemName)),
           newLine
@@ -373,7 +375,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
       if (displayEndDate) {
         parameters += getReportParameter(
           ReportParameter.EndDate,
-          JSON.stringify(report.endDate).replaceAll('"', ""),
+          report.endDate
+            ? JSON.stringify(report.endDate).replaceAll('"', "")
+            : "",
           formatDisplayDate(report.endDate) ?? "",
           t(getReportEndDateLabel(report.reportSystemName)),
           newLine
@@ -529,6 +533,30 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             )}
           />
         )}
+        {displayInventoryGroupBy && (
+          <Select
+            id="inventoryGroupBy"
+            defaultValue={model?.inventoryGroupBy}
+            invalid={errors?.inventoryGroupBy?.message}
+            invalidText={errors?.inventoryGroupBy?.message}
+            labelText={t("inventoryBy", "Inventory by")}
+            onChange={(e) => setValue("inventoryGroupBy", e.target.value)}
+          >
+            <SelectItem value="" text={t("SelectOption", "Select an option")} />
+            <SelectItem
+              value="StockItemOnly"
+              text={t("stockItem", "Stock Item")}
+            />
+            <SelectItem
+              value="LocationStockItem"
+              text={t("lcationstockitem", "Location  and Stock Item")}
+            />
+            <SelectItem
+              value="LocationStockItemBatchNo"
+              text={t("locationBatchno", "Location and Batch")}
+            />
+          </Select>
+        )}
         {displayLocation && (
           <Select
             name="location"
@@ -537,6 +565,8 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             id="location"
             onChange={(e) => setValue("location", e.target.value)}
             defaultValue=""
+            invalid={errors?.location?.message}
+            invalidText={errors?.location?.message}
           >
             <SelectItem
               disabled
@@ -673,6 +703,32 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
               )}
             />
           </div>
+        )}
+        {displayDate && (
+          <Controller
+            control={control}
+            name="date"
+            render={({ field: { onChange, value } }) => (
+              <DatePicker
+                datePickerType="single"
+                maxDate={formatForDatePicker(today())}
+                locale="en"
+                dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                onChange={onChange}
+                value={value}
+              >
+                <DatePickerInput
+                  id="date"
+                  name="date"
+                  placeholder={DATE_PICKER_FORMAT}
+                  labelText={t("date", "Date")}
+                  defaultValue=""
+                  invalid={errors?.date?.message}
+                  invalidText={errors?.date?.message}
+                />
+              </DatePicker>
+            )}
+          />
         )}
       </div>
       <div className={styles.reportButton}>
