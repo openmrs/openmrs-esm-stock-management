@@ -174,6 +174,7 @@ const PackagingUnitRow: React.FC<{
     control,
     formState: { errors },
   } = useFormContext();
+  const minPackagingQuantity = 0;
 
   return (
     <>
@@ -198,6 +199,7 @@ const PackagingUnitRow: React.FC<{
               row={row}
               controllerName="factor"
               name="factor"
+              min={minPackagingQuantity}
               control={control}
               id={`${row.uuid}-${key}`}
               invalid={!!errors.factor}
