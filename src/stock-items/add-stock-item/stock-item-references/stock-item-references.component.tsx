@@ -27,11 +27,13 @@ import {
   deleteStockItemReference,
 } from "../../stock-items.resource";
 import {
+  restBaseUrl,
   showNotification,
   showSnackbar,
   showToast,
 } from "@openmrs/esm-framework";
 import { extractErrorMessagesFromResponse } from "../../../constants";
+import { handleMutate } from "../../../utils";
 
 interface StockReferencesProps {
   isEditing?: boolean;
@@ -89,7 +91,9 @@ const StockReferences: React.FC<StockReferencesProps> = ({
     };
 
     createStockItemReference(payload).then(
-      () =>
+      () => {
+        handleMutate(`${restBaseUrl}/stockmanagement/stockitemreference`);
+
         showSnackbar({
           title: t("saveReferenceTitle", "StockItem Reference"),
           subtitle: t(
@@ -97,8 +101,11 @@ const StockReferences: React.FC<StockReferencesProps> = ({
             "Stock Item Reference saved successfully"
           ),
           kind: "success",
-        }),
+        });
+      },
       (error) => {
+        handleMutate(`${restBaseUrl}/stockmanagement/stockitemreference`);
+
         const err = extractErrorMessagesFromResponse(error);
         showSnackbar({
           title: t("saveStockItemReferenceErrorTitle", "StockItem Reference"),
