@@ -42,7 +42,6 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({
   canEdit = true,
 }) => {
   const { t } = useTranslation();
-  console.warn("Found stock uuid: " + stockItemUuid);
   const {
     isLoading,
     items,

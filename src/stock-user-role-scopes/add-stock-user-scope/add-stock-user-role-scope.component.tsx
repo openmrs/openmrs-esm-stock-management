@@ -28,7 +28,11 @@ import { closeOverlay } from "../../core/components/overlay/hook";
 import { useTranslation } from "react-i18next";
 import { UserRoleScope } from "../../core/api/types/identity/UserRoleScope";
 import { createOrUpdateUserRoleScope } from "../stock-user-role-scopes.resource";
-import { showNotification, showToast } from "@openmrs/esm-framework";
+import {
+  restBaseUrl,
+  showNotification,
+  showToast,
+} from "@openmrs/esm-framework";
 import { UserRoleScopeOperationType } from "../../core/api/types/identity/UserRoleScopeOperationType";
 import { UserRoleScopeLocation } from "../../core/api/types/identity/UserRoleScopeLocation";
 import {
@@ -42,11 +46,10 @@ import {
   formatForDatePicker,
   today,
 } from "../../constants";
-import { debounce } from "lodash-es";
 import { User } from "../../core/api/types/identity/User";
 import { Role } from "../../core/api/types/identity/Role";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
-import { handleMutate } from "../swr-revalidation";
+import { handleMutate } from "../../utils";
 
 const MinDate: Date = today();
 
@@ -274,7 +277,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
     createOrUpdateUserRoleScope(formModel).then(
       (res) => {
-        handleMutate("ws/rest/v1/stockmanagement/userrolescope");
+        handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
         showToast({
           critical: true,
           title: t("addUserRole", "Add User role"),
