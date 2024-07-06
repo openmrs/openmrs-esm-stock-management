@@ -20,6 +20,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
         <NumberInput
           id={`${props.name}-${props.row?.id}-${props.row?.uuid}`}
           value={props.row?.factor ?? value}
+          min={props.min}
           ref={ref}
           onChange={(
             event: React.MouseEvent<HTMLButtonElement>,
