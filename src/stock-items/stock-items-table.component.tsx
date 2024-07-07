@@ -17,6 +17,8 @@ import {
   TableToolbarSearch,
   Tile,
   Tooltip,
+  TableToolbarAction,
+  TableToolbarMenu,
 } from "@carbon/react";
 import { Edit } from "@carbon/react/icons";
 import { isDesktop } from "@openmrs/esm-framework";
@@ -39,6 +41,10 @@ interface StockItemsTableProps {
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState("");
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
 
   const {
     isLoading,
@@ -201,6 +207,11 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   changeFilterType={setDrug}
                 />
                 <AddStockItemsBulktImportActionButton />
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
                 <AddStockItemActionButton />
               </TableToolbarContent>
             </TableToolbar>

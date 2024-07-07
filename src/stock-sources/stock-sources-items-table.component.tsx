@@ -15,6 +15,8 @@ import {
   Tile,
   DataTableSkeleton,
   TableToolbarSearch,
+  TableToolbarMenu,
+  TableToolbarAction,
 } from "@carbon/react";
 import { isDesktop } from "@openmrs/esm-framework";
 import useStockSourcesPage from "./stock-sources-items-table.resource";
@@ -29,6 +31,10 @@ import EditStockSourceActionsMenu from "./edit-stock-source/edit-stock-source.co
 const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
   const [selectedSourceType, setSelectedSourceType] = React.useState("");
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
 
   // get sourcess
   const {
@@ -123,6 +129,11 @@ const StockSourcesItems: React.FC = () => {
                 >
                   <StockSourcesFilter onFilterChange={handleFilterChange} />
                 </div>
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
 
                 <AddStockSourceActionButton />
               </TableToolbarContent>

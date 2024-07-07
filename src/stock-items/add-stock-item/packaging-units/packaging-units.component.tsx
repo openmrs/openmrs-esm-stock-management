@@ -51,7 +51,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       },
       {
         key: "quantity",
-        header: t("quantity", "Quantity"),
+        header: t("quantity", "Pack Size"),
         styles: { width: "50%" },
       },
       {

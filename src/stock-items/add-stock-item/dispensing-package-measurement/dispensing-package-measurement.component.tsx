@@ -56,7 +56,9 @@ const DispensingPackageMeasurement = <T,>(
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockItemPackagingUOMDTO) =>
-              s.packagingUomName ?? ""
+              s.packagingUomName
+                ? `${s.packagingUomName} - ${s.factor} `
+                : "Not set"
             }
             placeholder={props.placeholder}
             invalid={props.invalid}

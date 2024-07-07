@@ -1,14 +1,20 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ResourceRepresentation } from "../../../core/api/api";
 import { useStockItemsTransactions } from "./transactions.resource";
 import { DataTableSkeleton, Link, Tile } from "@carbon/react";
-import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
+import {
+  DATE_PICKER_CONTROL_FORMAT,
+  DATE_PICKER_FORMAT,
+  formatDisplayDate,
+} from "../../../core/utils/datetimeUtils";
 import { ArrowLeft } from "@carbon/react/icons";
 import DataList from "../../../core/components/table/table.component";
 import styles from "../../stock-items-table.scss";
-import { URL_STOCK_OPERATION } from "../../../constants";
 import { StockOperationType } from "../../../core/api/types/stockOperation/StockOperationType";
 import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
+import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";
+import { useForm } from "react-hook-form";
+import { DatePicker, DatePickerInput } from "@carbon/react";
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -26,9 +32,14 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     setStockItemUuid,
   } = useStockItemsTransactions(ResourceRepresentation.Default);
 
+  const [selectedFromDate, setSelectedFromDate] = useState(null);
+  const [selectedToDate, setSelectedToDate] = useState(null);
+
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+
+  const { control } = useForm({});
 
   let operations: StockOperationType[] | null | undefined;
   const tableRows = useMemo(() => {
@@ -112,13 +123,13 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
         stockItemTransaction?.quantity >= 0
           ? `${stockItemTransaction?.quantity?.toLocaleString()} ${
               stockItemTransaction?.packagingUomName ?? ""
-            }`
+            } of ${stockItemTransaction.packagingUomFactor}`
           : "",
       out:
         stockItemTransaction?.quantity < 0
           ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
               stockItemTransaction?.packagingUomName ?? ""
-            }`
+            } of ${stockItemTransaction.packagingUomFactor}`
           : "",
     }));
   }, [items, operations]);
@@ -127,14 +138,51 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
+  const handleDateFilterChange = ([startDate, endDate]) => {
+    if (startDate) {
+      setSelectedFromDate(startDate);
+      if (selectedToDate && startDate && selectedToDate < startDate) {
+        setSelectedToDate(startDate);
+      }
+    }
+    if (endDate) {
+      setSelectedToDate(endDate);
+      if (selectedFromDate && endDate && selectedFromDate > endDate) {
+        setSelectedFromDate(endDate);
+      }
+    }
+  };
+
   if (items?.length != undefined) {
     return (
       <DataList
+        children={() => (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <DatePicker
+              className={styles.dateAlign}
+              datePickerType="range"
+              dateFormat={DATE_PICKER_CONTROL_FORMAT}
+              value={[selectedFromDate, selectedToDate]}
+              onChange={([startDate, endDate]) => {
+                handleDateFilterChange([startDate, endDate]);
+              }}
+            >
+              <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
+              <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
+            </DatePicker>
+            <TransactionsLocationsFilter
+              name="TransactionLocationUuid"
+              placeholder="Filter by Location"
+              control={control}
+              controllerName="TransactionLocationUuid"
+            />
+          </div>
+        )}
         columns={tableHeaders}
         data={tableRows}
         totalItems={totalCount}
         goToPage={setCurrentPage}
-        hasToolbar={false}
+        hasToolbar={true}
       />
     );
   }

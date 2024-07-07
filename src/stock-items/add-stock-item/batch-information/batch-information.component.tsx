@@ -6,6 +6,8 @@ import { DataTableSkeleton, Tile } from "@carbon/react";
 import DataList from "../../../core/components/table/table.component";
 import styles from "../../stock-items-table.scss";
 import { useStockItemBatchInformationHook } from "./batch-information.resource";
+import BatchInformationLocationsFilter from "./batch-information-locations/batch-information-locations-filter.component";
+import { useForm } from "react-hook-form";
 
 interface BatchInformationProps {
   onSubmit?: () => void;
@@ -24,6 +26,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
     setStockItemUuid,
   } = useStockItemBatchInformationHook(ResourceRepresentation.Default);
   const { t } = useTranslation();
+  const { control } = useForm({});
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
@@ -64,7 +67,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
       location: row?.partyName,
       quantity: row?.quantity?.toLocaleString() ?? "",
       batch: row.batchNumber ?? "",
-      packaging: row.quantityUoM ?? "",
+      packaging: `${row.quantityUoM ?? ""} of ${row.quantityFactor ?? ""}`,
     }));
   }, [items]);
 
@@ -75,11 +78,22 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
   if (items?.length > 0) {
     return (
       <DataList
+        children={() => (
+          <>
+            <BatchInformationLocationsFilter
+              control={control}
+              onLocationIdChange={() => null}
+              placeholder={t("filterByLocation", "Filter by Location")}
+              name="BatchLocationUuid"
+              controllerName="BatchLocationUuid"
+            />
+          </>
+        )}
         columns={tableHeaders}
         data={tableRows}
         totalItems={totalCount}
         goToPage={setCurrentPage}
-        hasToolbar={false}
+        hasToolbar={true}
       />
     );
   }

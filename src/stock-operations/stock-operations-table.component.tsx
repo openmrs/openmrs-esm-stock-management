@@ -28,6 +28,8 @@ import {
   OverflowMenuItem,
   DatePickerInput,
   DatePicker,
+  TableToolbarMenu,
+  TableToolbarAction,
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -64,6 +66,9 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const handleRefresh = () => {
+    // search.refetch()
+  };
   const operation: StockOperationType = useMemo(
     () => ({
       uuid: "",
@@ -434,6 +439,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     onFilterChange={handleOnFilterChange}
                   />
                 </div>
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
 
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {

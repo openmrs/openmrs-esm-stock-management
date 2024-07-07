@@ -18,6 +18,8 @@ import {
   Tile,
   Button,
   InlineLoading,
+  TableToolbarMenu,
+  TableToolbarAction,
 } from "@carbon/react";
 import { isDesktop } from "@openmrs/esm-framework";
 import NewReportActionButton from "./new-report-button.component";
@@ -44,6 +46,10 @@ import {
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
+
+  const handleRefresh = () => {
+    // search.refetch()
+  };
   const {
     reports,
     isLoading,
@@ -237,6 +243,11 @@ const StockReports: React.FC = () => {
             >
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
                 <NewReportActionButton />
               </TableToolbarContent>
             </TableToolbar>

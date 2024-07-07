@@ -17,6 +17,8 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
+  TableToolbarMenu,
+  TableToolbarAction,
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
 import { ArrowDownLeft, ArrowLeft } from "@carbon/react/icons";
@@ -33,6 +35,9 @@ function StockUserRoleScopesItems() {
   const { t } = useTranslation();
 
   const currentUser = useSession();
+  const handleRefresh = () => {
+    // search.refetch()
+  };
 
   // get user scopes
   const {
@@ -192,6 +197,11 @@ function StockUserRoleScopesItems() {
             >
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
                 <AddStockUserRoleScopeActionButton />
               </TableToolbarContent>
             </TableToolbar>

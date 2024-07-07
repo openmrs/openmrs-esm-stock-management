@@ -49,7 +49,7 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
       location: row?.partyName,
       quantity: row?.quantity?.toLocaleString() ?? "",
       batch: row.batchNumber ?? "",
-      packaging: row.quantityUoM ?? "",
+      packaging: `${row.quantityUoM ?? ""} of ${row.quantityFactor ?? ""}`,
     }));
   }, [items]);
 
