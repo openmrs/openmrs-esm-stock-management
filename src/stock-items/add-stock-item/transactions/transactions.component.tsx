@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ResourceRepresentation } from "../../../core/api/api";
 import { useStockItemsTransactions } from "./transactions.resource";
-import { DataTableSkeleton, Link, Tile } from "@carbon/react";
+import {
+  DataTableSkeleton,
+  Tile,
+  DatePicker,
+  DatePickerInput,
+} from "@carbon/react";
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
@@ -14,7 +19,6 @@ import { StockOperationType } from "../../../core/api/types/stockOperation/Stock
 import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
 import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";
 import { useForm } from "react-hook-form";
-import { DatePicker, DatePickerInput } from "@carbon/react";
 
 interface TransactionsProps {
   onSubmit?: () => void;
