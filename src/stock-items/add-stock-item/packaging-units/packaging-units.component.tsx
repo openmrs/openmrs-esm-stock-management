@@ -73,7 +73,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
   });
 
   const handleSavePackageUnits = () => {
-    const { getValues } = packageUnitForm;
+    const { getValues, setValue } = packageUnitForm;
     const { factor, packagingUomUuid } = getValues();
     const payload: StockItemPackagingUOMDTO = {
       factor: factor,
@@ -104,6 +104,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
           ),
           kind: "success",
         });
+        setValue("factor", 0);
       },
       () => {
         showSnackbar({
