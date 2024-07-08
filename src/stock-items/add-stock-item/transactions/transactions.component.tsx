@@ -33,7 +33,6 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     isLoading,
     items,
     tableHeaders,
-
     totalCount,
     setCurrentPage,
     setStockItemUuid,

@@ -52,7 +52,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
         header: t("expires", "Expires"),
       },
     ],
-    []
+    [t]
   );
 
   const tableRows = useMemo(() => {

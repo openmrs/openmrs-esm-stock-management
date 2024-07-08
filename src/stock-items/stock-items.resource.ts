@@ -321,12 +321,6 @@ export function useStockRules(filter: StockRuleFilter) {
     Error
   >(apiUrl, openmrsFetch);
 
-  // return {
-  //   items: data.data ? data.data : [],
-  //   isLoading,
-  //   isError: error,
-  // };
-
   return {
     items: data?.data || <PageableResult<StockRule>>{},
     isLoading,
