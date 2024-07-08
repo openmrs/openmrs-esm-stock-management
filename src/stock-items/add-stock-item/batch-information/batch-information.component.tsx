@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ResourceRepresentation } from "../../../core/api/api";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
 import { DataTableSkeleton, Tile } from "@carbon/react";
 import DataList from "../../../core/components/table/table.component";
@@ -21,8 +20,14 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
   const [stockItemFilter, setStockItemFilter] =
     useState<StockItemInventoryFilter>();
 
-  const { isLoading, items, totalCount, setCurrentPage, setStockItemUuid } =
-    useStockItemBatchInformationHook(stockItemFilter);
+  const {
+    isLoading,
+    items,
+    totalCount,
+    setCurrentPage,
+    setStockItemUuid,
+    setLocationUuid,
+  } = useStockItemBatchInformationHook(stockItemFilter);
   const { t } = useTranslation();
   const { control } = useForm({});
 
@@ -73,42 +78,31 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (items?.length > 0) {
-    return (
-      <DataList
-        children={() => (
-          <>
-            <BatchInformationLocationsFilter
-              control={control}
-              onLocationIdChange={(q) => {
-                setStockItemFilter({
-                  ...stockItemFilter,
-                  locationUuid: q,
-                });
-              }}
-              placeholder={t("filterByLocation", "Filter by Location")}
-              name="BatchLocationUuid"
-              controllerName="BatchLocationUuid"
-            />
-          </>
-        )}
-        columns={tableHeaders}
-        data={tableRows}
-        totalItems={totalCount}
-        goToPage={setCurrentPage}
-        hasToolbar={true}
-      />
-    );
-  }
-
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>
-          {t("batchInfoToDisplay", "No batch information to display")}
-        </p>
-      </Tile>
-    </div>
+    <DataList
+      children={() => (
+        <>
+          <BatchInformationLocationsFilter
+            control={control}
+            onLocationIdChange={(q) => {
+              setLocationUuid(q);
+              setStockItemFilter({
+                ...stockItemFilter,
+                locationUuid: q,
+              });
+            }}
+            placeholder={t("filterByLocation", "Filter by Location")}
+            name="BatchLocationUuid"
+            controllerName="BatchLocationUuid"
+          />
+        </>
+      )}
+      columns={tableHeaders}
+      data={tableRows}
+      totalItems={totalCount}
+      goToPage={setCurrentPage}
+      hasToolbar={true}
+    />
   );
 };
 

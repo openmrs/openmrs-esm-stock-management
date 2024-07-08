@@ -56,27 +56,14 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
-
-  if (items?.length > 0) {
-    return (
-      <DataList
-        columns={tableHeaders}
-        data={tableRows}
-        totalItems={totalCount}
-        goToPage={setCurrentPage}
-        hasToolbar={false}
-      />
-    );
-  }
-
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>
-          {t("quantityToDisplay", "No quantity to display")}
-        </p>
-      </Tile>
-    </div>
+    <DataList
+      columns={tableHeaders}
+      data={tableRows}
+      totalItems={totalCount}
+      goToPage={setCurrentPage}
+      hasToolbar={false}
+    />
   );
 };
 

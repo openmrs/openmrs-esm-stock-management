@@ -36,6 +36,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     totalCount,
     setCurrentPage,
     setStockItemUuid,
+    setLocationUuid,
   } = useStockItemsTransactions(stockItemFilter);
 
   const [selectedFromDate, setSelectedFromDate] = useState(null);
@@ -159,49 +160,28 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     }
   };
 
-  if (items?.length != undefined) {
-    return (
-      <DataList
-        children={() => (
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <DatePicker
-              className={styles.dateAlign}
-              datePickerType="range"
-              dateFormat={DATE_PICKER_CONTROL_FORMAT}
-              value={[selectedFromDate, selectedToDate]}
-              onChange={([startDate, endDate]) => {
-                handleDateFilterChange([startDate, endDate]);
-              }}
-            >
-              <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
-              <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
-            </DatePicker>
-            <TransactionsLocationsFilter
-              onLocationIdChange={(q) => {
-                setStockItemFilter({ ...stockItemFilter, locationUuid: q });
-              }}
-              name="TransactionLocationUuid"
-              placeholder="Filter by Location"
-              control={control}
-              controllerName="TransactionLocationUuid"
-            />
-          </div>
-        )}
-        columns={tableHeaders}
-        data={tableRows}
-        totalItems={totalCount}
-        goToPage={setCurrentPage}
-        hasToolbar={true}
-      />
-    );
-  }
-
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No transactions to display</p>
-      </Tile>
-    </div>
+    <DataList
+      children={() => (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <TransactionsLocationsFilter
+            onLocationIdChange={(q) => {
+              setLocationUuid(q);
+              setStockItemFilter({ ...stockItemFilter, locationUuid: q });
+            }}
+            name="TransactionLocationUuid"
+            placeholder="Filter by Location"
+            control={control}
+            controllerName="TransactionLocationUuid"
+          />
+        </div>
+      )}
+      columns={tableHeaders}
+      data={tableRows}
+      totalItems={totalCount}
+      goToPage={setCurrentPage}
+      hasToolbar={true}
+    />
   );
 };
 
