@@ -6,5 +6,6 @@ export interface StockItemInventory {
   batchNumber: string;
   quantity: number;
   quantityUoM: string;
+  quantityFactor: string;
   expiration: Date;
 }

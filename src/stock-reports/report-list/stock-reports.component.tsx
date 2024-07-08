@@ -18,8 +18,10 @@ import {
   Tile,
   Button,
   InlineLoading,
+  TableToolbarMenu,
+  TableToolbarAction,
 } from "@carbon/react";
-import { isDesktop } from "@openmrs/esm-framework";
+import { isDesktop, restBaseUrl } from "@openmrs/esm-framework";
 import NewReportActionButton from "./new-report-button.component";
 import styles from "./stock-reports.scss";
 import { useGetReports } from "../stock-reports.resource";
@@ -41,9 +43,14 @@ import {
   View,
   WarningAltFilled,
 } from "@carbon/react/icons";
+import { handleMutate } from "../../utils";
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
+
+  const handleRefresh = () => {
+    handleMutate(`${restBaseUrl}/stockmanagement/report?v=default`);
+  };
   const {
     reports,
     isLoading,
@@ -237,6 +244,11 @@ const StockReports: React.FC = () => {
             >
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
                 <NewReportActionButton />
               </TableToolbarContent>
             </TableToolbar>

@@ -14,6 +14,7 @@ export interface StockItemTransactionDTO {
   stockOperationUuid: string;
   stockOperationStatus: StockOperationStatus;
   stockOperationNumber: string;
+  packagingUomFactor: string;
   stockOperationTypeName: string;
   stockItemPackagingUOMUuid: string;
   packagingUomName: string;

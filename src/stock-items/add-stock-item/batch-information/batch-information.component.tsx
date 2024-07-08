@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ResourceRepresentation } from "../../../core/api/api";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
 import { DataTableSkeleton, Tile } from "@carbon/react";
 import DataList from "../../../core/components/table/table.component";
 import styles from "../../stock-items-table.scss";
 import { useStockItemBatchInformationHook } from "./batch-information.resource";
+import BatchInformationLocationsFilter from "./batch-information-locations/batch-information-locations-filter.component";
+import { useForm } from "react-hook-form";
+import { StockItemInventoryFilter } from "../../stock-items.resource";
 
 interface BatchInformationProps {
   onSubmit?: () => void;
@@ -15,15 +17,19 @@ interface BatchInformationProps {
 const BatchInformation: React.FC<BatchInformationProps> = ({
   stockItemUuid,
 }) => {
+  const [stockItemFilter, setStockItemFilter] =
+    useState<StockItemInventoryFilter>();
+
   const {
     isLoading,
     items,
-
     totalCount,
     setCurrentPage,
     setStockItemUuid,
-  } = useStockItemBatchInformationHook(ResourceRepresentation.Default);
+    setLocationUuid,
+  } = useStockItemBatchInformationHook(stockItemFilter);
   const { t } = useTranslation();
+  const { control } = useForm({});
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
@@ -51,7 +57,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
         header: t("expires", "Expires"),
       },
     ],
-    []
+    [t]
   );
 
   const tableRows = useMemo(() => {
@@ -64,7 +70,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
       location: row?.partyName,
       quantity: row?.quantity?.toLocaleString() ?? "",
       batch: row.batchNumber ?? "",
-      packaging: row.quantityUoM ?? "",
+      packaging: `${row.quantityUoM ?? ""} of ${row.quantityFactor ?? ""}`,
     }));
   }, [items]);
 
@@ -72,26 +78,31 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (items?.length > 0) {
-    return (
-      <DataList
-        columns={tableHeaders}
-        data={tableRows}
-        totalItems={totalCount}
-        goToPage={setCurrentPage}
-        hasToolbar={false}
-      />
-    );
-  }
-
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>
-          {t("batchInfoToDisplay", "No batch information to display")}
-        </p>
-      </Tile>
-    </div>
+    <DataList
+      children={() => (
+        <>
+          <BatchInformationLocationsFilter
+            control={control}
+            onLocationIdChange={(q) => {
+              setLocationUuid(q);
+              setStockItemFilter({
+                ...stockItemFilter,
+                locationUuid: q,
+              });
+            }}
+            placeholder={t("filterByLocation", "Filter by Location")}
+            name="BatchLocationUuid"
+            controllerName="BatchLocationUuid"
+          />
+        </>
+      )}
+      columns={tableHeaders}
+      data={tableRows}
+      totalItems={totalCount}
+      goToPage={setCurrentPage}
+      hasToolbar={true}
+    />
   );
 };
 
