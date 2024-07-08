@@ -67,7 +67,10 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
     isLoading: loadingRoles,
   } = useRoles({ v: ResourceRepresentation.Default });
 
-  const [formModel, setFormModel] = useState<StockRule>();
+  const [formModel, setFormModel] = useState<StockRule>({
+    enabled: true,
+    ...model,
+  });
 
   useEffect(() => {
     if (model != null && Object.keys(model).length != 0) {
@@ -190,7 +193,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
         )
         .catch();
     },
-    [formModel, model, t]
+    [formModel, model, t, stockItemUuid]
   );
 
   return (
