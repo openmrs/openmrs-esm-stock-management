@@ -20,6 +20,7 @@ import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-o
 import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";
 import { useForm } from "react-hook-form";
 import { StockItemInventoryFilter } from "../../stock-items.resource";
+import { useTranslation } from "react-i18next";
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -27,6 +28,8 @@ interface TransactionsProps {
 }
 
 const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
+  const { t } = useTranslation();
+
   const [stockItemFilter, setStockItemFilter] =
     useState<StockItemInventoryFilter>();
   const {
@@ -169,8 +172,8 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
               setLocationUuid(q);
               setStockItemFilter({ ...stockItemFilter, locationUuid: q });
             }}
-            name="TransactionLocationUuid"
-            placeholder="Filter by Location"
+            name={"TransactionLocationUuid"}
+            placeholder={t("filterByLocation", "Filter by Location")}
             control={control}
             controllerName="TransactionLocationUuid"
           />
