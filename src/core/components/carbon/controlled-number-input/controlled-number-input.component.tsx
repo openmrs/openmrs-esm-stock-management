@@ -9,6 +9,7 @@ interface ControlledNumberInputProps<T> extends NumberInputProps {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
+  hideSteppers?: boolean;
 }
 
 const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
@@ -21,6 +22,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
           id={`${props.name}-${props.row?.id}-${props.row?.uuid}`}
           value={props.row?.factor ?? value}
           min={props.min}
+          hideSteppers={props.hideSteppers || false}
           ref={ref}
           onChange={(
             event: React.MouseEvent<HTMLButtonElement>,

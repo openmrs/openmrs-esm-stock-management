@@ -222,6 +222,7 @@ const PackagingUnitRow: React.FC<{
               control={control}
               id={`${row.uuid}-${key}`}
               invalid={!!errors.factor}
+              hideSteppers={true}
             />
 
             <DeleteModalButton closeModal={() => true} row={row} />
