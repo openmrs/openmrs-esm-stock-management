@@ -25,7 +25,12 @@ const DispensingPackageMeasurement = <T,>(
   props: DispensingPackageMeasurementProps<T>
 ) => {
   const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
-    () => (props?.packagingUnits.length > 0 ? props?.packagingUnits[0] : null),
+    () =>
+      props?.packagingUnits.length > 0
+        ? props?.packagingUnits.find(
+            (u) => u?.uuid === props?.dispensingUnitPackagingUoMUuid
+          )
+        : null,
     [props?.packagingUnits]
   );
 
@@ -38,7 +43,7 @@ const DispensingPackageMeasurement = <T,>(
       <Controller
         name={props.controllerName}
         control={props.control}
-        defaultValue={initialSelectedItem.uuid ?? ""}
+        defaultValue={initialSelectedItem?.uuid ?? ""}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
             titleText={props.title}
@@ -56,8 +61,8 @@ const DispensingPackageMeasurement = <T,>(
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockItemPackagingUOMDTO) =>
-              s.packagingUomName
-                ? `${s.packagingUomName} - ${s.factor} `
+              s?.packagingUomName
+                ? `${s?.packagingUomName} - ${s?.factor} `
                 : "Not set"
             }
             placeholder={props.placeholder}

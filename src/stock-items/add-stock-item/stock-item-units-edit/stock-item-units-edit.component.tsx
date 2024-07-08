@@ -34,6 +34,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
   return (
     <>
       <DispensingPackageMeasurement
+        dispensingUnitPackagingUoMUuid={stockItem?.purchasePriceUoMUuid}
         name="dispensingUnitPackagingUoMUuid"
         controllerName="dispensingUnitPackagingUoMUuid"
         control={control}
@@ -51,6 +52,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         }
       />
       <DispensingPackageMeasurement
+        dispensingUnitPackagingUoMUuid={stockItem?.purchasePriceUoMUuid}
         name="defaultStockOperationsUoMUuid"
         controllerName="defaultStockOperationsUoMUuid"
         control={control}
@@ -84,6 +86,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         />
       )}
       <DispensingPackageMeasurement
+        dispensingUnitPackagingUoMUuid={stockItem?.purchasePriceUoMUuid}
         name="reorderLevelUoMUuid"
         controllerName="reorderLevelUoMUuid"
         control={control}
@@ -113,6 +116,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         />
       )}
       <DispensingPackageMeasurement
+        dispensingUnitPackagingUoMUuid={stockItem?.purchasePriceUoMUuid}
         name="purchasePriceUoMUuid"
         controllerName="purchasePriceUoMUuid"
         control={control}

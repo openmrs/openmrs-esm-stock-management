@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../../../core/api/api";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
@@ -8,6 +8,7 @@ import styles from "../../stock-items-table.scss";
 import { useStockItemBatchInformationHook } from "./batch-information.resource";
 import BatchInformationLocationsFilter from "./batch-information-locations/batch-information-locations-filter.component";
 import { useForm } from "react-hook-form";
+import { StockItemInventoryFilter } from "../../stock-items.resource";
 
 interface BatchInformationProps {
   onSubmit?: () => void;
@@ -17,14 +18,11 @@ interface BatchInformationProps {
 const BatchInformation: React.FC<BatchInformationProps> = ({
   stockItemUuid,
 }) => {
-  const {
-    isLoading,
-    items,
+  const [stockItemFilter, setStockItemFilter] =
+    useState<StockItemInventoryFilter>();
 
-    totalCount,
-    setCurrentPage,
-    setStockItemUuid,
-  } = useStockItemBatchInformationHook(ResourceRepresentation.Default);
+  const { isLoading, items, totalCount, setCurrentPage, setStockItemUuid } =
+    useStockItemBatchInformationHook(stockItemFilter);
   const { t } = useTranslation();
   const { control } = useForm({});
 
@@ -82,7 +80,12 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
           <>
             <BatchInformationLocationsFilter
               control={control}
-              onLocationIdChange={() => null}
+              onLocationIdChange={(q) => {
+                setStockItemFilter({
+                  ...stockItemFilter,
+                  locationUuid: q,
+                });
+              }}
               placeholder={t("filterByLocation", "Filter by Location")}
               name="BatchLocationUuid"
               controllerName="BatchLocationUuid"

@@ -67,7 +67,7 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
       disabled: !isEditing,
     },
     {
-      name: t("stockRules", "Stock Rules"),
+      name: t("stockRules", "Rules"),
       component: <StockItemRules stockItemUuid={model.uuid} />,
       disabled: !isEditing,
     },

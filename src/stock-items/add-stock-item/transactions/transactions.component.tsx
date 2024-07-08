@@ -19,6 +19,7 @@ import { StockOperationType } from "../../../core/api/types/stockOperation/Stock
 import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
 import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";
 import { useForm } from "react-hook-form";
+import { StockItemInventoryFilter } from "../../stock-items.resource";
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -26,6 +27,8 @@ interface TransactionsProps {
 }
 
 const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
+  const [stockItemFilter, setStockItemFilter] =
+    useState<StockItemInventoryFilter>();
   const {
     isLoading,
     items,
@@ -34,7 +37,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     totalCount,
     setCurrentPage,
     setStockItemUuid,
-  } = useStockItemsTransactions(ResourceRepresentation.Default);
+  } = useStockItemsTransactions(stockItemFilter);
 
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
@@ -175,6 +178,9 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
               <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
             </DatePicker>
             <TransactionsLocationsFilter
+              onLocationIdChange={(q) => {
+                setStockItemFilter({ ...stockItemFilter, locationUuid: q });
+              }}
               name="TransactionLocationUuid"
               placeholder="Filter by Location"
               control={control}
