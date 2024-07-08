@@ -67,7 +67,7 @@ interface StockOperationsTableProps {
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
   const handleRefresh = () => {
-    // search.refetch()
+    handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
   };
   const operation: StockOperationType = useMemo(
     () => ({

@@ -21,7 +21,7 @@ import {
   TableToolbarMenu,
   TableToolbarAction,
 } from "@carbon/react";
-import { isDesktop } from "@openmrs/esm-framework";
+import { isDesktop, restBaseUrl } from "@openmrs/esm-framework";
 import NewReportActionButton from "./new-report-button.component";
 import styles from "./stock-reports.scss";
 import { useGetReports } from "../stock-reports.resource";
@@ -43,12 +43,13 @@ import {
   View,
   WarningAltFilled,
 } from "@carbon/react/icons";
+import { handleMutate } from "../../utils";
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
 
   const handleRefresh = () => {
-    // search.refetch()
+    handleMutate(`${restBaseUrl}/stockmanagement/report?v=default`);
   };
   const {
     reports,

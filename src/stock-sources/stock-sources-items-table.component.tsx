@@ -18,7 +18,7 @@ import {
   TableToolbarMenu,
   TableToolbarAction,
 } from "@carbon/react";
-import { isDesktop } from "@openmrs/esm-framework";
+import { isDesktop, restBaseUrl } from "@openmrs/esm-framework";
 import useStockSourcesPage from "./stock-sources-items-table.resource";
 import { ResourceRepresentation } from "../core/api/api";
 import AddStockSourceActionButton from "./add-stock-source-button.component";
@@ -27,13 +27,14 @@ import styles from "./stock-sources.scss";
 import { useTranslation } from "react-i18next";
 import StockSourcesDeleteActionMenu from "./stock-sources-delete/stock-sources-delete.component";
 import EditStockSourceActionsMenu from "./edit-stock-source/edit-stock-source.component";
+import { handleMutate } from "../utils";
 
 const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
   const [selectedSourceType, setSelectedSourceType] = React.useState("");
 
   const handleRefresh = () => {
-    // search.refetch()
+    handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
   };
 
   // get sourcess

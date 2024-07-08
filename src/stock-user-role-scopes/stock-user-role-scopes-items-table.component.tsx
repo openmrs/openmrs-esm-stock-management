@@ -22,7 +22,7 @@ import {
 } from "@carbon/react";
 import styles from "./stock-user-role-scopes.scss";
 import { ArrowDownLeft, ArrowLeft } from "@carbon/react/icons";
-import { isDesktop, useSession } from "@openmrs/esm-framework";
+import { isDesktop, restBaseUrl, useSession } from "@openmrs/esm-framework";
 import { ResourceRepresentation } from "../core/api/api";
 import useStockUserRoleScopesPage from "./stock-user-role-scopes-items-table.resource";
 import AddStockUserRoleScopeActionButton from "./add-stock-user-role-scope-button.component";
@@ -30,13 +30,14 @@ import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import EditStockUserRoleActionsMenu from "./edit-stock-user-scope/edit-stock-user-scope-action-menu.component";
 import StockUserScopeDeleteActionMenu from "./delete-stock-user-scope/delete-stock-user-scope.component";
 import { URL_USER_ROLE_SCOPE } from "../constants";
+import { handleMutate } from "../utils";
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
 
   const currentUser = useSession();
   const handleRefresh = () => {
-    // search.refetch()
+    handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
   };
 
   // get user scopes

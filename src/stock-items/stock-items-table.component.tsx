@@ -21,7 +21,7 @@ import {
   TableToolbarMenu,
 } from "@carbon/react";
 import { Edit } from "@carbon/react/icons";
-import { isDesktop } from "@openmrs/esm-framework";
+import { isDesktop, restBaseUrl } from "@openmrs/esm-framework";
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ResourceRepresentation } from "../core/api/api";
@@ -33,6 +33,7 @@ import styles from "./stock-items-table.scss";
 import AddStockItemsBulktImportActionButton from "./add-bulk-stock-item/add-stock-items-bulk-import-action-button.component";
 import EditStockItemActionsMenu from "./edit-stock-item/edit-stock-item-action-menu.component";
 import { useDebounce } from "../core/hooks/debounce-hook";
+import { handleMutate } from "../utils";
 
 interface StockItemsTableProps {
   from?: string;
@@ -43,7 +44,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleRefresh = () => {
-    // search.refetch()
+    handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
   };
 
   const {

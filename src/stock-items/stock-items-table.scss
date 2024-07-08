@@ -78,7 +78,7 @@
 }
 
 .dateAlign {
-  padding-top: 8px;
+  padding-top: spacing.$spacing-03;
   height: 100%;
 }
 
@@ -90,6 +90,7 @@
     z-index: 1;
   }
 }
+
 .filterContainer {
   display: flex;
   align-items: center;
