@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo } from "react";
+import { showSnackbar, restBaseUrl } from "@openmrs/esm-framework";
+import { useTranslation } from "react-i18next";
 import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
 import {
   Button,
@@ -20,10 +22,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
 import { createStockItemPackagingUnit } from "../../stock-items.resource";
-import { showSnackbar } from "@openmrs/esm-framework";
-import { useTranslation } from "react-i18next";
-import styles from "./packaging-units.scss";
 import DeleteModalButton from "./packaging-units-delete-modal-button.component";
+import { handleMutate } from "../../../utils";
+import { toQueryParams, ResourceRepresentation } from "../../../core/api/api";
+
+import styles from "./packaging-units.scss";
 
 interface PackagingUnitsProps {
   isEditing?: boolean;
@@ -77,8 +80,22 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       packagingUomUuid,
       stockItemUuid,
     };
+
+    const filters = {
+      startIndex: 0,
+      v: ResourceRepresentation.Default,
+      totalCount: true,
+      stockItemUuid,
+    };
+
+    const fetchUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom${toQueryParams(
+      filters
+    )}`;
+
     createStockItemPackagingUnit(payload).then(
-      () =>
+      () => {
+        handleMutate(fetchUrl);
+
         showSnackbar({
           title: t("savePackingUnitTitle", "Package Unit"),
           subtitle: t(
@@ -86,7 +103,8 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
             "Package Unit saved successfully"
           ),
           kind: "success",
-        }),
+        });
+      },
       () => {
         showSnackbar({
           title: t("savePackagingUnitErrorTitle", "Package Unit"),
