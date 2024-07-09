@@ -109,7 +109,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           controllerName="purchasePrice"
           size={"md"}
           allowEmpty={true}
-          label={t("purchasePrice", "Purchase Price")}
+          label={t("purchasePrice", "Purchase Price:")}
           value={stockItem.purchasePrice ?? ""}
           invalid={!!errors.purchasePrice}
           invalidText={errors.purchasePrice && errors?.purchasePrice?.message}
@@ -120,7 +120,10 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="purchasePriceUoMUuid"
         controllerName="purchasePriceUoMUuid"
         control={control}
-        title={t("purchasePricePackagingUnit", "Purchase price packaging unit")}
+        title={t(
+          "purchasePricePackagingUnit",
+          "Purchase price packaging unit:"
+        )}
         placeholder={t("notSet", "Not Set")}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}

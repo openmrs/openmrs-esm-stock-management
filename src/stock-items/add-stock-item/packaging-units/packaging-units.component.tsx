@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { showSnackbar, restBaseUrl } from "@openmrs/esm-framework";
+import { showSnackbar } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
 import {
@@ -23,8 +23,6 @@ import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
 import { createStockItemPackagingUnit } from "../../stock-items.resource";
 import DeleteModalButton from "./packaging-units-delete-modal-button.component";
-import { handleMutate } from "../../../utils";
-import { toQueryParams, ResourceRepresentation } from "../../../core/api/api";
 
 import styles from "./packaging-units.scss";
 
@@ -39,7 +37,8 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
   stockItemUuid,
   handleTabChange,
 }) => {
-  const { items, isLoading, setStockItemUuid } = useStockItemPackageUnitsHook();
+  const { items, isLoading, setStockItemUuid, mutate } =
+    useStockItemPackageUnitsHook();
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
@@ -81,20 +80,9 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       stockItemUuid,
     };
 
-    const filters = {
-      startIndex: 0,
-      v: ResourceRepresentation.Default,
-      totalCount: true,
-      stockItemUuid,
-    };
-
-    const fetchUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom${toQueryParams(
-      filters
-    )}`;
-
     createStockItemPackagingUnit(payload).then(
       () => {
-        handleMutate(fetchUrl);
+        mutate();
 
         showSnackbar({
           title: t("savePackingUnitTitle", "Package Unit"),
@@ -204,6 +192,7 @@ const PackagingUnitRow: React.FC<{
               row={row}
               controllerName={"packagingUomUuid"}
               name="packagingUomUuid"
+              placeholder="Filter"
               control={control}
               invalid={!!errors.packagingUomUuid}
             />
