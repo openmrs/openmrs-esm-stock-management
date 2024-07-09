@@ -19,6 +19,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
       control={props.control}
       render={({ field: { onChange, value, ref } }) => (
         <NumberInput
+          label={props.label}
           id={`${props.name}-${props.row?.id}-${props.row?.uuid}`}
           value={props.row?.factor ?? value}
           min={props.min}

@@ -1,9 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { showNotification, showToast } from "@openmrs/esm-framework";
-import React, { useState } from "react";
-import { deleteStockItemPackagingUnit } from "../../stock-items.resource";
-import { useTranslation } from "react-i18next";
-import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import styles from "../packaging-units/packaging-units.scss";
 import {
   Button,
   ModalHeader,
@@ -11,6 +7,12 @@ import {
   ModalFooter,
   TextArea,
 } from "@carbon/react";
+import { deleteStockItemPackagingUnit } from "../../stock-items.resource";
+import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
+import { useTranslation } from "react-i18next";
+import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
+
+import styles from "../packaging-units/packaging-units.scss";
 
 interface DeletePackagingUnitProps {
   row?: StockItemPackagingUOMDTO;
@@ -22,6 +24,11 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
   closeModal,
 }) => {
   const { t } = useTranslation();
+  const { mutate, setStockItemUuid } = useStockItemPackageUnitsHook();
+
+  useEffect(() => {
+    setStockItemUuid(row.stockItemUuid);
+  }, [row.stockItemUuid, setStockItemUuid]);
 
   const [reason, setReason] = useState("");
 
@@ -33,6 +40,8 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
     e.preventDefault();
     deleteStockItemPackagingUnit(row.uuid).then(
       () => {
+        mutate();
+        closeModal();
         showToast({
           critical: true,
           title: t("deletePackagingUnitTitle", `Delete packing item `),

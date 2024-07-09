@@ -25,7 +25,7 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
     });
   }, [stockItemUuid]);
 
-  const { items, isLoading, isError } =
+  const { items, isLoading, isError, mutate } =
     useStockItemPackagingUOMs(stockItemFilter);
 
   return {
@@ -34,5 +34,6 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
     isLoading,
     isError,
     setStockItemUuid,
+    mutate,
   };
 }

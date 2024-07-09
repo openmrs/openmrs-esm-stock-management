@@ -167,7 +167,7 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom${toQueryParams(
     filter
   )}`;
-  const { data, error, isLoading } = useSWR<
+  const { data, error, isLoading, mutate } = useSWR<
     {
       data: PageableResult<StockItemPackagingUOMDTO>;
     },
@@ -178,6 +178,7 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
     items: data?.data || <PageableResult<StockItemPackagingUOMDTO>>{},
     isLoading,
     isError: error,
+    mutate,
   };
 }
 
