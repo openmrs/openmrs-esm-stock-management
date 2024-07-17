@@ -1,4 +1,4 @@
-name: Node CI
+name: KenyaEMR CI
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
       - created
 
 env:
-  ESM_NAME: "@openmrs/esm-stock-management-app"
-  JS_NAME: "openmrs-esm-stock-management-app.js"
+  ESM_NAME: "@kenyaemr/esm-stock-management-app"
+  JS_NAME: "kenyaemr-esm-stock-management-app.js"
 
 jobs:
   build:
