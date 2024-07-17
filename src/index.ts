@@ -11,7 +11,7 @@ import stockManagementAdminCardLinkComponent from "./stock-management-admin-card
 import deletePackagingUnitModalButtonComponent from "./stock-items/add-stock-item/packaging-units/packaging-units-delete-modal-button.component";
 import deletePackagingUnitComponent from "./stock-items/add-stock-item/packaging-units/packaging-units-delete-modal.component";
 
-const moduleName = "@openmrs/esm-stock-management-app";
+const moduleName = "@@kenyaemr/esm-stock-management-app";
 
 const options = {
   featureName: "stock-management",
