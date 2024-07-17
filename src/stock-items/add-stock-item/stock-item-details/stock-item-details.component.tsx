@@ -172,6 +172,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
                 name="expiryNotice"
                 control={control}
                 controllerName="expiryNotice"
+                min={0}
                 size={"md"}
                 allowEmpty={true}
                 label={t("expiryNoticeDays", "Expiration Notice (days)")}

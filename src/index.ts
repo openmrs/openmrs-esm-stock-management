@@ -8,6 +8,8 @@ import stockOperationDialogComponent from "./stock-operations/stock-operations-d
 import stockManagementDashboardComponent from "./dashboard/stock-management-dashboard.component";
 import stockManagementComponent from "./stock-management.component";
 import stockManagementAdminCardLinkComponent from "./stock-management-admin-card-link.component";
+import deletePackagingUnitModalButtonComponent from "./stock-items/add-stock-item/packaging-units/packaging-units-delete-modal-button.component";
+import deletePackagingUnitComponent from "./stock-items/add-stock-item/packaging-units/packaging-units-delete-modal.component";
 
 const moduleName = "@openmrs/esm-stock-management-app";
 
@@ -51,6 +53,22 @@ export const deleteUserScopeModal = getSyncLifecycle(deleteUserModalComponent, {
   featureName: "delete-stock-user-scope-modal",
   moduleName,
 });
+
+export const deletePackagingUnitModal = getSyncLifecycle(
+  deletePackagingUnitComponent,
+  {
+    featureName: "delete-packaging-unit-modal",
+    moduleName,
+  }
+);
+
+export const deletePackagingUnitButton = getSyncLifecycle(
+  deletePackagingUnitModalButtonComponent,
+  {
+    featureName: "delete-packging-unit-button",
+    moduleName,
+  }
+);
 
 export const importBulkStockItemsDialog = getSyncLifecycle(
   bulkImportComponent,

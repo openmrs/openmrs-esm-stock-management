@@ -15,7 +15,7 @@ import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import styles from "./add-stock-rules.scss";
 import {
   useRoles,
-  useStockLocations,
+  useStockTagLocations,
 } from "../../../stock-lookups/stock-lookups.resource";
 import { createOrUpdateStockRule } from "./stock-rules.resource";
 import { StockRule } from "../../../core/api/types/stockItem/StockRule";
@@ -38,7 +38,6 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
   stockItemUuid,
 }) => {
   const { t } = useTranslation();
-  console.warn("Got stock id: ", stockItemUuid);
 
   const [stockItemFilter, setStockItemFilter] =
     useState<StockItemInventoryFilter>({
@@ -59,10 +58,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
 
   const { items: dispensingUnits } = useStockItemPackagingUOMs(stockItemFilter);
 
-  //locations
-  const {
-    locations: { results: locations },
-  } = useStockLocations({ v: ResourceRepresentation.Default });
+  const { stockLocations } = useStockTagLocations();
 
   //Roles
   const {
@@ -113,8 +109,10 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
   };
 
   const onLocationChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-    const selectedLocation = locations.find((x) => x.uuid === evt.target.value);
-    setFormModel({ ...formModel, locationUuid: selectedLocation.uuid });
+    const selectedLocation = stockLocations.find(
+      (x) => x.id === evt.target.value
+    );
+    setFormModel({ ...formModel, locationUuid: selectedLocation.id });
   };
 
   const onQuantityUnitChange = (evt: ChangeEvent<HTMLSelectElement>) => {
@@ -217,12 +215,12 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
                     value=""
                     text={t("chooseLocation", "Choose the location")}
                   />
-                  {locations?.map((location) => {
+                  {stockLocations?.map((location) => {
                     return (
                       <SelectItem
-                        key={location.uuid}
-                        value={location.uuid}
-                        text={location.display}
+                        key={location.id}
+                        value={location.id}
+                        text={location.name}
                       />
                     );
                   })}

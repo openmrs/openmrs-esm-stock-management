@@ -2,6 +2,7 @@ import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
 import React from "react";
 import {
   FetchResponse,
+  restBaseUrl,
   showModal,
   showNotification,
   showToast,
@@ -47,7 +48,7 @@ export const addOrEditStockOperation = async (
       : createStockOperation)(payload);
 
     if (response?.data) {
-      handleMutate("ws/rest/v1/stockmanagement/stockoperation");
+      handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
       showToast({
         critical: true,
         title: `${isEditing ? "Edit" : "Add"} Stock Operation`,

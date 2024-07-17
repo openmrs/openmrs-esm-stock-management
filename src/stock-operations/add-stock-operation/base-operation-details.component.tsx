@@ -118,7 +118,9 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                 maxDate={formatForDatePicker(today())}
                 locale="en"
                 dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                onChange={onChange}
+                onChange={([newDate]) => {
+                  onChange(newDate);
+                }}
               >
                 <DatePickerInput
                   invalid={!!errors.operationDate}
@@ -127,7 +129,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                   name="operationDate"
                   placeholder={DATE_PICKER_FORMAT}
                   labelText={t("operationDate", "Operation Date")}
-                  value={formatForDatePicker(model?.operationDate)}
+                  defaultValue={formatForDatePicker(model?.operationDate)}
                 />
               </DatePicker>
             )}
