@@ -20,7 +20,8 @@ import StockSources from "./stock-sources/stock-sources.component";
 import StockLocations from "./stock-locations/stock-locations.component";
 import StockReports from "./stock-reports/report-list/stock-reports.component";
 import StockSettings from "./stock-settings/stock-settings.component";
-const moduleName = "@openmrs/esm-stock-management-app";
+
+const moduleName = "@@kenyaemr/esm-stock-management-app";
 
 const options = {
   featureName: "stock-management",
