@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
 import { deleteStockRule } from "../../stock-items.resource";
 import { showModal, showNotification, showToast } from "@openmrs/esm-framework";
+import { closeOverlay } from "../../../core/components/overlay/hook";
 
 interface StockRulesDeleteActionMenuProps {
   uuid: string;
@@ -24,6 +25,7 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
         deleteStockRule(uuid)
           .then(
             () => {
+              closeOverlay();
               setDeletingRule(false);
               showToast({
                 critical: true,
@@ -36,6 +38,7 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
               });
             },
             (error) => {
+              closeOverlay();
               setDeletingRule(false);
               showNotification({
                 title: t(`errorDeletingRule', 'error deleting a rule`),

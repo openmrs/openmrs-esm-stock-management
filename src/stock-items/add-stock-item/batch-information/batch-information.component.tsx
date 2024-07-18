@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
-import { DataTableSkeleton, Tile } from "@carbon/react";
+import { DataTableSkeleton } from "@carbon/react";
 import DataList from "../../../core/components/table/table.component";
-import styles from "../../stock-items-table.scss";
 import { useStockItemBatchInformationHook } from "./batch-information.resource";
 import BatchInformationLocationsFilter from "./batch-information-locations/batch-information-locations-filter.component";
 import { useForm } from "react-hook-form";

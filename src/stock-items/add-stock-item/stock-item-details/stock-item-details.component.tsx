@@ -52,6 +52,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         await onSave(item);
         handleTabChange(1);
         handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
+        closeOverlay();
       } catch (e) {
         // Show notification
       } finally {

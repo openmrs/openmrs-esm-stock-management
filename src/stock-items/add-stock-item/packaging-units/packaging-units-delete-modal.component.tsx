@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
 
 import styles from "../packaging-units/packaging-units.scss";
+import { closeOverlay } from "../../../core/components/overlay/hook";
 
 interface DeletePackagingUnitProps {
   row?: StockItemPackagingUOMDTO;
@@ -42,6 +43,7 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
       () => {
         mutate();
         closeModal();
+        closeOverlay();
         showToast({
           critical: true,
           title: t("deletePackagingUnitTitle", `Delete packing item `),
@@ -53,6 +55,7 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
         });
       },
       (error) => {
+        closeOverlay();
         showNotification({
           title: t(
             "deletePackingUnitErrorTitle",

@@ -1,20 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ResourceRepresentation } from "../../../core/api/api";
 import { useStockItemsTransactions } from "./transactions.resource";
-import {
-  DataTableSkeleton,
-  Tile,
-  DatePicker,
-  DatePickerInput,
-} from "@carbon/react";
-import {
-  DATE_PICKER_CONTROL_FORMAT,
-  DATE_PICKER_FORMAT,
-  formatDisplayDate,
-} from "../../../core/utils/datetimeUtils";
+import { DataTableSkeleton } from "@carbon/react";
+import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
 import { ArrowLeft } from "@carbon/react/icons";
 import DataList from "../../../core/components/table/table.component";
-import styles from "../../stock-items-table.scss";
 import { StockOperationType } from "../../../core/api/types/stockOperation/StockOperationType";
 import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
 import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";

@@ -46,35 +46,35 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
         <PackagingUnits
           isEditing
           handleTabChange={handleTabChange}
-          stockItemUuid={model.uuid}
+          stockItemUuid={model?.uuid}
         />
       ),
       disabled: !isEditing,
     },
     {
       name: t("transactions", "Transactions"),
-      component: <Transactions stockItemUuid={model.uuid} />,
+      component: <Transactions stockItemUuid={model?.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("batchInformation", "Batch Information"),
-      component: <BatchInformation stockItemUuid={model.uuid} />,
+      component: <BatchInformation stockItemUuid={model?.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("quantities", "Quantities"),
-      component: <StockQuantities stockItemUuid={model.uuid} />,
+      component: <StockQuantities stockItemUuid={model?.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("stockRules", "Rules"),
-      component: <StockItemRules stockItemUuid={model.uuid} />,
+      component: <StockItemRules stockItemUuid={model?.uuid} />,
       disabled: !isEditing,
     },
     {
       name: t("references", "References"),
       component: (
-        <StockReferences stockItemUuid={model.uuid} isEditing={isEditing} />
+        <StockReferences stockItemUuid={model?.uuid} isEditing={isEditing} />
       ),
       disabled: !isEditing,
     },

@@ -22,6 +22,8 @@ import { StockItemReferenceData } from "./validation-schema";
 import { stockItemDetailsSchema } from "../../validationSchema";
 import { StockItemReferenceDTO } from "../../../core/api/types/stockItem/StockItemReference";
 import ControlledTextInput from "../../../core/components/carbon/controlled-text-input/controlled-text-input.component";
+import { closeOverlay } from "../../../core/components/overlay/hook";
+
 import {
   createStockItemReference,
   deleteStockItemReference,
@@ -92,6 +94,8 @@ const StockReferences: React.FC<StockReferencesProps> = ({
 
     createStockItemReference(payload).then(
       () => {
+        closeOverlay();
+
         handleMutate(`${restBaseUrl}/stockmanagement/stockitemreference`);
 
         showSnackbar({
@@ -104,6 +108,8 @@ const StockReferences: React.FC<StockReferencesProps> = ({
         });
       },
       (error) => {
+        closeOverlay();
+
         handleMutate(`${restBaseUrl}/stockmanagement/stockitemreference`);
 
         const err = extractErrorMessagesFromResponse(error);
@@ -198,6 +204,7 @@ const StockReferencesRow: React.FC<{
     e.preventDefault();
     deleteStockItemReference(row.uuid).then(
       () => {
+        closeOverlay();
         showSnackbar({
           title: t("deletePackagingUnitTitle", `Delete StockItem reference`),
           kind: "success",
@@ -208,6 +215,7 @@ const StockReferencesRow: React.FC<{
         });
       },
       (error) => {
+        closeOverlay();
         const err = extractErrorMessagesFromResponse(error);
         showSnackbar({
           title: t(
