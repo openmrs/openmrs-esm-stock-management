@@ -1,5 +1,5 @@
 import { ResourceRepresentation } from "../../../core/api/api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StockItemInventoryFilter,
   useStockItemInventory,

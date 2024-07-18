@@ -25,6 +25,7 @@ import { createStockItemPackagingUnit } from "../../stock-items.resource";
 import DeleteModalButton from "./packaging-units-delete-modal-button.component";
 
 import styles from "./packaging-units.scss";
+import { closeOverlay } from "../../../core/components/overlay/hook";
 
 interface PackagingUnitsProps {
   isEditing?: boolean;
@@ -83,7 +84,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
     createStockItemPackagingUnit(payload).then(
       () => {
         mutate();
-
+        closeOverlay();
         showSnackbar({
           title: t("savePackingUnitTitle", "Package Unit"),
           subtitle: t(
@@ -95,6 +96,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         setValue("factor", 0);
       },
       () => {
+        closeOverlay();
         showSnackbar({
           title: t("savePackagingUnitErrorTitle", "Package Unit"),
           subtitle: t(

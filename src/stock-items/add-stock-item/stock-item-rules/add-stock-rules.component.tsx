@@ -189,6 +189,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               critical: true,
               description: error?.message,
             });
+            closeOverlay();
           }
         )
         .catch();
