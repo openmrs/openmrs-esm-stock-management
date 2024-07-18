@@ -9,7 +9,7 @@ import { type ConfigObject } from "../../../config-schema";
 
 interface PackagingUnitsConceptSelectorProps<T> {
   row?: StockItemPackagingUOMDTO;
-  onPackageUnitChange?: (unit: Concept) => void;
+  onPackageUnitChange?: (unit: { uuid: string; display: string }) => void;
   title?: string;
   placeholder?: string;
   invalid?: boolean;
@@ -62,7 +62,10 @@ const PackagingUnitsConceptSelector = <T,>(
                 ]
               : dispensingUnits || []
           }
-          onChange={(data: { selectedItem: Concept }) => {
+          onChange={(data: {
+            selectedItem: { uuid: string; display: string };
+          }) => {
+            console.log("called", data?.selectedItem);
             props.onPackageUnitChange?.(data?.selectedItem);
             onChange(data?.selectedItem?.uuid || ""); // Provide a default value if needed
           }}
