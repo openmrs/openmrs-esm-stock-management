@@ -65,7 +65,6 @@ const PackagingUnitsConceptSelector = <T,>(
           onChange={(data: {
             selectedItem: { uuid: string; display: string };
           }) => {
-            console.log("called", data?.selectedItem);
             props.onPackageUnitChange?.(data?.selectedItem);
             onChange(data?.selectedItem?.uuid || ""); // Provide a default value if needed
           }}

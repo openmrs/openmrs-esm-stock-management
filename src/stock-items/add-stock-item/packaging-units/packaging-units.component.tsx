@@ -297,7 +297,6 @@ const PackagingUnitRow: React.FC<{
   } = useFormContext();
   const minPackagingQuantity = 0;
 
-  console.log(row, "row");
   return (
     <>
       <TableRow>
