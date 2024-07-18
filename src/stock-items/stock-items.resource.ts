@@ -282,7 +282,10 @@ export function createStockItemPackagingUnit(item: StockItemPackagingUOMDTO) {
 }
 
 // updateStockItemPackagingUnit
-export function updateStockItemPackagingUnit(item: StockItemDTO, uuid: string) {
+export function updateStockItemPackagingUnit(
+  item: StockItemPackagingUOMDTO,
+  uuid: string
+) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitempackaginguom/${uuid}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
