@@ -1,5 +1,5 @@
 {
-  "abbreviation": "Abbreviation:",
+  "abbreviation": "Abbreviation",
   "acronym": "Acronym/Code",
   "action": "Actions",
   "actionFrequency": "Notification Frequency (Minutes)",
@@ -71,7 +71,7 @@
   "deletingstockUserScope": "Delete Stock User Scope",
   "dispatch": "Dispatch",
   "dispatched": "Dispatched",
-  "dispensingUnit": "Dispensing Unit:",
+  "dispensingUnit": "Dispensing Unit",
   "dispensingUnitHolder": "Choose a dispensing unit",
   "dispensingUnitName": "Dispensing UoM",
   "dispensingUnitOfMeasurement": "Dispensing packaging unit of measurement:",
@@ -121,6 +121,7 @@
   "Issuing": "",
   "issuingNull": "No issued to display",
   "item": "Item",
+  "itemAlreadyExists": "Item already exits",
   "itemType": "Item Type",
   "lcationstockitem": "Location  and Stock Item",
   "LeastMoving": "Least Moving",

@@ -1,4 +1,5 @@
 import React, { ReactNode, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { Drug } from "../../../core/api/types/concept/Drug";
 import { Control, Controller, FieldValues } from "react-hook-form";
@@ -21,6 +22,7 @@ interface DrugSelectorProps<T> {
 
 const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
   const [inputValue, setInputValue] = useState("");
+  const { t } = useTranslation();
   const { isLoading, drugList } = useDrugsHook(inputValue);
   const [showExistenceError, setShowExistenceError] = useState(false);
 
@@ -80,7 +82,9 @@ const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
         />
       )}
       {showExistenceError && (
-        <div style={{ color: "#da1e28" }}>Item already exits</div>
+        <div style={{ color: "#da1e28" }}>
+          {t("itemAlreadyExists", "Item already exits")}
+        </div>
       )}
     </div>
   );
