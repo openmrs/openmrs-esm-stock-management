@@ -90,6 +90,12 @@ export function useStockItems(filter: StockItemFilter) {
   };
 }
 
+// fetch filtered stock item
+export function fetchStockItem(drugUuid: string) {
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?drugUuid=${drugUuid}&limit=1`;
+  return openmrsFetch(apiUrl).then(({ data }) => data);
+}
+
 // getStockItemTransactions
 export function useStockItemTransactions(filter: StockItemTransactionFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitemtransaction${toQueryParams(
