@@ -21,11 +21,15 @@ import {
   TableToolbarMenu,
   TableToolbarAction,
 } from "@carbon/react";
-import { isDesktop, restBaseUrl } from "@openmrs/esm-framework";
+import { isDesktop, restBaseUrl, useSession } from "@openmrs/esm-framework";
 import NewReportActionButton from "./new-report-button.component";
 import styles from "./stock-reports.scss";
 import { useGetReports } from "../stock-reports.resource";
-import { URL_BATCH_JOB_ARTIFACT } from "../../constants";
+import {
+  URL_BATCH_JOB_ARTIFACT,
+  APP_STOCKMANAGEMENT_REPORTS_VIEW,
+  TASK_STOCKMANAGEMENT_REPORTS_MUTATE,
+} from "../../constants";
 import { formatDisplayDateTime } from "../../core/utils/datetimeUtils";
 import {
   BatchJobStatusCancelled,
@@ -44,6 +48,7 @@ import {
   WarningAltFilled,
 } from "@carbon/react/icons";
 import { handleMutate } from "../../utils";
+import { PrivilagedView } from "../../core/components/privilages-component/privilages.component";
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
@@ -61,6 +66,19 @@ const StockReports: React.FC = () => {
     currentPageSize,
     setPageSize,
   } = useGetReports();
+
+  const { user } = useSession();
+
+  const canViewReports =
+    user.privileges.filter(
+      (privilage) => privilage.display === APP_STOCKMANAGEMENT_REPORTS_VIEW
+    ).length > 0;
+
+  const canCreateReport =
+    user.privileges.filter(
+      (privilage) => privilage.display === TASK_STOCKMANAGEMENT_REPORTS_MUTATE
+    ).length > 0;
+
   const tableHeaders = useMemo(
     () => [
       {
@@ -108,7 +126,7 @@ const StockReports: React.FC = () => {
   );
 
   const tableRows = useMemo(() => {
-    return reports?.map((batchJob, index) => ({
+    return reports?.map((batchJob) => ({
       ...batchJob,
       checkbox: "isBatchJobActive",
       id: batchJob?.uuid,
@@ -249,7 +267,7 @@ const StockReports: React.FC = () => {
                     Refresh
                   </TableToolbarAction>
                 </TableToolbarMenu>
-                <NewReportActionButton />
+                {canCreateReport && <NewReportActionButton />}
               </TableToolbarContent>
             </TableToolbar>
             <Table {...getTableProps()}>
@@ -299,7 +317,12 @@ const StockReports: React.FC = () => {
                 })}
               </TableBody>
             </Table>
-            {rows.length === 0 ? (
+            {!canViewReports ? (
+              <PrivilagedView
+                title="Can not view stock reports"
+                description="You have no permissions to view reports"
+              />
+            ) : rows.length === 0 ? (
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
