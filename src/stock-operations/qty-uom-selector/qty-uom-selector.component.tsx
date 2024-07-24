@@ -49,7 +49,7 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockItemPackagingUOMDTO) =>
-              s.packagingUomName ?? ""
+              s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ""
             }
             placeholder={props.placeholder}
             invalid={props.invalid}
