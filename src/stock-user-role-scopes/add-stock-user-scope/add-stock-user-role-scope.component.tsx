@@ -14,7 +14,7 @@ import {
   Select,
   SelectItem,
 } from "@carbon/react";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import styles from "./add-stock-user-role-scope.scss";
 import {
   useRoles,
@@ -56,10 +56,12 @@ const MinDate: Date = today();
 
 interface AddStockUserRoleScopeProps {
   model?: UserRoleScope;
+  editMode?: boolean;
 }
 
 const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   model,
+  editMode,
 }) => {
   const { t } = useTranslation();
   const currentUser = useSession();
@@ -136,6 +138,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       setFilteredItems(filtered);
     }
   };
+  useEffect(() => {
+    if (model?.userUuid) {
+      setSelectedUserUuid(model.userUuid);
+    }
+  }, [model]);
 
   const handleSearchQueryChange = (query: string) => {
     setSearchQuery(query);
@@ -330,7 +337,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                     id="userName"
                     size="md"
                     labelText={t("user", "User")}
-                    items={filteredItems}
+                    items={filteredItems.length ? filteredItems : usersResults}
                     onChange={onUserChanged}
                     shouldFilterItem={() => true}
                     itemToString={(item) =>
@@ -338,6 +345,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                     }
                     onInputChange={handleSearchQueryChange}
                     placeholder="Filter..."
+                    initialSelectedItem={
+                      usersResults.find(
+                        (user) => user.uuid === model?.userUuid
+                      ) ?? null
+                    }
                   />
                 </>
               )}
@@ -359,15 +371,24 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                   value="placeholder-item"
                   text={t("Choose a role")}
                 />
-                {(user?.roles ?? roles)?.map((role) => {
-                  return (
-                    <SelectItem
-                      key={role.display}
-                      value={role.display}
-                      text={role.display}
-                    />
-                  );
-                })}
+
+                {editMode ? (
+                  <SelectItem
+                    key={formModel?.role}
+                    value={formModel?.role}
+                    text={formModel?.role}
+                  />
+                ) : (
+                  (user?.roles ?? roles)?.map((role) => {
+                    return (
+                      <SelectItem
+                        key={role.display}
+                        value={role.display}
+                        text={role.display}
+                      />
+                    );
+                  })
+                )}
               </Select>
             </div>
           </section>
@@ -376,7 +397,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               <Checkbox
                 onChange={onEnabledChanged}
                 checked={formModel?.enabled}
-                labelText={t(`Enabled ?`)}
+                labelText={t("enabled", "Enabled ?")}
                 value={model?.enabled}
                 id="chk-userEnabled"
               />
@@ -385,7 +406,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                 name="isPermanent"
                 checked={formModel?.permanent}
                 value={model?.permanent}
-                labelText={t(`Permanent ?`)}
+                labelText={t("permanent", "Permanent ?")}
                 id="chk-userPermanent"
               />
 
