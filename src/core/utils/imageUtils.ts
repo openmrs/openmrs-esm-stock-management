@@ -1,12 +1,12 @@
-import { URL_PRINT_LOGO } from "../../constants";
-
+import { getConfig } from "@openmrs/esm-framework";
 export interface PrintLogoData {
   image: string;
   isSvg: boolean;
 }
 
-export const GetPrintLogo = (): Promise<PrintLogoData | null> => {
-  const printLogoUrl: string = URL_PRINT_LOGO();
+export const GetPrintLogo = async (): Promise<PrintLogoData | null> => {
+  const config = await getConfig("@openmrs/esm-stock-management-app");
+  const printLogoUrl = config?.logo?.src;
   return new Promise((resolve, reject) => {
     if (!printLogoUrl) {
       resolve(null);
