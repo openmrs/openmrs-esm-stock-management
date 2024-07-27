@@ -32,6 +32,7 @@ import {
   restBaseUrl,
   showNotification,
   showToast,
+  useSession,
 } from "@openmrs/esm-framework";
 import { UserRoleScopeOperationType } from "../../core/api/types/identity/UserRoleScopeOperationType";
 import { UserRoleScopeLocation } from "../../core/api/types/identity/UserRoleScopeLocation";
@@ -61,12 +62,13 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   model,
 }) => {
   const { t } = useTranslation();
-
+  const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
 
   const [roles, setRoles] = useState<Role[]>([]);
 
   const [showItems, setShowItems] = useState(false);
+  const loggedInUserUuid = currentUser?.user?.uuid;
 
   // operation types
   const {
@@ -125,10 +127,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       setShowItems(false);
     } else {
       setShowItems(true);
-      const filtered = usersResults.filter((item: any) => {
-        const displayName = item?.person?.display ?? item?.display ?? "";
-        return displayName.toLowerCase().includes(query.toLowerCase());
-      });
+      const filtered = usersResults
+        .filter((item: any) => item.uuid !== loggedInUserUuid)
+        .filter((item: any) => {
+          const displayName = item?.person?.display ?? item?.display ?? "";
+          return displayName.toLowerCase().includes(query.toLowerCase());
+        });
       setFilteredItems(filtered);
     }
   };
@@ -215,9 +219,9 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       INVENTORY_ADMNISTRATOR_ROLE_UUID,
     ];
 
-    const filteredStockRoles = data.selectedItem?.roles.filter((role) =>
-      stockRolesUUIDs.includes(role.uuid)
-    );
+    const filteredStockRoles = data.selectedItem?.roles
+      .filter((role) => stockRolesUUIDs.includes(role.uuid))
+      .filter((role) => role.uuid !== loggedInUserUuid);
     setFormModel({ ...formModel, userUuid: data.selectedItem?.uuid });
     setRoles(filteredStockRoles ?? []);
     setSelectedUserUuid(data?.selectedItem?.uuid);

@@ -108,6 +108,7 @@ function StockUserRoleScopesItems() {
 
   const tableRows = useMemo(() => {
     return items?.map((userRoleScope, index) => {
+      const isCurrentUser = currentUser.user.uuid === userRoleScope.userUuid;
       return {
         ...userRoleScope,
         id: userRoleScope?.uuid,
@@ -141,18 +142,18 @@ function StockUserRoleScopesItems() {
             return operation?.operationTypeName;
           })
           ?.join(", "),
-        permanent: userRoleScope?.permanent
-          ? t("stockmanagement.yes", "Yes")
-          : t("stockmanagement.no", "No"),
+        permanent: userRoleScope?.permanent ? t("yes", "Yes") : t("no", "No"),
         activeFrom: formatDisplayDate(userRoleScope?.activeFrom) ?? "Not Set",
         activeTo: formatDisplayDate(userRoleScope?.activeTo) ?? "Not Set",
-        enabled: userRoleScope?.enabled
-          ? t("stockmanagement.yes", "Yes")
-          : t("stockmanagement.no", "No"),
+        enabled: userRoleScope?.enabled ? t("yes", "Yes") : t("no", "No"),
         actions: (
           <div style={{ display: "flex" }}>
-            <EditStockUserRoleActionsMenu data={items[index]} />
-            <StockUserScopeDeleteActionMenu uuid={items[index].uuid} />
+            {!isCurrentUser && (
+              <>
+                <EditStockUserRoleActionsMenu data={items[index]} />
+                <StockUserScopeDeleteActionMenu uuid={items[index].uuid} />
+              </>
+            )}
           </div>
         ),
       };
