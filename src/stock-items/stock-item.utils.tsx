@@ -52,7 +52,9 @@ export const launchAddOrEditDialog = (
   isEditing = false
 ) => {
   launchOverlay(
-    `${isEditing ? "Edit" : "Add"} ${stockItem?.drugName || ""}`,
+    `${isEditing ? "Edit" : "Add"} ${
+      stockItem?.drugName || stockItem.conceptName || ""
+    }`,
     <AddEditStockItem
       model={stockItem}
       onSave={(stockItem) => addOrEditStockItem(stockItem, isEditing)}
