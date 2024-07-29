@@ -28,6 +28,7 @@ import {
 import DeleteModalButton from "./packaging-units-delete-modal-button.component";
 
 import styles from "./packaging-units.scss";
+import { closeOverlay } from "../../../core/components/overlay/hook";
 
 interface PackagingUnitsProps {
   isEditing?: boolean;
@@ -267,6 +268,9 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         )}
       />
       <div className={styles.packageUnitsBtn}>
+        <Button kind="secondary" onClick={closeOverlay}>
+          {t("cancel", "Cancel")}
+        </Button>
         <Button
           name="save"
           type="submit"
