@@ -8,6 +8,7 @@
   width: 100%;
   right: 0;
   bottom: 0;
+  z-index: 9;
   border-left: 1px solid $text-03;
   background-color: white;
   overflow-y: auto;
@@ -35,7 +36,7 @@
     width: 0;
   }
 
-  & > div {
+  &>div {
     margin-top: spacing.$spacing-09;
   }
 }

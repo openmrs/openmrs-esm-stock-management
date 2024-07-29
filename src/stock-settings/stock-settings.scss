@@ -1,0 +1,22 @@
+@use '@carbon/colors';
+@use '@carbon/layout';
+@use '@carbon/type';
+
+.StockSettings {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: calc(layout.$layout-07 * 1.25);
+    border: 1px solid colors.$gray-20;
+    margin: layout.$spacing-03;
+    align-items: center;
+
+    &>button {
+        margin-bottom: layout.$layout-03;
+    }
+}
+
+.title {
+    @include type.type-style("heading-01");
+}
