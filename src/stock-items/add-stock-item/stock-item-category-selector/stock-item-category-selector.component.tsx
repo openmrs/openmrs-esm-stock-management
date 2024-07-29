@@ -14,6 +14,7 @@ interface StockItemCategorySelectorProps<T> {
   placeholder?: string;
   invalid?: boolean;
   invalidText?: ReactNode;
+  itemType?: string;
 
   // Control
   controllerName: string;
@@ -32,6 +33,10 @@ const StockItemCategorySelector = <T,>(
     isLoading,
   } = useConcept(stockItemCategoryUUID);
 
+  const filteredCategories = props.itemType
+    ? categories?.filter((c) => c.display === props?.itemType)
+    : categories;
+
   if (isLoading) return <TextInputSkeleton />;
 
   return (
@@ -46,7 +51,7 @@ const StockItemCategorySelector = <T,>(
           controllerName={props.controllerName}
           id={props.name}
           size={"md"}
-          items={categories || []}
+          items={filteredCategories || []}
           onChange={(data: { selectedItem: Concept }) => {
             props.onCategoryUuidChange?.(data.selectedItem);
             onChange(data.selectedItem?.uuid);

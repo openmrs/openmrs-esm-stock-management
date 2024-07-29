@@ -61,10 +61,18 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
 
     const [isSaving, setIsSaving] = useState(false);
     const [isDrug, setIsDrug] = useState(false);
+    const [selectedItemType, setSelectedItemType] = useState("");
     const [hasExpiration, setHasExpiration] = useState(false);
 
     useEffect(() => {
       setIsDrug(model.isDrug ?? false);
+      setSelectedItemType(
+        model.isDrug === true
+          ? "Pharmaceuticals"
+          : model.isDrug === false
+          ? "Non Pharmaceuticals"
+          : undefined
+      );
       setHasExpiration(model.hasExpiration ?? false);
     }, [model.hasExpiration, model.isDrug]);
 
@@ -85,7 +93,12 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             invalid={!!errors.isDrug}
             invalidText={errors.isDrug && errors?.isDrug?.message}
             onChange={(selection: boolean) => {
+              const selectedOption = radioOptions.find(
+                (option) => option.value === selection
+              );
+              const selectedLabel = selectedOption ? selectedOption.label : "";
               setIsDrug(selection);
+              setSelectedItemType(selectedLabel);
             }}
             options={radioOptions} // Pass radioOptions directly
           />
@@ -201,6 +214,13 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           name="categoryUuid"
           controllerName="categoryUuid"
           control={control}
+          itemType={
+            selectedItemType === "Pharmaceuticals"
+              ? "Drugs"
+              : selectedItemType === "Non Pharmaceuticals"
+              ? "Non Drugs"
+              : undefined
+          }
           title={t("category:", "Category") + ":"}
           placeholder={t("chooseACategory", "Choose a category")}
           invalid={!!errors.categoryUuid}
