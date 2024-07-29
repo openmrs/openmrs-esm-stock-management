@@ -1,6 +1,14 @@
 import React, { useEffect, useMemo } from "react";
-import { ButtonSkeleton, OverflowMenu, OverflowMenuItem } from "@carbon/react";
+import {
+  ButtonSkeleton,
+  OverflowMenu,
+  OverflowMenuItem,
+  Tooltip,
+} from "@carbon/react";
 import { OverflowMenuVertical } from "@carbon/react/icons";
+import { useTranslation } from "react-i18next";
+import { useSession } from "@openmrs/esm-framework";
+
 import {
   useStockOperationTypes,
   useUserRoles,
@@ -21,6 +29,8 @@ const StockOperationTypesSelector: React.FC<
     isError,
   } = useStockOperationTypes();
   const { userRoles } = useUserRoles();
+  const session = useSession();
+  const { t } = useTranslation();
 
   const filterOperationTypes = useMemo(() => {
     const applicablePrivilegeScopes =
@@ -35,6 +45,9 @@ const StockOperationTypesSelector: React.FC<
       ) || []
     );
   }, [createOperationTypes, userRoles]);
+  const isOperationAllowedInLoggedInLocation = userRoles?.locations?.some(
+    (p) => p.locationUuid === session?.sessionLocation?.uuid
+  );
 
   useEffect(() => {
     onOperationLoaded?.(filterOperationTypes);
@@ -62,17 +75,32 @@ const StockOperationTypesSelector: React.FC<
         whiteSpace: "nowrap",
       }}
     >
-      {filterOperationTypes
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((operation) => (
-          <OverflowMenuItem
-            key={operation.uuid}
-            itemText={operation.name}
-            onClick={() => {
-              onOperationTypeSelected?.(operation);
-            }}
-          />
-        ))}
+      {isOperationAllowedInLoggedInLocation ? (
+        filterOperationTypes
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((operation) => (
+            <OverflowMenuItem
+              key={operation.uuid}
+              itemText={operation.name}
+              onClick={() => {
+                onOperationTypeSelected?.(operation);
+              }}
+            />
+          ))
+      ) : (
+        <Tooltip
+          direction="top"
+          tabIndex={0}
+          triggerText="No required privileges"
+        >
+          <p style={{ color: "red" }}>
+            {t(
+              "NoRequirePrivileges",
+              "You don't have required privileges to perform stock operation in login location"
+            )}
+          </p>
+        </Tooltip>
+      )}
     </OverflowMenu>
   );
 };
