@@ -19,7 +19,7 @@ const EditStockUserRoleActionsMenu: React.FC<
   const handleClick = useCallback(() => {
     launchOverlay(
       "Edit Stock User Role",
-      <AddStockUserRoleScope model={data} />
+      <AddStockUserRoleScope model={data} editMode={true} />
     );
   }, [data]);
 

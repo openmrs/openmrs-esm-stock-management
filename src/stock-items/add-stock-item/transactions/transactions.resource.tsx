@@ -5,13 +5,13 @@ import {
   useStockItemTransactions,
 } from "../../stock-items.resource";
 
-export function useStockItemsTransactions(v?: ResourceRepresentation) {
+export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
   const [stockItemFilter, setStockItemFilter] =
     useState<StockItemInventoryFilter>({
       startIndex: 0,
-      v: v || ResourceRepresentation.Default,
+      v: filter?.v || ResourceRepresentation.Default,
       limit: 10,
-      q: null,
+      q: filter?.q,
       totalCount: true,
     });
 
@@ -21,10 +21,16 @@ export function useStockItemsTransactions(v?: ResourceRepresentation) {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [stockItemUuid, setStockItemUuid] = useState<string | null>();
-  const [partyUuid, setPartyUuid] = useState<string | null>();
-  const [locationUuid, setLocationUuid] = useState<string | null>();
-  const [stockBatchUuid, setStockBatchUuid] = useState<string | null>();
+  const [stockItemUuid, setStockItemUuid] = useState<string | null>(
+    filter?.stockItemUuid
+  );
+  const [partyUuid, setPartyUuid] = useState<string | null>(filter?.partyUuid);
+  const [locationUuid, setLocationUuid] = useState<string | null>(
+    filter?.locationUuid
+  );
+  const [stockBatchUuid, setStockBatchUuid] = useState<string | null>(
+    filter?.stockBatchUuid
+  );
 
   useEffect(() => {
     setStockItemFilter({

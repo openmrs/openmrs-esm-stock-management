@@ -162,7 +162,7 @@ const DataList: React.FC<ListProps> = ({
                           />
                         </OverflowMenu>
                         <TableToolbarSearch
-                          className={styles.patientListSearch}
+                          className={styles.itemListSearch}
                           expanded
                           onChange={onInputChange}
                           placeholder={t("searchThisList", "Search this list")}

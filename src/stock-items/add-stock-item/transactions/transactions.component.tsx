@@ -1,14 +1,26 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ResourceRepresentation } from "../../../core/api/api";
 import { useStockItemsTransactions } from "./transactions.resource";
-import { DataTableSkeleton, Link, Tile } from "@carbon/react";
-import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
+import {
+  DataTableSkeleton,
+  Tile,
+  DatePicker,
+  DatePickerInput,
+} from "@carbon/react";
+import {
+  DATE_PICKER_CONTROL_FORMAT,
+  DATE_PICKER_FORMAT,
+  formatDisplayDate,
+} from "../../../core/utils/datetimeUtils";
 import { ArrowLeft } from "@carbon/react/icons";
 import DataList from "../../../core/components/table/table.component";
 import styles from "../../stock-items-table.scss";
-import { URL_STOCK_OPERATION } from "../../../constants";
 import { StockOperationType } from "../../../core/api/types/stockOperation/StockOperationType";
 import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
+import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";
+import { useForm } from "react-hook-form";
+import { StockItemInventoryFilter } from "../../stock-items.resource";
+import { useTranslation } from "react-i18next";
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -16,19 +28,28 @@ interface TransactionsProps {
 }
 
 const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
+  const { t } = useTranslation();
+
+  const [stockItemFilter, setStockItemFilter] =
+    useState<StockItemInventoryFilter>();
   const {
     isLoading,
     items,
     tableHeaders,
-
     totalCount,
     setCurrentPage,
     setStockItemUuid,
-  } = useStockItemsTransactions(ResourceRepresentation.Default);
+    setLocationUuid,
+  } = useStockItemsTransactions(stockItemFilter);
+
+  const [selectedFromDate, setSelectedFromDate] = useState(null);
+  const [selectedToDate, setSelectedToDate] = useState(null);
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+
+  const { control } = useForm({});
 
   let operations: StockOperationType[] | null | undefined;
   const tableRows = useMemo(() => {
@@ -112,13 +133,13 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
         stockItemTransaction?.quantity >= 0
           ? `${stockItemTransaction?.quantity?.toLocaleString()} ${
               stockItemTransaction?.packagingUomName ?? ""
-            }`
+            } of ${stockItemTransaction.packagingUomFactor}`
           : "",
       out:
         stockItemTransaction?.quantity < 0
           ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
               stockItemTransaction?.packagingUomName ?? ""
-            }`
+            } of ${stockItemTransaction.packagingUomFactor}`
           : "",
     }));
   }, [items, operations]);
@@ -127,24 +148,43 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (items?.length != undefined) {
-    return (
-      <DataList
-        columns={tableHeaders}
-        data={tableRows}
-        totalItems={totalCount}
-        goToPage={setCurrentPage}
-        hasToolbar={false}
-      />
-    );
-  }
+  const handleDateFilterChange = ([startDate, endDate]) => {
+    if (startDate) {
+      setSelectedFromDate(startDate);
+      if (selectedToDate && startDate && selectedToDate < startDate) {
+        setSelectedToDate(startDate);
+      }
+    }
+    if (endDate) {
+      setSelectedToDate(endDate);
+      if (selectedFromDate && endDate && selectedFromDate > endDate) {
+        setSelectedFromDate(endDate);
+      }
+    }
+  };
 
   return (
-    <div className={styles.tileContainer}>
-      <Tile className={styles.tile}>
-        <p className={styles.content}>No transactions to display</p>
-      </Tile>
-    </div>
+    <DataList
+      children={() => (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <TransactionsLocationsFilter
+            onLocationIdChange={(q) => {
+              setLocationUuid(q);
+              setStockItemFilter({ ...stockItemFilter, locationUuid: q });
+            }}
+            name={"TransactionLocationUuid"}
+            placeholder={t("filterByLocation", "Filter by Location")}
+            control={control}
+            controllerName="TransactionLocationUuid"
+          />
+        </div>
+      )}
+      columns={tableHeaders}
+      data={tableRows}
+      totalItems={totalCount}
+      goToPage={setCurrentPage}
+      hasToolbar={true}
+    />
   );
 };
 

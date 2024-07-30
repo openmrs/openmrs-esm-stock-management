@@ -10,6 +10,7 @@ import StockQuantities from "./quantities/quantities.component";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import { SaveStockItem } from "../types";
+import StockReferences from "./stock-item-references/stock-item-references.component";
 
 interface AddStockItemProps {
   isEditing?: boolean;
@@ -66,8 +67,15 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({
       disabled: !isEditing,
     },
     {
-      name: t("stockRules", "Stock Rules"),
+      name: t("stockRules", "Rules"),
       component: <StockItemRules stockItemUuid={model.uuid} />,
+      disabled: !isEditing,
+    },
+    {
+      name: t("references", "References"),
+      component: (
+        <StockReferences stockItemUuid={model.uuid} isEditing={isEditing} />
+      ),
       disabled: !isEditing,
     },
   ];

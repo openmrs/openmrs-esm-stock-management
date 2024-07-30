@@ -23,7 +23,8 @@ import ConceptsSelector from "../concepts-selector/concepts-selector.component";
 import rootStyles from "../../../root.scss";
 import { closeOverlay } from "../../../core/components/overlay/hook";
 import { expirationOptions, radioOptions } from "./stock-item-details.resource";
-import { handleMutate } from "../../../stock-operations/swr-revalidation";
+import { restBaseUrl } from "@openmrs/esm-framework";
+import { handleMutate } from "../../../utils";
 
 interface StockItemDetailsProps {
   model: StockItemDTO;
@@ -50,7 +51,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         item.uuid = model.uuid;
         await onSave(item);
         handleTabChange(1);
-        handleMutate("ws/rest/v1/stockmanagement/stockitem");
+        handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
       } catch (e) {
         // Show notification
       } finally {
@@ -60,10 +61,18 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
 
     const [isSaving, setIsSaving] = useState(false);
     const [isDrug, setIsDrug] = useState(false);
+    const [selectedItemType, setSelectedItemType] = useState("");
     const [hasExpiration, setHasExpiration] = useState(false);
 
     useEffect(() => {
       setIsDrug(model.isDrug ?? false);
+      setSelectedItemType(
+        model.isDrug === true
+          ? "Pharmaceuticals"
+          : model.isDrug === false
+          ? "Non Pharmaceuticals"
+          : undefined
+      );
       setHasExpiration(model.hasExpiration ?? false);
     }, [model.hasExpiration, model.isDrug]);
 
@@ -84,7 +93,12 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             invalid={!!errors.isDrug}
             invalidText={errors.isDrug && errors?.isDrug?.message}
             onChange={(selection: boolean) => {
+              const selectedOption = radioOptions.find(
+                (option) => option.value === selection
+              );
+              const selectedLabel = selectedOption ? selectedOption.label : "";
               setIsDrug(selection);
+              setSelectedItemType(selectedLabel);
             }}
             options={radioOptions} // Pass radioOptions directly
           />
@@ -95,6 +109,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             controllerName="drugUuid"
             control={control}
             title={t("pleaseSpecify", "Please specify:")}
+            placeholder="Choose a drug"
             invalid={!!errors.drugUuid}
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
           />
@@ -104,7 +119,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             name="conceptUuid"
             controllerName="conceptUuid"
             control={control}
-            title={t("pleaseSpecify", "Please specify:")}
+            title={t("pleaseSpecify", "Please specify") + ":"}
             placeholder={t("chooseAnItem", "Choose an item")}
             invalid={!!errors.drugUuid}
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
@@ -118,7 +133,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           maxLength={255}
           size={"md"}
           value={`${model?.commonName ?? ""}`}
-          labelText={t("commonName", "Common name:")}
+          labelText={t("commonName", "Common name") + ":"}
           invalid={!!errors.commonName}
           invalidText={errors.commonName && errors?.commonName?.message}
         />
@@ -129,7 +144,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           control={control}
           controllerName="acronym"
           size={"md"}
-          labelText={t("abbreviation", "Abbreviation:")}
+          labelText={t("abbreviation", "Abbreviation") + ":"}
           invalid={!!errors.acronym}
           invalidText={errors.acronym && errors?.acronym?.message}
         />
@@ -199,7 +214,14 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           name="categoryUuid"
           controllerName="categoryUuid"
           control={control}
-          title={t("category:", "Category:")}
+          itemType={
+            selectedItemType === "Pharmaceuticals"
+              ? "Drugs"
+              : selectedItemType === "Non Pharmaceuticals"
+              ? "Non Drugs"
+              : undefined
+          }
+          title={t("category:", "Category") + ":"}
           placeholder={t("chooseACategory", "Choose a category")}
           invalid={!!errors.categoryUuid}
           invalidText={errors.categoryUuid && errors?.categoryUuid?.message}
@@ -209,7 +231,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             name="dispensingUnitUuid"
             controllerName="dispensingUnitUuid"
             control={control}
-            title={t("dispensingUnit", "Dispensing Unit:")}
+            title={t("dispensingUnit", "Dispensing Unit") + ":"}
             placeholder={t("dispensingUnitHolder", "Choose a dispensing unit")}
             invalid={!!errors.dispensingUnitUuid}
             invalidText={

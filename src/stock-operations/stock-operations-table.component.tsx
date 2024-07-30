@@ -28,6 +28,8 @@ import {
   OverflowMenuItem,
   DatePickerInput,
   DatePicker,
+  TableToolbarMenu,
+  TableToolbarAction,
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/react/icons";
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
@@ -38,7 +40,12 @@ import {
   StockOperationStatusRejected,
   StockOperationStatusReturned,
 } from "../core/api/types/stockOperation/StockOperationStatus";
-import { isDesktop, showModal, useConfig } from "@openmrs/esm-framework";
+import {
+  isDesktop,
+  restBaseUrl,
+  showModal,
+  useConfig,
+} from "@openmrs/esm-framework";
 import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
 import { launchAddOrEditDialog } from "./stock-operation.utils";
 import { initialStockOperationValue } from "../core/utils/utils";
@@ -51,6 +58,7 @@ import {
   DATE_PICKER_FORMAT,
   StockFilters,
 } from "../constants";
+import { handleMutate } from "../utils";
 
 interface StockOperationsTableProps {
   status?: string;
@@ -58,6 +66,9 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const handleRefresh = () => {
+    handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
+  };
   const operation: StockOperationType = useMemo(
     () => ({
       uuid: "",
@@ -114,6 +125,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       title: "complete",
       closeModal: () => dispose(),
     });
+    handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
   };
 
   useEffect(() => {
@@ -427,6 +439,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     onFilterChange={handleOnFilterChange}
                   />
                 </div>
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={handleRefresh}>
+                    Refresh
+                  </TableToolbarAction>
+                </TableToolbarMenu>
 
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {

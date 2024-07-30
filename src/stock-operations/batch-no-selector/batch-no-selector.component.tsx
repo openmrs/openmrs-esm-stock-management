@@ -32,9 +32,8 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       ) ?? "",
     [stockItemBatchNos, props.batchUuid]
   );
-  const { items, setStockItemUuid } = useStockItemBatchInformationHook(
-    ResourceRepresentation.Default
-  );
+
+  const { items, setStockItemUuid } = useStockItemBatchInformationHook();
 
   useEffect(() => {
     setStockItemUuid(props.stockItemUuid);

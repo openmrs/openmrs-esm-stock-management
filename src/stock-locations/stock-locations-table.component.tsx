@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { mutate } from "swr";
 import NewLocationForm from "./add-locations-form.component";
 import { Add } from "@carbon/react/icons";
+import { handleMutate } from "../utils";
+import { restBaseUrl } from "@openmrs/esm-framework";
 
 interface StockLocationsTableProps {
   status?: string;
@@ -30,7 +32,7 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   });
 
   const handleRefresh = () => {
-    // search.refetch()
+    handleMutate(`${restBaseUrl}/Location?_summary=data`);
   };
 
   const createStockLocation = () => {

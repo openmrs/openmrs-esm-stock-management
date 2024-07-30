@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { handleMutate } from "../swr-revalidation";
 import { Button, InlineLoading } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
 import { deleteStockSource } from "../stock-sources.resource";
-import { showModal, showNotification, showToast } from "@openmrs/esm-framework";
+import {
+  restBaseUrl,
+  showModal,
+  showNotification,
+  showToast,
+} from "@openmrs/esm-framework";
+import { handleMutate } from "../../utils";
 
 interface StockSourcesDeleteActionMenuProps {
   uuid: string;
@@ -29,7 +34,7 @@ const StockSourcesDeleteActionMenu: React.FC<
             () => {
               setDeletingSource(false);
 
-              handleMutate("ws/rest/v1/stockmanagement/stocksource");
+              handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
               showToast({
                 critical: true,
                 title: t("deletingSource", "Delete Source"),
