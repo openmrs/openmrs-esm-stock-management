@@ -29,6 +29,7 @@ import DeleteModalButton from "./packaging-units-delete-modal-button.component";
 import { handleMutate } from "../../../utils";
 
 import styles from "./packaging-units.scss";
+import { closeOverlay } from "../../../core/components/overlay/hook";
 
 interface PackagingUnitsProps {
   isEditing?: boolean;
@@ -177,7 +178,9 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       handleTabChange(0);
     });
   };
-
+  const handleCancelPackagingUnits = () => {
+    handleTabChange(0);
+  };
   const handleNewUnitFactorChange = (value: string | number) => {
     setNewUnit({
       ...newUnit,
@@ -269,6 +272,9 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         )}
       />
       <div className={styles.packageUnitsBtn}>
+        <Button kind="secondary" onClick={handleCancelPackagingUnits}>
+          {t("cancel", "Cancel")}
+        </Button>
         <Button
           name="save"
           type="submit"
