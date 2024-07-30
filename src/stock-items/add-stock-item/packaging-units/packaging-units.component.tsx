@@ -176,7 +176,9 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       handleTabChange(0);
     });
   };
-
+  const handleCancelPackagingUnits = () => {
+    handleTabChange(0);
+  };
   const handleNewUnitFactorChange = (value: string | number) => {
     setNewUnit({
       ...newUnit,
@@ -268,7 +270,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
         )}
       />
       <div className={styles.packageUnitsBtn}>
-        <Button kind="secondary" onClick={closeOverlay}>
+        <Button kind="secondary" onClick={handleCancelPackagingUnits}>
           {t("cancel", "Cancel")}
         </Button>
         <Button
