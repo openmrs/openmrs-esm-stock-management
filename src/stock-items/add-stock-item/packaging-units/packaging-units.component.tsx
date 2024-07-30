@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { showSnackbar } from "@openmrs/esm-framework";
+import { showSnackbar, restBaseUrl } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
 import {
@@ -26,6 +26,7 @@ import {
   updateStockItemPackagingUnit,
 } from "../../stock-items.resource";
 import DeleteModalButton from "./packaging-units-delete-modal-button.component";
+import { handleMutate } from "../../../utils";
 
 import styles from "./packaging-units.scss";
 
@@ -171,6 +172,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
     // Wait for all requests to complete
     Promise.all([createPromises, ...updatePromises]).then(() => {
       mutate();
+      handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
       reset();
       handleTabChange(0);
     });
