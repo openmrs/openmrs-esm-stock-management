@@ -14,10 +14,10 @@ function DashboardExtension({
 }) {
   const { name, title } = dashboardLinkConfig;
   const location = useLocation();
-  const spaBasePath = `${window.spaBase}/home`;
+  const spaBasePath = `${window.spaBase}/stock-management`;
 
   const navLink = useMemo(() => {
-    const pathArray = location.pathname.split("/home");
+    const pathArray = location.pathname.split("/");
     const lastElement = pathArray[pathArray.length - 1];
     return decodeURIComponent(lastElement);
   }, [location.pathname]);
