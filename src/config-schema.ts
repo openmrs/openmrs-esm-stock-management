@@ -35,6 +35,23 @@ export const configSchema = {
     _description: "UUID for the stock item category",
     _default: "6d24eb6e-b42f-4706-ab2d-ae4472161f6a",
   },
+  logo: {
+    src: {
+      _type: Type.String,
+      _default: null,
+      _description: "A path or URL to an image.",
+    },
+    alt: {
+      _type: Type.String,
+      _default: "Logo",
+      _description: "Alt text, shown on hover",
+    },
+    name: {
+      _type: Type.String,
+      _default: null,
+      _description: "The organization name displayed when image is absent",
+    },
+  },
 };
 
 export type ConfigObject = {
@@ -45,4 +62,9 @@ export type ConfigObject = {
   stockSourceTypeUUID: string;
   dispensingUnitsUUID: string;
   stockItemCategoryUUID: string;
+  logo: {
+    src: string;
+    alt: string;
+    name: string;
+  };
 };
