@@ -22,6 +22,7 @@ import { Drug } from "../core/api/types/concept/Drug";
 import { Patient } from "../core/api/types/identity/Patient";
 import { useMemo } from "react";
 import { uniqBy } from "lodash-es";
+import { UserRoleScope } from "../core/api/types/identity/UserRoleScope";
 
 export type PatientFilterCriteria = ResourceFilterCriteria;
 
@@ -304,3 +305,9 @@ export const useUserRoles = () => {
     error,
   };
 };
+export function getUserRoleScopes(): Promise<
+  FetchResponse<PageableResult<UserRoleScope>>
+> {
+  const apiUrl = `${restBaseUrl}/stockmanagement/userrolescope`;
+  return openmrsFetch(apiUrl);
+}
