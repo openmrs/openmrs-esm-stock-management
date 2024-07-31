@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { showToast, showNotification, useConfig } from "@openmrs/esm-framework";
+import { showSnackbar } from "@openmrs/esm-framework";
 import { saveLocation } from "./stock-locations-table.resource";
 import { locationData, LocationMutator } from "../stock-items/types";
 import LocationAdministrationForm from "./location-admin-form.component";
@@ -35,22 +35,22 @@ const NewLocationForm: React.FC<LocationFormProps> = ({
       };
       saveLocation({ locationPayload: locationbject })
         .then(() => {
-          showToast({
+          showSnackbar({
             title: t("formCreated", "Add Location"),
             kind: "success",
-            critical: true,
-            description: t(`Location ${name} was created successfully.`),
+            isLowContrast: true,
+            subtitle: t(`Location ${name} was created successfully.`),
           });
 
           mutate();
           onModalChange(false);
         })
         .catch((error) => {
-          showNotification({
+          showSnackbar({
             title: t("errorCreatingForm", "Error creating location"),
             kind: "error",
-            critical: true,
-            description: error?.message,
+            isLowContrast: true,
+            subtitle: error?.message,
           });
           onModalChange(false);
         });

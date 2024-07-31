@@ -3,7 +3,7 @@ import { Button, InlineLoading } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
 import { deleteStockRule } from "../../stock-items.resource";
-import { showModal, showNotification, showToast } from "@openmrs/esm-framework";
+import { showModal, showSnackbar } from "@openmrs/esm-framework";
 
 interface StockRulesDeleteActionMenuProps {
   uuid: string;
@@ -25,11 +25,11 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
           .then(
             () => {
               setDeletingRule(false);
-              showToast({
-                critical: true,
+              showSnackbar({
+                isLowContrast: true,
                 title: t("deletingRule", "Delete Rule"),
                 kind: "success",
-                description: t(
+                subtitle: t(
                   "stockruledeletedsuccessfully",
                   "Stock Rule Deleted Successfully"
                 ),
@@ -37,11 +37,11 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
             },
             (error) => {
               setDeletingRule(false);
-              showNotification({
+              showSnackbar({
                 title: t(`errorDeletingRule', 'error deleting a rule`),
                 kind: "error",
-                critical: true,
-                description: error?.message,
+                isLowContrast: true,
+                subtitle: error?.message,
               });
             }
           )
