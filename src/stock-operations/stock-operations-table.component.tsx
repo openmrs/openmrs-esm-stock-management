@@ -59,7 +59,6 @@ import {
   StockFilters,
 } from "../constants";
 import { handleMutate } from "../utils";
-
 interface StockOperationsTableProps {
   status?: string;
 }

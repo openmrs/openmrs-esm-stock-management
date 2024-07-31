@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button } from "@carbon/react";
-import { useConfig } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { Printer } from "@carbon/react/icons";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
@@ -29,11 +28,6 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const { config } = useConfig();
-
-  // const { printItemCost, printBalanceOnHand } = config;
-
-  // on print stock operation
   const onPrintStockOperation = async () => {
     try {
       let parentOperation: StockOperationDTO | null | undefined;
@@ -152,7 +146,7 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
       kind="tertiary"
       renderIcon={(props) => <Printer size={16} {...props} />}
     >
-      {t("print", "Print ")}
+      {t("print", "Print")}
     </Button>
   );
 };
