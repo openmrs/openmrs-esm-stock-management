@@ -23,8 +23,10 @@ import {
 import {
   getParties,
   getStockOperationTypes,
+  getUserRoleScopes,
 } from "../../stock-lookups/stock-lookups.resource";
 import { Party } from "../../core/api/types/Party";
+import { getCurrentUser } from "@openmrs/esm-framework";
 
 export async function initializeNewStockOperation(
   currentStockOperationType: StockOperationType,
@@ -36,7 +38,15 @@ export async function initializeNewStockOperation(
   const isNew = !!stockOperation;
   const newItemsToCopy: StockOperationItemDTO[] = [];
   const showQuantityRequested = false;
-
+  const currentUserUuid = await new Promise((resolve, reject) => {
+    getCurrentUser().subscribe({
+      next: (user) => {
+        const userUuid = user?.user?.uuid;
+        resolve(userUuid);
+      },
+      error: (err) => reject(err),
+    });
+  });
   let operationTypes = stockOperationTypes;
   const canIssueStock =
     stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false;
@@ -68,69 +78,27 @@ export async function initializeNewStockOperation(
       operationTypeUuid: currentStockOperationType?.uuid,
       operationType: currentStockOperationType?.operationType,
     });
-
-    if (
-      currentStockOperationType.operationType ==
-      OperationType.STOCK_ISSUE_OPERATION_TYPE
-    ) {
-      // requisition = urlQueryParams?.get("requisition");
-      // if (requisition) {
-      //   const response = await getStockOperation(requisition);
-      //   if (!response.ok) {
-      //     return;
-      //   }
-      //
-      //   const requisitionStockOperation = response.data;
-      //
-      //   if (
-      //     !requisitionStockOperation.responsiblePersonUuid &&
-      //     requisitionStockOperation.responsiblePersonOther
-      //   ) {
-      //     requisitionStockOperation.responsiblePersonUuid = "Other";
-      //   }
-      //
-      //   if (
-      //     requisitionStockOperation &&
-      //     requisitionStockOperation.stockOperationItems
-      //   ) {
-      //     let hasQtyRequested = false;
-      //     requisitionStockOperation.stockOperationItems.forEach((si) => {
-      //       if (si.quantity && si.stockItemPackagingUOMName) {
-      //         hasQtyRequested = true;
-      //       }
-      //
-      //       const itemId = `new-item-${getStockOperationUniqueId()}`;
-      //       si.id = itemId;
-      //       si.uuid = itemId;
-      //       newItemsToCopy.push({
-      //         ...si,
-      //         quantityRequested: si.quantity,
-      //         quantityRequestedPackagingUOMUuid: si.stockItemPackagingUOMUuid,
-      //         quantityRequestedPackagingUOMName: si.stockItemPackagingUOMName,
-      //       });
-      //     });
-      //     if (hasQtyRequested) {
-      //       showQuantityRequested = true;
-      //     }
-      //   }
-      //   newItemsToCopy.push({ uuid: `new-item-1`, id: `new-item-1` });
-      //   model.destinationUuid = requisitionStockOperation.sourceUuid;
-      //   model.destinationName = requisitionStockOperation.sourceName;
-      //   model.responsiblePersonUuid =
-      //     requisitionStockOperation.responsiblePersonUuid;
-      //   model.responsiblePersonOther =
-      //     requisitionStockOperation.responsiblePersonOther;
-      //   model.responsiblePersonFamilyName =
-      //     requisitionStockOperation.responsiblePersonFamilyName;
-      //   model.responsiblePersonGivenName =
-      //     requisitionStockOperation.responsiblePersonGivenName;
-      //   model.remarks = requisitionStockOperation.remarks;
-      // }
-    }
     const partyList = await getParties();
-    if (!partyList.ok) throw Error("Error loading parties");
+    const userRoleScopes = await getUserRoleScopes();
+    const currentUserRoleScope = userRoleScopes.data?.results?.filter(
+      (role) => role.userUuid === currentUserUuid
+    );
+    const userRoleScopeLocations = [
+      ...new Set(
+        currentUserRoleScope.flatMap((role) =>
+          role?.locations?.map((l) => l.locationUuid)
+        )
+      ),
+    ];
 
-    sourcePartyList = partyList?.data?.results?.filter(
+    if (!partyList.ok) throw Error("Error loading parties");
+    const filteredPartyList = partyList.data?.results?.filter(
+      (party) =>
+        userRoleScopeLocations.includes(party.locationUuid) ||
+        party.stockSourceUuid !== null
+    );
+
+    sourcePartyList = filteredPartyList?.filter(
       (p) =>
         (p.locationUuid &&
           currentStockOperationType?.sourceType === LocationTypeLocation &&
