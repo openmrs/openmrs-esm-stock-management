@@ -257,10 +257,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       },
       (err) => {
         showSnackbar({
-          title: t(
-            "errorSaving user role scope",
-            "Error Saving user role scope"
-          ),
+          title: t("errorSavingUserRoleScope", "Error Saving user role scope"),
           kind: "error",
           isLowContrast: true,
           subtitle: err?.message,

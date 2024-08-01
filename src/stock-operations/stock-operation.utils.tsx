@@ -62,7 +62,6 @@ export const addOrEditStockOperation = async (
           : t("stockOperationAdded", "Stock operation added successfully"),
       });
 
-      // Close overlay and open edit overlay
       closeOverlay();
     }
   } catch (error) {

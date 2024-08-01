@@ -4,6 +4,7 @@ import { showSnackbar } from "@openmrs/esm-framework";
 import { saveLocation } from "./stock-locations-table.resource";
 import { locationData, LocationMutator } from "../stock-items/types";
 import LocationAdministrationForm from "./location-admin-form.component";
+import { extractErrorMessagesFromResponse } from "../constants";
 
 interface LocationFormProps {
   showModal: boolean;
@@ -41,7 +42,7 @@ const NewLocationForm: React.FC<LocationFormProps> = ({
             isLowContrast: true,
             subtitle: t(
               "locationCreatedSuccessfully",
-              `Location {{locationName}} was created successfully.`,
+              "Location {{locationName}} was created successfully.",
               { locationName: name }
             ),
           });
@@ -50,11 +51,12 @@ const NewLocationForm: React.FC<LocationFormProps> = ({
           onModalChange(false);
         })
         .catch((error) => {
+          const errorMessages = extractErrorMessagesFromResponse(error);
           showSnackbar({
             title: t("errorCreatingForm", "Error creating location"),
             kind: "error",
             isLowContrast: true,
-            subtitle: error?.message,
+            subtitle: errorMessages.join(", "),
           });
           onModalChange(false);
         });

@@ -46,7 +46,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       (err) => {
         showSnackbar({
           title: t(
-            `errorUploadingItems', 'An error occurred uploading stock items`
+            "errorUploadingItems', 'An error occurred uploading stock items"
           ),
           kind: "error",
           isLowContrast: true,

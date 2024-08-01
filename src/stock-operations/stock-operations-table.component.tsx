@@ -359,7 +359,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [handleOnComplete, filteredItems, operation, operations, items]);
+  }, [handleOnComplete, filteredItems, operation, operations, t]);
 
   if (isLoading) {
     return (

@@ -66,7 +66,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       return;
     }
 
-    // const data = Object.assign(model, item);
     model.stockOperationItems = item?.stockItems;
     await onSave?.(model);
   };

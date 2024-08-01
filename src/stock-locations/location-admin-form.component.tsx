@@ -13,7 +13,6 @@ import {
   TextInput,
   InlineNotification,
   FilterableMultiSelect,
-  InlineLoading,
 } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { locationData } from "../stock-items/types";
@@ -50,7 +49,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
   const [formStateError, setFormStateError] = useState("");
 
   // Location tag types
-  const { locationTagList: Tags, loading: loadingRoles } = useLocationTags();
+  const { locationTagList: Tags } = useLocationTags();
 
   const {
     handleSubmit,
@@ -120,10 +119,10 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                 <Controller
                   name="tags"
                   control={control}
-                  render={({ field, fieldState }) => (
+                  render={({ field }) => (
                     <FilterableMultiSelect
                       id="tag"
-                      titleText="Select tag(s)"
+                      titleText={t("selectTags", "Select tag(s)")}
                       helperText="This is helper text"
                       items={Tags ?? []}
                       {...field}
@@ -142,7 +141,11 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                 style={{ minWidth: "100%", margin: "0rem", padding: "0rem" }}
                 role="alert"
                 kind="error"
-                subtitle={t("pleaseFillField", formStateError) + "."}
+                subtitle={
+                  t("pleaseFillField", "{{message}}", {
+                    message: formStateError,
+                  }) + "."
+                }
                 onClose={() => setShowErrorNotification(false)}
               />
             )}
