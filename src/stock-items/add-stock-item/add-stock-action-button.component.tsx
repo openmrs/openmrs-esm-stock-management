@@ -13,7 +13,7 @@ const AddStockItemActionButton: React.FC = () => {
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
-      {t("stockmanagement.addnew", "Add New")}
+      {t("addNewStock", "Add New")}
     </Button>
   );
 };

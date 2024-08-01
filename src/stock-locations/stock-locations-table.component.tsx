@@ -73,7 +73,9 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>No stock items to display</p>
+        <p className={styles.content}>
+          {t("noStockItemsToDisplay", "No stock items to display")}
+        </p>
       </Tile>
     </div>
   );

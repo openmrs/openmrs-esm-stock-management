@@ -165,7 +165,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               title: t("addedRule", "Add Rule"),
               kind: "success",
               subtitle: t(
-                "stockruleaddedsuccessfully",
+                "stockRuleAddedSuccessfully",
                 "Stock Rule Added Successfully"
               ),
             });

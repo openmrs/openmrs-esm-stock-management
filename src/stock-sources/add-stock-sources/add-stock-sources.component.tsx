@@ -63,7 +63,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               title: t("addedSource", "Add Source"),
               kind: "success",
               subtitle: t(
-                "stocksourceaddedsuccessfully",
+                "stockSourceAddedSuccessfully",
                 "Stock Source Added Successfully"
               ),
               timeoutInMs: 5000,

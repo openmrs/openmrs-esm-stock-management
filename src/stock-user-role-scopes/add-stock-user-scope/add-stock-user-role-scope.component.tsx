@@ -322,7 +322,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                   disabled
                   hidden
                   value="placeholder-item"
-                  text={t("Choose a role")}
+                  text={t("chooseARole", "Choose a role")}
                 />
 
                 {editMode ? (

@@ -30,7 +30,7 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
                 title: t("deletingRule", "Delete Rule"),
                 kind: "success",
                 subtitle: t(
-                  "stockruledeletedsuccessfully",
+                  "stockRuleDeletedSuccessfully",
                   "Stock Rule Deleted Successfully"
                 ),
               });

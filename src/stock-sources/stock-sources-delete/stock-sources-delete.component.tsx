@@ -35,7 +35,7 @@ const StockSourcesDeleteActionMenu: React.FC<
                 title: t("deletingSource", "Delete Source"),
                 kind: "success",
                 subtitle: t(
-                  "stocksourcedeletedsuccessfully",
+                  "stockSourceDeletedSuccessfully",
                   "Stock Source Deleted Successfully"
                 ),
               });
