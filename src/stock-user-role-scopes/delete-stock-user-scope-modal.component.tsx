@@ -12,7 +12,6 @@ interface DeleteConfirmationProps {
 const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   close,
   onConfirmation,
-  uuid,
 }) => {
   const { t } = useTranslation();
   const handleCancel = () => close();
@@ -27,8 +26,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
         <p className={styles.bodyLong01}>
           {t(
             "deleteConfirmationText",
-            `Are you sure you want to delete this User Scope? This action can't be undone.`,
-            { encounter: uuid }
+            "Are you sure you want to delete this User Scope? This action can't be undone."
           )}
         </p>
       </ModalBody>

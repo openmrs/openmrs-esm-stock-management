@@ -135,7 +135,7 @@ function StockUserRoleScopesItems() {
                 <ArrowLeft key={`${key}-${index}-1`} />
               )}{" "}
             </span>
-          ); //return
+          );
         }),
         stockOperations: userRoleScope?.operationTypes
           ?.map((operation) => {

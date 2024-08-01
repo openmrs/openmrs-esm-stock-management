@@ -43,7 +43,7 @@ const StockSourcesDeleteActionMenu: React.FC<
             (error) => {
               setDeletingSource(false);
               showSnackbar({
-                title: t(`errorDeletingSource', 'error deleting a source`),
+                title: t("errorDeletingSource", "error deleting a source"),
                 kind: "error",
                 isLowContrast: true,
                 subtitle: error?.message,

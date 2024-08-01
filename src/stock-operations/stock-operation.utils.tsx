@@ -1,11 +1,12 @@
-import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
 import React from "react";
+import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
 import {
   FetchResponse,
   restBaseUrl,
   showModal,
   showSnackbar,
 } from "@openmrs/esm-framework";
+import { TFunction } from "react-i18next";
 import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
 import {
   createStockOperation,
@@ -19,7 +20,9 @@ import {
 import { useLocation } from "react-router-dom";
 import { extractErrorMessagesFromResponse } from "../constants";
 import { handleMutate } from "../utils";
+
 export const addOrEditStockOperation = async (
+  t: TFunction,
   stockOperation: StockOperationDTO,
   isEditing: boolean,
   operation?: StockOperationType,
@@ -50,11 +53,13 @@ export const addOrEditStockOperation = async (
       handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
       showSnackbar({
         isLowContrast: true,
-        title: `${isEditing ? "Edit" : "Add"} Stock Operation`,
+        title: isEditing
+          ? t("editStockOperation", "Edit stock operation")
+          : t("addStockOperation", "Add stock operation"),
         kind: "success",
-        subtitle: `Stock Operation ${
-          isEditing ? "Edited" : "Added"
-        } Successfully`,
+        subtitle: isEditing
+          ? t("stockOperationEdited", "Stock operation edited successfully")
+          : t("stockOperationAdded", "Stock operation added successfully"),
       });
 
       // Close overlay and open edit overlay
@@ -64,7 +69,7 @@ export const addOrEditStockOperation = async (
     const errorMessages = extractErrorMessagesFromResponse(error);
     showSnackbar({
       subtitle: errorMessages.join(", "),
-      title: "Error on saving form",
+      title: t("errorSavingForm", "Error on saving form"),
       kind: "error",
       isLowContrast: true,
     });
@@ -72,6 +77,7 @@ export const addOrEditStockOperation = async (
 };
 
 export const launchAddOrEditDialog = (
+  t: TFunction,
   stockOperation: StockOperationDTO,
   isEditing: boolean,
   operation?: StockOperationType,
@@ -79,13 +85,24 @@ export const launchAddOrEditDialog = (
   canPrint?: boolean
 ) => {
   launchOverlay(
-    `${isEditing ? "Edit" : "New: "} ${
-      isEditing ? stockOperation?.operationTypeName : operation?.name
-    }`,
+    isEditing
+      ? t("editOperationTitle", "Edit {{operationType}}", {
+          operationType: stockOperation?.operationTypeName,
+        })
+      : t("newOperationTitle", "New: {{operationName}}", {
+          operationName: operation?.name,
+        }),
     <AddStockOperation
       model={stockOperation}
-      onSave={(so) =>
-        addOrEditStockOperation(so, isEditing, operation, operations, canPrint)
+      onSave={(stockOperation) =>
+        addOrEditStockOperation(
+          t,
+          stockOperation,
+          isEditing,
+          operation,
+          operations,
+          canPrint
+        )
       }
       isEditing={isEditing}
       operation={operation}
