@@ -1,18 +1,15 @@
-import { StockOperationFilter } from "../stock-operations/stock-operations.resource";
 import { useMemo, useState } from "react";
+import useSWR from "swr";
 import {
   FetchResponse,
   openmrsFetch,
   restBaseUrl,
-  showToast,
+  showSnackbar,
   usePagination,
 } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
-import {
-  useStockLocations,
-  useStockTagLocations,
-} from "../stock-lookups/stock-lookups.resource";
-import useSWR from "swr";
+import { StockOperationFilter } from "../stock-operations/stock-operations.resource";
+import { useStockTagLocations } from "../stock-lookups/stock-lookups.resource";
 import { extractErrorMessagesFromResponse } from "../constants";
 
 export function useStockLocationPages(filter: StockOperationFilter) {
@@ -89,10 +86,10 @@ export const useLocationTags = () => {
   const url = `${restBaseUrl}/locationtag/`;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data, error, isLoading, isValidating, mutate } = useSWR<
-    { data },
-    Error
-  >(url, openmrsFetch);
+  const { data, isLoading, mutate } = useSWR<{ data }, Error>(
+    url,
+    openmrsFetch
+  );
   const results = data?.data?.results ? data?.data?.results : [];
   return {
     locationTagList: results,
@@ -118,11 +115,11 @@ export async function saveLocation({
     return response;
   } catch (error) {
     const errorMessages = extractErrorMessagesFromResponse(error);
-    showToast({
-      description: errorMessages.join(", "),
+    showSnackbar({
+      subtitle: errorMessages.join(", "),
       title: "Error on saving form",
       kind: "error",
-      critical: true,
+      isLowContrast: true,
     });
   }
 }
