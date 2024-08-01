@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { showNotification, showToast } from "@openmrs/esm-framework";
+import { showSnackbar } from "@openmrs/esm-framework";
 import {
   Button,
   ModalHeader,
@@ -42,25 +42,25 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
       () => {
         mutate();
         closeModal();
-        showToast({
-          critical: true,
+        showSnackbar({
+          isLowContrast: true,
           title: t("deletePackagingUnitTitle", `Delete packing item `),
           kind: "success",
-          description: t(
+          subtitle: t(
             "deletePackagingUnitMesaage",
             `Stock Item packing unit deleted Successfully`
           ),
         });
       },
       (error) => {
-        showNotification({
+        showSnackbar({
           title: t(
             "deletePackingUnitErrorTitle",
             `Error Deleting a stock item packing unit`
           ),
           kind: "error",
-          critical: true,
-          description: error?.message,
+          isLowContrast: true,
+          subtitle: error?.message,
         });
       }
     );

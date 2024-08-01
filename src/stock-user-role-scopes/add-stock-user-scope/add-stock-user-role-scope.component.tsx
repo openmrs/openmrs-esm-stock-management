@@ -28,12 +28,7 @@ import { closeOverlay } from "../../core/components/overlay/hook";
 import { useTranslation } from "react-i18next";
 import { UserRoleScope } from "../../core/api/types/identity/UserRoleScope";
 import { createOrUpdateUserRoleScope } from "../stock-user-role-scopes.resource";
-import {
-  restBaseUrl,
-  showNotification,
-  showToast,
-  useSession,
-} from "@openmrs/esm-framework";
+import { restBaseUrl, showSnackbar, useSession } from "@openmrs/esm-framework";
 import { UserRoleScopeOperationType } from "../../core/api/types/identity/UserRoleScopeOperationType";
 import { UserRoleScopeLocation } from "../../core/api/types/identity/UserRoleScopeLocation";
 import {
@@ -69,7 +64,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
   const [roles, setRoles] = useState<Role[]>([]);
 
-  const [showItems, setShowItems] = useState(false);
   const loggedInUserUuid = currentUser?.user?.uuid;
 
   // operation types
@@ -79,37 +73,28 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   } = useStockOperationTypes();
 
   // get users
-  const {
-    items: users,
-
-    isLoading: loadingUsers,
-  } = useUsers({ v: ResourceRepresentation.Default });
+  const { items: users, isLoading: loadingUsers } = useUsers({
+    v: ResourceRepresentation.Default,
+  });
 
   const [selectedUserUuid, setSelectedUserUuid] = useState<string | null>(null);
-  const { data: user, isError } = useUser(selectedUserUuid);
+  const { data: user } = useUser(selectedUserUuid);
 
   // get roles
-  const { items: rolesData, isLoading: loadingRoles } = useRoles({
+  const { isLoading: loadingRoles } = useRoles({
     v: ResourceRepresentation.Default,
   });
 
   /* Only load locations tagged to perform stock related activities.
      Unless a location is tag as main store, main pharmacy or dispensing, it will not be listed here.
-
    */
   const { stockLocations } = useStockTagLocations();
-  const onEnabledChanged = (
-    cvt: React.ChangeEvent<HTMLInputElement>,
-    data: { checked: boolean; id: string }
-  ): void => {
+  const onEnabledChanged = (): void => {
     const isEnabled = !formModel?.enabled;
     setFormModel({ ...formModel, enabled: isEnabled });
   };
 
-  const onPermanentChanged = (
-    cvt: React.ChangeEvent<HTMLInputElement>,
-    data: { checked: boolean; id: string }
-  ): void => {
+  const onPermanentChanged = (): void => {
     const isPermanent = !formModel?.permanent;
     setFormModel({
       ...formModel,
@@ -119,16 +104,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     });
   };
 
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredItems, setFilteredItems] = useState<any[]>([]);
+  const [filteredItems, setFilteredItems] = useState<unknown[]>([]);
 
   const usersResults = users?.results ?? [];
 
   const filterItems = (query: string) => {
-    if (query.trim() === "") {
-      setShowItems(false);
-    } else {
-      setShowItems(true);
+    if (query && query.trim() !== "") {
       const filtered = usersResults
         .filter((item: any) => item.uuid !== loggedInUserUuid)
         .filter((item: any) => {
@@ -145,13 +126,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   }, [model]);
 
   const handleSearchQueryChange = (query: string) => {
-    setSearchQuery(query);
     filterItems(query);
   };
   const onStockOperationTypeChanged = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    uuid: string,
-    isChecked: boolean
+    event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const operationType = formModel?.operationTypes?.find(
       (x) => x.operationTypeUuid === event?.target?.value
@@ -179,8 +157,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   };
 
   const onLocationCheckBoxChanged = (
-    event: ChangeEvent<HTMLInputElement>,
-    id: string
+    event: ChangeEvent<HTMLInputElement>
   ): void => {
     const selectedLocation = formModel?.locations?.find(
       (x) => x.locationUuid === event?.target?.value
@@ -253,28 +230,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     });
   };
 
-  const onEnableDescendantsChanged = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedLocation = formModel?.locations?.find(
-      (x) => x.locationUuid === event?.target?.value
-    );
-    if (selectedLocation) {
-      const enableDescendants = !(selectedLocation.enableDescendants === true);
-      const newModifiedLocation = {
-        ...selectedLocation,
-        enableDescendants: enableDescendants,
-      };
-      setFormModel({
-        ...formModel,
-        locations: [
-          ...(formModel?.locations?.filter(
-            (x) => x.locationUuid !== selectedLocation?.locationUuid
-          ) ?? []),
-          newModifiedLocation,
-        ],
-      });
-    }
-  };
-
   const isOperationChecked = (operationType: StockOperationType) => {
     return (
       formModel?.operationTypes?.filter(
@@ -289,11 +244,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     createOrUpdateUserRoleScope(formModel).then(
       (res) => {
         handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
-        showToast({
-          critical: true,
+        showSnackbar({
+          isLowContrast: true,
           title: t("addUserRole", "Add User role"),
           kind: "success",
-          description: t(
+          subtitle: t(
             "successfullysaved",
             `You have successfully saved user role scope `
           ),
@@ -301,13 +256,13 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
         closeOverlay();
       },
       (err) => {
-        showNotification({
+        showSnackbar({
           title: t(
             `errorSaving user role scope', 'Error Saving user role scope`
           ),
           kind: "error",
-          critical: true,
-          description: err?.message,
+          isLowContrast: true,
+          subtitle: err?.message,
         });
 
         closeOverlay();
@@ -465,13 +420,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                         value={type.uuid}
                         checked={isOperationChecked(type)}
                         className={styles.checkbox}
-                        onChange={(event) =>
-                          onStockOperationTypeChanged(
-                            event,
-                            type.uuid,
-                            isOperationChecked(type)
-                          )
-                        }
+                        onChange={(event) => onStockOperationTypeChanged(event)}
                         labelText={type.name}
                         id={type.uuid}
                       />
@@ -520,9 +469,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                         key={`chk-loc-child-key-${type.id}`}
                         id={`chk-loc-child-${type.id}`}
                         value={type.id}
-                        onChange={(event) =>
-                          onLocationCheckBoxChanged(event, type.id)
-                        }
+                        onChange={(event) => onLocationCheckBoxChanged(event)}
                         className={styles.checkbox}
                         labelText={type.name}
                         checked={checkedLocation != null}

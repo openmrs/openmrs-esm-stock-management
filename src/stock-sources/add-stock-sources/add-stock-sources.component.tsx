@@ -13,12 +13,7 @@ import styles from "./add-stock-sources.scss";
 import { useConcept } from "../../stock-lookups/stock-lookups.resource";
 import { StockSource } from "../../core/api/types/stockOperation/StockSource";
 import { createOrUpdateStockSource } from "../stock-sources.resource";
-import {
-  restBaseUrl,
-  showNotification,
-  showToast,
-  useConfig,
-} from "@openmrs/esm-framework";
+import { restBaseUrl, showSnackbar, useConfig } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../core/components/overlay/hook";
 import { type ConfigObject } from "../../config-schema";
@@ -63,14 +58,15 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
       createOrUpdateStockSource(formModel)
         .then(
           () => {
-            showToast({
-              critical: true,
+            showSnackbar({
+              isLowContrast: true,
               title: t("addedSource", "Add Source"),
               kind: "success",
-              description: t(
+              subtitle: t(
                 "stocksourceaddedsuccessfully",
                 "Stock Source Added Successfully"
               ),
+              timeoutInMs: 5000,
             });
 
             handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
@@ -78,11 +74,11 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
             closeOverlay();
           },
           (error) => {
-            showNotification({
+            showSnackbar({
               title: t(`errorAddingSource', 'error adding a source`),
               kind: "error",
-              critical: true,
-              description: error?.message,
+              isLowContrast: true,
+              subtitle: error?.message,
             });
           }
         )

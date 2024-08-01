@@ -3,12 +3,7 @@ import { Button, InlineLoading } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
 import { deleteStockSource } from "../stock-sources.resource";
-import {
-  restBaseUrl,
-  showModal,
-  showNotification,
-  showToast,
-} from "@openmrs/esm-framework";
+import { restBaseUrl, showModal, showSnackbar } from "@openmrs/esm-framework";
 import { handleMutate } from "../../utils";
 
 interface StockSourcesDeleteActionMenuProps {
@@ -35,11 +30,11 @@ const StockSourcesDeleteActionMenu: React.FC<
               setDeletingSource(false);
 
               handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
-              showToast({
-                critical: true,
+              showSnackbar({
+                isLowContrast: true,
                 title: t("deletingSource", "Delete Source"),
                 kind: "success",
-                description: t(
+                subtitle: t(
                   "stocksourcedeletedsuccessfully",
                   "Stock Source Deleted Successfully"
                 ),
@@ -47,11 +42,11 @@ const StockSourcesDeleteActionMenu: React.FC<
             },
             (error) => {
               setDeletingSource(false);
-              showNotification({
+              showSnackbar({
                 title: t(`errorDeletingSource', 'error deleting a source`),
                 kind: "error",
-                critical: true,
-                description: error?.message,
+                isLowContrast: true,
+                subtitle: error?.message,
               });
             }
           )

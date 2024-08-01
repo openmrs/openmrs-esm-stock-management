@@ -3,12 +3,7 @@ import { Button, InlineLoading } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { TrashCan } from "@carbon/react/icons";
 import { deleteUserRoleScopes } from "../stock-user-role-scopes.resource";
-import {
-  restBaseUrl,
-  showModal,
-  showNotification,
-  showToast,
-} from "@openmrs/esm-framework";
+import { restBaseUrl, showModal, showSnackbar } from "@openmrs/esm-framework";
 import { handleMutate } from "../../utils";
 
 interface StockUserScopDeleteActionMenuProps {
@@ -34,11 +29,11 @@ const StockUserScopeDeleteActionMenu: React.FC<
             () => {
               handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
               setDeletingUserScope(false);
-              showToast({
-                critical: true,
+              showSnackbar({
+                isLowContrast: true,
                 title: t("deletingstockUserScope", "Delete Stock User Scope"),
                 kind: "success",
-                description: t(
+                subtitle: t(
                   "stockuserscopedeletedsuccessfully",
                   "Stock User Scope Deleted Successfully"
                 ),
@@ -46,13 +41,13 @@ const StockUserScopeDeleteActionMenu: React.FC<
             },
             (error) => {
               setDeletingUserScope(false);
-              showNotification({
+              showSnackbar({
                 title: t(
                   `errorDeletingUserScope', 'error deleting a user scope`
                 ),
                 kind: "error",
-                critical: true,
-                description: error?.message,
+                isLowContrast: true,
+                subtitle: error?.message,
               });
             }
           )
