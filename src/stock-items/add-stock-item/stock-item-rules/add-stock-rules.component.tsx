@@ -173,7 +173,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
           },
           (error) => {
             showSnackbar({
-              title: t(`errorAddingRule', 'error adding a rule`),
+              title: t("errorAddingRule", "error adding a rule"),
               kind: "error",
               isLowContrast: true,
               subtitle: error?.message,

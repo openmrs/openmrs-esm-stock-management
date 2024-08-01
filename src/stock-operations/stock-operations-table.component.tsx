@@ -348,6 +348,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             itemText="Edit"
             onClick={() => {
               launchAddOrEditDialog(
+                t,
                 filteredItems[index],
                 true,
                 operation,
@@ -448,6 +449,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
+                      t,
                       initialStockOperationValue(),
                       false,
                       operation,

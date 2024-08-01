@@ -242,7 +242,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     e.preventDefault();
 
     createOrUpdateUserRoleScope(formModel).then(
-      (res) => {
+      () => {
         handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
         showSnackbar({
           isLowContrast: true,
@@ -250,7 +250,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           kind: "success",
           subtitle: t(
             "successfullysaved",
-            `You have successfully saved user role scope `
+            "You have successfully saved user role scope"
           ),
         });
         closeOverlay();
@@ -258,7 +258,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       (err) => {
         showSnackbar({
           title: t(
-            `errorSaving user role scope', 'Error Saving user role scope`
+            "errorSaving user role scope",
+            "Error Saving user role scope"
           ),
           kind: "error",
           isLowContrast: true,
@@ -274,7 +275,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
       <InlineLoading
         status="active"
         iconDescription="Loading"
-        description="Loading data..."
+        description={t("loadingData", "Loading data...")}
       />
     );
   }
@@ -432,10 +433,14 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           <br />
           <section className={styles.section}>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span className={styles.sectionTitle}> {t("Locations")}</span>
+              <span className={styles.sectionTitle}>
+                {" "}
+                {t("locations", "Locations")}
+              </span>
               <div className={styles.hr} />
               <span className={styles.subTitle}>
                 {t(
+                  "toggleMessage",
                   "Use the toggle to apply this scope to the locations under the selected location."
                 )}
               </span>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@carbon/react";
+import { useTranslation } from "react-i18next";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { launchAddOrEditDialog } from "../stock-operation.utils";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
@@ -13,6 +14,7 @@ interface EditStockOperationActionMenuProps {
 const EditStockOperationActionMenu: React.FC<
   EditStockOperationActionMenuProps
 > = ({ operationUuid, operationNumber, model, operations }) => {
+  const { t } = useTranslation();
   const [operation, setOperation] = useState<StockOperationDTO | null>(null);
 
   if (operationUuid && !operation) {
@@ -56,6 +58,7 @@ const EditStockOperationActionMenu: React.FC<
         kind="ghost"
         onClick={() => {
           launchAddOrEditDialog(
+            t,
             model ?? operation,
             true,
             type,

@@ -39,7 +39,11 @@ const NewLocationForm: React.FC<LocationFormProps> = ({
             title: t("formCreated", "Add Location"),
             kind: "success",
             isLowContrast: true,
-            subtitle: t(`Location ${name} was created successfully.`),
+            subtitle: t(
+              "locationCreatedSuccessfully",
+              `Location {{locationName}} was created successfully.`,
+              { locationName: name }
+            ),
           });
 
           mutate();
