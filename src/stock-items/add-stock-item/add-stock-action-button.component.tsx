@@ -8,12 +8,12 @@ const AddStockItemActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchAddOrEditDialog(initialValues, false);
+    launchAddOrEditDialog(t, initialValues, false);
   }, []);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
-      {t("stockmanagement.addnew", "Add New")}
+      {t("addNewStock", "Add New")}
     </Button>
   );
 };

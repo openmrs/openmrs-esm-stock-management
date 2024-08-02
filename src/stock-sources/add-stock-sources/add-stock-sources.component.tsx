@@ -63,7 +63,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               title: t("addedSource", "Add Source"),
               kind: "success",
               subtitle: t(
-                "stocksourceaddedsuccessfully",
+                "stockSourceAddedSuccessfully",
                 "Stock Source Added Successfully"
               ),
               timeoutInMs: 5000,
@@ -75,7 +75,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
           },
           (error) => {
             showSnackbar({
-              title: t(`errorAddingSource', 'error adding a source`),
+              title: t("errorAddingSource", "Error adding a source"),
               kind: "error",
               isLowContrast: true,
               subtitle: error?.message,

@@ -23,9 +23,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useValidationSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
 import { Add, ArrowRight } from "@carbon/react/icons";
-import styles from "./stock-items-addition.component.scss";
 import { errorAlert } from "../../core/utils/alert";
 import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
+
+import styles from "./stock-items-addition.component.scss";
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -65,7 +66,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       return;
     }
 
-    // const data = Object.assign(model, item);
     model.stockOperationItems = item?.stockItems;
     await onSave?.(model);
   };

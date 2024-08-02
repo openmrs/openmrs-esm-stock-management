@@ -24,7 +24,13 @@ export const PrivilagedView: React.FC<PrivilageComponentProps> = ({
           <p className={styles.content}>{t("noPrivilagesTitle", `${title}`)}</p>
           {description && (
             <p className={styles.helper}>
-              {t("noViewPrivilegesDescription", `${description}`)}
+              {t(
+                "noViewPrivilegesDescription",
+                "Description: {{description}}",
+                {
+                  description,
+                }
+              )}
             </p>
           )}
         </div>

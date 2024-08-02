@@ -6,16 +6,10 @@ export const useInitializeStockOperations = (props: AddStockOperationProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [result, setResult] = useState<InitializeResult>();
-  // const urlQueryParams = useUrlQueryParams();
 
   useEffect(() => {
     setIsLoading(true);
-    initializeNewStockOperation(
-      props.operation,
-      // urlQueryParams,
-      props.model,
-      props.operations
-    )
+    initializeNewStockOperation(props.operation, props.model, props.operations)
       .then((data) => {
         setResult(data);
         setIsLoading(false);

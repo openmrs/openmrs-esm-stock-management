@@ -3,7 +3,6 @@ import { initialStockOperationValue } from "../../core/utils/utils";
 import { MAIN_STORE_LOCATION_TAG, today } from "../../constants";
 import {
   operationFromString,
-  OperationType,
   StockOperationType,
   StockOperationTypeCanCapturePurchasePrice,
   StockOperationTypeHasPrint,

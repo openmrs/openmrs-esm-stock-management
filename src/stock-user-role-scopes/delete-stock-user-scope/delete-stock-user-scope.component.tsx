@@ -34,7 +34,7 @@ const StockUserScopeDeleteActionMenu: React.FC<
                 title: t("deletingstockUserScope", "Delete Stock User Scope"),
                 kind: "success",
                 subtitle: t(
-                  "stockuserscopedeletedsuccessfully",
+                  "stockUserScopeDeletedSuccessfully",
                   "Stock User Scope Deleted Successfully"
                 ),
               });
@@ -43,7 +43,8 @@ const StockUserScopeDeleteActionMenu: React.FC<
               setDeletingUserScope(false);
               showSnackbar({
                 title: t(
-                  `errorDeletingUserScope', 'error deleting a user scope`
+                  "errorDeletingUserScope",
+                  "Error deleting a user scope"
                 ),
                 kind: "error",
                 isLowContrast: true,

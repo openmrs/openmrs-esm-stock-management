@@ -347,6 +347,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             itemText="Edit"
             onClick={() => {
               launchAddOrEditDialog(
+                t,
                 filteredItems[index],
                 true,
                 operation,
@@ -358,7 +359,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </OverflowMenu>
       ),
     }));
-  }, [handleOnComplete, filteredItems, operation, operations, items]);
+  }, [handleOnComplete, filteredItems, operation, operations, t]);
 
   if (isLoading) {
     return (
@@ -374,7 +375,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>{t("Stock operations to track movement of stock.")}</TabPanel>
+      <TabPanel>
+        {t(
+          "stockOperationTrackMovement",
+          "Stock operations to track movement of stock."
+        )}
+      </TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
@@ -447,6 +453,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
+                      t,
                       initialStockOperationValue(),
                       false,
                       operation,
