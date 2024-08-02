@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useStockLocationPages } from "./stock-locations-table.resource";
 import {
   Button,
@@ -33,18 +33,6 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
 
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/Location?_summary=data`);
-  };
-
-  const createStockLocation = () => {
-    {
-      showLocationModal ? (
-        <NewLocationForm
-          onModalChange={setAddLocationModal}
-          showModal={showLocationModal}
-          mutate={mutate}
-        />
-      ) : null;
-    }
   };
 
   if (isLoading) {
@@ -85,7 +73,9 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>No stock items to display</p>
+        <p className={styles.content}>
+          {t("noStockItemsToDisplay", "No stock items to display")}
+        </p>
       </Tile>
     </div>
   );

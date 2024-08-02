@@ -198,7 +198,7 @@ const DataList: React.FC<ListProps> = ({
                   <Tile className={styles.tile}>
                     <div className={styles.tileContent}>
                       <p className={styles.content}>
-                        {t("No data", "No data to display")}
+                        {t("noData", "No data to display")}
                       </p>
                       <p className={styles.helper}>
                         {t("checkFilters", "Check the filters above")}

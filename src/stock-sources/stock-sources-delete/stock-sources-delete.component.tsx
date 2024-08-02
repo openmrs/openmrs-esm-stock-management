@@ -35,7 +35,7 @@ const StockSourcesDeleteActionMenu: React.FC<
                 title: t("deletingSource", "Delete Source"),
                 kind: "success",
                 subtitle: t(
-                  "stocksourcedeletedsuccessfully",
+                  "stockSourceDeletedSuccessfully",
                   "Stock Source Deleted Successfully"
                 ),
               });
@@ -43,7 +43,7 @@ const StockSourcesDeleteActionMenu: React.FC<
             (error) => {
               setDeletingSource(false);
               showSnackbar({
-                title: t(`errorDeletingSource', 'error deleting a source`),
+                title: t("errorDeletingSource", "Error deleting a source"),
                 kind: "error",
                 isLowContrast: true,
                 subtitle: error?.message,

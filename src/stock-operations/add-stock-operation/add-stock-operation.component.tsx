@@ -135,6 +135,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
             onSave: async (model) => {
               // TODO: Update
               await addOrEditStockOperation(
+                t,
                 model,
                 props.isEditing,
                 props.operation,

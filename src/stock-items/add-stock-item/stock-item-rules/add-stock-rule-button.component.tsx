@@ -22,7 +22,7 @@ const AddStockRuleActionButton: React.FC<AddStockRuleActionButtonProps> = ({
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
-      {t("stockmanagement.addnewrule", "Add New Rule")}
+      {t("addNewStockRule", "Add New Rule")}
     </Button>
   );
 };
