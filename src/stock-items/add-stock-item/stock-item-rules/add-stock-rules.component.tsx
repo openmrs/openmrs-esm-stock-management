@@ -19,7 +19,7 @@ import {
 } from "../../../stock-lookups/stock-lookups.resource";
 import { createOrUpdateStockRule } from "./stock-rules.resource";
 import { StockRule } from "../../../core/api/types/stockItem/StockRule";
-import { showNotification, showToast } from "@openmrs/esm-framework";
+import { showSnackbar } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { closeOverlay } from "../../../core/components/overlay/hook";
 import { ResourceRepresentation } from "../../../core/api/api";
@@ -61,11 +61,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
   const { stockLocations } = useStockTagLocations();
 
   //Roles
-  const {
-    items: rolesData,
-    isError: rolesError,
-    isLoading: loadingRoles,
-  } = useRoles({ v: ResourceRepresentation.Default });
+  const { items: rolesData } = useRoles({ v: ResourceRepresentation.Default });
 
   const [formModel, setFormModel] = useState<StockRule>({
     enabled: true,
@@ -75,8 +71,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
   useEffect(() => {
     if (model != null && Object.keys(model).length != 0) {
       // To prevent editing properties like date created
-      const { dateCreated, creatorGivenName, creatorFamilyName, ...rest } =
-        model;
+      const { ...rest } = model;
       const tmpFormModel = { ...rest };
       setFormModel(tmpFormModel);
     }
@@ -143,18 +138,12 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
     setFormModel({ ...formModel, mailRole: selectedMailRole.display });
   };
 
-  const onEnabledChanged = (
-    cvt: React.ChangeEvent<HTMLInputElement>,
-    data: { checked: boolean; id: string }
-  ): void => {
+  const onEnabledChanged = (): void => {
     const isEnabled = !formModel?.enabled;
     setFormModel({ ...formModel, enabled: isEnabled });
   };
 
-  const onAppliesToChildrenChanged = (
-    cvt: React.ChangeEvent<HTMLInputElement>,
-    data: { checked: boolean; id: string }
-  ): void => {
+  const onAppliesToChildrenChanged = (): void => {
     const enableDescendants = !formModel?.enableDescendants;
     setFormModel({ ...formModel, enableDescendants: enableDescendants });
   };
@@ -171,11 +160,11 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
       createOrUpdateStockRule(formModel)
         .then(
           () => {
-            showToast({
-              critical: true,
+            showSnackbar({
+              isLowContrast: true,
               title: t("addedRule", "Add Rule"),
               kind: "success",
-              description: t(
+              subtitle: t(
                 "stockruleaddedsuccessfully",
                 "Stock Rule Added Successfully"
               ),
@@ -183,11 +172,11 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
             closeOverlay();
           },
           (error) => {
-            showNotification({
+            showSnackbar({
               title: t(`errorAddingRule', 'error adding a rule`),
               kind: "error",
-              critical: true,
-              description: error?.message,
+              isLowContrast: true,
+              subtitle: error?.message,
             });
           }
         )

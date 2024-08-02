@@ -2,11 +2,7 @@ import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
 import { StockItemDTO } from "../core/api/types/stockItem/StockItem";
 import React from "react";
 import AddEditStockItem from "./add-stock-item/add-stock-item.component";
-import {
-  FetchResponse,
-  showNotification,
-  showToast,
-} from "@openmrs/esm-framework";
+import { FetchResponse, showSnackbar } from "@openmrs/esm-framework";
 import { createStockItem, updateStockItem } from "./stock-items.resource";
 
 export const addOrEditStockItem = async (
@@ -19,13 +15,11 @@ export const addOrEditStockItem = async (
       : createStockItem)(stockItem);
 
     if (response?.data) {
-      showToast({
-        critical: true,
+      showSnackbar({
+        isLowContrast: true,
         title: `${isEditing ? "Edit" : "Add"} Stock Item`,
         kind: "success",
-        description: `Stock Item ${
-          isEditing ? "Edited" : "Added"
-        } Successfully`,
+        subtitle: `Stock Item ${isEditing ? "Edited" : "Added"} Successfully`,
       });
 
       if (!isEditing) {
@@ -38,11 +32,11 @@ export const addOrEditStockItem = async (
       }
     }
   } catch (error) {
-    showNotification({
+    showSnackbar({
       title: `Error ${isEditing ? "edit" : "add"}ing a stock item`,
       kind: "error",
-      critical: true,
-      description: error?.responseBody?.error?.message,
+      isLowContrast: true,
+      subtitle: error?.responseBody?.error?.message,
     });
   }
 };

@@ -9,7 +9,7 @@ import {
   FileUploader,
 } from "@carbon/react";
 import { UploadStockItems } from "./stock-items-bulk-import.resource";
-import { showNotification, showToast } from "@openmrs/esm-framework";
+import { showSnackbar } from "@openmrs/esm-framework";
 
 export interface ImportDialogPopupProps {
   closeModal: () => void;
@@ -20,8 +20,6 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
 }) => {
   const { t } = useTranslation();
   const [selectedFile, setSelectedFile] = useState<any>();
-  const [hasHeader, setHasHeader] = useState(true);
-  const [fileNotSelected, setFileNotSelected] = useState(true);
 
   const onConfirmUpload = () => {
     if (!selectedFile) {
@@ -30,15 +28,15 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
     const formData = new FormData();
     if (selectedFile) {
       formData.append("file", selectedFile, "Import_Stock_Items.csv");
-      formData.append("hasHeader", hasHeader ? "true" : "false");
+      formData.append("hasHeader", "true");
     }
     UploadStockItems(formData).then(
-      (resp) => {
-        showToast({
-          critical: true,
+      () => {
+        showSnackbar({
+          isLowContrast: true,
           title: t("rejectOrder", "Uploaded Order"),
           kind: "success",
-          description: t(
+          subtitle: t(
             "Successfully uploaded",
             `You have successfully uploaded stock items`
           ),
@@ -46,13 +44,13 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
         closeModal();
       },
       (err) => {
-        showNotification({
+        showSnackbar({
           title: t(
             `errorUploadingItems', 'An error occurred uploading stock items`
           ),
           kind: "error",
-          critical: true,
-          description: err?.message,
+          isLowContrast: true,
+          subtitle: err?.message,
         });
       }
     );
@@ -62,14 +60,9 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
     const file = event?.target?.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setFileNotSelected(false);
     } else {
       event.preventDefault();
     }
-  };
-
-  const onFileDeleted = () => {
-    setFileNotSelected(true);
   };
 
   return (
@@ -90,7 +83,6 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
             labelTitle=""
             size="small"
             onChange={onFileChanged}
-            onDelete={onFileDeleted}
           />
         </ModalBody>
         <ModalFooter>

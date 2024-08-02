@@ -1,6 +1,7 @@
 import { PrintCss } from "./PrintStyles";
-import { PRINT_LOGO_TEXT, PRINT_LOGO } from "../../constants";
+import { PRINT_LOGO } from "../../constants";
 import { GetPrintLogo, PrintLogoData } from "../utils/imageUtils";
+import { getConfig } from "@openmrs/esm-framework";
 
 export const GetPrintTemplate = (
   body: string,
@@ -27,6 +28,8 @@ ${PrintCss}
 };
 
 export const GetLogoSection = async () => {
+  const config = await getConfig("@openmrs/esm-stock-management-app");
+  const logoText = config?.logo?.name;
   let printLogoData: PrintLogoData | null = null;
   if (PRINT_LOGO) {
     try {
@@ -35,7 +38,7 @@ export const GetLogoSection = async () => {
       console.info(e);
     }
   }
-  return printLogoData || PRINT_LOGO_TEXT
+  return printLogoData || logoText
     ? `
 <div class="logo" >
     ${
@@ -45,11 +48,7 @@ export const GetLogoSection = async () => {
           : `<img alt='' src='${printLogoData.image}' />`
         : ""
     }
-    ${
-      PRINT_LOGO_TEXT
-        ? `<span class='logo-text text'>${PRINT_LOGO_TEXT}</span>`
-        : ""
-    }
+    ${logoText ? `<span class='logo-text text'>${logoText}</span>` : ""}
 </div>    
     `
     : "";

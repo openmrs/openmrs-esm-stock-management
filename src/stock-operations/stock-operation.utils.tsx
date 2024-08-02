@@ -4,8 +4,7 @@ import {
   FetchResponse,
   restBaseUrl,
   showModal,
-  showNotification,
-  showToast,
+  showSnackbar,
 } from "@openmrs/esm-framework";
 import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
 import {
@@ -49,11 +48,11 @@ export const addOrEditStockOperation = async (
 
     if (response?.data) {
       handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
-      showToast({
-        critical: true,
+      showSnackbar({
+        isLowContrast: true,
         title: `${isEditing ? "Edit" : "Add"} Stock Operation`,
         kind: "success",
-        description: `Stock Operation ${
+        subtitle: `Stock Operation ${
           isEditing ? "Edited" : "Added"
         } Successfully`,
       });
@@ -63,11 +62,11 @@ export const addOrEditStockOperation = async (
     }
   } catch (error) {
     const errorMessages = extractErrorMessagesFromResponse(error);
-    showNotification({
-      description: errorMessages.join(", "),
+    showSnackbar({
+      subtitle: errorMessages.join(", "),
       title: "Error on saving form",
       kind: "error",
-      critical: true,
+      isLowContrast: true,
     });
   }
 };

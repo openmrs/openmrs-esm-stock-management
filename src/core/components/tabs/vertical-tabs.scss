@@ -7,7 +7,6 @@
   @include type.type-style('productive-heading-02');
   color: colors.$gray-70;
   margin-bottom: spacing.$spacing-05;
-  ;
 }
 
 .heading:after {
@@ -50,11 +49,12 @@
 
   :global(.cds--tab--list) {
     flex-direction: column;
+    max-height: 30rem;
   }
 
   :global(.cds--tabs) {
     width: auto;
-    max-height: 20rem;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -78,7 +78,6 @@
   }
 
   :global(.cds--tabs__nav-link) {
-
     &:active,
     &:focus {
       outline: 0 !important;

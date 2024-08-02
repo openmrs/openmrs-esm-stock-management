@@ -1,12 +1,12 @@
-import { showNotification } from "@openmrs/esm-framework";
+import { showSnackbar } from "@openmrs/esm-framework";
 import { mutate } from "swr";
 
 export function errorAlert(msg: string, error?: Error) {
-  showNotification({
+  showSnackbar({
     title: msg,
     kind: "error",
-    critical: true,
-    description: error?.message,
+    isLowContrast: true,
+    subtitle: error?.message,
   });
 }
 

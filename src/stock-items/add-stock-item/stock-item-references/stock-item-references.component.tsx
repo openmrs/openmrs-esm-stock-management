@@ -26,12 +26,7 @@ import {
   createStockItemReference,
   deleteStockItemReference,
 } from "../../stock-items.resource";
-import {
-  restBaseUrl,
-  showNotification,
-  showSnackbar,
-  showToast,
-} from "@openmrs/esm-framework";
+import { restBaseUrl, showSnackbar } from "@openmrs/esm-framework";
 import { extractErrorMessagesFromResponse } from "../../../constants";
 import { handleMutate } from "../../../utils";
 
@@ -41,10 +36,7 @@ interface StockReferencesProps {
   stockItemUuid: string;
 }
 
-const StockReferences: React.FC<StockReferencesProps> = ({
-  isEditing,
-  stockItemUuid,
-}) => {
+const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
   const { t } = useTranslation();
 
   // get stock item references
@@ -189,10 +181,7 @@ const StockReferencesRow: React.FC<{
 }> = ({ isEditing, row, key }) => {
   const { t } = useTranslation();
 
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext();
+  const { control } = useFormContext();
 
   const handleDelete = (e) => {
     e.preventDefault();
