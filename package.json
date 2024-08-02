@@ -1,6 +1,6 @@
 {
     "name": "@kenyaemr/esm-stock-management-app",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "license": "MPL-2.0",
     "description": "Stock management microfrontend for OpenMRS 3.x",
     "browser": "dist/kenyaemr-esm-stock-management-app.js",
