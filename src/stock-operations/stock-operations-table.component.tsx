@@ -24,14 +24,14 @@ import {
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
-  OverflowMenu,
-  OverflowMenuItem,
   DatePickerInput,
   DatePicker,
   TableToolbarMenu,
   TableToolbarAction,
+  Button,
 } from "@carbon/react";
-import { ArrowRight } from "@carbon/react/icons";
+import { ArrowRight, Edit } from "@carbon/react/icons";
+
 import { formatDisplayDate } from "../core/utils/datetimeUtils";
 import styles from "../stock-items/stock-items-table.scss";
 import {
@@ -341,22 +341,22 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </div>
       ),
       actions: (
-        <OverflowMenu flipped={"true"} aria-label="overflow-menu">
-          <OverflowMenuItem itemText="Complete" onClick={handleOnComplete} />
-          <OverflowMenuItem
-            itemText="Edit"
-            onClick={() => {
-              launchAddOrEditDialog(
-                t,
-                filteredItems[index],
-                true,
-                operation,
-                operations,
-                false
-              );
-            }}
-          />
-        </OverflowMenu>
+        <Button
+          kind="ghost"
+          size="md"
+          onClick={() => {
+            launchAddOrEditDialog(
+              t,
+              filteredItems[index],
+              true,
+              operation,
+              operations,
+              false
+            );
+          }}
+          iconDescription={t("editStockItem", "Edit Stock Item")}
+          renderIcon={(props) => <Edit size={16} {...props} />}
+        ></Button>
       ),
     }));
   }, [handleOnComplete, filteredItems, operation, operations, t]);
@@ -520,10 +520,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                               <StructuredListCell head>
                                 {t("dateCompleted", "Date Completed")}
                               </StructuredListCell>
-                              <StructuredListCell head>
-                                {t("batchNumber", "Batch Number")}
-                              </StructuredListCell>
-                              <StructuredListCell head>Qty</StructuredListCell>
                             </StructuredListRow>
                           </StructuredListHead>
                           <StructuredListBody>
@@ -554,24 +550,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                 &nbsp;
                                 {filteredItems[index]?.completedDate
                                   ? filteredItems[index]?.creatorFamilyName
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
-                                      (item) => item.batchNo
-                                    )[0]
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
-                                      (item) => item.quantity
-                                    )[0]
                                   : ""}
                               </StructuredListCell>
                             </StructuredListRow>
@@ -616,24 +594,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                   (item) => item.quantity
                                 )[1] && filteredItems[index]?.completedDate
                                   ? items[index]?.creatorFamilyName
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
-                                      (item) => item.batchNo
-                                    )[1]
-                                  : ""}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
-                                      (item) => item.quantity
-                                    )[1]
                                   : ""}
                               </StructuredListCell>
                             </StructuredListRow>

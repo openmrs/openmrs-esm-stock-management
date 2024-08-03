@@ -162,6 +162,14 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     },
   ];
 
+  console.log(
+    "Checking model" + isEditing
+      ? props?.model
+      : props?.operation?.name === "Stock Issue"
+      ? props?.model
+      : result?.dto
+  );
+
   return (
     <>
       {!isEditing && props.operation.name === "Stock Issue" ? (
@@ -442,6 +450,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                       <div style={{ margin: "2px" }}>
                         <StockOperationCompleteDispatchButton
                           operation={props?.model}
+                          reason={false}
                         />
                       </div>
                       <div style={{ margin: "2px" }}>

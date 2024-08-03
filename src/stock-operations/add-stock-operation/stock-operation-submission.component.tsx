@@ -50,8 +50,10 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   const { t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(
-    null
+    model?.approvalRequired
   );
+
+  console.log("approvalRequired-->" + JSON.stringify(model, null, 2));
 
   const handleRadioButtonChange = (selectedItem: boolean) => {
     setApprovalRequired(selectedItem);
@@ -68,7 +70,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
               "Does the transaction require approval ?"
             )}
             onChange={handleRadioButtonChange}
-            defaultSelected={approvalRequired}
+            defaultSelected={
+              model?.approvalRequired === null ? false : approvalRequired
+            }
           >
             <RadioButton
               value={true}
@@ -100,9 +104,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
 
       {canEdit && !locked && (
         <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
-          {approvalRequired != null && (
+          {model?.approvalRequired != null && (
             <>
-              {!requiresDispatchAcknowledgement && !approvalRequired && (
+              {!requiresDispatchAcknowledgement && !model?.approvalRequired && (
                 <Button
                   name="complete"
                   type="button"
@@ -126,7 +130,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   {t("complete", "Complete")}
                 </Button>
               )}
-              {requiresDispatchAcknowledgement && !approvalRequired && (
+              {requiresDispatchAcknowledgement && !model?.approvalRequired && (
                 <Button
                   name="dispatch"
                   type="button"
@@ -150,7 +154,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   {t("dispatch", "Dispatch")}
                 </Button>
               )}
-              {approvalRequired && (
+              {model?.approvalRequired && (
                 <Button
                   name="submit"
                   type="button"
