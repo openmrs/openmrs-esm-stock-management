@@ -80,9 +80,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
 
   const { reportTypes, isLoading } = useReportTypes();
   const { stockLocations } = useStockTagLocations();
-  const { items, isLoading: isLoadingStockItemCategories } = useConcept(
-    stockItemCategoryUUID
-  );
+  const { items } = useConcept(stockItemCategoryUUID);
   const [displayDate, setDisplayDate] = useState<boolean>(false);
   const [displayStartDate, setDisplayStartDate] = useState<boolean>(false);
   const [displayEndDate, setDisplayEndDate] = useState<boolean>(false);
@@ -644,6 +642,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
               <NumberInput
                 id="limitTop"
                 allowEmpty={true}
+                hideSteppers={true}
                 value={value}
                 onchange={onChange}
                 label={t("limit", "Limit")}

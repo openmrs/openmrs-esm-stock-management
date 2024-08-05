@@ -82,6 +82,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           label={t("orderLevel", "Reorder level:")}
           invalid={!!errors.reorderLevel}
           value={stockItem.reorderLevel ?? ""}
+          hideSteppers={true}
           invalidText={errors.reorderLevel && errors?.reorderLevel?.message}
         />
       )}
@@ -112,6 +113,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           label={t("purchasePrice", "Purchase Price:")}
           value={stockItem.purchasePrice ?? ""}
           invalid={!!errors.purchasePrice}
+          hideSteppers={true}
           invalidText={errors.purchasePrice && errors?.purchasePrice?.message}
         />
       )}
