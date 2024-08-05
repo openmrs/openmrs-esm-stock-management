@@ -53,8 +53,6 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
     model?.approvalRequired
   );
 
-  console.log("approvalRequired-->" + JSON.stringify(model, null, 2));
-
   const handleRadioButtonChange = (selectedItem: boolean) => {
     setApprovalRequired(selectedItem);
   };
@@ -70,9 +68,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
               "Does the transaction require approval ?"
             )}
             onChange={handleRadioButtonChange}
-            defaultSelected={
-              model?.approvalRequired === null ? false : approvalRequired
-            }
+            defaultSelected={model?.approvalRequired}
           >
             <RadioButton
               value={true}
@@ -104,9 +100,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
 
       {canEdit && !locked && (
         <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
-          {model?.approvalRequired != null && (
+          {approvalRequired != null && (
             <>
-              {!requiresDispatchAcknowledgement && !model?.approvalRequired && (
+              {!requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="complete"
                   type="button"
@@ -115,22 +111,17 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   kind="primary"
                   onClick={async () => {
                     delete model?.dateCreated;
-                    delete model?.status;
+                    model.status = "COMPLETED";
                     setIsSaving(true);
-                    await actions.onSave(model).then(() => {
-                      delete model?.dateCreated;
-                      model.status = "COMPLETED";
-                      setIsSaving(true);
-                      actions.onComplete(model);
-                      setIsSaving(false);
-                    });
+                    await actions.onComplete(model);
+                    setIsSaving(false);
                   }}
                   renderIcon={ListChecked}
                 >
                   {t("complete", "Complete")}
                 </Button>
               )}
-              {requiresDispatchAcknowledgement && !model?.approvalRequired && (
+              {requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="dispatch"
                   type="button"
@@ -141,20 +132,16 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                     delete model?.dateCreated;
                     delete model?.status;
                     setIsSaving(true);
-                    await actions.onSave(model).then(() => {
-                      delete model?.dateCreated;
-                      model.status = "COMPLETED";
-                      setIsSaving(true);
-                      actions.onDispatch(model);
-                      setIsSaving(false);
-                    });
+                    model.status = "DISPATCHED";
+                    await actions.onDispatch(model);
+                    setIsSaving(false);
                   }}
                   renderIcon={Departure}
                 >
                   {t("dispatch", "Dispatch")}
                 </Button>
               )}
-              {model?.approvalRequired && (
+              {approvalRequired && (
                 <Button
                   name="submit"
                   type="button"
@@ -164,7 +151,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   onClick={actions.onSubmit}
                   renderIcon={SendFilled}
                 >
-                  {t("submit", "Submit For Review")}
+                  {t("submitForReview", "Submit For Review")}
                 </Button>
               )}
             </>
@@ -179,6 +166,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
               delete model?.dateCreated;
               delete model?.status;
               setIsSaving(true);
+              model.approvalRequired = approvalRequired ? true : false;
               await actions.onSave(model);
               setIsSaving(false);
             }}
