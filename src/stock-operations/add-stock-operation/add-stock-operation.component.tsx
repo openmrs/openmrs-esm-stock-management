@@ -27,8 +27,13 @@ import {
   OperationType,
   StockOperationType,
 } from "../../core/api/types/stockOperation/StockOperationType";
-import { operationStatusColor } from "../stock-operations.resource";
+import {
+  operationStatusColor,
+  useStockOperationLinks,
+} from "../stock-operations.resource";
 import styles from "./add-stock-operation.scss";
+import { Link, OverflowMenuVertical } from "@carbon/react/icons";
+import { URL_STOCK_OPERATION } from "../../constants";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -38,7 +43,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props?.isEditing
   );
+
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { items } = useStockOperationLinks(
+    props.operation?.name === "Stock Issue" ? props.operation?.uuid : ""
+  );
 
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
@@ -481,6 +490,53 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 )}
               </>
             </div>
+          )}
+        </div>
+      )}
+      {items && items?.length > 0 && (
+        <div style={{ margin: "10px" }}>
+          <h6>Related Transactions:</h6>
+          <hr />
+          {items.map(
+            (item) =>
+              props.model?.uuid === item?.parentUuid && (
+                <>
+                  <span>{item?.childOperationTypeName}</span>
+                  <span className={item?.childVoided ? "voided" : ""}>
+                    {item?.childVoided && item?.childOperationNumber}
+                    {!item?.childVoided && (
+                      <Link
+                        target={"_blank"}
+                        to={URL_STOCK_OPERATION(item?.childUuid)}
+                      >
+                        {item?.childOperationNumber}
+                      </Link>
+                    )}
+                  </span>
+                  <span>[{item?.childStatus}]</span>
+                  <OverflowMenuVertical />
+                </>
+              )
+          )}
+          {items.map(
+            (item) =>
+              props.model?.uuid === item?.parentUuid && (
+                <>
+                  <span>{item?.parentOperationTypeName}</span>
+                  <span className={item?.parentVoided ? "voided" : ""}>
+                    {item?.parentVoided && item?.parentOperationNumber}
+                    {!item?.parentVoided && (
+                      <Link
+                        target={"_blank"}
+                        to={URL_STOCK_OPERATION(item?.parentUuid)}
+                      >
+                        {item?.parentOperationNumber}
+                      </Link>
+                    )}
+                  </span>
+                  <span>[{item?.parentStatus}]</span>
+                </>
+              )
           )}
         </div>
       )}

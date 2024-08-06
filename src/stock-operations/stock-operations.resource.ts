@@ -61,7 +61,7 @@ export function useStockOperationLinks(filter: string) {
     Error
   >(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : [],
+    items: data?.data ? data?.data?.results : [],
     isLoading,
     isError: error,
   };
