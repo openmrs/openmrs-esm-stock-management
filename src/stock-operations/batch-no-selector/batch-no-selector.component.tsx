@@ -1,10 +1,10 @@
-import React, { ReactNode, useEffect, useMemo } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { useStockItemBatchNos } from "./batch-no-selector.resource";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { useStockItemBatchInformationHook } from "../../stock-items/add-stock-item/batch-information/batch-information.resource";
-import { ResourceRepresentation } from "../../core/api/api";
+import { useTranslation } from "react-i18next";
 
 interface BatchNoSelectorProps<T> {
   placeholder?: string;
@@ -14,6 +14,7 @@ interface BatchNoSelectorProps<T> {
   title?: string;
   invalid?: boolean;
   invalidText?: ReactNode;
+  selectedItem?: string;
 
   // Control
   controllerName: string;
@@ -25,6 +26,12 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNos(
     props.stockItemUuid
   );
+  const [validationMessage, setValidationMessage] = useState<string | null>(
+    null
+  );
+  const [selectedItem, setSelectedItem] = useState<StockBatchDTO | null>(null);
+  const { t } = useTranslation();
+
   const initialSelectedItem = useMemo(
     () =>
       stockItemBatchNos?.find(
@@ -52,23 +59,31 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     return item;
   });
 
+  useEffect(() => {
+    if (
+      !isLoading &&
+      stockItemBatchNos &&
+      props.selectedItem &&
+      stockItemBatchNos.length === 0
+    ) {
+      setValidationMessage(
+        "No stock batch numbers defined. Do a initial/receipt stock operation first."
+      );
+    } else {
+      setValidationMessage(null);
+    }
+  }, [isLoading, stockItemBatchNos, props.selectedItem]);
+
   if (isLoading) return <InlineLoading status="active" />;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <Controller
         name={props.controllerName}
         control={props.control}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
-            style={{
-              flexGrow: "1",
-            }}
+            style={{ flexGrow: "1" }}
             titleText={props.title}
             name={props.name}
             control={props.control}
@@ -77,6 +92,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             size={"sm"}
             items={stockItemBatchesInfo || []}
             onChange={(data: { selectedItem?: StockBatchDTO }) => {
+              setSelectedItem(data.selectedItem || null);
               props.onBatchNoChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
@@ -92,6 +108,11 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
         )}
       />
       {isLoading && <InlineLoading status="active" />}
+      {validationMessage && (
+        <div style={{ color: "red", marginTop: "8px" }}>
+          {t(validationMessage)}
+        </div>
+      )}
     </div>
   );
 };
