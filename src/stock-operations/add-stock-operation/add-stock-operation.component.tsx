@@ -5,6 +5,7 @@ import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
 import BaseOperationDetails from "./base-operation-details.component";
 import StockItemsAddition from "./stock-items-addition.component";
 import StockOperationSubmission from "./stock-operation-submission.component";
+import ReceivedItems from "./received-items.component";
 import { AddStockOperationProps } from "./types";
 import { useInitializeStockOperations } from "./add-stock-operation.resource";
 import { AccordionSkeleton } from "@carbon/react";
@@ -160,6 +161,10 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         />
       ),
       disabled: !(props.isEditing || manageSubmitOrComplete),
+    },
+    {
+      name: t("receivedItems", "Received Items"),
+      component: <ReceivedItems model={props?.model} />,
     },
   ];
 
