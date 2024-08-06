@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabItem } from "../../core/components/tabs/types";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
@@ -41,6 +41,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     props?.isEditing
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canReceiveItems, setCanReceiveItems] = useState(false);
+
+  useEffect(() => {
+    setCanReceiveItems(props?.model?.permission?.canReceiveItems ?? false);
+  }, [props?.model?.permission]);
 
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
@@ -164,7 +169,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(props.isEditing || manageSubmitOrComplete),
     },
   ].concat(
-    StockOperationTypeIsStockIssue(props?.model?.operationType as OperationType)
+    StockOperationTypeIsStockIssue(
+      props?.model?.operationType as OperationType
+    ) && canReceiveItems
       ? [
           {
             name: t("receivedItems", "Received Items"),
@@ -173,7 +180,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         ]
       : []
   );
-
   return (
     <>
       {!isEditing && props.operation.name === "Stock Issue" ? (
