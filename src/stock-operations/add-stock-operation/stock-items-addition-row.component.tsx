@@ -259,6 +259,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   className="small-placeholder-text"
                   size="sm"
                   id={`qty-${row?.uuid}`}
+                  hideSteppers={true}
                   allowEmpty={true}
                   onChange={(e: any) =>
                     setValue(`stockItems.${index}.quantity`, e?.target?.value)
