@@ -194,7 +194,10 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                     <BatchNoSelector
                       batchUuid={row?.stockBatchUuid}
                       onBatchNoChanged={(item) => {
-                        setValue(`stockItems.${index}.batchNo`, item?.batchNo);
+                        setValue(
+                          `stockItems.${index}.batchNo`,
+                          item?.batchNo ?? ""
+                        );
                         setValue(
                           `stockItems.${index}.expiration`,
                           item?.expiration
@@ -207,6 +210,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                       controllerName={`stockItems.${index}.stockBatchUuid`}
                       name={`stockItems.${index}.stockBatchUuid`}
                       stockItemUuid={row.stockItemUuid}
+                      selectedItem={stockItemUuid}
                     />
                   )}
                 {!(
