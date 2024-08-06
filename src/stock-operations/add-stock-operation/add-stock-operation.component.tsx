@@ -26,6 +26,7 @@ import { StockOperation } from "./stock-operation-context/useStockOperationConte
 import { formatDate, parseDate, showSnackbar } from "@openmrs/esm-framework";
 import {
   OperationType,
+  StockOperationTypeIsStockIssue,
   StockOperationType,
 } from "../../core/api/types/stockOperation/StockOperationType";
 import { operationStatusColor } from "../stock-operations.resource";
@@ -162,11 +163,16 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       ),
       disabled: !(props.isEditing || manageSubmitOrComplete),
     },
-    {
-      name: t("receivedItems", "Received Items"),
-      component: <ReceivedItems model={props?.model} />,
-    },
-  ];
+  ].concat(
+    StockOperationTypeIsStockIssue(props?.model?.operationType as OperationType)
+      ? [
+          {
+            name: t("receivedItems", "Received Items"),
+            component: <ReceivedItems model={props?.model} />,
+          },
+        ]
+      : []
+  );
 
   return (
     <>
