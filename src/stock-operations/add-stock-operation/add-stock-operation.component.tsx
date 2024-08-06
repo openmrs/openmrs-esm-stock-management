@@ -46,7 +46,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const { types } = useStockOperationTypes();
 
-  let currentStockOperationType = types?.results?.find(
+  const currentStockOperationType = types?.results?.find(
     (p) => p.operationType === props.model?.operationType
   );
 
