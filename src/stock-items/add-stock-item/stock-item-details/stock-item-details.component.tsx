@@ -107,6 +107,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             control={control}
             title={t("pleaseSpecify", "Please specify:")}
             placeholder="Choose a drug"
+            drugUuid={model.drugUuid}
             invalid={!!errors.drugUuid}
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
           />
@@ -184,6 +185,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
                 control={control}
                 controllerName="expiryNotice"
                 min={0}
+                hideSteppers={true}
                 size={"md"}
                 allowEmpty={true}
                 label={t("expiryNoticeDays", "Expiration Notice (days)")}
