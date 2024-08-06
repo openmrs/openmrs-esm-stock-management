@@ -66,13 +66,6 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
 
     useEffect(() => {
       setIsDrug(model.isDrug ?? false);
-      setSelectedItemType(
-        model.isDrug === true
-          ? "Pharmaceuticals"
-          : model.isDrug === false
-          ? "Non Pharmaceuticals"
-          : undefined
-      );
       setHasExpiration(model.hasExpiration ?? false);
     }, [model.hasExpiration, model.isDrug]);
 
@@ -80,30 +73,34 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
       <form
         className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
       >
-        <FormGroup
-          className="clear-margin-bottom"
-          legendText={t("itemType", "Item Type")}
-          title={t("itemType", "Item Type")}
-        >
-          <ControlledRadioButtonGroup
-            control={control}
-            name="isDrug"
-            controllerName="isDrug"
-            legendText=""
-            invalid={!!errors.isDrug}
-            invalidText={errors.isDrug && errors?.isDrug?.message}
-            onChange={(selection: boolean) => {
-              const selectedOption = radioOptions.find(
-                (option) => option.value === selection
-              );
-              const selectedLabel = selectedOption ? selectedOption.label : "";
-              setIsDrug(selection);
-              setSelectedItemType(selectedLabel);
-            }}
-            options={radioOptions} // Pass radioOptions directly
-          />
-        </FormGroup>
-        {isDrug && (
+        {!isEditing && (
+          <FormGroup
+            className="clear-margin-bottom"
+            legendText={t("itemType", "Item Type")}
+            title={t("itemType", "Item Type")}
+          >
+            <ControlledRadioButtonGroup
+              control={control}
+              name="isDrug"
+              controllerName="isDrug"
+              legendText=""
+              invalid={!!errors.isDrug}
+              invalidText={errors.isDrug && errors?.isDrug?.message}
+              onChange={(selection: boolean) => {
+                const selectedOption = radioOptions.find(
+                  (option) => option.value === selection
+                );
+                const selectedLabel = selectedOption
+                  ? selectedOption.label
+                  : "";
+                setIsDrug(selection);
+                setSelectedItemType(selectedLabel);
+              }}
+              options={radioOptions} // Pass radioOptions directly
+            />
+          </FormGroup>
+        )}
+        {selectedItemType === "Pharmaceuticals" ? (
           <DrugSelector
             name="drugUuid"
             controllerName="drugUuid"
@@ -113,8 +110,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             invalid={!!errors.drugUuid}
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
           />
-        )}
-        {isDrug != undefined && !isDrug && (
+        ) : selectedItemType === "Non Pharmaceuticals" ? (
           <ConceptsSelector
             name="conceptUuid"
             controllerName="conceptUuid"
@@ -124,7 +120,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             invalid={!!errors.drugUuid}
             invalidText={errors.drugUuid && errors?.drugUuid?.message}
           />
-        )}
+        ) : null}
         <ControlledTextInput
           id="commonName"
           name="commonName"
