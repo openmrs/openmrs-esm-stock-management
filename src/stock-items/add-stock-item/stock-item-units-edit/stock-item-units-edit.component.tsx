@@ -21,7 +21,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
   const { t } = useTranslation();
 
   const { item: stockItem, isLoading } = useStockItem(stockItemUuid);
-  console.log(stockItem)
+
   if (
     !(
       stockItem &&
@@ -34,7 +34,9 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
   return (
     <>
       <DispensingPackageMeasurement
-        dispensingUnitPackagingUoMUuid={stockItem?.dispensingUnitPackagingUoMUuid}
+        dispensingUnitPackagingUoMUuid={
+          stockItem?.dispensingUnitPackagingUoMUuid
+        }
         name="dispensingUnitPackagingUoMUuid"
         controllerName="dispensingUnitPackagingUoMUuid"
         control={control}
@@ -52,7 +54,9 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         }
       />
       <DispensingPackageMeasurement
-        dispensingUnitPackagingUoMUuid={stockItem?.defaultStockOperationsUoMUuid}
+        dispensingUnitPackagingUoMUuid={
+          stockItem?.defaultStockOperationsUoMUuid
+        }
         name="defaultStockOperationsUoMUuid"
         controllerName="defaultStockOperationsUoMUuid"
         control={control}
