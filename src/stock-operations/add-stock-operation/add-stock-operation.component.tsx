@@ -26,28 +26,47 @@ import { formatDate, parseDate, showSnackbar } from "@openmrs/esm-framework";
 import {
   OperationType,
   StockOperationType,
+  StockOperationTypeCanBeRelatedToRequisition,
+  operationFromString,
 } from "../../core/api/types/stockOperation/StockOperationType";
 import {
+  getStockOperationLinks,
   operationStatusColor,
-  useStockOperationLinks,
 } from "../stock-operations.resource";
 import styles from "./add-stock-operation.scss";
-import { Link, OverflowMenuVertical } from "@carbon/react/icons";
-import { URL_STOCK_OPERATION } from "../../constants";
+import { useStockOperationTypes } from "../../stock-lookups/stock-lookups.resource";
+import { StockOperationLinkDTO } from "../../core/api/types/stockOperation/StockOperationLinkDTO";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
   const { isEditing, canEdit, canPrint } = props;
   const { isLoading, isError, result } = useInitializeStockOperations(props);
+  const [operationLinks, setOperationLinks] =
+    useState<StockOperationLinkDTO[]>();
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
+  const { types } = useStockOperationTypes();
+
+  let currentStockOperationType = types?.results?.find(
+    (p) => p.operationType === props.model?.operationType
+  );
+
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props?.isEditing
   );
 
+  if (
+    StockOperationTypeCanBeRelatedToRequisition(
+      operationFromString(currentStockOperationType?.name.toLowerCase())
+    ) ||
+    OperationType.REQUISITION_OPERATION_TYPE ===
+      currentStockOperationType?.operationType
+  ) {
+    getStockOperationLinks(props.model?.uuid).then((resp) => {
+      setOperationLinks(resp.data?.results);
+    });
+  }
+
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { items } = useStockOperationLinks(
-    props.operation?.name === "Stock Issue" ? props.operation?.uuid : ""
-  );
 
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
@@ -493,47 +512,56 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           )}
         </div>
       )}
-      {items && items?.length > 0 && (
+      {operationLinks && operationLinks?.length > 0 && (
         <div style={{ margin: "10px" }}>
-          <h6>Related Transactions:</h6>
-          <hr />
-          {items.map(
+          <h6 style={{ color: "#24a148" }}>Related Transactions:</h6>
+          {operationLinks.map(
             (item) =>
-              props.model?.uuid === item?.parentUuid && (
+              (props.model?.uuid === item?.parentUuid ||
+                currentStockOperationType.uuid === item?.parentUuid) && (
                 <>
                   <span>{item?.childOperationTypeName}</span>
                   <span className={item?.childVoided ? "voided" : ""}>
+                    <span> </span>
                     {item?.childVoided && item?.childOperationNumber}
                     {!item?.childVoided && (
-                      <Link
-                        target={"_blank"}
-                        to={URL_STOCK_OPERATION(item?.childUuid)}
+                      <span
+                        style={{
+                          marginLeft: "2px",
+                          color: "#0f62fe",
+                        }}
                       >
                         {item?.childOperationNumber}
-                      </Link>
+                      </span>
                     )}
                   </span>
+                  <span> </span>
                   <span>[{item?.childStatus}]</span>
-                  <OverflowMenuVertical />
                 </>
               )
           )}
-          {items.map(
+          <span> </span>
+          {operationLinks.map(
             (item) =>
-              props.model?.uuid === item?.parentUuid && (
+              (props.model?.uuid === item?.childUuid ||
+                currentStockOperationType.uuid === item?.childUuid) && (
                 <>
                   <span>{item?.parentOperationTypeName}</span>
                   <span className={item?.parentVoided ? "voided" : ""}>
+                    <span> </span>
                     {item?.parentVoided && item?.parentOperationNumber}
                     {!item?.parentVoided && (
-                      <Link
-                        target={"_blank"}
-                        to={URL_STOCK_OPERATION(item?.parentUuid)}
+                      <span
+                        style={{
+                          marginLeft: "2px",
+                          color: "#0f62fe",
+                        }}
                       >
                         {item?.parentOperationNumber}
-                      </Link>
+                      </span>
                     )}
                   </span>
+                  <span> </span>
                   <span>[{item?.parentStatus}]</span>
                 </>
               )
