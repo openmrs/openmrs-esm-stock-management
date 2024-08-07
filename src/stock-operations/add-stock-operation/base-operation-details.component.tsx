@@ -33,7 +33,7 @@ import { InitializeResult } from "./types";
 import { ResourceRepresentation } from "../../core/api/api";
 import { useStockOperationPages } from "../stock-operations-table.resource";
 import { createBaseOperationPayload } from "./add-stock-utils";
-import { showSnackbar } from "@openmrs/esm-framework";
+import { showSnackbar, useSession } from "@openmrs/esm-framework";
 
 import rootStyles from "../../root.scss";
 
@@ -67,6 +67,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   });
   const operationType = operationFromString(operation?.operationType);
   const issueStockOperation = mapIssueStockLocations(model);
+  const { user } = useSession();
+  const defaultLoggedUserUuid = user.uuid;
 
   const {
     handleSubmit,
@@ -232,6 +234,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             title={t("responsiblePerson:", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
+            userUuid={defaultLoggedUserUuid}
             invalidText={
               errors.responsiblePersonUuid &&
               errors?.responsiblePersonUuid?.message
