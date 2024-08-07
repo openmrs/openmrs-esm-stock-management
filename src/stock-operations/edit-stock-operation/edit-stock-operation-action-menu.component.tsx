@@ -57,14 +57,7 @@ const EditStockOperationActionMenu: React.FC<
         iconDescription={"View"}
         kind="ghost"
         onClick={() => {
-          launchAddOrEditDialog(
-            t,
-            model ?? operation,
-            true,
-            type,
-            operations,
-            false
-          );
+          launchAddOrEditDialog(t, model ?? operation, true, type, operations);
         }}
       >
         {operationNumber ? operationNumber : `${model?.operationNumber}`}

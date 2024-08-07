@@ -350,8 +350,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               filteredItems[index],
               true,
               operation,
-              operations,
-              false
+              operations
             );
           }}
           iconDescription={t("editStockItem", "Edit Stock Item")}
@@ -457,8 +456,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                       initialStockOperationValue(),
                       false,
                       operation,
-                      operations,
-                      false
+                      operations
                     );
                   }}
                   onOperationLoaded={(ops) => {
