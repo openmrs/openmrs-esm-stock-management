@@ -85,10 +85,7 @@ export const launchAddOrEditDialog = (
   canPrint?: boolean
 ) => {
   const printEnabled =
-    canPrint !== undefined
-      ? canPrint
-      : stockOperation?.status === "NEW" ||
-        stockOperation?.status === "COMPLETED";
+    canPrint !== undefined ? canPrint : stockOperation?.status === "COMPLETED";
 
   launchOverlay(
     isEditing
