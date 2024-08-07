@@ -171,7 +171,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   ].concat(
     StockOperationTypeIsStockIssue(
       props?.model?.operationType as OperationType
-    ) && canReceiveItems
+    ) || canReceiveItems
       ? [
           {
             name: t("receivedItems", "Received Items"),
