@@ -61,6 +61,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   }
 
   let operations: StockOperationType[] | null | undefined;
+  const status = props?.model?.status;
+
   const tabs: TabItem[] = [
     {
       name: isEditing
@@ -82,7 +84,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               : props?.operation?.name === "Stock Issue"
               ? props?.model
               : result?.dto
-          } // check if type is stockIssue and pass requistion data
+          } // check if type is stockIssue and pass requisition data
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -105,7 +107,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               : props?.operation?.name === "Stock Issue"
               ? props?.model
               : result?.dto
-          } // check if type is stockIssue and pass requistion data
+          } // check if type is stockIssue and pass requisition data
           onSave={async () => {
             setManageSubmitOrComplete(true);
             setSelectedIndex(2);
@@ -172,14 +174,17 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     StockOperationTypeIsStockIssue(
       props?.model?.operationType as OperationType
     ) || canReceiveItems
-      ? [
-          {
-            name: t("receivedItems", "Received Items"),
-            component: <ReceivedItems model={props?.model} />,
-          },
-        ]
+      ? status === "DISPATCHED" || status === "COMPLETED"
+        ? [
+            {
+              name: t("receivedItems", "Received Items"),
+              component: <ReceivedItems model={props?.model} />,
+            },
+          ]
+        : []
       : []
   );
+
   return (
     <>
       {!isEditing && props.operation.name === "Stock Issue" ? (

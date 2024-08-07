@@ -14,7 +14,7 @@ import {
 } from "@carbon/react";
 
 const formatDate = (date: Date | string | null) => {
-  if (!date) return "N/A";
+  if (!date) return " ";
   const d = new Date(date);
   const day = String(d.getDate()).padStart(2, "0");
   const month = String(d.getMonth() + 1).padStart(2, "0");
@@ -39,22 +39,15 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ model }) => {
     { key: "qtyUoM", header: t("qtyUoM", "Qty UoM") },
   ];
 
-  // Check if the model status is either DISPATCHED or COMPLETED
-  if (model?.status !== "DISPATCHED" && model?.status !== "COMPLETED") {
-    return (
-      <div>{t("statusNotValid", "No items to display for this status.")}</div>
-    );
-  }
-
   const rows =
-    model?.stockOperationItems?.map((item, index) => ({
+    model?.stockOperationItems?.map((item) => ({
       id: item.uuid,
       item: item.stockItemName,
-      requested: item.quantityRequested || "N/A",
+      requested: item.quantityRequested || " ",
       batch: item.batchNo,
       expiry: formatDate(item.expiration),
-      qtySent: item.quantity || "N/A",
-      qtyReceived: item.quantityReceived || "N/A",
+      qtySent: item.quantity || " ",
+      qtyReceived: item.quantityReceived || " ",
       qtyUoM: item.quantityReceivedPackagingUOMName,
     })) || [];
 
