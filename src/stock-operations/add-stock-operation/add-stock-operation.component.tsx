@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabItem } from "../../core/components/tabs/types";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
@@ -45,26 +45,39 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     useState<StockOperationLinkDTO[]>();
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const { types } = useStockOperationTypes();
+  const [requisition, setRequisition] = useState(props?.model?.uuid);
+  const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
+    props?.isEditing
+  );
 
   const currentStockOperationType = types?.results?.find(
     (p) => p.operationType === props.model?.operationType
   );
 
-  const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
-    props?.isEditing
-  );
+  useEffect(() => {
+    if (
+      currentStockOperationType?.operationType ===
+        OperationType.REQUISITION_OPERATION_TYPE ||
+      props.model?.operationType === OperationType.REQUISITION_OPERATION_TYPE
+    ) {
+      setRequisition(props.model?.uuid);
+    }
+  }, [currentStockOperationType, props.model?.operationType]);
 
-  if (
-    StockOperationTypeCanBeRelatedToRequisition(
-      operationFromString(currentStockOperationType?.name.toLowerCase())
-    ) ||
-    OperationType.REQUISITION_OPERATION_TYPE ===
-      currentStockOperationType?.operationType
-  ) {
-    getStockOperationLinks(props.model?.uuid).then((resp) => {
-      setOperationLinks(resp.data?.results);
-    });
-  }
+  useEffect(() => {
+    if (
+      isEditing ||
+      StockOperationTypeCanBeRelatedToRequisition(
+        operationFromString(currentStockOperationType?.name.toLowerCase())
+      ) ||
+      OperationType.REQUISITION_OPERATION_TYPE ===
+        currentStockOperationType?.operationType
+    ) {
+      getStockOperationLinks(requisition).then((resp) => {
+        setOperationLinks(resp.data?.results);
+      });
+    }
+  }, [currentStockOperationType, requisition, props.model?.uuid]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
