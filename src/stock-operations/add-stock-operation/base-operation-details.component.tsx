@@ -100,7 +100,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       await onSave(payload);
     } catch (e) {
       showSnackbar({
-        title: t("errorSavingBaseOperation", "Erro saving base operation"),
+        title: t("errorSavingBaseOperation", "Error saving base operation"),
         isLowContrast: true,
         kind: "error",
       });
@@ -183,17 +183,22 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         )}
 
         {(!canEdit || isEditing || lockSource) && (
-          <TextInput
-            id="sourceUuidLbl"
-            value={
-              operationType === "stockissue"
-                ? issueStockOperation.sourceName
-                : model?.sourceName ?? ""
+          <PartySelector
+            controllerName="sourceUuid"
+            name="sourceUuid"
+            control={control}
+            title={operation?.hasDestination ? "From" : "Location"}
+            placeholder={
+              operation.hasDestination
+                ? t("chooseASource", "Choose a source")
+                : t("chooseALocation", "Choose a location")
             }
-            readOnly={true}
-            labelText={operation?.hasDestination ? "From" : "From"}
+            invalid={!!errors.sourceUuid}
+            invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
+            parties={sourcePartyList || []}
           />
         )}
+
         {canEdit && !lockDestination && operation?.hasDestination && (
           <PartySelector
             controllerName="destinationUuid"
@@ -214,15 +219,21 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         )}
 
         {(!canEdit || isEditing || lockDestination) && (
-          <TextInput
-            id="destinationUuidLbl"
-            value={
-              operationType === "stockissue"
-                ? issueStockOperation.destinationName
-                : model?.destinationName ?? ""
+          <PartySelector
+            controllerName="destinationUuid"
+            name="destinationUuid"
+            control={control}
+            title={operation?.hasSource ? "To" : "Location"}
+            placeholder={
+              operation?.hasSource
+                ? t("chooseADestination", "Choose a destination")
+                : "Location"
             }
-            readOnly={true}
-            labelText={operation?.hasSource ? "To" : "To"}
+            invalid={!!errors.destinationUuid}
+            invalidText={
+              errors.destinationUuid && errors?.destinationUuid?.message
+            }
+            parties={destinationPartyList || []}
           />
         )}
 
@@ -242,6 +253,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             onUserChanged={(user) => {
               if (user?.uuid === otherUser.uuid) {
                 setIsOtherUser(true);
+              } else {
+                setIsOtherUser(false);
               }
             }}
           />
@@ -267,16 +280,24 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         )}
 
         {!canEdit && (
-          <TextInput
-            id="responsiblePersonLbl"
-            value={
-              (model?.responsiblePersonUuid &&
-              model?.responsiblePersonUuid !== otherUser.uuid
-                ? `${model?.responsiblePersonFamilyName} ${model?.responsiblePersonGivenName}`
-                : model?.responsiblePersonOther) ?? ""
+          <UsersSelector
+            controllerName="responsiblePersonUuid"
+            name="responsiblePersonUuid"
+            control={control}
+            title={t("responsiblePerson:", "Responsible Person")}
+            placeholder={t("filter", "Filter ...")}
+            invalid={!!errors.responsiblePersonUuid}
+            invalidText={
+              errors.responsiblePersonUuid &&
+              errors?.responsiblePersonUuid?.message
             }
-            readOnly={true}
-            labelText={"Responsible Person"}
+            onUserChanged={(user) => {
+              if (user?.uuid === otherUser.uuid) {
+                setIsOtherUser(true);
+              } else {
+                setIsOtherUser(false);
+              }
+            }}
           />
         )}
 
