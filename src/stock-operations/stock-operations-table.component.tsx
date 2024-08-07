@@ -435,11 +435,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   />
 
                   <StockOperationsFilters
+                    conceptUuid={config.stockSourceTypeUUID}
                     filterName={StockFilters.STATUS}
                     onFilterChange={handleOnFilterChange}
                   />
 
                   <StockOperationsFilters
+                    conceptUuid={config.stockSourceTypeUUID}
                     filterName={StockFilters.OPERATION}
                     onFilterChange={handleOnFilterChange}
                   />
@@ -454,7 +456,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
                       t,
-                      initialStockOperationValue(),
+                      { ...initialStockOperationValue(), receivedItems: [] },
                       false,
                       operation,
                       operations,
