@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabItem } from "../../core/components/tabs/types";
 import VerticalTabs from "../../core/components/tabs/vertical-tabs.component";
 import BaseOperationDetails from "./base-operation-details.component";
 import StockItemsAddition from "./stock-items-addition.component";
 import StockOperationSubmission from "./stock-operation-submission.component";
+import ReceivedItems from "./received-items.component";
 import { AddStockOperationProps } from "./types";
 import { useInitializeStockOperations } from "./add-stock-operation.resource";
 import { AccordionSkeleton } from "@carbon/react";
@@ -25,6 +26,7 @@ import { StockOperation } from "./stock-operation-context/useStockOperationConte
 import { formatDate, parseDate, showSnackbar } from "@openmrs/esm-framework";
 import {
   OperationType,
+  StockOperationTypeIsStockIssue,
   StockOperationType,
 } from "../../core/api/types/stockOperation/StockOperationType";
 import { operationStatusColor } from "../stock-operations.resource";
@@ -39,6 +41,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     props?.isEditing
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canReceiveItems, setCanReceiveItems] = useState(false);
+
+  useEffect(() => {
+    setCanReceiveItems(props?.model?.permission?.canReceiveItems ?? false);
+  }, [props?.model?.permission]);
 
   if (isLoading) return <AccordionSkeleton />;
   if (isError) {
@@ -54,6 +61,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   }
 
   let operations: StockOperationType[] | null | undefined;
+  const status = props?.model?.status;
+
   const tabs: TabItem[] = [
     {
       name: isEditing
@@ -75,7 +84,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               : props?.operation?.name === "Stock Issue"
               ? props?.model
               : result?.dto
-          } // check if type is stockIssue and pass requistion data
+          } // check if type is stockIssue and pass requisition data
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -98,7 +107,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               : props?.operation?.name === "Stock Issue"
               ? props?.model
               : result?.dto
-          } // check if type is stockIssue and pass requistion data
+          } // check if type is stockIssue and pass requisition data
           onSave={async () => {
             setManageSubmitOrComplete(true);
             setSelectedIndex(2);
@@ -161,7 +170,20 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       ),
       disabled: !(props.isEditing || manageSubmitOrComplete),
     },
-  ];
+  ].concat(
+    StockOperationTypeIsStockIssue(
+      props?.model?.operationType as OperationType
+    ) || canReceiveItems
+      ? status === "DISPATCHED" || status === "COMPLETED"
+        ? [
+            {
+              name: t("receivedItems", "Received Items"),
+              component: <ReceivedItems model={props?.model} />,
+            },
+          ]
+        : []
+      : []
+  );
 
   return (
     <>

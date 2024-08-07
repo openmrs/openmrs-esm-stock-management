@@ -3,6 +3,7 @@ import { StockOperationItemDTO } from "./StockOperationItemDTO";
 import { StockOperationStatus } from "./StockOperationStatus";
 
 export interface StockOperationDTO {
+  receivedItems: any;
   uuid: string | null | undefined;
   cancelReason: string | null | undefined;
   cancelledBy: number;
