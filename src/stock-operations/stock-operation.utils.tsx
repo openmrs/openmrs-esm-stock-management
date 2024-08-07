@@ -27,7 +27,8 @@ export const addOrEditStockOperation = async (
   isEditing: boolean,
   operation?: StockOperationType,
   operations?: StockOperationType[],
-  canPrint?: boolean
+  canPrint?: boolean,
+  printEnabled?: boolean
 ) => {
   const payload = stockOperation;
   try {
@@ -106,6 +107,7 @@ export const launchAddOrEditDialog = (
           isEditing,
           operation,
           operations,
+          canPrint,
           printEnabled
         )
       }

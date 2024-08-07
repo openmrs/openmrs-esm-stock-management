@@ -42,7 +42,7 @@ const StockOperationIssueStockButton: React.FC<
 
   const modifiedOperation = addRequisitionStockOperation(operation);
   const handleButtonClick = () => {
-    launchAddOrEditDialog(t, modifiedOperation, false, type, operations);
+    launchAddOrEditDialog(t, modifiedOperation, false, type, operations, false);
   };
 
   return (
