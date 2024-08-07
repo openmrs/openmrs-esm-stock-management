@@ -80,10 +80,15 @@ export const launchAddOrEditDialog = (
   stockOperation: StockOperationDTO,
   isEditing: boolean,
   operation?: StockOperationType,
-  operations?: StockOperationType[]
+  operations?: StockOperationType[],
+  canPrint?: boolean
 ) => {
-  const canPrint =
-    stockOperation?.status === "NEW" || stockOperation?.status === "COMPLETED";
+  const printEnabled =
+    canPrint !== undefined
+      ? canPrint
+      : stockOperation?.status === "NEW" ||
+        stockOperation?.status === "COMPLETED";
+
   launchOverlay(
     isEditing
       ? t("editOperationTitle", "Edit {{operationType}}", {
@@ -101,7 +106,7 @@ export const launchAddOrEditDialog = (
           isEditing,
           operation,
           operations,
-          canPrint
+          printEnabled
         )
       }
       isEditing={isEditing}
@@ -109,7 +114,7 @@ export const launchAddOrEditDialog = (
       canEdit={
         isEditing ? (stockOperation?.status === "NEW" ? true : false) : true
       }
-      canPrint={canPrint}
+      canPrint={printEnabled}
     />
   );
 };
