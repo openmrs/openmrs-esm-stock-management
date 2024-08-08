@@ -1,6 +1,12 @@
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { initialStockOperationValue } from "../../core/utils/utils";
-import { MAIN_STORE_LOCATION_TAG, today } from "../../constants";
+import {
+  APP_STOCKMANAGEMENT_STOCKOPERATIONS,
+  MAIN_STORE_LOCATION_TAG,
+  TASK_STOCKMANAGEMENT_STOCKOPERATIONS_APPROVE,
+  TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE,
+  today,
+} from "../../constants";
 import {
   operationFromString,
   StockOperationType,
@@ -22,10 +28,8 @@ import {
 import {
   getParties,
   getStockOperationTypes,
-  getUserRoleScopes,
 } from "../../stock-lookups/stock-lookups.resource";
 import { Party } from "../../core/api/types/Party";
-import { getCurrentUser } from "@openmrs/esm-framework";
 
 export async function initializeNewStockOperation(
   currentStockOperationType: StockOperationType,
@@ -37,15 +41,6 @@ export async function initializeNewStockOperation(
   const isNew = !!stockOperation;
   const newItemsToCopy: StockOperationItemDTO[] = [];
   const showQuantityRequested = false;
-  const currentUserUuid = await new Promise((resolve, reject) => {
-    getCurrentUser().subscribe({
-      next: (user) => {
-        const userUuid = user?.user?.uuid;
-        resolve(userUuid);
-      },
-      error: (err) => reject(err),
-    });
-  });
   let operationTypes = stockOperationTypes;
   const canIssueStock =
     stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false;
@@ -81,23 +76,10 @@ export async function initializeNewStockOperation(
       operationType: currentStockOperationType?.operationType,
     });
     const partyList = await getParties();
-    const userRoleScopes = await getUserRoleScopes();
-    const currentUserRoleScope = userRoleScopes.data?.results?.filter(
-      (role) => role.userUuid === currentUserUuid
-    );
-    const userRoleScopeLocations = [
-      ...new Set(
-        currentUserRoleScope.flatMap((role) =>
-          role?.locations?.map((l) => l.locationUuid)
-        )
-      ),
-    ];
 
     if (!partyList.ok) throw Error("Error loading parties");
     const filteredPartyList = partyList.data?.results?.filter(
-      (party) =>
-        userRoleScopeLocations.includes(party.locationUuid) ||
-        party.stockSourceUuid !== null
+      (party) => party.stockSourceUuid !== null
     );
 
     sourcePartyList = filteredPartyList?.filter(
