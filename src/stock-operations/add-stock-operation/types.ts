@@ -6,6 +6,7 @@ import { SaveStockOperation } from "../../stock-items/types";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
 import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
+import { PrivilegeScope } from "../../core/api/types/identity/PriviledgeScope";
 
 export interface InitializeResult {
   dto?: StockOperationDTO;
@@ -34,7 +35,7 @@ export interface InitializeResult {
   shouldLockDestination: boolean;
   sourcePartyListFilter?: (p: Party) => boolean;
   destinationPartyListFilter?: (p: Party) => boolean;
-  location?: string;
+  atLocation?: string;
   sourcePartyList?: Party[];
   destinationPartyList?: Party[];
   stockOperationTypes: StockOperationType[];
