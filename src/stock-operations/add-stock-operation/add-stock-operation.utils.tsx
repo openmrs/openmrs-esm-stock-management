@@ -1,9 +1,7 @@
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { initialStockOperationValue } from "../../core/utils/utils";
 import {
-  APP_STOCKMANAGEMENT_STOCKOPERATIONS,
   MAIN_STORE_LOCATION_TAG,
-  TASK_STOCKMANAGEMENT_STOCKOPERATIONS_APPROVE,
   TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE,
   today,
 } from "../../constants";
@@ -30,6 +28,7 @@ import {
   getStockOperationTypes,
 } from "../../stock-lookups/stock-lookups.resource";
 import { Party } from "../../core/api/types/Party";
+import { useState } from "react";
 
 export async function initializeNewStockOperation(
   currentStockOperationType: StockOperationType,
@@ -40,6 +39,7 @@ export async function initializeNewStockOperation(
   let model: StockOperationDTO;
   const isNew = !!stockOperation;
   const newItemsToCopy: StockOperationItemDTO[] = [];
+  const [atLocation, setAtLocation] = useState<string | null>();
   const showQuantityRequested = false;
   let operationTypes = stockOperationTypes;
   const canIssueStock =
@@ -60,7 +60,7 @@ export async function initializeNewStockOperation(
   const shouldLockDestination =
     destinationTags.length === 1 &&
     destinationTags[0] === MAIN_STORE_LOCATION_TAG;
-  let location: string | null | undefined = null;
+  // let location: string | null | undefined = null;
   let sourcePartyList: Party[] | null | undefined;
   let destinationPartyList: Party[] | null | undefined;
 
@@ -69,6 +69,8 @@ export async function initializeNewStockOperation(
       ...initialStockOperationValue(),
       receivedItems: [],
     });
+    model = structuredClone(initialStockOperationValue());
+    setAtLocation(model?.atLocationUuid);
     model = Object.assign(model, {
       operationDate: today(),
       operationTypeName: currentStockOperationType?.name,
@@ -76,13 +78,8 @@ export async function initializeNewStockOperation(
       operationType: currentStockOperationType?.operationType,
     });
     const partyList = await getParties();
-
     if (!partyList.ok) throw Error("Error loading parties");
-    const filteredPartyList = partyList.data?.results?.filter(
-      (party) => party.stockSourceUuid !== null
-    );
-
-    sourcePartyList = filteredPartyList?.filter(
+    sourcePartyList = partyList?.data?.results?.filter(
       (p) =>
         (p.locationUuid &&
           currentStockOperationType?.sourceType === LocationTypeLocation &&
@@ -96,7 +93,7 @@ export async function initializeNewStockOperation(
         const party = sourcePartyList[0];
         model.sourceUuid = party.uuid;
         model.sourceName = party.name;
-        location = party?.locationUuid;
+        setAtLocation(party?.locationUuid);
       }
     }
 
@@ -184,7 +181,7 @@ export async function initializeNewStockOperation(
           currentStockOperationType?.destinationType === LocationTypeOther)
       );
     },
-    location,
+    atLocation,
     sourcePartyList,
     destinationPartyList,
     stockOperationTypes: operationTypes,
