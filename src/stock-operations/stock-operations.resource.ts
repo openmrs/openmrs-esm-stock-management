@@ -54,17 +54,17 @@ export function useStockOperations(filter: StockOperationFilter) {
 }
 
 // getStockOperationLinks
-export function useStockOperationLinks(filter: string) {
+export function getStockOperationLinks(filter: string) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationlink?v=default&q=${filter}`;
-  const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockOperationLinkDTO> },
-    Error
-  >(apiUrl, openmrsFetch);
-  return {
-    items: data.data ? data.data : [],
-    isLoading,
-    isError: error,
-  };
+  const abortController = new AbortController();
+
+  return openmrsFetch(apiUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    signal: abortController.signal,
+  });
 }
 
 // getStockOperation

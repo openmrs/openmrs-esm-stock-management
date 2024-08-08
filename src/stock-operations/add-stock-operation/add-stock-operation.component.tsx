@@ -28,18 +28,59 @@ import {
   OperationType,
   StockOperationTypeIsStockIssue,
   StockOperationType,
+  StockOperationTypeCanBeRelatedToRequisition,
+  operationFromString,
 } from "../../core/api/types/stockOperation/StockOperationType";
-import { operationStatusColor } from "../stock-operations.resource";
+import {
+  getStockOperationLinks,
+  operationStatusColor,
+} from "../stock-operations.resource";
 import styles from "./add-stock-operation.scss";
+import { useStockOperationTypes } from "../../stock-lookups/stock-lookups.resource";
+import { StockOperationLinkDTO } from "../../core/api/types/stockOperation/StockOperationLinkDTO";
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
   const { isEditing, canEdit, canPrint } = props;
   const { isLoading, isError, result } = useInitializeStockOperations(props);
+  const [operationLinks, setOperationLinks] =
+    useState<StockOperationLinkDTO[]>();
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
+  const { types } = useStockOperationTypes();
+  const [requisition, setRequisition] = useState(props?.model?.uuid);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props?.isEditing
   );
+
+  const currentStockOperationType = types?.results?.find(
+    (p) => p.operationType === props.model?.operationType
+  );
+
+  useEffect(() => {
+    if (
+      currentStockOperationType?.operationType ===
+        OperationType.REQUISITION_OPERATION_TYPE ||
+      props.model?.operationType === OperationType.REQUISITION_OPERATION_TYPE
+    ) {
+      setRequisition(props.model?.uuid);
+    }
+  }, [currentStockOperationType, props.model?.operationType]);
+
+  useEffect(() => {
+    if (
+      isEditing ||
+      StockOperationTypeCanBeRelatedToRequisition(
+        operationFromString(currentStockOperationType?.name.toLowerCase())
+      ) ||
+      OperationType.REQUISITION_OPERATION_TYPE ===
+        currentStockOperationType?.operationType
+    ) {
+      getStockOperationLinks(requisition).then((resp) => {
+        setOperationLinks(resp.data?.results);
+      });
+    }
+  }, [currentStockOperationType, requisition, props.model?.uuid]);
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canReceiveItems, setCanReceiveItems] = useState(false);
 
@@ -503,6 +544,62 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 )}
               </>
             </div>
+          )}
+        </div>
+      )}
+      {operationLinks && operationLinks?.length > 0 && (
+        <div style={{ margin: "10px" }}>
+          <h6 style={{ color: "#24a148" }}>Related Transactions:</h6>
+          {operationLinks.map(
+            (item) =>
+              (props.model?.uuid === item?.parentUuid ||
+                currentStockOperationType.uuid === item?.parentUuid) && (
+                <>
+                  <span>{item?.childOperationTypeName}</span>
+                  <span className={item?.childVoided ? "voided" : ""}>
+                    <span> </span>
+                    {item?.childVoided && item?.childOperationNumber}
+                    {!item?.childVoided && (
+                      <span
+                        style={{
+                          marginLeft: "2px",
+                          color: "#0f62fe",
+                        }}
+                      >
+                        {item?.childOperationNumber}
+                      </span>
+                    )}
+                  </span>
+                  <span> </span>
+                  <span>[{item?.childStatus}]</span>
+                </>
+              )
+          )}
+          <span> </span>
+          {operationLinks.map(
+            (item) =>
+              (props.model?.uuid === item?.childUuid ||
+                currentStockOperationType.uuid === item?.childUuid) && (
+                <>
+                  <span>{item?.parentOperationTypeName}</span>
+                  <span className={item?.parentVoided ? "voided" : ""}>
+                    <span> </span>
+                    {item?.parentVoided && item?.parentOperationNumber}
+                    {!item?.parentVoided && (
+                      <span
+                        style={{
+                          marginLeft: "2px",
+                          color: "#0f62fe",
+                        }}
+                      >
+                        {item?.parentOperationNumber}
+                      </span>
+                    )}
+                  </span>
+                  <span> </span>
+                  <span>[{item?.parentStatus}]</span>
+                </>
+              )
           )}
         </div>
       )}
