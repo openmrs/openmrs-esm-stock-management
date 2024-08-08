@@ -1,10 +1,6 @@
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { initialStockOperationValue } from "../../core/utils/utils";
-import {
-  MAIN_STORE_LOCATION_TAG,
-  TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE,
-  today,
-} from "../../constants";
+import { MAIN_STORE_LOCATION_TAG, today } from "../../constants";
 import {
   operationFromString,
   StockOperationType,
@@ -69,7 +65,6 @@ export async function initializeNewStockOperation(
       ...initialStockOperationValue(),
       receivedItems: [],
     });
-    model = structuredClone(initialStockOperationValue());
     setAtLocation(model?.atLocationUuid);
     model = Object.assign(model, {
       operationDate: today(),
