@@ -210,7 +210,7 @@ export function getStockOperationItemsCost(filter: StockOperationFilter) {
 export function getStockItemInventory(filter: StockItemInventoryFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockiteminventory${toQueryParams(
     filter
-  )}`;
+  )}&v=default`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
     method: "GET",
