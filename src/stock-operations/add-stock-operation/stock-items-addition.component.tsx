@@ -241,6 +241,8 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                         { uuid: `new-item-1`, id: `new-item-1` },
                       ]
                     }
+                    stockOperationUuid={model.uuid ?? ""}
+                    locationUuid={model.atLocationUuid ?? ""}
                     batchBalance={batchBalance}
                     batchNos={batchNos}
                     control={control}

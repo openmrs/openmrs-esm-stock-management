@@ -35,6 +35,10 @@ import { StockOperationItemDTO } from "../../core/api/types/stockOperation/Stock
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import QtyUomSelector from "../qty-uom-selector/qty-uom-selector.component";
 import BatchNoSelector from "../batch-no-selector/batch-no-selector.component";
+import {
+  getStockItemInventory,
+  StockItemInventoryFilter,
+} from "../stock-operations.resource";
 
 import styles from "./stock-items-addition-row.scss";
 
@@ -46,6 +50,8 @@ interface StockItemsAdditionRowProps {
   requiresBatchUuid?: boolean;
   canUpdateBatchInformation?: boolean;
   canCapturePurchasePrice?: boolean;
+  stockOperationUuid?: string;
+  locationUuid?: string;
   batchNos?: {
     [key: string]: StockBatchDTO[];
   };
@@ -86,12 +92,13 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   requiresBatchUuid,
   canUpdateBatchInformation,
   canCapturePurchasePrice,
-  batchBalance,
   control,
   setValue,
   errors,
   remove,
   fields,
+  stockOperationUuid,
+  locationUuid,
 }) => {
   const [stockItemUuid, setStockItemUuid] = useState<
     string | null | undefined
@@ -99,6 +106,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   const [stockItemExpiry, setStockItemExpiy] = useState<
     Date | null | undefined
   >();
+  const [batchBalance, setBatchBalance] = useState(null);
 
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
     if (!data) return;
@@ -129,6 +137,50 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
         // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
       }
     }
+  };
+
+  const handleFetchBatchBalance = ({
+    stockItemUuid,
+    stockBatchUuid,
+    excludeExpired = true,
+  }) => {
+    const filters: StockItemInventoryFilter = {
+      stockBatchUuid,
+      stockItemUuid,
+      stockOperationUuid,
+      excludeExpired,
+      locationUuid,
+      groupBy: "LocationStockItemBatchNo",
+    };
+    if (stockBatchUuid) {
+      getStockItemInventory(filters)
+        .then(({ data }) => data)
+        .then((res: any) => {
+          if ((res as any).error) {
+            return;
+          }
+          const inventory: StockItemInventory = (
+            res?.results as StockItemInventory[]
+          )?.[0];
+          if (!inventory) {
+            setBatchBalance({
+              quantity: 0,
+              quantityUoM: null,
+            });
+          }
+          setBatchBalance({
+            quantity: inventory.quantity,
+            quantityUoM: inventory.quantityUoM,
+          });
+        })
+        .catch((error: any) => {
+          if ((error as any).error) {
+            return;
+          }
+          return;
+        });
+    }
+    setBatchBalance(null);
   };
 
   return (
@@ -203,6 +255,10 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                           item?.expiration
                         );
                         setStockItemExpiy(item?.expiration);
+                        handleFetchBatchBalance({
+                          stockItemUuid: row?.stockItemUuid,
+                          stockBatchUuid: item?.uuid,
+                        });
                       }}
                       placeholder={"Filter..."}
                       invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
@@ -273,14 +329,10 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   placeholder={
                     requiresBatchUuid &&
                     !requiresActualBatchInformation &&
-                    row?.stockBatchUuid in batchBalance
+                    batchBalance
                       ? `Bal: ${
-                          batchBalance[
-                            row?.stockBatchUuid
-                          ]?.quantity?.toLocaleString() ?? ""
-                        } ${
-                          batchBalance[row?.stockBatchUuid]?.quantityUoM ?? ""
-                        }`
+                          batchBalance?.quantity?.toLocaleString() ?? ""
+                        } ${batchBalance?.quantityUoM ?? ""}`
                       : ""
                   }
                   invalid={!!errors?.stockItems?.[index]?.quantity}
