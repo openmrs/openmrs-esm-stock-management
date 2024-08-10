@@ -25,7 +25,7 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
   }, 500);
-
+  console.log(props)
   return (
     <div>
       <Controller
