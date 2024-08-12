@@ -1,0 +1,23 @@
+@use '@carbon/colors';
+@use '@carbon/styles/scss/spacing';
+@use '@carbon/styles/scss/type';
+@import '../style.scss';
+// Patient List Table
+.searchContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  
+  .searchContainer > div {
+    align-self: center;
+    justify-self: flex-end;
+  }
+  
+  .searchbox {
+    width: 100%;
+    max-width: 16rem;
+    background-color: $ui-02;
+    border-bottom-color: $ui-03;
+  }
+  

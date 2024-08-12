@@ -18,15 +18,21 @@ import { isDesktop } from "@openmrs/esm-framework";
 import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
 import { getStockOperationUniqueId } from "../stock-operation.utils";
 import { useTranslation } from "react-i18next";
-import { useFieldArray, useForm } from "react-hook-form";
+import {
+  FieldArrayWithId,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useValidationSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
-import { Add, ArrowRight } from "@carbon/react/icons";
+import { ArrowRight } from "@carbon/react/icons";
 import { errorAlert } from "../../core/utils/alert";
 import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 
 import styles from "./stock-items-addition.component.scss";
+import StockItemSearch from "./stock-item-search/stock-item-search.component";
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -55,7 +61,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
 }) => {
   const { t } = useTranslation();
   const { operationType } = operation ?? {};
-  const { formContext } = useStockOperationContext();
   const validationSchema = useValidationSchema(operationType);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
     if (item.stockItems.length == 0) {
@@ -70,12 +75,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     await onSave?.(model);
   };
 
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  const formMethods = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       stockItems: model?.stockOperationItems ?? [
@@ -85,20 +85,40 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     mode: "onSubmit",
   });
 
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = formMethods;
+
   const [isSaving] = useState(false);
 
-  const { fields, append, remove } = useFieldArray({
+  const formFieldMethods = useFieldArray({
     name: "stockItems",
     control,
   });
+  const { fields, append, remove } = formFieldMethods;
+  const [selectedItems, setSelectedItems] = useState<
+    | FieldArrayWithId<
+        { stockItems: StockOperationItemDTO[] },
+        "stockItems",
+        "id"
+      >
+    | (() => FieldArrayWithId<
+        { stockItems: StockOperationItemDTO[] },
+        "stockItems",
+        "id"
+      >)
+  >();
 
   useEffect(() => {
-    if (formContext?.stockItems) {
-      const stockItems =
-        formContext?.stockItems as Array<StockOperationItemDTO>;
-      stockItems?.forEach((item) => append(item));
+    if (fields.length > 0) {
+      const lastItemIndex = fields.length - 1;
+      const item = fields[lastItemIndex];
+      setSelectedItems(item);
     }
-  }, [append, formContext?.stockItems]);
+  }, [fields]);
 
   const headers = [
     {
@@ -143,12 +163,12 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     {
       key: "quantity",
       header: showQuantityRequested
-        ? t("quantityIssued", "Quantity Issued")
-        : t("quantity", "Quantity"),
+        ? t("qtyIssued", "Qty Issued")
+        : t("qty", "Qty"),
     },
     {
       key: "quantityuom",
-      header: t("quantityUoM", "Quantity Unit of Measurement(UoM)"),
+      header: t("quantityUom", "Qty UoM"),
     },
     ...(canCaptureQuantityPrice
       ? [
@@ -160,114 +180,107 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       : []),
   ];
 
-  const addNewItem = () => {
-    const itemId = `new-item-${getStockOperationUniqueId()}`;
-    append({ uuid: itemId, id: itemId });
-  };
-
   return (
-    <div style={{ margin: "10px" }}>
-      <div className={styles.tableContainer}>
-        <DataTable
-          rows={
-            model?.stockOperationItems ?? [
-              { uuid: `new-item-1`, id: `new-item-1` },
-            ]
-          }
-          headers={headers}
-          isSortable={false}
-          useZebraStyles={true}
-          styles={{
-            width: "100%",
-          }}
-          render={({ headers, getHeaderProps, getTableProps }) => (
-            <TableContainer>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    {headers.map((header: any) => (
-                      <TableHeader
-                        {...getHeaderProps({
-                          header,
-                          isSortable: false,
-                        })}
-                        className={
-                          isDesktop ? styles.desktopHeader : styles.tabletHeader
-                        }
-                        style={header?.styles}
-                        key={`${header.key}`}
-                      >
-                        {header.header?.content ?? header?.header}
-                      </TableHeader>
-                    ))}
-                    {canEdit && (
-                      <TableHeader
-                        style={{
-                          width: "3% !important",
-                        }}
-                      >
-                        <div
+    <FormProvider {...formMethods}>
+      <div style={{ margin: "10px" }}>
+        <div className={styles.tableContainer}>
+          <StockItemSearch {...formFieldMethods} />
+          <DataTable
+            rows={
+              model?.stockOperationItems ?? [
+                { uuid: `new-item-1`, id: `new-item-1` },
+              ]
+            }
+            headers={headers}
+            isSortable={false}
+            useZebraStyles={true}
+            styles={{
+              width: "100%",
+            }}
+            render={({ headers, getHeaderProps, getTableProps }) => (
+              <TableContainer>
+                <Table {...getTableProps()}>
+                  <TableHead>
+                    <TableRow>
+                      {headers.map((header: any) => (
+                        <TableHeader
+                          {...getHeaderProps({
+                            header,
+                            isSortable: false,
+                          })}
+                          className={
+                            isDesktop
+                              ? styles.desktopHeader
+                              : styles.tabletHeader
+                          }
+                          style={header?.styles}
+                          key={`${header.key}`}
+                        >
+                          {header.header?.content ?? header?.header}
+                        </TableHeader>
+                      ))}
+                      {canEdit && (
+                        <TableHeader
                           style={{
                             width: "3% !important",
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "8px",
                           }}
                         >
-                          <Button
-                            renderIcon={Add}
-                            onClick={addNewItem}
-                            hasIconOnly
-                          ></Button>
-                          <Button
-                            name="save"
-                            type="button"
-                            className="submitButton"
-                            onClick={() => handleSubmit(handleSave)()}
-                            kind="primary"
-                            renderIcon={ArrowRight}
+                          <div
+                            style={{
+                              width: "3% !important",
+                              display: "flex",
+                              flexDirection: "row",
+                              gap: "8px",
+                            }}
                           >
-                            {isSaving ? <InlineLoading /> : t("next", "Next")}
-                          </Button>
-                        </div>
-                      </TableHeader>
-                    )}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <StockItemsAdditionRow
-                    rows={
-                      model?.stockOperationItems ?? [
-                        { uuid: `new-item-1`, id: `new-item-1` },
-                      ]
-                    }
-                    stockOperationUuid={model.uuid ?? ""}
-                    locationUuid={model.atLocationUuid ?? ""}
-                    batchBalance={batchBalance}
-                    batchNos={batchNos}
-                    control={control}
-                    setValue={setValue}
-                    errors={errors}
-                    remove={remove}
-                    append={append}
-                    canEdit={canEdit}
-                    showQuantityRequested={showQuantityRequested}
-                    requiresActualBatchInformation={
-                      requiresActualBatchInformation
-                    }
-                    requiresBatchUuid={requiresBatchUuid}
-                    canUpdateBatchInformation={canUpdateBatchInformation}
-                    canCapturePurchasePrice={canCaptureQuantityPrice}
-                    itemUoM={itemUoM}
-                    fields={fields}
-                  />{" "}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        ></DataTable>
+                            <Button
+                              name="save"
+                              type="button"
+                              className="submitButton"
+                              onClick={() => handleSubmit(handleSave)()}
+                              kind="primary"
+                              renderIcon={ArrowRight}
+                            >
+                              {isSaving ? <InlineLoading /> : t("next", "Next")}
+                            </Button>
+                          </div>
+                        </TableHeader>
+                      )}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <StockItemsAdditionRow
+                      rows={
+                        model?.stockOperationItems ?? [
+                          { uuid: `new-item-1`, id: `new-item-1` },
+                        ]
+                      }
+                      batchBalance={batchBalance}
+                      batchNos={batchNos}
+                      control={control}
+                      setValue={setValue}
+                      errors={errors}
+                      remove={remove}
+                      append={append}
+                      canEdit={canEdit}
+                      showQuantityRequested={showQuantityRequested}
+                      requiresActualBatchInformation={
+                        requiresActualBatchInformation
+                      }
+                      requiresBatchUuid={requiresBatchUuid}
+                      canUpdateBatchInformation={canUpdateBatchInformation}
+                      canCapturePurchasePrice={canCaptureQuantityPrice}
+                      itemUoM={itemUoM}
+                      fields={fields}
+                    />{" "}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          ></DataTable>
+        </div>
       </div>
-    </div>
+    </FormProvider>
   );
 };
 

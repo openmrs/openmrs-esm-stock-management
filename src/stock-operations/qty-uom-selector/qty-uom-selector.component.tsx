@@ -20,11 +20,12 @@ interface QtyUomSelectorProps<T> {
 }
 
 const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
-  const { isLoading, isError, item } = useStockItem(props.stockItemUuid);
+  const { isLoading, isError, item } = useStockItem(props.stockItemUuid ?? props["uuid"]);
   const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
     () => (item?.packagingUnits?.length > 0 ? item.packagingUnits[0] : null),
     [item?.packagingUnits]
   );
+console.log("Props",props.stockItemUuid);
 
   if (isLoading || isError) return <SkeletonText />;
 
