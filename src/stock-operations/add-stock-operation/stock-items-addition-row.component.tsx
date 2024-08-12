@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { isDesktop } from "@openmrs/esm-framework";
 import {
   Button,
@@ -92,6 +92,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   errors,
   remove,
   fields,
+  append,
 }) => {
   const [stockItemUuid, setStockItemUuid] = useState<
     string | null | undefined
@@ -99,6 +100,47 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   const [stockItemExpiry, setStockItemExpiy] = useState<
     Date | null | undefined
   >();
+  const [selectedItem, setSelectedItem] =
+    useState<StockOperationItemDTO | null>(null);
+  // const [selectedItems, setSelectedItems] = useState<StockOperationItemDTO[]>(
+  //   []
+  // );
+
+  useEffect(() => {
+    if (fields.length > 0) {
+      const item = fields[0];
+      console.log("Received item in row:", item);
+
+      setSelectedItem(item);
+
+    }
+  }, [fields]);
+
+  // useEffect(() => {
+  //   if (fields.length > 0) {
+  //     const updatedItems = fields.map((item, index) => ({
+  //       ...item,
+  //       stockItemUuid: item.stockItemUuid,
+  //       stockItemName: isStockItem(item.stockItemUuid)
+  //         ? item.stockItemUuid.drugName
+  //         : item.stockItemName,
+  //       preferredVendorName: isStockItem(item.stockItemUuid)
+  //         ? item.stockItemUuid.preferredVendorName
+  //         : null,
+  //       purchasePrice: isStockItem(item.stockItemUuid)
+  //         ? item.stockItemUuid.purchasePrice
+  //         : null,
+  //       purchasePriceUoMName: isStockItem(item.stockItemUuid)
+  //         ? item.stockItemUuid.purchasePriceUoMName
+  //         : null,
+  //       dispensingUnitName: isStockItem(item.stockItemUuid)
+  //         ? item.stockItemUuid.dispensingUnitName
+  //         : null,
+  //     }));
+
+  //     setSelectedItems(updatedItems);
+  //   }
+  // }, [fields]);
 
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
     if (!data) return;
@@ -123,7 +165,6 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
 
       item.stockItemPackagingUOMUuid = null;
       item.stockItemPackagingUOMName = null;
-
       item.stockBatchUuid = null;
       if (requiresBatchUuid) {
         // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
@@ -131,6 +172,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
     }
   };
 
+  const isStockItem = (obj: any): obj is StockItemDTO => {
+    return typeof obj === "object" && obj !== null && "drugName" in obj;
+  };
   return (
     <>
       {fields?.map((row, index) => {
@@ -165,6 +209,18 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 >{`${row?.stockItemName}`}</Link>
               )}
             </TableCell>
+            <TableCell>
+              {row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
+                <Link target={"_blank"} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
+                  {row?.stockItemUuid.drugName || "No stock item name"}
+                </Link>
+              ) : (
+                <Link target={"_blank"} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
+                  {row?.stockItemName || "No name available"}
+                </Link>
+              )}
+            </TableCell>
+
             {showQuantityRequested && (
               <TableCell>
                 {row?.quantityRequested?.toLocaleString() ?? ""}{" "}
@@ -288,7 +344,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
               )}
               {!canEdit && row?.quantity?.toLocaleString()}
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               {canEdit && (
                 <QtyUomSelector
                   stockItemUuid={row.stockItemUuid}
@@ -308,7 +364,43 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 />
               )}
               {!canEdit && row?.stockItemPackagingUOMName}
+            </TableCell> */}
+
+            <TableCell>
+              {canEdit && (
+                <>
+                  {/* Assuming stockItemUuid is a direct property of the row object */}
+                  {console.log("Stock Item UUID:", row.stockItemUuid)}
+                  {console.log("Row Data:", row)}
+
+                  <QtyUomSelector
+                    stockItemUuid={row.stockItemUuid}
+                    onStockPackageChanged={(selectedItem) => {
+                      setValue(
+                        `stockItems.${index}.stockItemPackagingUOMUuid`,
+                        selectedItem?.uuid
+                      );
+                    }}
+                    placeholder={"Filter..."}
+                    invalid={
+                      !!errors?.stockItems?.[index]?.stockItemPackagingUOMUuid
+                    }
+                    control={control as unknown as Control}
+                    controllerName={`stockItems.${index}.stockItemPackagingUOMUuid`}
+                    name={`stockItems.${index}.stockItemPackagingUOMUuid`}
+                  />
+                </>
+              )}
+              {!canEdit && (
+                <span>
+                  {row?.packagingUnits && row?.quantityReceivedPackagingUOMName
+                    ? `${row.quantityReceivedPackagingUOMName}-${row.packagingUnits}`
+                    : row?.quantityReceivedPackagingUOMName || // Access dispensingUnitPackagingUOMName from stockItem
+                      row?.stockItemPackagingUOMName}
+                </span>
+              )}
             </TableCell>
+
             {canCapturePurchasePrice && (
               <TableCell>
                 {canEdit && (

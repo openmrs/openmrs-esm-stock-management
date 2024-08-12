@@ -36,7 +36,7 @@ export enum OperationType {
 }
 
 export function operationFromString(str: string): OperationType | undefined {
-  str = str.toLowerCase();
+  str = str?.toLowerCase();
   if (str === OperationType.TRANSFER_OUT_OPERATION_TYPE)
     return OperationType.TRANSFER_OUT_OPERATION_TYPE;
   if (str === OperationType.DISPOSED_OPERATION_TYPE)
