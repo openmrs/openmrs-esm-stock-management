@@ -67,7 +67,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       stockItemBatchNos.length === 0
     ) {
       setValidationMessage(
-        "No stock batch numbers defined. Do a initial/receipt stock operation first."
+        "No stock batch numbers defined. Do an initial/receipt stock operation first."
       );
     } else {
       setValidationMessage(null);
