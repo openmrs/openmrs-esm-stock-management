@@ -12,6 +12,7 @@ interface StockItemSelectorProps<T> {
   title?: string;
   invalid?: boolean;
   invalidText?: ReactNode;
+  initialSelectedItem?: StockItemDTO;
 
   // Control
   controllerName: string;
@@ -45,7 +46,9 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
-              stockItemsList?.find((p) => p.uuid === props.stockItemUuid) ?? ""
+              props?.initialSelectedItem ??
+              stockItemsList?.find((p) => p.uuid === props.stockItemUuid) ??
+              ""
             }
             itemToString={stockItemName}
             onInputChange={debouncedSearch}

@@ -1,23 +1,44 @@
 @use '@carbon/colors';
+@use '@carbon/type';
 @use '@carbon/styles/scss/spacing';
-@use '@carbon/styles/scss/type';
-@import '../style.scss';
+@use '@openmrs/esm-styleguide/src/vars' as *;
+
 // Patient List Table
 .searchContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.searchContainer>div {
+  align-self: center;
+  justify-self: flex-end;
+}
+
+.searchBox {
+  width: 100%;
+  max-width: 16rem;
+  background-color: $ui-02;
+  border-bottom-color: $ui-03;
+}
+
+
+.searchResults {
+  display: flex;
+  height: 3rem;
+  border-bottom: 1px solid colors.$cool-gray-20;
+  padding: 0.625rem;
+  align-items: center;
+  @include type.type-style('label-01');
+
+  &:hover {
+    background-color: colors.$cool-gray-10;
+    cursor: pointer;
   }
-  
-  .searchContainer > div {
-    align-self: center;
-    justify-self: flex-end;
-  }
-  
-  .searchbox {
-    width: 100%;
-    max-width: 16rem;
-    background-color: $ui-02;
-    border-bottom-color: $ui-03;
-  }
-  
+}
+
+.stockItemSearchContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: spacing.$spacing-01;
+}

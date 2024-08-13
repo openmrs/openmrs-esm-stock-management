@@ -123,6 +123,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
 
       item.stockItemPackagingUOMUuid = null;
       item.stockItemPackagingUOMName = null;
+
       item.stockBatchUuid = null;
       if (requiresBatchUuid) {
         // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
@@ -142,6 +143,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             key={row?.uuid}
           >
             <TableCell>
+<<<<<<< HEAD
               <div className={styles.cellContent}>
                 {row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
                   <Link
@@ -159,6 +161,17 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   </Link>
                 )}
               </div>
+=======
+              {row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
+                <Link target={"_blank"} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
+                  {row?.stockItemUuid.drugName || "No stock item name"}
+                </Link>
+              ) : (
+                <Link target={"_blank"} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
+                  {row?.stockItemName || "No name available"}
+                </Link>
+              )}
+>>>>>>> fccec91 (Expand the view panel in stock management systen at stock operation)
             </TableCell>
             {showQuantityRequested && (
               <TableCell>

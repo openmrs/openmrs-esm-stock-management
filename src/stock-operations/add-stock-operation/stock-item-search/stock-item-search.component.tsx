@@ -6,6 +6,8 @@ import { useStockItems } from "../../stock-item-selector/stock-item-selector.res
 import { useFormContext, type UseFieldArrayReturn } from "react-hook-form";
 import { StockOperationItemDTO } from "../../../core/api/types/stockOperation/StockOperationItemDTO";
 import { getStockOperationUniqueId } from "../../stock-operation.utils";
+import styles from "./stock-item-search.scss";
+
 type StockItemSearchProps = UseFieldArrayReturn<
   {
     stockItems: StockOperationItemDTO[];
@@ -32,14 +34,19 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({
 
   const handleOnSearchResultClick = (stockItem) => {
     const itemId = `new-item-${getStockOperationUniqueId()}`;
-    append({ uuid: itemId, id: itemId });
-    setSearchTerm(stockItem?.commonName);
-    setValue(`stockItems.${fields.length}.stockItemUuid`, stockItem);
-
+    append({
+      ...stockItem,
+      uuid: itemId,
+      id: itemId,
+      stockItemUuid: stockItem.uuid,
+      stockItemName: stockItem.commonName,
+    });
+    setSearchTerm("");
+    setValue(`stockItems[${fields.length}].stockItemUuid`, stockItem.uuid);
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div className={styles.stockItemSearchContainer}>
       <div style={{ display: "flex" }}>
         <Search
           size="lg"
@@ -52,18 +59,18 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({
         />
         <Button>{t("search", "Search")}</Button>
       </div>
-      <>
+      <div>
         {searchTerm &&
           stockItemsList?.map((stockItem) => (
             <div
               onClick={() => handleOnSearchResultClick(stockItem)}
-              style={{ height: "2rem", cursor: "pointer" }}
+              className={styles.searchResults}
               key={stockItem?.uuid}
             >
               {stockItem?.commonName}
             </div>
           ))}
-      </>
+      </div>
     </div>
   );
 };

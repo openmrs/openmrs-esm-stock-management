@@ -89,6 +89,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = formMethods;
 
@@ -180,6 +181,19 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       : []),
   ];
 
+<<<<<<< HEAD
+=======
+  const addNewItem = () => {
+    const itemId = `new-item-${getStockOperationUniqueId()}`;
+    append({
+      uuid: itemId,
+      id: itemId,
+      stockItemUuid: null,
+      stockItemName: "",
+    });
+  };
+
+>>>>>>> fccec91 (Expand the view panel in stock management systen at stock operation)
   return (
     <FormProvider {...formMethods}>
       <div style={{ margin: "10px" }}>
@@ -233,6 +247,14 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                               gap: "8px",
                             }}
                           >
+<<<<<<< HEAD
+=======
+                            {/* <Button
+                              renderIcon={Add}
+                              onClick={addNewItem}
+                              hasIconOnly
+                            ></Button> */}
+>>>>>>> fccec91 (Expand the view panel in stock management systen at stock operation)
                             <Button
                               name="save"
                               type="button"
