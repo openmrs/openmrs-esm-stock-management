@@ -54,21 +54,8 @@ describe('BatchNoSelector', () => {
     });
   });
 
-  const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const methods = useForm();
-    return <FormProvider {...methods}>{children}</FormProvider>;
-  };
-
   it('renders batch numbers correctly', async () => {
-    render(
-      <Wrapper>
-        <BatchNoSelector
-          stockItemUuid="test-uuid"
-          controllerName="testController"
-          name="testName"
-        />
-      </Wrapper>
-    );
+    render(<BatchNoSelector stockItemUuid="test-uuid" name="testName" title="Test Title" />);
 
     const comboboxButton = screen.getByRole('button', { name: /open/i });
     fireEvent.click(comboboxButton);
@@ -83,14 +70,12 @@ describe('BatchNoSelector', () => {
     const handleBatchNoChanged = jest.fn();
 
     render(
-      <Wrapper>
-        <BatchNoSelector
-          stockItemUuid="test-uuid"
-          controllerName="testController"
-          name="testName"
-          onBatchNoChanged={handleBatchNoChanged}
-        />
-      </Wrapper>
+      <BatchNoSelector
+        stockItemUuid="test-uuid"
+        name="testName"
+        title="Test Title"
+        onBatchNoChanged={handleBatchNoChanged}
+      />
     );
 
     const comboboxButton = screen.getByRole('button', { name: /open/i });

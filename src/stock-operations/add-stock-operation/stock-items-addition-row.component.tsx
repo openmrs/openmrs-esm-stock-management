@@ -206,8 +206,6 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                       }}
                       placeholder={"Filter..."}
                       invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
-                      control={control as unknown as Control}
-                      controllerName={`stockItems.${index}.stockBatchUuid`}
                       name={`stockItems.${index}.stockBatchUuid`}
                       stockItemUuid={row.stockItemUuid}
                       selectedItem={stockItemUuid}
@@ -350,4 +348,5 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
     </>
   );
 };
+
 export default StockItemsAdditionRow;

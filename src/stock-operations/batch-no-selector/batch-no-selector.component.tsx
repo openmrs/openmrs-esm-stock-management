@@ -1,12 +1,11 @@
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
 import { ComboBox, InlineLoading } from "@carbon/react";
 import { useStockItemBatchNos } from "./batch-no-selector.resource";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { useStockItemBatchInformationHook } from "../../stock-items/add-stock-item/batch-information/batch-information.resource";
 import { useTranslation } from "react-i18next";
 
-interface BatchNoSelectorProps<T> {
+interface BatchNoSelectorProps {
   placeholder?: string;
   stockItemUuid: string;
   batchUuid?: string;
@@ -15,14 +14,10 @@ interface BatchNoSelectorProps<T> {
   invalid?: boolean;
   invalidText?: ReactNode;
   selectedItem?: string;
-
-  // Control
-  controllerName: string;
-  name: string;
-  control: Control<FieldValues, T>;
+  name: string; // Ensure name is defined
 }
 
-const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
+const BatchNoSelector = (props: BatchNoSelectorProps) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNos(
     props.stockItemUuid
   );
@@ -46,18 +41,16 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     setStockItemUuid(props.stockItemUuid);
   }, [props.stockItemUuid, setStockItemUuid]);
 
-  const stockItemBatchesInfo = stockItemBatchNos?.map((item) => {
-    const matchingBatch = items?.find(
-      (batch) => batch.batchNumber === item.batchNo
-    );
-    if (matchingBatch) {
-      return {
-        ...item,
-        quantity: matchingBatch.quantity ?? "",
-      };
-    }
-    return item;
-  });
+  const stockItemBatchesInfo = useMemo(() => {
+    return stockItemBatchNos?.map((item) => {
+      const matchingBatch = items?.find(
+        (batch) => batch.batchNumber === item.batchNo
+      );
+      return matchingBatch
+        ? { ...item, quantity: matchingBatch.quantity ?? "" }
+        : item;
+    });
+  }, [stockItemBatchNos, items]);
 
   useEffect(() => {
     if (
@@ -78,34 +71,26 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <Controller
-        name={props.controllerName}
-        control={props.control}
-        render={({ field: { onChange, ref } }) => (
-          <ComboBox
-            style={{ flexGrow: "1" }}
-            titleText={props.title}
-            name={props.name}
-            id={props.name}
-            size={"sm"}
-            items={stockItemBatchesInfo || []}
-            onChange={(data: { selectedItem?: StockBatchDTO }) => {
-              setSelectedItem(data.selectedItem || null);
-              props.onBatchNoChanged?.(data.selectedItem);
-              onChange(data.selectedItem?.uuid);
-            }}
-            initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockBatchDTO) =>
-              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? ""}` : ""
-            }
-            placeholder={props.placeholder}
-            invalid={props.invalid}
-            invalidText={props.invalidText}
-            ref={ref}
-          />
-        )}
+      <ComboBox
+        style={{ flexGrow: 1 }}
+        titleText={props.title}
+        name={props.name}
+        id={props.name}
+        size="sm"
+        items={stockItemBatchesInfo || []}
+        onChange={(data: { selectedItem?: StockBatchDTO }) => {
+          const selected = data.selectedItem || null;
+          setSelectedItem(selected);
+          props.onBatchNoChanged?.(selected);
+        }}
+        initialSelectedItem={initialSelectedItem}
+        itemToString={(s: StockBatchDTO) =>
+          s?.batchNo ? `${s.batchNo} | Qty: ${s.quantity ?? ""}` : ""
+        }
+        placeholder={props.placeholder}
+        invalid={props.invalid}
+        invalidText={props.invalidText}
       />
-      {isLoading && <InlineLoading status="active" />}
       {validationMessage && (
         <div style={{ color: "red", marginTop: "8px" }}>
           {t(validationMessage)}
