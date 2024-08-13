@@ -19,7 +19,12 @@ import { isDesktop } from "@openmrs/esm-framework";
 import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
 import { getStockOperationUniqueId } from "../stock-operation.utils";
 import { useTranslation } from "react-i18next";
-import { FieldArrayWithId, FormProvider, useFieldArray, useForm } from "react-hook-form";
+import {
+  FieldArrayWithId,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useValidationSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
@@ -86,6 +91,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = formMethods;
 
@@ -96,18 +102,26 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     control,
   });
   const { fields, append, remove } = formFieldMethods;
-  const [selectedItems, setSelectedItems] = useState<FieldArrayWithId<{ stockItems: StockOperationItemDTO[]; }, "stockItems", "id"> | (() => FieldArrayWithId<{ stockItems: StockOperationItemDTO[]; }, "stockItems", "id">)>();
- 
-  
+  const [selectedItems, setSelectedItems] = useState<
+    | FieldArrayWithId<
+        { stockItems: StockOperationItemDTO[] },
+        "stockItems",
+        "id"
+      >
+    | (() => FieldArrayWithId<
+        { stockItems: StockOperationItemDTO[] },
+        "stockItems",
+        "id"
+      >)
+  >();
+
   useEffect(() => {
     if (fields.length > 0) {
       const lastItemIndex = fields.length - 1;
       const item = fields[lastItemIndex]; // Take the last item from the fields array
       setSelectedItems(item);
-      console.log("Received item in row:", item); // Log the selected item
     }
   }, [fields]);
-  
 
   const headers = [
     {
@@ -169,12 +183,16 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       : []),
   ];
 
-
   const addNewItem = () => {
     const itemId = `new-item-${getStockOperationUniqueId()}`;
-    append({ uuid: itemId, id: itemId, stockItemUuid: null, stockItemName: "" });
+    append({
+      uuid: itemId,
+      id: itemId,
+      stockItemUuid: null,
+      stockItemName: "",
+    });
   };
-  
+
   return (
     <FormProvider {...formMethods}>
       <div style={{ margin: "10px" }}>
@@ -228,11 +246,11 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                               gap: "8px",
                             }}
                           >
-                            <Button
+                            {/* <Button
                               renderIcon={Add}
                               onClick={addNewItem}
                               hasIconOnly
-                            ></Button>
+                            ></Button> */}
                             <Button
                               name="save"
                               type="button"
