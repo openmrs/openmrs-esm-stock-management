@@ -48,7 +48,7 @@ export const ParseDate = (value: string | null | undefined) => {
   let date = null;
   try {
     if (!value) return date;
-    value = value.toLowerCase();
+    value = value?.toLowerCase();
     if (value.includes("jan")) value = value.replace("jan", "01");
     else if (value.includes("feb")) value = value.replace("feb", "02");
     else if (value.includes("mar")) value = value.replace("mar", "03");

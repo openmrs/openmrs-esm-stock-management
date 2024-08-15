@@ -33,8 +33,8 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
       ? concepts
       : concepts.filter((concept) =>
           concept.display
-            .toLowerCase()
-            .includes(inputValue.trim().toLowerCase())
+            ?.toLowerCase()
+            .includes(inputValue.trim()?.toLowerCase())
         );
   }, [inputValue, concepts]);
 

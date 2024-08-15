@@ -114,7 +114,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
         .filter((item: any) => item.uuid !== loggedInUserUuid)
         .filter((item: any) => {
           const displayName = item?.person?.display ?? item?.display ?? "";
-          return displayName.toLowerCase().includes(query.toLowerCase());
+          return displayName?.toLowerCase().includes(query?.toLowerCase());
         });
       setFilteredItems(filtered);
     }

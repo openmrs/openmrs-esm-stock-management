@@ -85,13 +85,13 @@ const DataList: React.FC<ListProps> = ({
       headers.some(({ key }) => {
         const cellId = getCellId(rowId, key);
         const filterableValue = cellsById[cellId].value;
-        const filterTerm = inputValue.toLowerCase();
+        const filterTerm = inputValue?.toLowerCase();
 
         if (typeof filterableValue === "boolean") {
           return false;
         }
 
-        return ("" + filterableValue).toLowerCase().includes(filterTerm);
+        return ("" + filterableValue)?.toLowerCase().includes(filterTerm);
       })
     );
   };

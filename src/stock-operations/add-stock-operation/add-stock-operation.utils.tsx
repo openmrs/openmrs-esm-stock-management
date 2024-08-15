@@ -76,7 +76,7 @@ export async function initializeNewStockOperation(
       (party) => party.stockSourceUuid !== null
     );
 
-    sourcePartyList = filteredPartyList?.filter(
+    sourcePartyList = partyList?.data?.results?.filter(
       (p) =>
         (p.locationUuid &&
           currentStockOperationType?.sourceType === LocationTypeLocation &&
