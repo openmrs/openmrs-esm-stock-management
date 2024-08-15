@@ -50,7 +50,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   const { t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(
-    model?.approvalRequired
+    null
   );
 
   const handleRadioButtonChange = (selectedItem: boolean) => {
@@ -68,7 +68,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
               "Does the transaction require approval ?"
             )}
             onChange={handleRadioButtonChange}
-            defaultSelected={model?.approvalRequired}
+            defaultSelected={approvalRequired}
           >
             <RadioButton
               value={true}
@@ -111,10 +111,15 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   kind="primary"
                   onClick={async () => {
                     delete model?.dateCreated;
-                    model.status = "COMPLETED";
+                    delete model?.status;
                     setIsSaving(true);
-                    await actions.onComplete(model);
-                    setIsSaving(false);
+                    await actions.onSave(model).then(() => {
+                      delete model?.dateCreated;
+                      model.status = "COMPLETED";
+                      setIsSaving(true);
+                      actions.onComplete(model);
+                      setIsSaving(false);
+                    });
                   }}
                   renderIcon={ListChecked}
                 >
@@ -132,9 +137,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                     delete model?.dateCreated;
                     delete model?.status;
                     setIsSaving(true);
-                    model.status = "DISPATCHED";
-                    await actions.onDispatch(model);
-                    setIsSaving(false);
+                    await actions.onSave(model).then(() => {
+                      delete model?.dateCreated;
+                      model.status = "COMPLETED";
+                      setIsSaving(true);
+                      actions.onDispatch(model);
+                      setIsSaving(false);
+                    });
                   }}
                   renderIcon={Departure}
                 >
@@ -151,7 +160,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   onClick={actions.onSubmit}
                   renderIcon={SendFilled}
                 >
-                  {t("submitForReview", "Submit For Review")}
+                  {t("submit", "Submit For Review")}
                 </Button>
               )}
             </>
@@ -166,7 +175,6 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
               delete model?.dateCreated;
               delete model?.status;
               setIsSaving(true);
-              model.approvalRequired = approvalRequired ? true : false;
               await actions.onSave(model);
               setIsSaving(false);
             }}
