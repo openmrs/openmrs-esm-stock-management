@@ -82,10 +82,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   }, [currentStockOperationType, requisition, props.model?.uuid]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [canReceiveItems, setCanReceiveItems] = useState(false);
+  const [canDisplayReceivedItems, setCanDisplayReceivedItems] = useState(false);
 
   useEffect(() => {
-    setCanReceiveItems(props?.model?.permission?.canReceiveItems ?? false);
+    setCanDisplayReceivedItems(
+      props?.model?.permission?.canDisplayReceivedItems ?? false
+    );
   }, [props?.model?.permission]);
 
   if (isLoading) return <AccordionSkeleton />;
@@ -214,7 +216,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   ].concat(
     StockOperationTypeIsStockIssue(
       props?.model?.operationType as OperationType
-    ) || canReceiveItems
+    ) || canDisplayReceivedItems
       ? status === "DISPATCHED" || status === "COMPLETED"
         ? [
             {

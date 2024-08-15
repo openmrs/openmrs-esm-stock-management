@@ -395,19 +395,16 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   </DatePicker>
 
                   <StockOperationsFilters
-                    conceptUuid={config.stockSourceTypeUUID}
                     filterName={StockFilters.SOURCES}
                     onFilterChange={handleOnFilterChange}
                   />
 
                   <StockOperationsFilters
-                    conceptUuid={config.stockSourceTypeUUID}
                     filterName={StockFilters.STATUS}
                     onFilterChange={handleOnFilterChange}
                   />
 
                   <StockOperationsFilters
-                    conceptUuid={config.stockSourceTypeUUID}
                     filterName={StockFilters.OPERATION}
                     onFilterChange={handleOnFilterChange}
                   />
@@ -422,7 +419,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
                       t,
-                      { ...initialStockOperationValue(), receivedItems: [] },
+                      initialStockOperationValue(),
                       false,
                       operation,
                       operations,
