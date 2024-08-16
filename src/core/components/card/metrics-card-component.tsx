@@ -58,7 +58,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         {!isEmpty(count) && (
           <div className={styles.countGrid}>
             <span style={{ color: "#DA1E28" }}>
-              {t("in6months", "In 6 months")}
+              {t("in6Months", "In 6 months")}
             </span>
             <p style={{ color: "#DA1E28" }}>{count.expiry6months?.length}</p>
           </div>
@@ -66,10 +66,10 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         {!isEmpty(outofstockCount) && (
           <div className={styles.countGrid}>
             <span style={{ color: "#DA1E28" }}>
-              {t("itemsbelowmin", "Items Below Min")}
+              {t("itemsBelowMin", "Items Below Min")}
             </span>
             <span style={{ color: "#319227" }}>
-              {t("itemsabovemax", "Items Above Max")}
+              {t("itemsAboveMax", "Items Above Max")}
             </span>
             <p style={{ color: "#DA1E28" }}>
               {outofstockCount.itemsbelowmin?.length}

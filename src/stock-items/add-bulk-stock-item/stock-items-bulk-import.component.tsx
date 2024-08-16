@@ -37,7 +37,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
           title: t("rejectOrder", "Uploaded Order"),
           kind: "success",
           subtitle: t(
-            "Successfully uploaded",
+            "SuccessfullyUploadedStockItem",
             `You have successfully uploaded stock items`
           ),
         });
@@ -46,7 +46,8 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
       (err) => {
         showSnackbar({
           title: t(
-            `errorUploadingItems', 'An error occurred uploading stock items`
+            "errorUploadingItems",
+            "An error occurred uploading stock items"
           ),
           kind: "error",
           isLowContrast: true,

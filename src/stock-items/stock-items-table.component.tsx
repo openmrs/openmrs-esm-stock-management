@@ -146,7 +146,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             size="md"
             onClick={() => {
               stockItem.isDrug = !!stockItem.drugUuid;
-              launchAddOrEditDialog(stockItem, true);
+              launchAddOrEditDialog(t, stockItem, true);
             }}
             iconDescription={t("editStockItem", "Edit Stock Item")}
             renderIcon={(props) => <Edit size={16} {...props} />}

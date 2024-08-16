@@ -165,7 +165,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               title: t("addedRule", "Add Rule"),
               kind: "success",
               subtitle: t(
-                "stockruleaddedsuccessfully",
+                "stockRuleAddedSuccessfully",
                 "Stock Rule Added Successfully"
               ),
             });
@@ -173,7 +173,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
           },
           (error) => {
             showSnackbar({
-              title: t(`errorAddingRule', 'error adding a rule`),
+              title: t("errorAddingRule", "Error adding a rule"),
               kind: "error",
               isLowContrast: true,
               subtitle: error?.message,

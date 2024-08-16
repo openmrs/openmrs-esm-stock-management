@@ -1,11 +1,13 @@
+import React from "react";
 import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
 import { StockItemDTO } from "../core/api/types/stockItem/StockItem";
-import React from "react";
+import { type TFunction } from "react-i18next";
 import AddEditStockItem from "./add-stock-item/add-stock-item.component";
 import { FetchResponse, showSnackbar } from "@openmrs/esm-framework";
 import { createStockItem, updateStockItem } from "./stock-items.resource";
 
 export const addOrEditStockItem = async (
+  t: TFunction,
   stockItem: StockItemDTO,
   isEditing = false
 ) => {
@@ -17,9 +19,13 @@ export const addOrEditStockItem = async (
     if (response?.data) {
       showSnackbar({
         isLowContrast: true,
-        title: `${isEditing ? "Edit" : "Add"} Stock Item`,
+        title: isEditing
+          ? `${t("editStockItem", "Edit Stock Item")}`
+          : `${t("addStockItem", "Add Stock Item")}`,
         kind: "success",
-        subtitle: `Stock Item ${isEditing ? "Edited" : "Added"} Successfully`,
+        subtitle: isEditing
+          ? `${t("stockItemEdited", "Stock Item Edited Successfully")}`
+          : `${t("stockItemAdded", "Stock Item Added Successfully")}`,
       });
 
       if (!isEditing) {
@@ -28,12 +34,14 @@ export const addOrEditStockItem = async (
         // launch edit dialog
         const item = response.data;
         item.isDrug = !!item.drugUuid;
-        launchAddOrEditDialog(item, true);
+        launchAddOrEditDialog(t, item, true);
       }
     }
   } catch (error) {
     showSnackbar({
-      title: `Error ${isEditing ? "edit" : "add"}ing a stock item`,
+      title: isEditing
+        ? t("errorEditingStockItem", "Error editing a stock Item")
+        : t("errorAddingStockItem", "Error adding a stock Item"),
       kind: "error",
       isLowContrast: true,
       subtitle: error?.responseBody?.error?.message,
@@ -42,16 +50,19 @@ export const addOrEditStockItem = async (
 };
 
 export const launchAddOrEditDialog = (
+  t: TFunction,
   stockItem: StockItemDTO,
   isEditing = false
 ) => {
   launchOverlay(
-    `${isEditing ? "Edit" : "Add"} ${
-      stockItem?.drugName || stockItem.conceptName || ""
-    }`,
+    isEditing
+      ? `${t("editItem", "Edit {{name}}", {
+          name: stockItem?.drugName || stockItem.conceptName || "",
+        })} ${stockItem.isDrug ? "(Drug)" : "(Non Drug)"}`
+      : t("addItem", "Add stock item"),
     <AddEditStockItem
       model={stockItem}
-      onSave={(stockItem) => addOrEditStockItem(stockItem, isEditing)}
+      onSave={(stockItem) => addOrEditStockItem(t, stockItem, isEditing)}
       isEditing={isEditing}
     />
   );

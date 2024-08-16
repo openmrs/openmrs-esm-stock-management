@@ -8,12 +8,15 @@ const AddStockUserRoleScopeActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchOverlay("Add Stock User Role Scope", <AddStockUserRoleScope />);
+    launchOverlay(
+      t("addStockUserRoleScope", "Add Stock User Role Scope"),
+      <AddStockUserRoleScope />
+    );
   }, []);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
-      {t("stockmanagement.addnewuserrolescope", "Add New User Role Scope")}
+      {t("addNewUserRoleScope", "Add New User Role Scope")}
     </Button>
   );
 };

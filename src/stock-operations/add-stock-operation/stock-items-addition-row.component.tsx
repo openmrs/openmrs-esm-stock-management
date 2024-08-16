@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useState } from "react";
-import styles from "./stock-items-addition-row.scss";
 import { isDesktop } from "@openmrs/esm-framework";
 import {
   Button,
@@ -36,6 +35,8 @@ import { StockOperationItemDTO } from "../../core/api/types/stockOperation/Stock
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 import QtyUomSelector from "../qty-uom-selector/qty-uom-selector.component";
 import BatchNoSelector from "../batch-no-selector/batch-no-selector.component";
+
+import styles from "./stock-items-addition-row.scss";
 
 interface StockItemsAdditionRowProps {
   canEdit?: boolean;
@@ -258,6 +259,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   className="small-placeholder-text"
                   size="sm"
                   id={`qty-${row?.uuid}`}
+                  hideSteppers={true}
                   allowEmpty={true}
                   onChange={(e: any) =>
                     setValue(`stockItems.${index}.quantity`, e?.target?.value)

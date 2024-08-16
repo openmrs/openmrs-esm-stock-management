@@ -44,11 +44,11 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
         closeModal();
         showSnackbar({
           isLowContrast: true,
-          title: t("deletePackagingUnitTitle", `Delete packing item `),
+          title: t("deletePackagingUnitTitle", "Delete packing item"),
           kind: "success",
           subtitle: t(
             "deletePackagingUnitMesaage",
-            `Stock Item packing unit deleted Successfully`
+            "Stock Item packing unit deleted Successfully"
           ),
         });
       },
@@ -56,7 +56,7 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
         showSnackbar({
           title: t(
             "deletePackingUnitErrorTitle",
-            `Error Deleting a stock item packing unit`
+            "Error Deleting a stock item packing unit"
           ),
           kind: "error",
           isLowContrast: true,
@@ -78,7 +78,7 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
         <span>
           {t(
             "removePackagingUnitConfirmation",
-            `Would you really like to remove the packaging unit ${row?.packagingUomName} from the stock item?`
+            "Would you really like to remove the packaging unit ${row?.packagingUomName} from the stock item?"
           )}
         </span>
         <TextArea

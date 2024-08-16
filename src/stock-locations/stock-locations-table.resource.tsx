@@ -4,13 +4,11 @@ import {
   FetchResponse,
   openmrsFetch,
   restBaseUrl,
-  showSnackbar,
   usePagination,
 } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 import { StockOperationFilter } from "../stock-operations/stock-operations.resource";
 import { useStockTagLocations } from "../stock-lookups/stock-lookups.resource";
-import { extractErrorMessagesFromResponse } from "../constants";
 
 export function useStockLocationPages(filter: StockOperationFilter) {
   const { stockLocations, error, isLoading } = useStockTagLocations();
@@ -103,23 +101,13 @@ interface LocationName {
 export async function saveLocation({
   locationPayload,
 }): Promise<FetchResponse<LocationName>> {
-  try {
-    const response: FetchResponse = await openmrsFetch(
-      `${restBaseUrl}/location/`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: locationPayload,
-      }
-    );
-    return response;
-  } catch (error) {
-    const errorMessages = extractErrorMessagesFromResponse(error);
-    showSnackbar({
-      subtitle: errorMessages.join(", "),
-      title: "Error on saving form",
-      kind: "error",
-      isLowContrast: true,
-    });
-  }
+  const response: FetchResponse = await openmrsFetch(
+    `${restBaseUrl}/location/`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: locationPayload,
+    }
+  );
+  return response;
 }

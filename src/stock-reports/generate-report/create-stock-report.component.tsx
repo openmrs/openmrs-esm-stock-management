@@ -80,9 +80,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
 
   const { reportTypes, isLoading } = useReportTypes();
   const { stockLocations } = useStockTagLocations();
-  const { items, isLoading: isLoadingStockItemCategories } = useConcept(
-    stockItemCategoryUUID
-  );
+  const { items } = useConcept(stockItemCategoryUUID);
   const [displayDate, setDisplayDate] = useState<boolean>(false);
   const [displayStartDate, setDisplayStartDate] = useState<boolean>(false);
   const [displayEndDate, setDisplayEndDate] = useState<boolean>(false);
@@ -241,7 +239,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.Fullfillment,
           (report.fullFillment ?? ["All"]).join(","),
           (report.fullFillment ?? ["All"]).join(", "),
-          t("stockmanagement.report.edit.fullfillment"),
+          t(
+            "editFullfillmentReport",
+            "stockmanagement.report.edit.fullfillment"
+          ),
           newLine
         );
       }
@@ -250,7 +251,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.Patient,
           report.patientUuid ?? "",
           report.patientName?.trim() ?? "All Patients",
-          t("Patients"),
+          t("patients", "Patients"),
           newLine
         );
       }
@@ -259,7 +260,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.StockItem,
           report.stockItemUuid ?? "",
           report.stockItemName?.trim() ?? "All Stock Items",
-          t("Stock Item"),
+          t("stockItem", "Stock Item"),
           newLine
         );
       }
@@ -268,7 +269,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.StockItemCategory,
           report.stockItemCategoryConceptUuid ?? "",
           report.stockItemCategory?.trim() ?? "All Categories",
-          t("Stock Item Category"),
+          t("stockItemCategory", "Stock Item Category"),
           newLine
         );
       }
@@ -277,7 +278,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.InventoryGroupBy,
           report.inventoryGroupBy ?? "LocationStockItemBatchNo",
           report.inventoryGroupByName?.trim() ?? "Stock Item Batch Number",
-          t("stockmanagement.report.edit.inventorygroupby"),
+          t(
+            "displayInventoryReport",
+            "stockmanagement.report.edit.inventorygroupby"
+          ),
           newLine
         );
       }
@@ -286,7 +290,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.Location,
           report.location,
           report.location?.trim() ?? "",
-          t("Location"),
+          t("location", "Location"),
           newLine
         );
         if (displayChildLocations) {
@@ -294,7 +298,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             ReportParameter.ChildLocations,
             report.childLocations ? "true" : "false",
             report.childLocations ? "Yes" : "No",
-            t("Include Child Locations"),
+            t("includeChildLocations", "Include Child Locations"),
             newLine
           );
         }
@@ -304,7 +308,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.MaxReorderLevelRatio,
           (report.maxReorderLevelRatio ?? 0).toString(),
           (report.maxReorderLevelRatio ?? 0).toString() + "%",
-          t("stockmanagement.report.edit.maxreorderlevelratio"),
+          t(
+            "displayMaxReorderReport",
+            "stockmanagement.report.edit.maxreorderlevelratio"
+          ),
           newLine
         );
       }
@@ -313,7 +320,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.StockSource,
           report.stockSourceUuid ?? "",
           report.stockSource?.trim() ?? "All Sources",
-          t("stockmanagement.report.edit.stocksource"),
+          t("displayStockReport", "stockmanagement.report.edit.stocksource"),
           newLine
         );
       }
@@ -322,7 +329,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.StockSourceDestination,
           report.stockSourceDestinationUuid ?? "",
           report.stockSourceDestination?.trim() ?? "All Destinations",
-          t("stockmanagement.report.edit.stocksourcedestination"),
+          t(
+            "displayStockDestinationReport",
+            "stockmanagement.report.edit.stocksourcedestination"
+          ),
           newLine
         );
       }
@@ -331,7 +341,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.MostLeastMoving,
           report.mostLeastMoving ?? "MostMoving",
           report.mostLeastMovingName?.trim() ?? "Most Moving",
-          t("stockmanagement.report.edit.mostleastmoving"),
+          t(
+            "displayMostLeastMovingReport",
+            "stockmanagement.report.edit.mostleastmoving"
+          ),
           newLine
         );
       }
@@ -357,7 +370,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.Date,
           report.date ? JSON.stringify(report.date).replaceAll('"', "") : "",
           formatDisplayDate(report.date) ?? "",
-          t("stockmanagement.report.edit.date"),
+          t("displayReportDate", "stockmanagement.report.edit.date"),
           newLine
         );
       }
@@ -405,7 +418,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           showSnackbar({
             title: t("BatchJobErrorTitle", "Batch job"),
             subtitle: t("batchJobErrorMessage", "Error creating batch job"),
@@ -549,11 +562,11 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             />
             <SelectItem
               value="LocationStockItem"
-              text={t("lcationstockitem", "Location  and Stock Item")}
+              text={t("locationAndStockItem", "Location and Stock Item")}
             />
             <SelectItem
               value="LocationStockItemBatchNo"
-              text={t("locationBatchno", "Location and Batch")}
+              text={t("locationAndBatchno", "Location and Batch")}
             />
           </Select>
         )}
@@ -572,7 +585,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
               disabled
               hidden
               value=""
-              text={t("Choose a location")}
+              text={t("chooseALocation", "Choose a location")}
             />
             {(stockLocations ?? [])?.map((loc) => {
               return <SelectItem key={loc.id} value={loc.id} text={loc.name} />;
@@ -589,7 +602,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
                 onChange={onChange}
                 value={value}
                 labelText={t(
-                  "IncludeChildLocations",
+                  "includeChildLocations",
                   "Include Child Locations"
                 )}
               />
@@ -615,7 +628,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
                 <RadioButton
                   value="LeastMoving"
                   id="mostLeastMovingLeast"
-                  labelText={t("LeastMoving", "Least Moving")}
+                  labelText={t("leastMoving", "Least Moving")}
                 />
               </RadioButtonGroup>
             )}
@@ -629,6 +642,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
               <NumberInput
                 id="limitTop"
                 allowEmpty={true}
+                hideSteppers={true}
                 value={value}
                 onchange={onChange}
                 label={t("limit", "Limit")}

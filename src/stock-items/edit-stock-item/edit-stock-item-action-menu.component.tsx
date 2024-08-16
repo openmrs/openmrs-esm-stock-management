@@ -19,7 +19,7 @@ const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({
       size="md"
       onClick={() => {
         data.isDrug = !!data.drugUuid;
-        launchAddOrEditDialog(data, true);
+        launchAddOrEditDialog(t, data, true);
       }}
       iconDescription={t("editStockItem", "Edit Stock Item")}
     >

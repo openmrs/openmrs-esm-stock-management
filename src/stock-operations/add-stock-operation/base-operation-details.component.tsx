@@ -4,7 +4,6 @@ import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOper
 import { SaveStockOperation } from "../../stock-items/types";
 import {
   operationFromString,
-  OperationType,
   StockOperationType,
 } from "../../core/api/types/stockOperation/StockOperationType";
 import {
@@ -19,7 +18,6 @@ import {
   DatePickerInput,
   InlineLoading,
   TextInput,
-  ComboBox,
 } from "@carbon/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,11 +30,12 @@ import ControlledTextInput from "../../core/components/carbon/controlled-text-in
 import StockOperationReasonSelector from "../stock-operation-reason-selector/stock-operation-reason-selector.component";
 import ControlledTextArea from "../../core/components/carbon/controlled-text-area/controlled-text-area.component";
 import { InitializeResult } from "./types";
-import rootStyles from "../../root.scss";
 import { ResourceRepresentation } from "../../core/api/api";
 import { useStockOperationPages } from "../stock-operations-table.resource";
-import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 import { createBaseOperationPayload } from "./add-stock-utils";
+import { showSnackbar, useSession } from "@openmrs/esm-framework";
+
+import rootStyles from "../../root.scss";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -62,13 +61,14 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   },
 }) => {
   const { t } = useTranslation();
-  const { setFormContext } = useStockOperationContext();
-  const { isLoading, items } = useStockOperationPages({
+  const { isLoading } = useStockOperationPages({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
   const operationType = operationFromString(operation?.operationType);
   const issueStockOperation = mapIssueStockLocations(model);
+  const { user } = useSession();
+  const defaultLoggedUserUuid = user.uuid;
 
   const {
     handleSubmit,
@@ -88,7 +88,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       <InlineLoading
         status="active"
         iconDescription="Loading"
-        description="Loading data..."
+        description={t("loadingData", "Loading data...")}
       />
     );
   }
@@ -99,7 +99,11 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       const payload = createBaseOperationPayload(model, item, operationType);
       await onSave(payload);
     } catch (e) {
-      // Show notification
+      showSnackbar({
+        title: t("errorSavingBaseOperation", "Erro saving base operation"),
+        isLowContrast: true,
+        kind: "error",
+      });
     } finally {
       setIsSaving(false);
     }
@@ -230,6 +234,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             title={t("responsiblePerson:", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
+            userUuid={defaultLoggedUserUuid}
             invalidText={
               errors.responsiblePersonUuid &&
               errors?.responsiblePersonUuid?.message

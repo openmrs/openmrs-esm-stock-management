@@ -34,7 +34,9 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
   return (
     <>
       <DispensingPackageMeasurement
-        dispensingUnitPackagingUoMUuid={stockItem?.purchasePriceUoMUuid}
+        dispensingUnitPackagingUoMUuid={
+          stockItem?.dispensingUnitPackagingUoMUuid
+        }
         name="dispensingUnitPackagingUoMUuid"
         controllerName="dispensingUnitPackagingUoMUuid"
         control={control}
@@ -52,7 +54,9 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         }
       />
       <DispensingPackageMeasurement
-        dispensingUnitPackagingUoMUuid={stockItem?.purchasePriceUoMUuid}
+        dispensingUnitPackagingUoMUuid={
+          stockItem?.defaultStockOperationsUoMUuid
+        }
         name="defaultStockOperationsUoMUuid"
         controllerName="defaultStockOperationsUoMUuid"
         control={control}
@@ -82,6 +86,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           label={t("orderLevel", "Reorder level:")}
           invalid={!!errors.reorderLevel}
           value={stockItem.reorderLevel ?? ""}
+          hideSteppers={true}
           invalidText={errors.reorderLevel && errors?.reorderLevel?.message}
         />
       )}
@@ -112,6 +117,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           label={t("purchasePrice", "Purchase Price:")}
           value={stockItem.purchasePrice ?? ""}
           invalid={!!errors.purchasePrice}
+          hideSteppers={true}
           invalidText={errors.purchasePrice && errors?.purchasePrice?.message}
         />
       )}

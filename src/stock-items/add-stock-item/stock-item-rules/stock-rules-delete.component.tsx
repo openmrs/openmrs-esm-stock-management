@@ -30,7 +30,7 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
                 title: t("deletingRule", "Delete Rule"),
                 kind: "success",
                 subtitle: t(
-                  "stockruledeletedsuccessfully",
+                  "stockRuleDeletedSuccessfully",
                   "Stock Rule Deleted Successfully"
                 ),
               });
@@ -38,7 +38,7 @@ const StockRulesDeleteActionMenu: React.FC<StockRulesDeleteActionMenuProps> = ({
             (error) => {
               setDeletingRule(false);
               showSnackbar({
-                title: t(`errorDeletingRule', 'error deleting a rule`),
+                title: t("errorDeletingRule", "Error deleting a rule"),
                 kind: "error",
                 isLowContrast: true,
                 subtitle: error?.message,
