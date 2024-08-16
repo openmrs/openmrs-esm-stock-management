@@ -7,6 +7,7 @@ import { useFormContext, type UseFieldArrayReturn } from "react-hook-form";
 import { StockOperationItemDTO } from "../../../core/api/types/stockOperation/StockOperationItemDTO";
 import { getStockOperationUniqueId } from "../../stock-operation.utils";
 import styles from "./stock-item-search.scss";
+import { ClickableTile } from "@carbon/react";
 
 type StockItemSearchProps = UseFieldArrayReturn<
   {
@@ -44,7 +45,6 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({
     setSearchTerm("");
     setValue(`stockItems[${fields.length}].stockItemUuid`, stockItem.uuid);
   };
-
   return (
     <div className={styles.stockItemSearchContainer}>
       <div style={{ display: "flex" }}>
@@ -57,20 +57,19 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({
           id="search-1"
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button>{t("search", "Search")}</Button>
       </div>
-      <div>
-        {searchTerm &&
-          stockItemsList?.map((stockItem) => (
-            <div
+      {searchTerm && stockItemsList?.length > 0 && (
+        <div className={styles.searchResults}>
+          {stockItemsList?.slice(0, 10).map((stockItem) => (
+            <ClickableTile
               onClick={() => handleOnSearchResultClick(stockItem)}
-              className={styles.searchResults}
               key={stockItem?.uuid}
             >
               {stockItem?.commonName}
-            </div>
+            </ClickableTile>
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
