@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { SaveStockOperation } from "../../stock-items/types";
@@ -83,6 +83,12 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
 
   const [isOtherUser, setIsOtherUser] = useState<boolean | null>();
   const [isSaving, setIsSaving] = useState(false);
+  useEffect(() => {
+    if (defaultLoggedUserUuid) {
+      setValue("responsiblePersonUuid", defaultLoggedUserUuid);
+    }
+  }, [defaultLoggedUserUuid, setValue]);
+
   if (isLoading) {
     return (
       <InlineLoading
