@@ -35,6 +35,10 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
         key: "packaging",
         header: t("packagingUnit", "Packaging Unit"),
       },
+      {
+        key: "packsize",
+        header: t("packSize", "Pack Size"),
+      },
     ],
     []
   );
@@ -50,6 +54,7 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
       quantity: row?.quantity?.toLocaleString() ?? "",
       batch: row.batchNumber ?? "",
       packaging: `${row.quantityUoM ?? ""} of ${row.quantityFactor ?? ""}`,
+      packsize: `${row.quantityFactor ?? ""}`,
     }));
   }, [items]);
 
