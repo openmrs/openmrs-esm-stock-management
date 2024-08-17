@@ -20,7 +20,7 @@ import { Concept } from "../core/api/types/concept/Concept";
 import { Party } from "../core/api/types/Party";
 import { Drug } from "../core/api/types/concept/Drug";
 import { Patient } from "../core/api/types/identity/Patient";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { uniqBy } from "lodash-es";
 import { UserRoleScope } from "../core/api/types/identity/UserRoleScope";
 
@@ -59,7 +59,8 @@ export function useStockLocations(filter: LocationFilterCriteria) {
    Unless a location is tag as main store, main pharmacy or dispensing, it will not be fetched.
 */
 export function useStockTagLocations() {
-  const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary `;
+  const [count, setCount] = useState(100);
+  const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary&_count=${count}`;
   const { data, error, isLoading } = useSWR<{ data: FHIRResponse }>(
     apiUrl,
     openmrsFetch
@@ -68,10 +69,15 @@ export function useStockTagLocations() {
     () => data?.data?.entry?.map((response) => response.resource) ?? [],
     [data?.data?.entry]
   );
+  const increaseCount = () => {
+    setCount((prevCount) => prevCount + 100);
+  };
   return {
     stockLocations: uniqBy(stockLocations, "id") ?? [],
     isLoading,
     error,
+    count,
+    increaseCount,
   };
 }
 

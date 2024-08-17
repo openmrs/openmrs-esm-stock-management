@@ -114,7 +114,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
         .filter((item: any) => item.uuid !== loggedInUserUuid)
         .filter((item: any) => {
           const displayName = item?.person?.display ?? item?.display ?? "";
-          return displayName?.toLowerCase().includes(query?.toLowerCase());
+          return displayName.toLowerCase().includes(query.toLowerCase());
         });
       setFilteredItems(filtered);
     }
@@ -443,8 +443,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               </span>
             </div>
           </section>
-          <section className={styles.section}>
-            <CheckboxGroup className={styles.checkboxGrid}>
+          <section className={styles.sectionScroll}>
+            <CheckboxGroup className={styles.checkboxGridScroll}>
               {stockLocations?.length > 0 &&
                 stockLocations.map((type) => {
                   const checkedLocation = findCheckedLocation(type);
@@ -459,16 +459,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
 
                   return (
                     <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        margin: "4px",
-                        padding: "5px",
-                      }}
+                      key={`chk-loc-child-key-${type.id}`}
+                      className={styles.checkboxItem}
                     >
                       <Checkbox
                         name="location"
-                        key={`chk-loc-child-key-${type.id}`}
                         id={`chk-loc-child-${type.id}`}
                         value={type.id}
                         onChange={(event) => onLocationCheckBoxChanged(event)}
@@ -481,7 +476,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                           value={type.id}
                           hideLabel
                           className={styles.toggle}
-                          size={"sm"}
+                          size="sm"
                           onToggleClick={getToggledValue(type.id)}
                           key={`tg-loc-child-key-${type.id}`}
                           id={`tg-loc-child-${type.id}`}
