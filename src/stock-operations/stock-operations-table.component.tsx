@@ -522,19 +522,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems?.map(
                                       (item) => item.batchNo
                                     )[0]
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems?.map(
                                       (item) => item.quantity
                                     )[0]
                                   : ""}
@@ -582,19 +578,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems?.map(
                                       (item) => item.batchNo
                                     )[1]
                                   : ""}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {filteredItems[index]?.stockOperationItems
-                                  ? filteredItems[
-                                      index
-                                    ].stockOperationItems?.map(
+                                {items[index]?.stockOperationItems
+                                  ? items[index].stockOperationItems?.map(
                                       (item) => item.quantity
                                     )[1]
                                   : ""}

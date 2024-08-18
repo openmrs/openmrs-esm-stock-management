@@ -108,9 +108,12 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
       (err) => {
         setIsApproving(false);
         const errorMessages = extractErrorMessagesFromResponse(err);
+        const message = errorMessages[0].replace(/[[\]]/g, "");
         showSnackbar({
           title: t("errorDescriptionTitle", "Error on saving form"),
-          subtitle: t("errorDescription", errorMessages.join(", ")),
+          subtitle: t("errorDescription", "Details: {{message}}", {
+            message,
+          }),
           kind: "error",
         }),
           closeModal();
