@@ -1,0 +1,61 @@
+@use '@carbon/styles/scss/spacing';
+@use '@carbon/styles/scss/type';
+@import "~@openmrs/esm-styleguide/src/vars";
+@import '../root.scss';
+
+.tileContainer {
+  background-color: $ui-02;
+  border-top: 1px solid $ui-03;
+  padding: 5rem 0;
+}
+
+.tile {
+  margin: auto;
+  width: fit-content;
+}
+
+.tileContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  @include type.type-style('heading-compact-02');
+  color: $text-02;
+  margin-bottom: 0.5rem;
+}
+
+.helper {
+  @include type.type-style('body-compact-01');
+  color: $text-02;
+}
+
+.toolbarContent {
+  display: flex;
+  align-items: center;
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+}
+
+.dateAlign {
+  padding-top: spacing.$spacing-03;
+  height: 100%;
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: spacing.$spacing-05;
+}
+
+.rowLoadingContainer {
+  text-align: center;
+  padding: 5rem 2rem;
+  margin: auto;
+  width: 20%;
+}
