@@ -40,10 +40,12 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="dispensingUnitPackagingUoMUuid"
         controllerName="dispensingUnitPackagingUoMUuid"
         control={control}
-        title={t(
-          "dispensingUnitOfMeasurement",
-          "Dispensing packaging unit of measurement:"
-        )}
+        title={
+          t(
+            "dispensingUnitOfMeasurement",
+            "Dispensing packaging unit of measurement"
+          ) + ":"
+        }
         placeholder={t("chooseAPackagingUoM", "Choose a packaging UoM")}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
@@ -60,10 +62,12 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="defaultStockOperationsUoMUuid"
         controllerName="defaultStockOperationsUoMUuid"
         control={control}
-        title={t(
-          "defaultStockOperationsPackagingUnit:",
-          "Default stock operations packaging unit:"
-        )}
+        title={
+          t(
+            "defaultStockOperationsPackagingUnit",
+            "Default stock operations packaging unit"
+          ) + ":"
+        }
         placeholder={t("chooseAPackagingUoM", "Choose a packaging UoM")}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
@@ -83,7 +87,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           controllerName="reorderLevel"
           size={"md"}
           allowEmpty={true}
-          label={t("orderLevel", "Reorder level:")}
+          label={t("orderLevel", "Reorder level") + ":"}
           invalid={!!errors.reorderLevel}
           value={stockItem.reorderLevel ?? ""}
           hideSteppers={true}
@@ -95,7 +99,9 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="reorderLevelUoMUuid"
         controllerName="reorderLevelUoMUuid"
         control={control}
-        title={t("reorderLevelPackagingUnit:", "Reorder level packaging unit:")}
+        title={
+          t("reorderLevelPackagingUnit", "Reorder level packaging unit") + ":"
+        }
         placeholder={t("notSet", "Not Set")}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
@@ -114,7 +120,7 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           controllerName="purchasePrice"
           size={"md"}
           allowEmpty={true}
-          label={t("purchasePrice", "Purchase Price:")}
+          label={t("purchasePrice", "Purchase Price") + ":"}
           value={stockItem.purchasePrice ?? ""}
           invalid={!!errors.purchasePrice}
           hideSteppers={true}
@@ -126,10 +132,9 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="purchasePriceUoMUuid"
         controllerName="purchasePriceUoMUuid"
         control={control}
-        title={t(
-          "purchasePricePackagingUnit",
-          "Purchase price packaging unit:"
-        )}
+        title={
+          t("purchasePricePackagingUnit", "Purchase price packaging unit") + ":"
+        }
         placeholder={t("notSet", "Not Set")}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}

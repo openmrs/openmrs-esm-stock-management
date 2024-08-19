@@ -7,7 +7,6 @@ import useSWR from "swr";
 import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
 import { PageableResult } from "../core/api/types/PageableResult";
 import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
-import { StockOperationLinkDTO } from "../core/api/types/stockOperation/StockOperationLinkDTO";
 import { StopOperationAction } from "../core/api/types/stockOperation/StockOperationAction";
 import { InventoryGroupBy } from "../core/api/types/stockItem/StockItem";
 

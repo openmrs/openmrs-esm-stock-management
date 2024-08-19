@@ -175,7 +175,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             title={
               operation?.hasDestination
                 ? t("from", "From")
-                : t("location:", "Location")
+                : t("location", "Location")
             }
             placeholder={
               operation.hasDestination
@@ -248,7 +248,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
-            title={t("responsiblePerson:", "Responsible Person")}
+            title={t("responsiblePerson", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             userUuid={defaultLoggedUserUuid}
@@ -290,7 +290,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
-            title={t("responsiblePerson:", "Responsible Person")}
+            title={t("responsiblePerson", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             invalidText={
@@ -338,7 +338,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           controllerName="remarks"
           maxLength={255}
           value={`${model?.remarks ?? ""}`}
-          labelText={t("remarks:", "Remarks")}
+          labelText={t("remarks", "Remarks")}
           invalid={!!errors.remarks}
           invalidText={errors.remarks && errors?.remarks?.message}
         />

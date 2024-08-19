@@ -143,12 +143,12 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     {
       key: "quantity",
       header: showQuantityRequested
-        ? t("qtyIssued", "Qty Issued")
-        : t("qty", "Qty"),
+        ? t("quantityIssued", "Quantity Issued")
+        : t("quantity", "Quantity"),
     },
     {
       key: "quantityuom",
-      header: t("quantityUom", "Qty UoM"),
+      header: t("quantityUoM", "Quantity Unit of Measurement(UoM)"),
     },
     ...(canCaptureQuantityPrice
       ? [
