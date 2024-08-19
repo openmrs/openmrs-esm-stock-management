@@ -28,11 +28,10 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
         const selectedParty = props.parties.find(
           (p) => p.uuid === props.partyUuid
         );
-        useEffect(() => {
-          if (selectedParty && !value) {
-            onChange(selectedParty.uuid);
-          }
-        }, [selectedParty, onChange, value]);
+
+        if (selectedParty && !value) {
+          onChange(selectedParty.uuid);
+        }
         return (
           <ComboBox
             titleText={props.title}
