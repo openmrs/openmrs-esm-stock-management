@@ -166,10 +166,12 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         )}
 
         {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
+        {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
           <PartySelector
             controllerName="sourceUuid"
             name="sourceUuid"
             control={control}
+            partyUuid={model?.atLocationUuid}
             partyUuid={model?.atLocationUuid}
             title={
               operation?.hasDestination || model?.destinationUuid
@@ -258,7 +260,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             name="responsiblePersonUuid"
             control={control}
             userUuid={model?.responsiblePersonUuid}
-            title={t("responsiblePerson", "Responsible Person")}
+            title={t("responsiblePerson:", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             invalidText={
@@ -300,7 +302,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             name="responsiblePersonUuid"
             control={control}
             userUuid={model?.responsiblePersonUuid}
-            title={t("responsiblePerson", "Responsible Person")}
+            title={t("responsiblePerson:", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             invalidText={
