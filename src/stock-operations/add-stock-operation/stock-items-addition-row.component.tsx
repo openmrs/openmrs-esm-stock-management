@@ -107,7 +107,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
     Date | null | undefined
   >();
   const [batchBalance, setBatchBalance] = useState(null);
-
+  console.log(batchBalance, "bal");
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
     if (!data) return;
     const item = fields[index];
@@ -162,6 +162,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
           const inventory: StockItemInventory = (
             res?.results as StockItemInventory[]
           )?.[0];
+          console.log(inventory, "inve");
           if (!inventory) {
             setBatchBalance({
               quantity: 0,
@@ -171,6 +172,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
           setBatchBalance({
             quantity: inventory.quantity,
             quantityUoM: inventory.quantityUoM,
+            quantityUoMUuid: inventory.quantityUoMUuid,
           });
         })
         .catch((error: any) => {
@@ -299,7 +301,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                         id={`expiration-input-${row.uuid}`}
                         name="operationDate"
                         placeholder={DATE_PICKER_FORMAT}
-                        defaultValue={formatForDatePicker(row?.expiration)}
+                        defaultValue={formatForDatePicker(
+                          stockItemExpiry || row?.expiration
+                        )}
                         invalid={!!errors?.stockItems?.[index]?.expiration}
                       />
                     </DatePicker>
