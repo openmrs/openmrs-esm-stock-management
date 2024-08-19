@@ -188,7 +188,7 @@
   "operationDate": "操作日期",
   "operationModalTitle": "{{title}} 手术",
   "operationSuccessful": "您已成功 {{title}} 手术",
-  "operationSuccessTitle": "{{title} 手术",
+  "operationSuccessTitle": "{{title}} 手术",
   "orderLevel": "重新订购级别：",
   "other": "其他",
   "outofstock": "缺货",

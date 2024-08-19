@@ -188,7 +188,7 @@
   "operationDate": "تاريخ العملية",
   "operationModalTitle": "{{title}} عملية",
   "operationSuccessful": "لقد نجحت {{title}} عملية",
-  "operationSuccessTitle": "{{title} عملية",
+  "operationSuccessTitle": "{{title}} عملية",
   "orderLevel": "مستوى إعادة الطلب:",
   "other": "آخر",
   "outofstock": "نفد المخزون",

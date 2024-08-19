@@ -188,7 +188,7 @@
   "operationDate": "Operation Date",
   "operationModalTitle": "{{title}} Operation",
   "operationSuccessful": "You have successfully {{title}} operation",
-  "operationSuccessTitle": "{{title} Operation",
+  "operationSuccessTitle": "{{title}} Operation",
   "orderLevel": "Reorder level:",
   "other": "Other",
   "outofstock": "Out of Stock",

@@ -94,7 +94,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
       () => {
         setIsApproving(false);
         showSnackbar({
-          title: t("operationSuccessTitle", "{{title} Operation", { title }),
+          title: t("operationSuccessTitle", "{{title}} Operation", { title }),
           subtitle: t(
             "operationSuccessful",
             "You have successfully {{title}} operation",

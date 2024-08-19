@@ -188,7 +188,7 @@
   "operationDate": "Date de l'Opération",
   "operationModalTitle": "{{title}} Opération",
   "operationSuccessful": "Vous avez réussi {{title}} opération",
-  "operationSuccessTitle": "{{title} Opération",
+  "operationSuccessTitle": "{{title}} Opération",
   "orderLevel": "Niveau de Réapprovisionnement:",
   "other": "Autre",
   "outofstock": "En Rupture de Stock",
