@@ -165,18 +165,19 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {canEdit && !lockSource && operation?.hasSource && (
+        {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
           <PartySelector
             controllerName="sourceUuid"
             name="sourceUuid"
             control={control}
+            partyUuid={model?.atLocationUuid}
             title={
-              operation?.hasDestination
+              operation?.hasDestination || model?.destinationUuid
                 ? t("from", "From")
                 : t("location", "Location")
             }
             placeholder={
-              operation.hasDestination
+              operation.hasDestination || model?.destinationUuid
                 ? t("chooseASource", "Choose a source")
                 : t("chooseALocation", "Choose a location")
             }
@@ -186,14 +187,19 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || isEditing || lockSource) && (
+        {!canEdit && isEditing && (
           <PartySelector
             controllerName="sourceUuid"
             name="sourceUuid"
             control={control}
-            title={operation?.hasDestination ? "From" : "Location"}
+            partyUuid={model?.atLocationUuid}
+            title={
+              operation?.hasDestination || model?.destinationUuid
+                ? "From"
+                : "Location"
+            }
             placeholder={
-              operation.hasDestination
+              operation.hasDestination || model?.destinationUuid
                 ? t("chooseASource", "Choose a source")
                 : t("chooseALocation", "Choose a location")
             }
@@ -202,15 +208,17 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             parties={sourcePartyList || []}
           />
         )}
-
-        {canEdit && !lockDestination && operation?.hasDestination && (
+        {canEdit && (operation?.hasDestination || model?.destinationUuid) && (
           <PartySelector
             controllerName="destinationUuid"
             name="destinationUuid"
             control={control}
-            title={operation?.hasSource ? "To" : "Location"}
+            partyUuid={model?.destinationUuid}
+            title={
+              operation?.hasSource || model?.atLocationUuid ? "To" : "Location"
+            }
             placeholder={
-              operation?.hasSource
+              operation?.hasSource || model?.atLocationUuid
                 ? t("chooseADestination", "Choose a destination")
                 : "Location"
             }
@@ -222,14 +230,17 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {(!canEdit || isEditing || lockDestination) && (
+        {!canEdit && isEditing && (
           <PartySelector
             controllerName="destinationUuid"
             name="destinationUuid"
             control={control}
-            title={operation?.hasSource ? "To" : "Location"}
+            partyUuid={model?.destinationUuid}
+            title={
+              operation?.hasSource || model?.atLocationUuid ? "To" : "Location"
+            }
             placeholder={
-              operation?.hasSource
+              operation?.hasSource || model?.atLocationUuid
                 ? t("chooseADestination", "Choose a destination")
                 : "Location"
             }
@@ -246,10 +257,10 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
+            userUuid={model?.responsiblePersonUuid}
             title={t("responsiblePerson", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
-            userUuid={defaultLoggedUserUuid}
             invalidText={
               errors.responsiblePersonUuid &&
               errors?.responsiblePersonUuid?.message
@@ -283,11 +294,12 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {!canEdit && (
+        {!canEdit && isEditing && (
           <UsersSelector
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
+            userUuid={model?.responsiblePersonUuid}
             title={t("responsiblePerson", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}

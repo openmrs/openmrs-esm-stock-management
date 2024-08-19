@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { initialStockOperationValue } from "../../core/utils/utils";
 import { MAIN_STORE_LOCATION_TAG, today } from "../../constants";
@@ -31,7 +32,7 @@ export async function initializeNewStockOperation(
   stockOperationTypes?: StockOperationType[]
 ): Promise<InitializeResult> {
   let model: StockOperationDTO;
-  const isNew = !!stockOperation;
+  const isNew = !stockOperation;
   const newItemsToCopy: StockOperationItemDTO[] = [];
   const showQuantityRequested = false;
 
@@ -58,6 +59,27 @@ export async function initializeNewStockOperation(
   let sourcePartyList: Party[] | null | undefined;
   let destinationPartyList: Party[] | null | undefined;
 
+  const partyList = await getParties();
+  if (!partyList.ok) throw Error("Error loading parties");
+  sourcePartyList = partyList?.data?.results?.filter(
+    (p) =>
+      (p.locationUuid &&
+        currentStockOperationType?.sourceType === LocationTypeLocation &&
+        (sourceTags.length === 0 ||
+          (p.tags && sourceTags.some((x) => p.tags.includes(x))))) ||
+      (p.stockSourceUuid &&
+        currentStockOperationType?.sourceType === LocationTypeOther)
+  );
+  destinationPartyList = partyList?.data?.results?.filter(
+    (p) =>
+      (p.locationUuid &&
+        currentStockOperationType?.destinationType === LocationTypeLocation &&
+        (destinationTags.length === 0 ||
+          (p.tags && destinationTags.some((x) => p.tags.includes(x))))) ||
+      (p.stockSourceUuid &&
+        currentStockOperationType?.destinationType === LocationTypeOther)
+  );
+
   if (isNew) {
     model = structuredClone(initialStockOperationValue());
     model = Object.assign(model, {
@@ -66,24 +88,8 @@ export async function initializeNewStockOperation(
       operationTypeUuid: currentStockOperationType?.uuid,
       operationType: currentStockOperationType?.operationType,
     });
-    const partyList = await getParties();
-
-    if (!partyList.ok) throw Error("Error loading parties");
-    const filteredPartyList = partyList.data?.results?.filter(
-      (party) => party.stockSourceUuid !== null
-    );
-
-    sourcePartyList = partyList?.data?.results?.filter(
-      (p) =>
-        (p.locationUuid &&
-          currentStockOperationType?.sourceType === LocationTypeLocation &&
-          (sourceTags.length === 0 ||
-            (p.tags && sourceTags.some((x) => p.tags.includes(x))))) ||
-        (p.stockSourceUuid &&
-          currentStockOperationType?.sourceType === LocationTypeOther)
-    );
     if (currentStockOperationType?.hasSource) {
-      if (isNew && shouldLockSource && sourcePartyList?.length > 0) {
+      if (shouldLockSource && sourcePartyList?.length > 0) {
         const party = sourcePartyList[0];
         model.sourceUuid = party.uuid;
         model.sourceName = party.name;
@@ -92,24 +98,14 @@ export async function initializeNewStockOperation(
     }
 
     if (currentStockOperationType?.hasDestination) {
-      destinationPartyList = partyList?.data?.results?.filter(
-        (p) =>
-          (p.locationUuid &&
-            currentStockOperationType?.destinationType ===
-              LocationTypeLocation &&
-            (destinationTags.length === 0 ||
-              (p.tags && destinationTags.some((x) => p.tags.includes(x))))) ||
-          (p.stockSourceUuid &&
-            currentStockOperationType?.destinationType === LocationTypeOther)
-      );
-
-      if (isNew && shouldLockDestination && destinationPartyList?.length > 0) {
+      if (shouldLockDestination && destinationPartyList?.length > 0) {
         const party = destinationPartyList[0];
         model.destinationUuid = party.uuid;
         model.destinationName = party.name;
       }
     }
   } else {
+    model = stockOperation!;
     const response = await getStockOperationTypes();
     if (response.ok) {
       operationTypes = response.data.results;
