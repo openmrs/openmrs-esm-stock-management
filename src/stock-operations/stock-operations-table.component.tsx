@@ -451,12 +451,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     Refresh
                   </TableToolbarAction>
                 </TableToolbarMenu>
-
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(
                       t,
-                      { ...initialStockOperationValue(), receivedItems: [] },
+                      initialStockOperationValue(),
                       false,
                       operation,
                       operations,

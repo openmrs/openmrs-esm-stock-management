@@ -70,10 +70,7 @@ export async function initializeNewStockOperation(
   let destinationPartyList: Party[] | null | undefined;
 
   if (isNew) {
-    model = structuredClone({
-      ...initialStockOperationValue(),
-      receivedItems: [],
-    });
+    model = structuredClone(initialStockOperationValue());
     model = Object.assign(model, {
       operationDate: today(),
       operationTypeName: currentStockOperationType?.name,
