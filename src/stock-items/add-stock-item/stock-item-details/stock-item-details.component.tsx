@@ -219,7 +219,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               ? "Non Drugs"
               : undefined
           }
-          title={t("category:", "Category") + ":"}
+          title={t("category", "Category") + ":"}
           placeholder={t("chooseACategory", "Choose a category")}
           invalid={!!errors.categoryUuid}
           invalidText={errors.categoryUuid && errors?.categoryUuid?.message}

@@ -34,9 +34,12 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ model }) => {
     { key: "requested", header: t("requested", "Requested") },
     { key: "batch", header: t("batch", "Batch No") },
     { key: "expiry", header: t("expiry", "Expiry Date") },
-    { key: "qtySent", header: t("qtySent", "Qty Sent") },
-    { key: "qtyReceived", header: t("qtyReceived", "Qty Received") },
-    { key: "qtyUoM", header: t("qtyUoM", "Qty UoM") },
+    { key: "qtySent", header: t("quantitySent", "Quantity Sent") },
+    { key: "qtyReceived", header: t("quantityReceived", "Quantity Received") },
+    {
+      key: "qtyUoM",
+      header: t("quantityUoM", "Quantity Unit of Measurement(UoM)"),
+    },
   ];
 
   const rows =
