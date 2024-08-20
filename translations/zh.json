@@ -280,6 +280,7 @@
   "stockSourceDeletedSuccessfully": "库存源已成功删除",
   "stockUserScopeDeletedSuccessfully": "库存用户范围已成功删除",
   "submit": "提交",
+  "submitForReview": "Submit For Review",
   "submitted": "已提交",
   "successfullysaved": "您已成功保存用户角色范围",
   "SuccessfullyUploadedStockItem": "您已成功上传库存商品",
