@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Search, Button } from "@carbon/react";
+import { Search, ClickableTile } from "@carbon/react";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "@openmrs/esm-framework";
 import { useStockItems } from "../../stock-item-selector/stock-item-selector.resource";
@@ -7,7 +7,6 @@ import { useFormContext, type UseFieldArrayReturn } from "react-hook-form";
 import { StockOperationItemDTO } from "../../../core/api/types/stockOperation/StockOperationItemDTO";
 import { getStockOperationUniqueId } from "../../stock-operation.utils";
 import styles from "./stock-item-search.scss";
-import { ClickableTile } from "@carbon/react";
 
 type StockItemSearchProps = UseFieldArrayReturn<
   {
@@ -15,7 +14,7 @@ type StockItemSearchProps = UseFieldArrayReturn<
   },
   "stockItems",
   "id"
-> & {};
+>;
 
 const StockItemSearch: React.FC<StockItemSearchProps> = ({
   append,

@@ -143,25 +143,6 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             key={row?.uuid}
           >
             <TableCell>
-<<<<<<< HEAD
-              <div className={styles.cellContent}>
-                {row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
-                  <Link
-                    target={"_blank"}
-                    to={URL_STOCK_ITEM(row?.stockItemUuid)}
-                  >
-                    {row?.stockItemUuid.drugName || "No stock item name"}
-                  </Link>
-                ) : (
-                  <Link
-                    target={"_blank"}
-                    to={URL_STOCK_ITEM(row?.stockItemUuid)}
-                  >
-                    {row?.stockItemName || "No name available"}
-                  </Link>
-                )}
-              </div>
-=======
               {row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
                 <Link target={"_blank"} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
                   {row?.stockItemUuid.drugName || "No stock item name"}
@@ -171,7 +152,6 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   {row?.stockItemName || "No name available"}
                 </Link>
               )}
->>>>>>> fccec91 (Expand the view panel in stock management systen at stock operation)
             </TableCell>
             {showQuantityRequested && (
               <TableCell>
@@ -183,163 +163,176 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             )}
             {(requiresActualBatchInformation || requiresBatchUuid) && (
               <TableCell>
-                {requiresActualBatchInformation &&
-                  (canEdit ||
-                    (canUpdateBatchInformation &&
-                      row?.permission?.canUpdateBatchInformation)) && (
-                    <TextInput
-                      size="sm"
-                      maxLength={50}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        setValue(`stockItems.${index}.batchNo`, e.target.value)
-                      }
-                      defaultValue={row.batchNo}
-                      invalidText=""
-                      invalid={errors?.stockItems?.[index]?.batchNo}
-                    />
-                  )}
-                {requiresBatchUuid &&
-                  !requiresActualBatchInformation &&
-                  canEdit && (
-                    <BatchNoSelector
-                      batchUuid={row?.stockBatchUuid}
-                      onBatchNoChanged={(item) => {
-                        setValue(
-                          `stockItems.${index}.batchNo`,
-                          item?.batchNo ?? ""
-                        );
-                        setValue(
-                          `stockItems.${index}.expiration`,
-                          item?.expiration
-                        );
-                        setStockItemExpiy(item?.expiration);
-                      }}
-                      placeholder={"Filter..."}
-                      invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
-                      control={control as unknown as Control}
-                      controllerName={`stockItems.${index}.stockBatchUuid`}
-                      name={`stockItems.${index}.stockBatchUuid`}
-                      stockItemUuid={row.stockItemUuid}
-                      selectedItem={stockItemUuid}
-                    />
-                  )}
-                {!(
-                  canUpdateBatchInformation &&
-                  row?.permission?.canUpdateBatchInformation
-                ) &&
-                  !canEdit &&
-                  row?.batchNo}
+                <div className={styles.cellContent}>
+                  {requiresActualBatchInformation &&
+                    (canEdit ||
+                      (canUpdateBatchInformation &&
+                        row?.permission?.canUpdateBatchInformation)) && (
+                      <TextInput
+                        size="sm"
+                        maxLength={50}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                          setValue(
+                            `stockItems.${index}.batchNo`,
+                            e.target.value
+                          )
+                        }
+                        defaultValue={row.batchNo}
+                        invalidText=""
+                        invalid={errors?.stockItems?.[index]?.batchNo}
+                      />
+                    )}
+                  {requiresBatchUuid &&
+                    !requiresActualBatchInformation &&
+                    canEdit && (
+                      <BatchNoSelector
+                        batchUuid={row?.stockBatchUuid}
+                        onBatchNoChanged={(item) => {
+                          setValue(
+                            `stockItems.${index}.batchNo`,
+                            item?.batchNo ?? ""
+                          );
+                          setValue(
+                            `stockItems.${index}.expiration`,
+                            item?.expiration
+                          );
+                          setStockItemExpiy(item?.expiration);
+                        }}
+                        placeholder={"Filter..."}
+                        invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
+                        control={control as unknown as Control}
+                        controllerName={`stockItems.${index}.stockBatchUuid`}
+                        name={`stockItems.${index}.stockBatchUuid`}
+                        stockItemUuid={row.stockItemUuid}
+                        selectedItem={stockItemUuid}
+                      />
+                    )}
+                  {!(
+                    canUpdateBatchInformation &&
+                    row?.permission?.canUpdateBatchInformation
+                  ) &&
+                    !canEdit &&
+                    row?.batchNo}
+                </div>
               </TableCell>
             )}
             {(requiresActualBatchInformation || requiresBatchUuid) && (
               <TableCell>
-                {(canEdit ||
-                  (canUpdateBatchInformation &&
-                    row?.permission?.canUpdateBatchInformation)) &&
-                  requiresActualBatchInformation && (
-                    <DatePicker
-                      id={`expiration-${row.uuid}`}
-                      datePickerType="single"
-                      minDate={formatForDatePicker(today())}
-                      locale="en"
-                      dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                      onChange={([newDate]) => {
-                        setValue(`stockItems.${index}.expiration`, newDate);
-                      }}
-                    >
-                      <DatePickerInput
-                        size="sm"
-                        autoComplete="off"
-                        id={`expiration-input-${row.uuid}`}
-                        name="operationDate"
-                        placeholder={DATE_PICKER_FORMAT}
-                        defaultValue={formatForDatePicker(row?.expiration)}
-                        invalid={!!errors?.stockItems?.[index]?.expiration}
-                      />
-                    </DatePicker>
-                  )}
-                {((!(
-                  canUpdateBatchInformation &&
-                  row?.permission?.canUpdateBatchInformation
-                ) &&
-                  !canEdit) ||
-                  requiresBatchUuid) &&
-                  formatForDatePicker(row.expiration)}
+                <div className={styles.cellContent}>
+                  {(canEdit ||
+                    (canUpdateBatchInformation &&
+                      row?.permission?.canUpdateBatchInformation)) &&
+                    requiresActualBatchInformation && (
+                      <DatePicker
+                        id={`expiration-${row.uuid}`}
+                        datePickerType="single"
+                        minDate={formatForDatePicker(today())}
+                        locale="en"
+                        dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                        onChange={([newDate]) => {
+                          setValue(`stockItems.${index}.expiration`, newDate);
+                        }}
+                      >
+                        <DatePickerInput
+                          size="sm"
+                          autoComplete="off"
+                          id={`expiration-input-${row.uuid}`}
+                          name="operationDate"
+                          placeholder={DATE_PICKER_FORMAT}
+                          defaultValue={formatForDatePicker(row?.expiration)}
+                          invalid={!!errors?.stockItems?.[index]?.expiration}
+                        />
+                      </DatePicker>
+                    )}
+                  {((!(
+                    canUpdateBatchInformation &&
+                    row?.permission?.canUpdateBatchInformation
+                  ) &&
+                    !canEdit) ||
+                    requiresBatchUuid) &&
+                    formatForDatePicker(row.expiration)}
+                </div>
               </TableCell>
             )}
             <TableCell>
-              {canEdit && (
-                <NumberInput
-                  className="small-placeholder-text"
-                  size="sm"
-                  id={`qty-${row?.uuid}`}
-                  hideSteppers={true}
-                  allowEmpty={true}
-                  onChange={(e: any) =>
-                    setValue(`stockItems.${index}.quantity`, e?.target?.value)
-                  }
-                  value={row?.quantity ?? ""}
-                  invalidText={errors?.stockItems?.[index]?.quantity?.message}
-                  placeholder={
-                    requiresBatchUuid &&
-                    !requiresActualBatchInformation &&
-                    row?.stockBatchUuid in batchBalance
-                      ? `Bal: ${
-                          batchBalance[
-                            row?.stockBatchUuid
-                          ]?.quantity?.toLocaleString() ?? ""
-                        } ${
-                          batchBalance[row?.stockBatchUuid]?.quantityUoM ?? ""
-                        }`
-                      : ""
-                  }
-                  invalid={!!errors?.stockItems?.[index]?.quantity}
-                />
-              )}
-              {!canEdit && row?.quantity?.toLocaleString()}
+              <div className={styles.cellContent}>
+                {canEdit && (
+                  <NumberInput
+                    className="small-placeholder-text"
+                    size="sm"
+                    id={`qty-${row?.uuid}`}
+                    hideSteppers={true}
+                    allowEmpty={true}
+                    onChange={(e: any) =>
+                      setValue(`stockItems.${index}.quantity`, e?.target?.value)
+                    }
+                    value={row?.quantity ?? ""}
+                    invalidText={errors?.stockItems?.[index]?.quantity?.message}
+                    placeholder={
+                      requiresBatchUuid &&
+                      !requiresActualBatchInformation &&
+                      row?.stockBatchUuid in batchBalance
+                        ? `Bal: ${
+                            batchBalance[
+                              row?.stockBatchUuid
+                            ]?.quantity?.toLocaleString() ?? ""
+                          } ${
+                            batchBalance[row?.stockBatchUuid]?.quantityUoM ?? ""
+                          }`
+                        : ""
+                    }
+                    invalid={!!errors?.stockItems?.[index]?.quantity}
+                  />
+                )}
+                {!canEdit && row?.quantity?.toLocaleString()}
+              </div>
             </TableCell>
             <TableCell>
-              {canEdit && (
-                <QtyUomSelector
-                  stockItemUuid={row.stockItemUuid}
-                  onStockPackageChanged={(selectedItem) => {
-                    setValue(
-                      `stockItems.${index}.stockItemPackagingUOMUuid`,
-                      selectedItem?.uuid
-                    );
-                  }}
-                  placeholder={"Filter..."}
-                  invalid={
-                    !!errors?.stockItems?.[index]?.stockItemPackagingUOMUuid
-                  }
-                  control={control as unknown as Control}
-                  controllerName={`stockItems.${index}.stockItemPackagingUOMUuid`}
-                  name={`stockItems.${index}.stockItemPackagingUOMUuid`}
-                />
-              )}
-              {!canEdit && row?.stockItemPackagingUOMName}
+              <div className={styles.cellContent}>
+                {canEdit && (
+                  <QtyUomSelector
+                    stockItemUuid={row.stockItemUuid}
+                    onStockPackageChanged={(selectedItem) => {
+                      setValue(
+                        `stockItems.${index}.stockItemPackagingUOMUuid`,
+                        selectedItem?.uuid
+                      );
+                    }}
+                    placeholder={"Filter..."}
+                    invalid={
+                      !!errors?.stockItems?.[index]?.stockItemPackagingUOMUuid
+                    }
+                    control={control as unknown as Control}
+                    controllerName={`stockItems.${index}.stockItemPackagingUOMUuid`}
+                    name={`stockItems.${index}.stockItemPackagingUOMUuid`}
+                  />
+                )}
+                {!canEdit && row?.stockItemPackagingUOMName}
+              </div>
             </TableCell>
             {canCapturePurchasePrice && (
               <TableCell>
                 <div className={styles.cellContent}>
-                  {canEdit && (
-                    <NumberInput
-                      size="sm"
-                      invalid={!!errors?.stockItems?.[index]?.purchasePrice}
-                      invalidText=""
-                      id={`purchaseprice-${row.uuid}`}
-                      allowEmpty={true}
-                      onChange={(e: any) =>
-                        setValue(
-                          `stockItems.${index}.purchasePrice`,
-                          e?.target?.value
-                        )
-                      }
-                      value={row?.purchasePrice ?? ""}
-                      title=""
-                    />
-                  )}
-                  {!canEdit && row?.purchasePrice?.toLocaleString()}
+                  <div className={styles.cellContent}>
+                    {canEdit && (
+                      <NumberInput
+                        size="sm"
+                        invalid={!!errors?.stockItems?.[index]?.purchasePrice}
+                        invalidText=""
+                        id={`purchaseprice-${row.uuid}`}
+                        allowEmpty={true}
+                        onChange={(e: any) =>
+                          setValue(
+                            `stockItems.${index}.purchasePrice`,
+                            e?.target?.value
+                          )
+                        }
+                        value={row?.purchasePrice ?? ""}
+                        title=""
+                      />
+                    )}
+                    {!canEdit && row?.purchasePrice?.toLocaleString()}
+                  </div>
                 </div>
               </TableCell>
             )}
