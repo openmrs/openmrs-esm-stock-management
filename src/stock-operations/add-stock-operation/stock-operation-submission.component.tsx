@@ -46,6 +46,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   model,
   requiresDispatchAcknowledgement,
   actions,
+  isEditing,
 }) => {
   const { t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
@@ -114,11 +115,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   onClick={async () => {
                     delete model?.dateCreated;
                     setIsSaving(true);
-                    await actions.onSave(model).then(() => {
-                      model.status = "COMPLETED";
-                      actions.onComplete(model);
+                    if (!isEditing) {
+                      delete model.status;
+                      await actions.onSave(model);
                       setIsSaving(false);
-                    });
+                    }
+                    model.status = "COMPLETED";
+                    actions.onComplete(model);
                     setIsSaving(false);
                   }}
                   renderIcon={ListChecked}
