@@ -130,17 +130,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     selectedStatus.length ||
     selectedOperations.length;
 
-  const config = useConfig();
-
   let operations: StockOperationType[] | null | undefined;
-
-  const handleOnComplete = () => {
-    const dispose = showModal("stock-operation-dialog", {
-      title: "complete",
-      closeModal: () => dispose(),
-    });
-    handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
-  };
 
   const handleOnFilterChange = useCallback((selectedItems, filterType) => {
     if (filterType === StockFilters.SOURCES) {
@@ -313,7 +303,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           onClick={() => {
             launchAddOrEditDialog(
               t,
-              filteredItems[index],
+              items[index],
               true,
               operation,
               operations,
@@ -513,7 +503,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                                   ? items[index]?.creatorFamilyName
                                   : ""}
                               </StructuredListCell>
-
                             </StructuredListRow>
                             <StructuredListRow>
                               <StructuredListCell noWrap>

@@ -104,7 +104,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
         <div className="stkpg-form-buttons" style={{ margin: "10px" }}>
           {approvalRequired != null && (
             <>
-              {!requiresDispatchAcknowledgement && !model?.approvalRequired && (
+              {!requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="complete"
                   type="button"
