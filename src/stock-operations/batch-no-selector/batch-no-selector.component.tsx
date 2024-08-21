@@ -46,18 +46,20 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     setStockItemUuid(props.stockItemUuid);
   }, [props.stockItemUuid, setStockItemUuid]);
 
-  const stockItemBatchesInfo = stockItemBatchNos?.map((item) => {
-    const matchingBatch = items?.find(
-      (batch) => batch.batchNumber === item.batchNo
-    );
-    if (matchingBatch) {
-      return {
-        ...item,
-        quantity: matchingBatch.quantity ?? "",
-      };
-    }
-    return item;
-  });
+  const stockItemBatchesInfo = stockItemBatchNos
+    ?.map((item) => {
+      const matchingBatch = items?.find(
+        (batch) => batch.batchNumber === item.batchNo
+      );
+      if (matchingBatch) {
+        return {
+          ...item,
+          quantity: Number(matchingBatch.quantity) ?? 0,
+        };
+      }
+      return item;
+    })
+    ?.filter((item) => Number(item.quantity) > 0);
 
   useEffect(() => {
     if (
