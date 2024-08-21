@@ -18,7 +18,7 @@ export const configSchema = {
   stockAdjustmentReasonUUID: {
     _type: Type.ConceptUuid,
     _description: "UUID for the stock adjustment reasons",
-    _default: "3bbfaa44-d5b8-404d-b4c1-2bf49ad8ce25",
+    _default: "47f0825e-8648-47c2-b847-d3197ed6bb72",
   },
   stockSourceTypeUUID: {
     _type: Type.ConceptUuid,
