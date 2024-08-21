@@ -82,10 +82,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   }, [currentStockOperationType, requisition, props.model?.uuid]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [canReceiveItems, setCanReceiveItems] = useState(false);
+  const [canDisplayReceivedItems, setCanDisplayReceivedItems] = useState(false);
 
   useEffect(() => {
-    setCanReceiveItems(props?.model?.permission?.canReceiveItems ?? false);
+    setCanDisplayReceivedItems(
+      props?.model?.permission?.canDisplayReceivedItems ?? false
+    );
   }, [props?.model?.permission]);
 
   if (isLoading) return <AccordionSkeleton />;
@@ -182,6 +184,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
               : result.requiresDispatchAcknowledgement
           }
           actions={{
+            onGoBack: () => {
+              setSelectedIndex(1);
+            },
             onSave: async (model) => {
               // TODO: Update
               await addOrEditStockOperation(
@@ -193,17 +198,15 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 props.canPrint
               );
             },
-            onGoBack: () => {
-              setSelectedIndex(1);
-            },
+
             onComplete: async () => {
-              await showActionDialogButton("Complete", true, props?.model);
+              await showActionDialogButton("Complete", false, props?.model);
             },
             onSubmit: async () => {
-              await showActionDialogButton("Submit", true, props?.model);
+              await showActionDialogButton("Submit", false, props?.model);
             },
             onDispatch: async () => {
-              await showActionDialogButton("Dispatch", true, props?.model);
+              await showActionDialogButton("Dispatch", false, props?.model);
             },
           }}
         />
@@ -213,7 +216,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   ].concat(
     StockOperationTypeIsStockIssue(
       props?.model?.operationType as OperationType
-    ) || canReceiveItems
+    ) || canDisplayReceivedItems
       ? status === "DISPATCHED" || status === "COMPLETED"
         ? [
             {
@@ -505,6 +508,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                       <div style={{ margin: "2px" }}>
                         <StockOperationCompleteDispatchButton
                           operation={props?.model}
+                          reason={false}
                         />
                       </div>
                       <div style={{ margin: "2px" }}>

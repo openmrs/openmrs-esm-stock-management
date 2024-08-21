@@ -94,10 +94,13 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
       () => {
         setIsApproving(false);
         showSnackbar({
-          title: t("title", `${title} Operation`),
+          title: t("operationSuccessTitle", "{{title}} Operation", { title }),
           subtitle: t(
-            "successMessage",
-            `You have successfully ${title} operation `
+            "operationSuccessful",
+            "You have successfully {{title}} operation",
+            {
+              title,
+            }
           ),
           kind: "success",
         }),
@@ -108,9 +111,16 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
       (err) => {
         setIsApproving(false);
         const errorMessages = extractErrorMessagesFromResponse(err);
+        const message = errorMessages[0].replace(/[[\]]/g, "");
         showSnackbar({
-          title: t("errorDescriptionTitle", "Error on saving form"),
-          subtitle: t("errorDescription", errorMessages.join(", ")),
+          title: t("stockOperationErrorTitle", "Error on saving form"),
+          subtitle: t(
+            "stockOperationErrorDescription",
+            "Details: {{message}}",
+            {
+              message,
+            }
+          ),
           kind: "error",
         }),
           closeModal();
@@ -124,7 +134,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({
       <Form onSubmit={handleClick}>
         <ModalHeader
           closeModal={closeModal}
-          title={t("title", `${title} Operation`)}
+          title={t("operationModalTitle", "{{title}} Operation", { title })}
         />
         <ModalBody>
           <div className={styles.modalBody}>

@@ -42,7 +42,7 @@ const StockOperationTypesSelector: React.FC<
 
   if (isLoading || isError) return <ButtonSkeleton />;
 
-  return (
+  return filterOperationTypes && filterOperationTypes.length ? (
     <OverflowMenu
       renderIcon={() => (
         <>
@@ -74,7 +74,7 @@ const StockOperationTypesSelector: React.FC<
           />
         ))}
     </OverflowMenu>
-  );
+  ) : null;
 };
 
 export default StockOperationTypesSelector;

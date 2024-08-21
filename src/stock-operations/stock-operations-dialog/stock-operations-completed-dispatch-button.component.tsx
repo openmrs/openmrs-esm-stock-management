@@ -8,17 +8,18 @@ import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOper
 
 interface StockOperationCompleteDispatchButtonProps {
   operation: StockOperationDTO;
+  reason: boolean;
 }
 
 const StockOperationCompleteDispatchButton: React.FC<
   StockOperationCompleteDispatchButtonProps
-> = ({ operation }) => {
+> = ({ operation, reason }) => {
   const { t } = useTranslation();
   const launchcompletedDispatchModal = useCallback(() => {
     const dispose = showModal("stock-operation-dialog", {
       title: "Complete Dispatch",
       operation: operation,
-      requireReason: false,
+      requireReason: reason,
       closeModal: () => dispose(),
     });
   }, [operation]);

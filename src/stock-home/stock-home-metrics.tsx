@@ -58,7 +58,12 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
     );
   }
   if (error) {
-    return <ErrorState headerTitle={t("errorStockMetric")} error={error} />;
+    return (
+      <ErrorState
+        headerTitle={t("errorStockMetric", "Error fetching stock metrics")}
+        error={error}
+      />
+    );
   }
 
   const filteredItems =

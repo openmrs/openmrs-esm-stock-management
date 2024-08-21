@@ -78,7 +78,10 @@ const DeletePackagingUnit: React.FC<DeletePackagingUnitProps> = ({
         <span>
           {t(
             "removePackagingUnitConfirmation",
-            "Would you really like to remove the packaging unit ${row?.packagingUomName} from the stock item?"
+            "Would you really like to remove the packaging unit {{name}} from the stock item?",
+            {
+              name: row?.packagingUomName,
+            }
           )}
         </span>
         <TextArea
