@@ -135,10 +135,6 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
     <>
       {fields?.map((row, index) => {
         const stockItemId = `stockItems.${index}.stockItemUuid`;
-        const maxQuantity =
-          row?.stockBatchUuid && batchBalance[row?.stockBatchUuid]
-            ? batchBalance[row?.stockBatchUuid]?.quantity ?? 0
-            : 0;
         return (
           <TableRow
             className={isDesktop ? styles.desktopRow : styles.tabletRow}
