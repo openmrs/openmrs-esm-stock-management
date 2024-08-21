@@ -93,37 +93,37 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   remove,
   fields,
 }) => {
+  const [maxQuantity, setMaxQuantity] = useState<number | null>(null);
   const [stockItemUuid, setStockItemUuid] = useState<
     string | null | undefined
   >();
-  const [stockItemExpiry, setStockItemExpiy] = useState<
+  const [stockItemExpiry, setStockItemExpiry] = useState<
     Date | null | undefined
   >();
+
+  const handleBatchChange = (batch: StockBatchDTO) => {
+    setMaxQuantity(batch ? parseInt(batch.quantity ?? "0", 10) : null);
+  };
 
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
     if (!data) return;
     const item = fields[index];
     if (item) {
-      item.stockItemName =
-        (data?.drugName
-          ? `${data?.drugName}${
-              data?.commonName ?? data?.conceptName
-                ? ` (${data?.commonName ?? data?.conceptName})`
-                : ""
-            }`
-          : null) ?? data?.conceptName;
-
-      const configureExpiration = data?.hasExpiration ?? true;
+      item.stockItemName = data.drugName
+        ? `${data.drugName}${
+            data.commonName ?? data.conceptName
+              ? ` (${data.commonName ?? data.conceptName})`
+              : ""
+          }`
+        : data.conceptName;
+      const configureExpiration = data.hasExpiration ?? true;
       item.hasExpiration = configureExpiration;
       if (!configureExpiration) {
         item.expiration = null;
       }
-
-      item.stockItemUuid = data?.uuid;
-
+      item.stockItemUuid = data.uuid;
       item.stockItemPackagingUOMUuid = null;
       item.stockItemPackagingUOMName = null;
-
       item.stockBatchUuid = null;
       if (requiresBatchUuid) {
         // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
@@ -199,6 +199,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                       <BatchNoSelector
                         batchUuid={row?.stockBatchUuid}
                         onBatchNoChanged={(item) => {
+                          handleBatchChange(item);
                           setValue(
                             `stockItems.${index}.batchNo`,
                             item?.batchNo ?? ""
@@ -207,8 +208,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                             `stockItems.${index}.expiration`,
                             item?.expiration
                           );
-                          console.log("item exp", item?.expiration);
-                          setStockItemExpiy(item?.expiration);
+                          setStockItemExpiry(item?.expiration);
                         }}
                         placeholder={"Filter..."}
                         invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}

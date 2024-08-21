@@ -5,7 +5,6 @@ import { useStockItemBatchNos } from "./batch-no-selector.resource";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { useStockItemBatchInformationHook } from "../../stock-items/add-stock-item/batch-information/batch-information.resource";
 import { useTranslation } from "react-i18next";
-
 interface BatchNoSelectorProps<T> {
   placeholder?: string;
   stockItemUuid: string;
@@ -15,13 +14,11 @@ interface BatchNoSelectorProps<T> {
   invalid?: boolean;
   invalidText?: ReactNode;
   selectedItem?: string;
-
   // Control
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
 }
-
 const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNos(
     props.stockItemUuid
@@ -31,7 +28,6 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   );
   const [selectedItem, setSelectedItem] = useState<StockBatchDTO | null>(null);
   const { t } = useTranslation();
-
   const initialSelectedItem = useMemo(
     () =>
       stockItemBatchNos?.find(
@@ -39,13 +35,10 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       ) ?? "",
     [stockItemBatchNos, props.batchUuid]
   );
-
   const { items, setStockItemUuid } = useStockItemBatchInformationHook();
-
   useEffect(() => {
     setStockItemUuid(props.stockItemUuid);
   }, [props.stockItemUuid, setStockItemUuid]);
-
   const stockItemBatchesInfo = stockItemBatchNos
     ?.map((item) => {
       const matchingBatch = items?.find(
@@ -60,7 +53,6 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       return item;
     })
     ?.filter((item) => Number(item.quantity) > 0);
-
   useEffect(() => {
     if (
       !isLoading &&
@@ -69,15 +61,13 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       stockItemBatchNos.length === 0
     ) {
       setValidationMessage(
-        "No stock batch numbers defined. Do a initial/receipt stock operation first."
+        "No stock batch numbers defined. Do an initial/receipt stock operation first."
       );
     } else {
       setValidationMessage(null);
     }
   }, [isLoading, stockItemBatchNos, props.selectedItem]);
-
   if (isLoading) return <InlineLoading status="active" />;
-
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Controller
@@ -118,5 +108,4 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     </div>
   );
 };
-
 export default BatchNoSelector;
