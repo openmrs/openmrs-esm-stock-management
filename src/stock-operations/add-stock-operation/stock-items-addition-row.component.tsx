@@ -135,6 +135,10 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
     <>
       {fields?.map((row, index) => {
         const stockItemId = `stockItems.${index}.stockItemUuid`;
+        const maxQuantity =
+          row?.stockBatchUuid && batchBalance[row?.stockBatchUuid]
+            ? batchBalance[row?.stockBatchUuid]?.quantity ?? 0
+            : 0;
         return (
           <TableRow
             className={isDesktop ? styles.desktopRow : styles.tabletRow}
@@ -229,35 +233,37 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
               {(canEdit ||
                 (canUpdateBatchInformation &&
                   row?.permission?.canUpdateBatchInformation)) &&
-                requiresActualBatchInformation && (
-                  <DatePicker
-                    id={`expiration-${row.uuid}`}
-                    datePickerType="single"
-                    minDate={formatForDatePicker(today())}
-                    locale="en"
-                    dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                    onChange={([newDate]) => {
-                      setValue(`stockItems.${index}.expiration`, newDate);
-                    }}
-                  >
-                    <DatePickerInput
-                      size="sm"
-                      autoComplete="off"
-                      id={`expiration-input-${row.uuid}`}
-                      name="operationDate"
-                      placeholder={DATE_PICKER_FORMAT}
-                      defaultValue={formatForDatePicker(row?.expiration)}
-                      invalid={!!errors?.stockItems?.[index]?.expiration}
-                    />
-                  </DatePicker>
-                )}
-              {((!(
-                canUpdateBatchInformation &&
-                row?.permission?.canUpdateBatchInformation
-              ) &&
-                !canEdit) ||
-                requiresBatchUuid) &&
-                formatForDatePicker(row.expiration)}
+              requiresActualBatchInformation ? (
+                <DatePicker
+                  id={`expiration-${row.uuid}`}
+                  datePickerType="single"
+                  minDate={formatForDatePicker(today())}
+                  locale="en"
+                  dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                  onChange={([newDate]) => {
+                    setValue(`stockItems.${index}.expiration`, newDate);
+                    setStockItemExpiry(newDate);
+                  }}
+                  value={stockItemExpiry || row?.expiration}
+                >
+                  <DatePickerInput
+                    size="sm"
+                    autoComplete="off"
+                    id={`expiration-input-${row.uuid}`}
+                    name="operationDate"
+                    placeholder={DATE_PICKER_FORMAT}
+                    value={formatForDatePicker(
+                      stockItemExpiry || row?.expiration
+                    )}
+                    invalid={!!errors?.stockItems?.[index]?.expiration}
+                  />
+                </DatePicker>
+              ) : (
+                <span>
+                  {formatForDatePicker(stockItemExpiry || row?.expiration) ||
+                    "N/A"}
+                </span>
+              )}
             </TableCell>
             <TableCell>
               {canEdit && (
