@@ -189,93 +189,74 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {!canEdit && isEditing && (
-          <PartySelector
-            controllerName="sourceUuid"
-            name="sourceUuid"
-            control={control}
-            partyUuid={model?.atLocationUuid}
-            title={
-              operation?.hasDestination || model?.destinationUuid
-                ? "From"
-                : "Location"
-            }
-            placeholder={
-              operation.hasDestination || model?.destinationUuid
-                ? t("chooseASource", "Choose a source")
-                : t("chooseALocation", "Choose a location")
-            }
-            invalid={!!errors.sourceUuid}
-            invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
-            parties={sourcePartyList || []}
-          />
-        )}
-        {canEdit && (operation?.hasDestination || model?.destinationUuid) && (
-          <PartySelector
-            controllerName="destinationUuid"
-            name="destinationUuid"
-            control={control}
-            partyUuid={model?.destinationUuid}
-            title={
-              operation?.hasSource || model?.atLocationUuid ? "To" : "Location"
-            }
-            placeholder={
-              operation?.hasSource || model?.atLocationUuid
-                ? t("chooseADestination", "Choose a destination")
-                : "Location"
-            }
-            invalid={!!errors.destinationUuid}
-            invalidText={
-              errors.destinationUuid && errors?.destinationUuid?.message
-            }
-            parties={destinationPartyList || []}
-          />
-        )}
+            {!canEdit && isEditing && (
+              <PartySelector
+                controllerName="sourceUuid"
+                name="sourceUuid"
+                control={control}
+                partyUuid={model?.atLocationUuid}
+                title={
+                  operation?.hasDestination || model?.destinationUuid
+                    ? "From"
+                    : "Location"
+                }
+                placeholder={
+                  operation.hasDestination || model?.destinationUuid
+                    ? t("chooseASource", "Choose a source")
+                    : t("chooseALocation", "Choose a location")
+                }
+                invalid={!!errors.sourceUuid}
+                invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
+                parties={sourcePartyList || []}
+              />
+            )}
+            {canEdit &&
+              (operation?.hasDestination || model?.destinationUuid) && (
+                <PartySelector
+                  controllerName="destinationUuid"
+                  name="destinationUuid"
+                  control={control}
+                  partyUuid={model?.destinationUuid}
+                  title={
+                    operation?.hasSource || model?.atLocationUuid
+                      ? t("to", "To")
+                      : t("location", "Location")
+                  }
+                  placeholder={
+                    operation?.hasSource || model?.atLocationUuid
+                      ? t("chooseADestination", "Choose a destination")
+                      : "Location"
+                  }
+                  invalid={!!errors.destinationUuid}
+                  invalidText={
+                    errors.destinationUuid && errors?.destinationUuid?.message
+                  }
+                  parties={destinationPartyList || []}
+                />
+              )}
 
-        {!canEdit && isEditing && (
-          <PartySelector
-            controllerName="destinationUuid"
-            name="destinationUuid"
-            control={control}
-            partyUuid={model?.destinationUuid}
-            title={
-              operation?.hasSource || model?.atLocationUuid ? "To" : "Location"
-            }
-            placeholder={
-              operation?.hasSource || model?.atLocationUuid
-                ? t("chooseADestination", "Choose a destination")
-                : "Location"
-            }
-            invalid={!!errors.destinationUuid}
-            invalidText={
-              errors.destinationUuid && errors?.destinationUuid?.message
-            }
-            parties={destinationPartyList || []}
-          />
-        )}
-
-        {canEdit && (
-          <UsersSelector
-            controllerName="responsiblePersonUuid"
-            name="responsiblePersonUuid"
-            control={control}
-            userUuid={model?.responsiblePersonUuid ?? defaultLoggedUserUuid}
-            title={t("responsiblePerson", "Responsible Person")}
-            placeholder={t("filter", "Filter ...")}
-            invalid={!!errors.responsiblePersonUuid}
-            invalidText={
-              errors.responsiblePersonUuid &&
-              errors?.responsiblePersonUuid?.message
-            }
-            onUserChanged={(user) => {
-              if (user?.uuid === otherUser.uuid) {
-                setIsOtherUser(true);
-              } else {
-                setIsOtherUser(false);
-              }
-            }}
-          />
-        )}
+            {canEdit && (
+              <UsersSelector
+                controllerName="responsiblePersonUuid"
+                name="responsiblePersonUuid"
+                control={control}
+                userUuid={model?.responsiblePersonUuid}
+                title={t("responsiblePerson", "Responsible Person")}
+                placeholder={t("filter", "Filter ...")}
+                invalid={!!errors.responsiblePersonUuid}
+                invalidText={
+                  errors.responsiblePersonUuid &&
+                  errors?.responsiblePersonUuid?.message
+                }
+                onUserChanged={(user) => {
+                  if (user?.uuid === otherUser.uuid) {
+                    setIsOtherUser(true);
+                  } else {
+                    setIsOtherUser(false);
+                  }
+                }}
+              />
+            )}
 
         {isOtherUser && (
           <ControlledTextInput
@@ -296,28 +277,28 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {!canEdit && isEditing && (
-          <UsersSelector
-            controllerName="responsiblePersonUuid"
-            name="responsiblePersonUuid"
-            control={control}
-            userUuid={model?.responsiblePersonUuid ?? defaultLoggedUserUuid}
-            title={t("responsiblePerson", "Responsible Person")}
-            placeholder={t("filter", "Filter ...")}
-            invalid={!!errors.responsiblePersonUuid}
-            invalidText={
-              errors.responsiblePersonUuid &&
-              errors?.responsiblePersonUuid?.message
-            }
-            onUserChanged={(user) => {
-              if (user?.uuid === otherUser.uuid) {
-                setIsOtherUser(true);
-              } else {
-                setIsOtherUser(false);
-              }
-            }}
-          />
-        )}
+            {!canEdit && isEditing && (
+              <UsersSelector
+                controllerName="responsiblePersonUuid"
+                name="responsiblePersonUuid"
+                control={control}
+                userUuid={model?.responsiblePersonUuid}
+                title={t("responsiblePerson", "Responsible Person")}
+                placeholder={t("filter", "Filter ...")}
+                invalid={!!errors.responsiblePersonUuid}
+                invalidText={
+                  errors.responsiblePersonUuid &&
+                  errors?.responsiblePersonUuid?.message
+                }
+                onUserChanged={(user) => {
+                  if (user?.uuid === otherUser.uuid) {
+                    setIsOtherUser(true);
+                  } else {
+                    setIsOtherUser(false);
+                  }
+                }}
+              />
+            )}
 
         {showReason && canEdit && (
           <StockOperationReasonSelector
