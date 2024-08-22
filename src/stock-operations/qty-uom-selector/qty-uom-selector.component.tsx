@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
-import { ComboBox, SkeletonText } from "@carbon/react";
+import { SkeletonText, TextInput } from "@carbon/react";
 import { useStockItem } from "../../stock-items/stock-items.resource";
 
 interface QtyUomSelectorProps<T> {
@@ -33,27 +33,22 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
       <Controller
         name={props.controllerName}
         control={props.control}
-        defaultValue={initialSelectedItem.uuid ?? ""}
-        render={({ field: { onChange, ref } }) => (
-          <ComboBox
+        defaultValue={initialSelectedItem?.uuid ?? ""}
+        render={({ field: { ref } }) => (
+          <TextInput
             titleText={props.title}
             name={props.name}
-            control={props.control}
-            controllerName={props.controllerName}
             id={props.name}
             size={"sm"}
-            items={item?.packagingUnits ?? []}
-            onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
-              props.onStockPackageChanged?.(data.selectedItem);
-              onChange(data.selectedItem?.uuid);
-            }}
-            initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockItemPackagingUOMDTO) =>
-              s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ""
+            value={
+              initialSelectedItem
+                ? `${initialSelectedItem?.packagingUomName} - ${initialSelectedItem?.factor}`
+                : ""
             }
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
+            readOnly
             ref={ref}
           />
         )}
