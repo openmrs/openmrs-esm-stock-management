@@ -32,7 +32,7 @@ export async function initializeNewStockOperation(
   stockOperationTypes?: StockOperationType[]
 ): Promise<InitializeResult> {
   let model: StockOperationDTO;
-  const isNew = !stockOperation;
+  const isNew = !!stockOperation;
   const newItemsToCopy: StockOperationItemDTO[] = [];
   const showQuantityRequested = false;
 
@@ -89,7 +89,7 @@ export async function initializeNewStockOperation(
       operationType: currentStockOperationType?.operationType,
     });
     if (currentStockOperationType?.hasSource) {
-      if (shouldLockSource && sourcePartyList?.length > 0) {
+      if (isNew && shouldLockSource && sourcePartyList?.length > 0) {
         const party = sourcePartyList[0];
         model.sourceUuid = party.uuid;
         model.sourceName = party.name;
@@ -98,7 +98,7 @@ export async function initializeNewStockOperation(
     }
 
     if (currentStockOperationType?.hasDestination) {
-      if (shouldLockDestination && destinationPartyList?.length > 0) {
+      if (isNew && shouldLockDestination && destinationPartyList?.length > 0) {
         const party = destinationPartyList[0];
         model.destinationUuid = party.uuid;
         model.destinationName = party.name;
