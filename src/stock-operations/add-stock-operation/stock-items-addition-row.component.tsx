@@ -237,7 +237,6 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                         dateFormat={DATE_PICKER_CONTROL_FORMAT}
                         value={stockItemExpiry || row.expiration}
                         onChange={([newDate]) => {
-
                           setValue(`stockItems.${index}.expiration`, newDate);
                           setStockItemExpiy(newDate);
                         }}
