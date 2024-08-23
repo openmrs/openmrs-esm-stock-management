@@ -24,9 +24,9 @@ import {
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
-  URL_STOCK_ITEM,
   formatForDatePicker,
   today,
+  URL_STOCK_ITEM,
 } from "../../constants";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
@@ -93,37 +93,37 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   remove,
   fields,
 }) => {
-  const [maxQuantity, setMaxQuantity] = useState<number | null>(null);
   const [stockItemUuid, setStockItemUuid] = useState<
     string | null | undefined
   >();
-  const [stockItemExpiry, setStockItemExpiry] = useState<
+  const [stockItemExpiry, setStockItemExpiy] = useState<
     Date | null | undefined
   >();
-
-  const handleBatchChange = (batch: StockBatchDTO) => {
-    setMaxQuantity(batch ? parseInt(batch.quantity ?? "0", 10) : null);
-  };
 
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
     if (!data) return;
     const item = fields[index];
     if (item) {
-      item.stockItemName = data.drugName
-        ? `${data.drugName}${
-            data.commonName ?? data.conceptName
-              ? ` (${data.commonName ?? data.conceptName})`
-              : ""
-          }`
-        : data.conceptName;
-      const configureExpiration = data.hasExpiration ?? true;
+      item.stockItemName =
+        (data?.drugName
+          ? `${data?.drugName}${
+              data?.commonName ?? data?.conceptName
+                ? ` (${data?.commonName ?? data?.conceptName})`
+                : ""
+            }`
+          : null) ?? data?.conceptName;
+
+      const configureExpiration = data?.hasExpiration ?? true;
       item.hasExpiration = configureExpiration;
       if (!configureExpiration) {
         item.expiration = null;
       }
-      item.stockItemUuid = data.uuid;
+
+      item.stockItemUuid = data?.uuid;
+
       item.stockItemPackagingUOMUuid = null;
       item.stockItemPackagingUOMName = null;
+
       item.stockBatchUuid = null;
       if (requiresBatchUuid) {
         // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
@@ -188,34 +188,31 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                       invalid={errors?.stockItems?.[index]?.batchNo}
                     />
                   )}
-                <TableCell>
-                  {requiresBatchUuid &&
-                    !requiresActualBatchInformation &&
-                    canEdit && (
-                      <BatchNoSelector
-                        batchUuid={row?.stockBatchUuid}
-                        onBatchNoChanged={(item) => {
-                          handleBatchChange(item);
-                          setValue(
-                            `stockItems.${index}.batchNo`,
-                            item?.batchNo ?? ""
-                          );
-                          setValue(
-                            `stockItems.${index}.expiration`,
-                            item?.expiration
-                          );
-                          setStockItemExpiry(item?.expiration);
-                        }}
-                        placeholder={"Filter..."}
-                        invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
-                        control={control as unknown as Control}
-                        controllerName={`stockItems.${index}.stockBatchUuid`}
-                        name={`stockItems.${index}.stockBatchUuid`}
-                        stockItemUuid={row.stockItemUuid}
-                        selectedItem={stockItemUuid}
-                      />
-                    )}
-                </TableCell>
+                {requiresBatchUuid &&
+                  !requiresActualBatchInformation &&
+                  canEdit && (
+                    <BatchNoSelector
+                      batchUuid={row?.stockBatchUuid}
+                      onBatchNoChanged={(item) => {
+                        setValue(
+                          `stockItems.${index}.batchNo`,
+                          item?.batchNo ?? ""
+                        );
+                        setValue(
+                          `stockItems.${index}.expiration`,
+                          item?.expiration
+                        );
+                        setStockItemExpiy(item?.expiration);
+                      }}
+                      placeholder={"Filter..."}
+                      invalid={!!errors?.stockItems?.[index]?.stockBatchUuid}
+                      control={control as unknown as Control}
+                      controllerName={`stockItems.${index}.stockBatchUuid`}
+                      name={`stockItems.${index}.stockBatchUuid`}
+                      stockItemUuid={row.stockItemUuid}
+                      selectedItem={stockItemUuid}
+                    />
+                  )}
                 {!(
                   canUpdateBatchInformation &&
                   row?.permission?.canUpdateBatchInformation
@@ -224,41 +221,52 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   row?.batchNo}
               </TableCell>
             )}
+            {(requiresActualBatchInformation || requiresBatchUuid) && (
+              <TableCell>
+                {(requiresActualBatchInformation || requiresBatchUuid) && (
+                  <>
+                    {(canEdit ||
+                      (canUpdateBatchInformation &&
+                        row?.permission?.canUpdateBatchInformation)) &&
+                    requiresActualBatchInformation ? (
+                      <DatePicker
+                        id={`expiration-${row.uuid}`}
+                        datePickerType="single"
+                        minDate={formatForDatePicker(today())}
+                        locale="en"
+                        dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                        value={stockItemExpiry || row.expiration}
+                        onChange={([newDate]) => {
 
-            <TableCell>
-              {(canEdit ||
-                (canUpdateBatchInformation &&
-                  row?.permission?.canUpdateBatchInformation)) &&
-                requiresActualBatchInformation && (
-                  <DatePicker
-                    id={`expiration-${row.uuid}`}
-                    datePickerType="single"
-                    minDate={formatForDatePicker(today())}
-                    locale="en"
-                    dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                    onChange={([newDate]) => {
-                      setValue(`stockItems.${index}.expiration`, newDate);
-                    }}
-                  >
-                    <DatePickerInput
-                      size="sm"
-                      autoComplete="off"
-                      id={`expiration-input-${row.uuid}`}
-                      name="operationDate"
-                      placeholder={DATE_PICKER_FORMAT}
-                      defaultValue={formatForDatePicker(row?.expiration)}
-                      invalid={!!errors?.stockItems?.[index]?.expiration}
-                    />
-                  </DatePicker>
+                          setValue(`stockItems.${index}.expiration`, newDate);
+                          setStockItemExpiy(newDate);
+                        }}
+                      >
+                        <DatePickerInput
+                          size="sm"
+                          autoComplete="off"
+                          id={`expiration-input-${row.uuid}`}
+                          name="operationDate"
+                          placeholder={DATE_PICKER_FORMAT}
+                          value={
+                            formatForDatePicker(
+                              stockItemExpiry || row.expiration
+                            ) || ""
+                          }
+                          invalid={!!errors?.stockItems?.[index]?.expiration}
+                        />
+                      </DatePicker>
+                    ) : (
+                      <span>
+                        {formatForDatePicker(
+                          stockItemExpiry || row.expiration
+                        ) || ""}
+                      </span>
+                    )}
+                  </>
                 )}
-              {((!(
-                canUpdateBatchInformation &&
-                row?.permission?.canUpdateBatchInformation
-              ) &&
-                !canEdit) ||
-                requiresBatchUuid) &&
-                formatForDatePicker(row.expiration)}
-            </TableCell>
+              </TableCell>
+            )}
             <TableCell>
               {canEdit && (
                 <NumberInput
@@ -267,16 +275,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   id={`qty-${row?.uuid}`}
                   hideSteppers={true}
                   allowEmpty={true}
-                  max={maxQuantity}
-                  onChange={(e: any) => {
-                    const value = parseFloat(e?.target?.value) || 0;
-                    if (value <= maxQuantity) {
-                      setValue(`stockItems.${index}.quantity`, value);
-                    } else {
-                      // Optionally, you can show an error message here
-                      // e.g., showError('Quantity exceeds available balance');
-                    }
-                  }}
+                  onChange={(e: any) =>
+                    setValue(`stockItems.${index}.quantity`, e?.target?.value)
+                  }
                   value={row?.quantity ?? ""}
                   invalidText={errors?.stockItems?.[index]?.quantity?.message}
                   placeholder={
