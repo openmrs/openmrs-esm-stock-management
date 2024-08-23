@@ -25,9 +25,9 @@ import {
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
-  URL_STOCK_ITEM,
   formatForDatePicker,
   today,
+  URL_STOCK_ITEM,
 } from "../../constants";
 import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
 import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
