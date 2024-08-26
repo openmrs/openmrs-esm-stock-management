@@ -116,34 +116,98 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   };
   return (
     <div style={{ margin: "10px" }}>
-      <form className={`${styles.formContainer} ${styles.verticalForm}`}>
-        {canEdit && (
-          <Controller
-            control={control}
-            render={({ field: { onChange } }) => (
-              <DatePicker
-                datePickerType="single"
-                maxDate={formatForDatePicker(today())}
-                locale="en"
-                dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                onChange={([newDate]) => {
-                  onChange(newDate);
-                }}
-              >
-                <DatePickerInput
-                  invalid={!!errors.operationDate}
-                  invalidText={errors?.operationDate?.message}
-                  id="operationDate"
-                  name="operationDate"
-                  placeholder={DATE_PICKER_FORMAT}
-                  labelText={t("operationDate", "Operation Date")}
-                  defaultValue={formatForDatePicker(model?.operationDate)}
-                />
-              </DatePicker>
+      <form
+        className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
+      >
+        {isCompleteStatus ? (
+          <>
+            {model?.operationDate && (
+              <TextInput
+                id="operationDateLbl"
+                value={formatForDatePicker(model.operationDate)}
+                readOnly={true}
+                labelText={t("operationDate", "Operation Date")}
+              />
             )}
-            name="operationDate"
-          />
-        )}
+            {model?.operationNumber && (
+              <TextInput
+                id="operationNoLbl"
+                value={model.operationNumber}
+                readOnly={true}
+                labelText={t("operationNumber", "Operation Number")}
+              />
+            )}
+            {model?.atLocationName && (
+              <TextInput
+                id="sourceLbl"
+                value={model.atLocationName}
+                readOnly={true}
+                labelText={t("source", "Source")}
+              />
+            )}
+            {model?.destinationName && (
+              <TextInput
+                id="destinationLbl"
+                value={model.destinationName}
+                readOnly={true}
+                labelText={t("destination", "Destination")}
+              />
+            )}
+            {model?.responsiblePersonGivenName &&
+              model?.responsiblePersonFamilyName && (
+                <TextInput
+                  id="responsiblePersonLbl"
+                  value={`${model.responsiblePersonGivenName} ${model.responsiblePersonFamilyName}`}
+                  readOnly={true}
+                  labelText={t("responsiblePerson", "Responsible Person")}
+                />
+              )}
+            {showReason && model?.reasonName && (
+              <TextInput
+                id="reasonLbl"
+                value={model.reasonName}
+                readOnly={true}
+                labelText={t("reason", "Reason")}
+              />
+            )}
+            {model?.remarks && (
+              <TextInput
+                id="remarksLbl"
+                value={model.remarks}
+                readOnly={true}
+                labelText={t("remarks", "Remarks")}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {canEdit && (
+              <Controller
+                control={control}
+                render={({ field: { onChange } }) => (
+                  <DatePicker
+                    datePickerType="single"
+                    maxDate={formatForDatePicker(today())}
+                    locale="en"
+                    dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                    onChange={([newDate]) => {
+                      onChange(newDate);
+                    }}
+                  >
+                    <DatePickerInput
+                      invalid={!!errors.operationDate}
+                      invalidText={errors?.operationDate?.message}
+                      id="operationDate"
+                      name="operationDate"
+                      placeholder={DATE_PICKER_FORMAT}
+                      labelText={t("operationDate", "Operation Date")}
+                      defaultValue={formatForDatePicker(model?.operationDate)}
+                    />
+                  </DatePicker>
+                )}
+                name="operationDate"
+              />
+            )}
 
         {!canEdit && (
           <>
@@ -234,6 +298,30 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                   parties={destinationPartyList || []}
                 />
               )}
+
+            {!canEdit && isEditing && (
+              <PartySelector
+                controllerName="destinationUuid"
+                name="destinationUuid"
+                control={control}
+                partyUuid={model?.destinationUuid}
+                title={
+                  operation?.hasSource || model?.atLocationUuid
+                    ? t("to", "To")
+                    : t("location", "Location")
+                }
+                placeholder={
+                  operation?.hasSource || model?.atLocationUuid
+                    ? t("chooseADestination", "Choose a destination")
+                    : "Location"
+                }
+                invalid={!!errors.destinationUuid}
+                invalidText={
+                  errors.destinationUuid && errors?.destinationUuid?.message
+                }
+                parties={destinationPartyList || []}
+              />
+            )}
 
             {canEdit && (
               <UsersSelector
