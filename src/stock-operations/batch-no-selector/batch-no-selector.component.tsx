@@ -59,6 +59,9 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     return item;
   });
 
+  const filteredBatches = stockItemBatchesInfo?.filter(
+    (s) => s.quantity !== undefined
+  );
   useEffect(() => {
     if (
       !isLoading &&
@@ -90,7 +93,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             controllerName={props.controllerName}
             id={props.name}
             size={"sm"}
-            items={stockItemBatchesInfo || []}
+            items={filteredBatches || []}
             onChange={(data: { selectedItem?: StockBatchDTO }) => {
               setSelectedItem(data.selectedItem || null);
               props.onBatchNoChanged?.(data.selectedItem);

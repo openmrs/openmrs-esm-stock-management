@@ -33,7 +33,6 @@ import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockIt
 import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
 import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
-import QtyUomSelector from "../qty-uom-selector/qty-uom-selector.component";
 import BatchNoSelector from "../batch-no-selector/batch-no-selector.component";
 import {
   getStockItemInventory,
@@ -103,11 +102,16 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   const [stockItemUuid, setStockItemUuid] = useState<
     string | null | undefined
   >();
-  const [stockItemExpiry, setStockItemExpiy] = useState<
-    Date | null | undefined
-  >();
-  const [batchBalance, setBatchBalance] = useState(null);
-  console.log(batchBalance, "bal");
+
+  const [batchBalances, setBatchBalances] = useState<{ [key: number]: any }>(
+    {}
+  );
+  const [stockItemExpiries, setStockItemExpiries] = useState<{
+    [key: number]: Date | null | undefined;
+  }>({});
+
+  const [qtyInputErrors, setQtyErrors] = useState({});
+
   const handleStockItemChange = (index: number, data?: StockItemDTO) => {
     if (!data) return;
     const item = fields[index];
@@ -142,6 +146,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   const handleFetchBatchBalance = ({
     stockItemUuid,
     stockBatchUuid,
+    index,
     excludeExpired = true,
   }) => {
     const filters: StockItemInventoryFilter = {
@@ -162,18 +167,29 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
           const inventory: StockItemInventory = (
             res?.results as StockItemInventory[]
           )?.[0];
-          console.log(inventory, "inve");
-          if (!inventory) {
-            setBatchBalance({
-              quantity: 0,
-              quantityUoM: null,
-            });
-          }
-          setBatchBalance({
-            quantity: inventory.quantity,
-            quantityUoM: inventory.quantityUoM,
-            quantityUoMUuid: inventory.quantityUoMUuid,
-          });
+
+          const newBatchBalance = inventory
+            ? {
+                quantity: inventory.quantity,
+                quantityUoM: inventory.quantityUoM,
+                quantityUoMUuid: inventory.quantityUoMUuid,
+              }
+            : { quantity: 0, quantityUoM: null };
+
+          setBatchBalances((prevBalances) => ({
+            ...prevBalances,
+            [index]: newBatchBalance,
+          }));
+
+          setValue(
+            `stockItems.${index}.stockItemPackagingUOMUuid`,
+            inventory.quantityUoMUuid
+          );
+
+          setValue(
+            `stockItems.${index}.stockItemPackagingUOMName`,
+            inventory.quantityUoM
+          );
         })
         .catch((error: any) => {
           if ((error as any).error) {
@@ -181,14 +197,39 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
           }
           return;
         });
+    } else {
+      setBatchBalances((prevBalances) => ({
+        ...prevBalances,
+        [index]: null,
+      }));
     }
-    setBatchBalance(null);
+  };
+
+  const handleInputChange = (e: any, index: number) => {
+    const inputValue = e?.target?.value;
+    const maxQuantity = Number(batchBalances[index]?.quantity);
+
+    if (inputValue > maxQuantity) {
+      setQtyErrors((prevErrors) => ({
+        ...prevErrors,
+        [`stockItems.${index}.quantity`]: `Quantity cannot exceed ${maxQuantity}`,
+      }));
+    } else {
+      setQtyErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
+        delete newErrors[`stockItems.${index}.quantity`];
+        return newErrors;
+      });
+    }
+    setValue(`stockItems.${index}.quantity`, inputValue);
   };
 
   return (
     <>
       {fields?.map((row, index) => {
         const stockItemId = `stockItems.${index}.stockItemUuid`;
+        const currentBatchBalance = batchBalances[index];
+        const currentStockItemExpiry = stockItemExpiries[index];
         return (
           <TableRow
             className={isDesktop ? styles.desktopRow : styles.tabletRow}
@@ -252,14 +293,21 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                           `stockItems.${index}.batchNo`,
                           item?.batchNo ?? ""
                         );
+
                         setValue(
                           `stockItems.${index}.expiration`,
                           item?.expiration
                         );
-                        setStockItemExpiy(item?.expiration);
+
+                        setStockItemExpiries((prevExpiries) => ({
+                          ...prevExpiries,
+                          [index]: item?.expiration ?? null,
+                        }));
+
                         handleFetchBatchBalance({
                           stockItemUuid: row?.stockItemUuid,
                           stockBatchUuid: item?.uuid,
+                          index,
                         });
                       }}
                       placeholder={"Filter..."}
@@ -302,7 +350,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                         name="operationDate"
                         placeholder={DATE_PICKER_FORMAT}
                         defaultValue={formatForDatePicker(
-                          stockItemExpiry || row?.expiration
+                          currentStockItemExpiry || row?.expiration
                         )}
                         invalid={!!errors?.stockItems?.[index]?.expiration}
                       />
@@ -314,55 +362,55 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 ) &&
                   !canEdit) ||
                   requiresBatchUuid) &&
-                  formatForDatePicker(row.expiration)}
+                  formatForDatePicker(currentStockItemExpiry || row.expiration)}
               </TableCell>
             )}
             <TableCell>
               {canEdit && (
-                <NumberInput
-                  className="small-placeholder-text"
-                  size="sm"
-                  id={`qty-${row?.uuid}`}
-                  hideSteppers={true}
-                  allowEmpty={true}
-                  onChange={(e: any) =>
-                    setValue(`stockItems.${index}.quantity`, e?.target?.value)
-                  }
-                  value={row?.quantity ?? ""}
-                  invalidText={errors?.stockItems?.[index]?.quantity?.message}
-                  placeholder={
-                    requiresBatchUuid &&
-                    !requiresActualBatchInformation &&
-                    batchBalance
-                      ? `Bal: ${
-                          batchBalance?.quantity?.toLocaleString() ?? ""
-                        } ${batchBalance?.quantityUoM ?? ""}`
-                      : ""
-                  }
-                  invalid={!!errors?.stockItems?.[index]?.quantity}
-                />
+                <>
+                  <NumberInput
+                    className="small-placeholder-text"
+                    size="sm"
+                    id={`qty-${row?.uuid}`}
+                    min={1}
+                    max={Number(currentBatchBalance?.quantity)}
+                    hideSteppers={true}
+                    allowEmpty={true}
+                    onChange={(e: any) => handleInputChange(e, index)}
+                    value={row?.quantity ?? ""}
+                    invalidText={
+                      errors?.stockItems?.[index]?.quantity?.message ||
+                      errors[`stockItems.${index}.quantity`]
+                    }
+                    placeholder={
+                      requiresBatchUuid &&
+                      !requiresActualBatchInformation &&
+                      currentBatchBalance
+                        ? `Bal: ${
+                            currentBatchBalance?.quantity?.toLocaleString() ??
+                            ""
+                          } ${currentBatchBalance?.quantityUoM ?? ""}`
+                        : ""
+                    }
+                    invalid={
+                      !!errors?.stockItems?.[index]?.quantity ||
+                      !!errors[`stockItems.${index}.quantity`]
+                    }
+                  />
+                  {errors[`stockItems.${index}.quantity`] && (
+                    <div className="error-message">
+                      {errors[`stockItems.${index}.quantity`]}
+                    </div>
+                  )}
+                </>
               )}
               {!canEdit && row?.quantity?.toLocaleString()}
             </TableCell>
+            {/* Qty UoM Cell (Non-editable) */}
             <TableCell>
-              {canEdit && (
-                <QtyUomSelector
-                  stockItemUuid={row.stockItemUuid}
-                  onStockPackageChanged={(selectedItem) => {
-                    setValue(
-                      `stockItems.${index}.stockItemPackagingUOMUuid`,
-                      selectedItem?.uuid
-                    );
-                  }}
-                  placeholder={"Filter..."}
-                  invalid={
-                    !!errors?.stockItems?.[index]?.stockItemPackagingUOMUuid
-                  }
-                  control={control as unknown as Control}
-                  controllerName={`stockItems.${index}.stockItemPackagingUOMUuid`}
-                  name={`stockItems.${index}.stockItemPackagingUOMUuid`}
-                />
-              )}
+              {currentBatchBalance?.quantityUoM
+                ? currentBatchBalance.quantityUoM
+                : "N/A"}
               {!canEdit && row?.stockItemPackagingUOMName}
             </TableCell>
             {canCapturePurchasePrice && (
