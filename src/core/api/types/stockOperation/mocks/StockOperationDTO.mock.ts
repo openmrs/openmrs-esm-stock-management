@@ -34,7 +34,7 @@ export const mockStockOperationDTO: StockOperationDTO = {
   operationTypeName: "Stock Transfer",
   responsiblePerson: 103,
   responsiblePersonUuid: "resp-uuid-123",
-  responsiblePersonGivenName: "Jane",
+  responsiblePersonGivenName: "Janes",
   responsiblePersonFamilyName: "Smith",
   responsiblePersonOther: "Middle Name",
   creator: 104,
