@@ -34,7 +34,7 @@ export const mockStockOperationDTO: StockOperationDTO = {
   operationTypeName: "Stock Transfer",
   responsiblePerson: 103,
   responsiblePersonUuid: "resp-uuid-123",
-  responsiblePersonGivenName: "Janes",
+  responsiblePersonGivenName: "Jane",
   responsiblePersonFamilyName: "Smith",
   responsiblePersonOther: "Middle Name",
   creator: 104,
@@ -99,5 +99,4 @@ export const mockStockOperationDTO: StockOperationDTO = {
   dispatchedByFamilyName: null,
   dispatchedDate: new Date("2024-08-14T07:00:00Z"),
   requisitionStockOperationUuid: "requisition-uuid-123",
-  receivedItems: undefined,
 };
