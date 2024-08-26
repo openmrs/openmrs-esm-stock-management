@@ -1,7 +1,5 @@
 import { StockOperationDTO } from "../StockOperationDTO";
-import { RecordPermission } from "../../RecordPermission";
 export const mockStockOperationDTO: StockOperationDTO = {
-  receivedItems: [],
   uuid: "123e4567-e89b-12d3-a456-426614174000",
   cancelReason: null,
   cancelledBy: 101,
@@ -101,4 +99,5 @@ export const mockStockOperationDTO: StockOperationDTO = {
   dispatchedByFamilyName: null,
   dispatchedDate: new Date("2024-08-14T07:00:00Z"),
   requisitionStockOperationUuid: "requisition-uuid-123",
+  receivedItems: undefined,
 };
