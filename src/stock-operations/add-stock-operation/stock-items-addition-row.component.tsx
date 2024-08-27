@@ -137,9 +137,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
       item.stockItemPackagingUOMName = null;
 
       item.stockBatchUuid = null;
-      if (requiresBatchUuid) {
-        // handleStockBatchSearch(row, "", data.selectedItem?.uuid);
-      }
+
+      setValue(`stockItems.${index}.stockItemUuid`, item?.stockItemUuid);
+      setValue(`stockItems.${index}.stockItemName`, item?.stockItemName);
     }
   };
 
@@ -299,6 +299,11 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                           item?.expiration
                         );
 
+                        setValue(
+                          `stockItems.${index}.hasExpiration`,
+                          item?.expiration ? true : false
+                        );
+
                         setStockItemExpiries((prevExpiries) => ({
                           ...prevExpiries,
                           [index]: item?.expiration ?? null,
@@ -367,42 +372,34 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             )}
             <TableCell>
               {canEdit && (
-                <>
-                  <NumberInput
-                    className="small-placeholder-text"
-                    size="sm"
-                    id={`qty-${row?.uuid}`}
-                    min={1}
-                    max={Number(currentBatchBalance?.quantity)}
-                    hideSteppers={true}
-                    allowEmpty={true}
-                    onChange={(e: any) => handleInputChange(e, index)}
-                    value={row?.quantity ?? ""}
-                    invalidText={
-                      errors?.stockItems?.[index]?.quantity?.message ||
-                      errors[`stockItems.${index}.quantity`]
-                    }
-                    placeholder={
-                      requiresBatchUuid &&
-                      !requiresActualBatchInformation &&
-                      currentBatchBalance
-                        ? `Bal: ${
-                            currentBatchBalance?.quantity?.toLocaleString() ??
-                            ""
-                          } ${currentBatchBalance?.quantityUoM ?? ""}`
-                        : ""
-                    }
-                    invalid={
-                      !!errors?.stockItems?.[index]?.quantity ||
-                      !!errors[`stockItems.${index}.quantity`]
-                    }
-                  />
-                  {errors[`stockItems.${index}.quantity`] && (
-                    <div className="error-message">
-                      {errors[`stockItems.${index}.quantity`]}
-                    </div>
-                  )}
-                </>
+                <NumberInput
+                  className="small-placeholder-text"
+                  size="sm"
+                  id={`qty-${row?.uuid}`}
+                  min={1}
+                  max={Number(currentBatchBalance?.quantity)}
+                  hideSteppers={true}
+                  allowEmpty={true}
+                  onChange={(e: any) => handleInputChange(e, index)}
+                  value={row?.quantity ?? ""}
+                  invalidText={
+                    errors?.stockItems?.[index]?.quantity?.message ||
+                    qtyInputErrors[`stockItems.${index}.quantity`]
+                  }
+                  placeholder={
+                    requiresBatchUuid &&
+                    !requiresActualBatchInformation &&
+                    currentBatchBalance
+                      ? `Bal: ${
+                          currentBatchBalance?.quantity?.toLocaleString() ?? ""
+                        } ${currentBatchBalance?.quantityUoM ?? ""}`
+                      : ""
+                  }
+                  invalid={
+                    !!errors?.stockItems?.[index]?.quantity ||
+                    !!qtyInputErrors[`stockItems.${index}.quantity`]
+                  }
+                />
               )}
               {!canEdit && row?.quantity?.toLocaleString()}
             </TableCell>
@@ -413,7 +410,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 : "N/A"}
               {!canEdit && row?.stockItemPackagingUOMName}
             </TableCell>
-            {canCapturePurchasePrice && (
+            {canCapturePurchasePrice ? (
               <TableCell>
                 {canEdit && (
                   <NumberInput
@@ -434,6 +431,8 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 )}
                 {!canEdit && row?.purchasePrice?.toLocaleString()}
               </TableCell>
+            ) : (
+              setValue(`stockItems.${index}.purchasePrice`, null)
             )}
             {canEdit && (
               <TableCell>

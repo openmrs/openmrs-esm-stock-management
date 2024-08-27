@@ -62,6 +62,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   const filteredBatches = stockItemBatchesInfo?.filter(
     (s) => s.quantity !== undefined
   );
+
   useEffect(() => {
     if (
       !isLoading &&
@@ -101,7 +102,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockBatchDTO) =>
-              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? ""}` : ""
+              s?.batchNo ? `${s?.batchNo}` : ""
             }
             placeholder={props.placeholder}
             invalid={props.invalid}
