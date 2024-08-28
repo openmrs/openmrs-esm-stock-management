@@ -12,6 +12,7 @@ import {
 } from "@carbon/react";
 import { TrashCan } from "@carbon/react/icons";
 import { StockOperationItemFormData } from "../validation-schema";
+import QtyUomSelector from "../qty-uom-selector/qty-uom-selector.component";
 import StockItemSelector from "../stock-item-selector/stock-item-selector.component";
 import {
   Control,
@@ -405,9 +406,29 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             </TableCell>
             {/* Qty UoM Cell (Non-editable) */}
             <TableCell>
-              {currentBatchBalance?.quantityUoM
-                ? currentBatchBalance.quantityUoM
-                : row?.stockItemPackagingUOMName}
+              {canEdit && !currentBatchBalance?.quantityUoM ? (
+                <QtyUomSelector
+                  stockItemUuid={row.stockItemUuid}
+                  onStockPackageChanged={(selectedItem) => {
+                    setValue(
+                      `stockItems.${index}.stockItemPackagingUOMUuid`,
+                      selectedItem?.uuid
+                    );
+                  }}
+                  placeholder={"Filter..."}
+                  invalid={
+                    !!errors?.stockItems?.[index]?.stockItemPackagingUOMUuid
+                  }
+                  control={control as unknown as Control}
+                  controllerName={`stockItems.${index}.stockItemPackagingUOMUuid`}
+                  name={`stockItems.${index}.stockItemPackagingUOMUuid`}
+                />
+              ) : currentBatchBalance?.quantityUoM ? (
+                currentBatchBalance.quantityUoM
+              ) : (
+                row?.stockItemPackagingUOMName
+              )}
+
               {!canEdit && row?.stockItemPackagingUOMName}
             </TableCell>
             {canCapturePurchasePrice ? (
