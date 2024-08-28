@@ -1,6 +1,6 @@
-@use '@carbon/styles/scss/spacing';
-@use '@carbon/styles/scss/type';
-@import "~@openmrs/esm-styleguide/src/vars";
+@use '@carbon/layout';
+@use '@carbon/type';
+@use '~@openmrs/esm-styleguide/src/vars' as *;
 
 $ui-01: #f4f4f4;
 $ui-02: #ffffff;
@@ -75,7 +75,7 @@ aside {
 }
 
 .container {
-  padding: spacing.$spacing-07;
+  padding: layout.$spacing-07;
 }
 
 .formContainer {
@@ -87,7 +87,7 @@ aside {
 .verticalForm {
   display: flex;
   grid-row-gap: 2em;
-  padding-top: 1rem;
+  padding-top: layout.$spacing-05;
   align-content: space-between;
   flex-direction: column;
 
@@ -101,8 +101,8 @@ aside {
     font-size: var(--cds-label-01-font-size);
     font-weight: bold;
     letter-spacing: var(--cds-label-01-letter-spacing, .32px);
-    line-height: 1rem;
-    margin-bottom: 0.5rem;
+    line-height: layout.$spacing-05;
+    margin-bottom: layout.$spacing-03;
     vertical-align: baseline;
   }
 }

@@ -1,6 +1,7 @@
-@use '@carbon/styles/scss/colors';
-@use '@carbon/styles/scss/type';
-@import '~@openmrs/esm-styleguide/src/vars';
+@use '@carbon/colors';
+@use '@carbon/layout';
+@use '@carbon/type';
+@use '~@openmrs/esm-styleguide/src/vars' as *;
 
 .content {
   @include type.type-style('heading-compact-02');
@@ -17,7 +18,7 @@
   @include type.type-style('body-compact-02');
   color: $text-02;
   width: 80%;
-  margin: 1.5rem auto;
+  margin: layout.$spacing-06 auto;
   overflow: hidden;
   text-align: center;
 
@@ -33,12 +34,12 @@
   }
 
   &::before {
-    right: 0.5rem;
+    right: layout.$spacing-03;
     margin-left: -50%;
   }
 
   &::after {
-    left: 0.5rem;
+    left: layout.$spacing-03;;
     margin-right: -50%;
   }
 }
@@ -46,7 +47,7 @@
 .tileContainer {
   background-color: $ui-02;
   border-top: 1px solid $ui-03;
-  padding: 5rem 0;
+  padding: layout.$spacing-11 0;
 }
 
 .tile {

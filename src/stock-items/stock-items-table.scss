@@ -1,18 +1,18 @@
-@use '@carbon/styles/scss/spacing';
+@use '@carbon/layout';
 @use '@carbon/styles/scss/type';
-@import "~@openmrs/esm-styleguide/src/vars";
-@import '../root.scss';
+@use '~@openmrs/esm-styleguide/src/vars' as *;
+@use '../root.scss';
 
 .headerBtnContainer {
   background-color: $ui-background;
-  padding: spacing.$spacing-05;
+  padding: layout.$spacing-05;
   text-align: right;
 }
 
 .tileContainer {
   background-color: $ui-02;
   border-top: 1px solid $ui-03;
-  padding: 5rem 0;
+  padding: layout.$spacing-11 0;
 }
 
 .tile {
@@ -78,12 +78,12 @@
 }
 
 .dateAlign {
-  padding-top: spacing.$spacing-03;
+  padding-top: layout.$spacing-03;
   height: 100%;
 }
 
 .filtersAlign {
-  padding-bottom: spacing.$spacing-03;
+  padding-bottom: layout.$spacing-03;
 
   :global(.cds--list-box__menu) {
     min-width: 15rem;
@@ -95,5 +95,5 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: spacing.$spacing-05;
+  margin-bottom: layout.$spacing-05;
 }

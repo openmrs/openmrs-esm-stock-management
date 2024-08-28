@@ -1,7 +1,7 @@
-@use '@carbon/styles/scss/colors';
-@use '@carbon/styles/scss/spacing';
-@use '@carbon/styles/scss/type';
-@import '~@openmrs/esm-styleguide/src/vars';
+@use '@carbon/colors';
+@use '@carbon/type';
+@use '@carbon/layout';
+@use '~@openmrs/esm-styleguide/src/vars' as *;
 
 .widgetContainer {
   background-color: $ui-background;
@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: spacing.$spacing-04 0 spacing.$spacing-04 spacing.$spacing-05;
+  padding: layout.$spacing-04 0 layout.$spacing-04 layout.$spacing-05;
 }
 
 .widgetHeaderContainer > h4:after {
@@ -24,7 +24,7 @@
 
 .toggleButtons {
   width: fit-content;
-  margin: 0 spacing.$spacing-03;
+  margin: 0 layout.$spacing-03;
 }
 
 .searchField {
@@ -69,7 +69,7 @@
 .tileContainer {
   background-color: $ui-02;
   border-top: 1px solid $ui-03;
-  padding: 5rem 0;
+  padding: layout.$spacing-11 0;
 }
 
 .tile {
@@ -91,29 +91,29 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: spacing.$spacing-03;
-  min-height: spacing.$spacing-10;
+  margin-top: layout.$spacing-03;
+  min-height: layout.$spacing-10;
   width: 100%;
   @include type.type-style('body-compact-01');
 }
 
 .radioButton {
-  padding: spacing.$spacing-02 spacing.$spacing-02;
-  margin: spacing.$spacing-03 0;
+  padding: layout.$spacing-02 layout.$spacing-02;
+  margin: layout.$spacing-03 0;
 }
 
 .section {
-  margin: spacing.$spacing-03;
+  margin: layout.$spacing-03;
 }
 
 .sectionTitle {
   @include type.type-style('heading-compact-02');
   color: colors.$gray-70;
-  margin-bottom: spacing.$spacing-04;
+  margin-bottom: layout.$spacing-04;
 }
 
 .modalBody {
-  padding-bottom: spacing.$spacing-05;
+  padding-bottom: layout.$spacing-05;
 }
 
 .tabContainer div[role='tabpanel'] {
@@ -145,11 +145,11 @@
   }
 
   tr {
-    width: spacing.$spacing-01;
+    width: layout.$spacing-01;
   }
 
   .toolbarContent {
-    height: spacing.$spacing-09;
+    height: layout.$spacing-09;
   }
 }
 

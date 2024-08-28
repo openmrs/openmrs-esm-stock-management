@@ -1,11 +1,12 @@
-@use '@carbon/styles/scss/colors';
-@use '@carbon/styles/scss/type';
-@import '~@openmrs/esm-styleguide/src/vars';
+@use '@carbon/colors';
+@use '@carbon/type';
+@use '@carbon/layout';
+@use '~@openmrs/esm-styleguide/src/vars' as *;
 
 .content {
   @include type.type-style('heading-compact-02');
   color: $text-02;
-  margin-bottom: 0.5rem;
+  margin-bottom: layout.$spacing-03;
 }
 
 .helper {
@@ -16,7 +17,7 @@
 .tileContainer {
   background-color: $ui-02;
   border-top: 1px solid $ui-03;
-  padding: 5rem 0;
+  padding: layout.$spacing-11 0;
 }
 
 .tile {

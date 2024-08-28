@@ -1,5 +1,5 @@
 @use '@carbon/styles/scss/colors';
-@use '@carbon/styles/scss/spacing';
+@use '@carbon/layout';
 @use '@carbon/styles/scss/type';
 @import '~@openmrs/esm-styleguide/src/vars';
 
@@ -64,7 +64,7 @@
 
 .tableContainer {
   background-color: $ui-01;
-  margin: 0 spacing.$spacing-05;
+  margin: 0 layout.$spacing-05;
   padding: 0;
 
   a {
@@ -80,8 +80,8 @@
   }
 
   .toolbarContent {
-    height: spacing.$spacing-07;
-    margin-bottom: spacing.$spacing-02;
+    height: layout.$spacing-07;
+    margin-bottom: layout.$spacing-02;
   }
 }
 
@@ -142,7 +142,7 @@
 .tileContainer {
   background-color: $ui-02;
   border-top: 1px solid $ui-03;
-  padding: 5rem 0;
+  padding: layout.$spacing-11 0;
 }
 
 .tile {
@@ -178,7 +178,7 @@
 .tabletHeading {
   text-align: left;
   text-transform: capitalize;
-  margin-bottom: spacing.$spacing-05;
+  margin-bottom: layout.$spacing-05;
 
   h4:after {
     content: '';
@@ -204,13 +204,13 @@
 
 .headerBtnContainer {
   background-color: $ui-background;
-  padding: spacing.$spacing-05;
+  padding: layout.$spacing-05;
   text-align: right;
 }
 
 .addPatientToListBtn {
-  margin-left: spacing.$spacing-05;
-  height: spacing.$spacing-09;
+  margin-left: layout.$spacing-05;
+  height: layout.$spacing-09;
 }
 
 .editIcon {
