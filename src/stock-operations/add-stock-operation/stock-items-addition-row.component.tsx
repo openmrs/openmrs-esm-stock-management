@@ -407,7 +407,7 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             <TableCell>
               {currentBatchBalance?.quantityUoM
                 ? currentBatchBalance.quantityUoM
-                : "N/A"}
+                : row?.stockItemPackagingUOMName}
               {!canEdit && row?.stockItemPackagingUOMName}
             </TableCell>
             {canCapturePurchasePrice ? (

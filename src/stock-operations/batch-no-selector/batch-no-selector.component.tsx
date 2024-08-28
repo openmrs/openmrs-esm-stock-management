@@ -60,7 +60,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   });
 
   const filteredBatches = stockItemBatchesInfo?.filter(
-    (s) => s.quantity !== undefined
+    (s) => s.quantity !== undefined && s.quantity !== 0
   );
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       !isLoading &&
       stockItemBatchNos &&
       props.selectedItem &&
-      stockItemBatchNos.length === 0
+      (stockItemBatchNos.length === 0 || filteredBatches.length === 0)
     ) {
       setValidationMessage(
         "No stock batch numbers defined. Do a initial/receipt stock operation first."
@@ -76,7 +76,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     } else {
       setValidationMessage(null);
     }
-  }, [isLoading, stockItemBatchNos, props.selectedItem]);
+  }, [isLoading, stockItemBatchNos, props.selectedItem, filteredBatches]);
 
   if (isLoading) return <InlineLoading status="active" />;
 
