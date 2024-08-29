@@ -1,10 +1,12 @@
+@use '@carbon/layout';
+
 .filterContainer {
     :global(.cds--dropdown__wrapper--inline) {
       gap: 0;
     }
   
     :global(.cds--list-box__menu-icon) {
-      height: 1rem;
+      height: layout.$spacing-05;
     }
   
     :global(.cds--dropdown--inline) :global(.cds--list-box__field) {

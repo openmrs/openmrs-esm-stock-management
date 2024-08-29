@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ModalHeader, ModalBody, ModalFooter } from "@carbon/react";
-import styles from "../root.scss";
+import styles from "./delete-stock-user-scope-modal.scss";
 
 interface DeleteConfirmationProps {
   uuid?: string;

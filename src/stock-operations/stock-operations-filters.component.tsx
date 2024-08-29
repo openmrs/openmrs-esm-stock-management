@@ -75,7 +75,7 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
       onChange={({ selectedItems }) => {
         if (selectedItems) {
           onFilterChange(
-            selectedItems.map((selectedItem) => selectedItem.display),
+            selectedItems.map((selectedItem) => selectedItem.uuid),
             filterName
           );
         }

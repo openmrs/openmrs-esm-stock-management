@@ -61,9 +61,10 @@ const StockSourcesDeleteActionMenu: React.FC<
       kind="ghost"
       size="md"
       onClick={handleDeleteStockSource}
-      iconDescription={t("deleteSource", "Delete Source")}
-      renderIcon={(props) => <TrashCan size={16} {...props} />}
-    />
+      aria-label={t("deleteSource", "Delete Source")}
+    >
+      <TrashCan size={16} />
+    </Button>
   );
 
   return deletingSource ? <InlineLoading /> : deleteButton;

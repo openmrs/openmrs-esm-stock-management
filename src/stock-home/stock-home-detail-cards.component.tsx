@@ -21,7 +21,7 @@ const StockHomeDetailCards = () => {
                 isTablet ? styles.tabletHeading : styles.desktopHeading
               }
             >
-              <h4>{t("Inventory Alerts")}</h4>
+              <h4>{t("inventory Alerts", "Inventory Alerts")}</h4>
             </div>
             <StockHomeInventoryCard />
           </Tile>
@@ -35,7 +35,7 @@ const StockHomeDetailCards = () => {
                 isTablet ? styles.tabletHeading : styles.desktopHeading
               }
             >
-              <h4>{t("Receiving")}</h4>
+              <h4>{t("receiving", "Receiving")}</h4>
             </div>
             <StockHomeReceivingCard />
           </Tile>
@@ -49,7 +49,7 @@ const StockHomeDetailCards = () => {
                 isTablet ? styles.tabletHeading : styles.desktopHeading
               }
             >
-              <h4>{t("Issuing")}</h4>
+              <h4>{t("issuing", "Issuing")}</h4>
             </div>
             <StockHomeIssuingCard />
           </Tile>

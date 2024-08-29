@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { SaveStockOperation } from "../../stock-items/types";
@@ -35,7 +35,7 @@ import { useStockOperationPages } from "../stock-operations-table.resource";
 import { createBaseOperationPayload } from "./add-stock-utils";
 import { showSnackbar, useSession } from "@openmrs/esm-framework";
 
-import rootStyles from "../../root.scss";
+import styles from "../add-stock-operation/base-operation-details.scss";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -83,6 +83,12 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
 
   const [isOtherUser, setIsOtherUser] = useState<boolean | null>();
   const [isSaving, setIsSaving] = useState(false);
+  useEffect(() => {
+    if (defaultLoggedUserUuid) {
+      setValue("responsiblePersonUuid", defaultLoggedUserUuid);
+    }
+  }, [defaultLoggedUserUuid, setValue]);
+
   if (isLoading) {
     return (
       <InlineLoading
@@ -110,9 +116,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   };
   return (
     <div style={{ margin: "10px" }}>
-      <form
-        className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
-      >
+      <form className={`${styles.formContainer} ${styles.verticalForm}`}>
         {canEdit && (
           <Controller
             control={control}
@@ -169,7 +173,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             title={
               operation?.hasDestination
                 ? t("from", "From")
-                : t("location:", "Location")
+                : t("location", "Location")
             }
             placeholder={
               operation.hasDestination
@@ -242,7 +246,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
-            title={t("responsiblePerson:", "Responsible Person")}
+            title={t("responsiblePerson", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             userUuid={defaultLoggedUserUuid}
@@ -284,7 +288,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             controllerName="responsiblePersonUuid"
             name="responsiblePersonUuid"
             control={control}
-            title={t("responsiblePerson:", "Responsible Person")}
+            title={t("responsiblePerson", "Responsible Person")}
             placeholder={t("filter", "Filter ...")}
             invalid={!!errors.responsiblePersonUuid}
             invalidText={
@@ -332,7 +336,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           controllerName="remarks"
           maxLength={255}
           value={`${model?.remarks ?? ""}`}
-          labelText={t("remarks:", "Remarks")}
+          labelText={t("remarks", "Remarks")}
           invalid={!!errors.remarks}
           invalidText={errors.remarks && errors?.remarks?.message}
         />
