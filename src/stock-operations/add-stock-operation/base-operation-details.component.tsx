@@ -35,7 +35,8 @@ import { useStockOperationPages } from "../stock-operations-table.resource";
 import { createBaseOperationPayload } from "./add-stock-utils";
 import { showSnackbar, useSession } from "@openmrs/esm-framework";
 
-import styles from "../add-stock-operation/base-operation-details.scss";
+import rootStyles from "../../root.scss";
+import { Party } from "../../core/api/types/Party";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -54,8 +55,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   isEditing,
   setup: {
     requiresStockAdjustmentReason: showReason,
-    shouldLockSource: lockSource,
-    shouldLockDestination: lockDestination,
     sourcePartyList,
     destinationPartyList,
   },
@@ -114,6 +113,44 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       setIsSaving(false);
     }
   };
+
+  const isCompleteStatus = model?.status === "COMPLETED";
+  const sourceTags =
+    operation?.stockOperationTypeLocationScopes
+      ?.filter((p) => operation?.hasSource && p.isSource)
+      .map((p) => p.locationTag) ?? [];
+
+  const destinationTags =
+    operation?.stockOperationTypeLocationScopes
+      ?.filter((p) => operation?.hasDestination && p.isDestination)
+      .map((p) => p.locationTag) ?? [];
+
+  const sourcePartyListFilter = (sourcePartyList: Party) => {
+    const isValid =
+      (sourcePartyList.locationUuid &&
+        operation?.sourceType === "Location" &&
+        (sourceTags.length === 0 ||
+          (sourcePartyList.tags &&
+            sourceTags.some((x) => sourcePartyList.tags.includes(x))))) ||
+      (sourcePartyList.stockSourceUuid && operation?.sourceType === "Other");
+    return isValid;
+  };
+
+  const destinationPartyListFilter = (destinationPartyList: Party) => {
+    const isValid =
+      (destinationPartyList.locationUuid &&
+        operation?.destinationType === "Location" &&
+        (destinationTags.length === 0 ||
+          (destinationPartyList.tags &&
+            destinationTags.some((x) =>
+              destinationPartyList.tags.includes(x)
+            )))) ||
+      (destinationPartyList.stockSourceUuid &&
+        operation?.destinationType === "Other");
+    return isValid;
+  };
+  console.log("operation", operation);
+  console.log("canEdit", canEdit);
   return (
     <div style={{ margin: "10px" }}>
       <form
@@ -229,29 +266,28 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
           />
         )}
 
-        {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
-        {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
-          <PartySelector
-            controllerName="sourceUuid"
-            name="sourceUuid"
-            control={control}
-            partyUuid={model?.atLocationUuid}
-            partyUuid={model?.atLocationUuid}
-            title={
-              operation?.hasDestination || model?.destinationUuid
-                ? t("from", "From")
-                : t("location", "Location")
-            }
-            placeholder={
-              operation.hasDestination || model?.destinationUuid
-                ? t("chooseASource", "Choose a source")
-                : t("chooseALocation", "Choose a location")
-            }
-            invalid={!!errors.sourceUuid}
-            invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
-            parties={sourcePartyList || []}
-          />
-        )}
+            {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
+              <PartySelector
+                controllerName="sourceUuid"
+                name="sourceUuid"
+                control={control}
+                partyUuid={model?.atLocationUuid}
+                title={
+                  operation?.hasDestination || model?.destinationUuid
+                    ? t("from", "From")
+                    : t("location", "Location")
+                }
+                placeholder={
+                  operation.hasDestination || model?.destinationUuid
+                    ? t("chooseASource", "Choose a source")
+                    : t("chooseALocation", "Choose a location")
+                }
+                invalid={!!errors.sourceUuid}
+                invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
+                parties={sourcePartyList?.filter(sourcePartyListFilter) || []}
+                filterFunction={sourcePartyListFilter}
+              />
+            )}
 
             {!canEdit && isEditing && (
               <PartySelector
@@ -271,7 +307,8 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                 }
                 invalid={!!errors.sourceUuid}
                 invalidText={errors.sourceUuid && errors?.sourceUuid?.message}
-                parties={sourcePartyList || []}
+                parties={sourcePartyList?.filter(sourcePartyListFilter) || []}
+                filterFunction={sourcePartyListFilter}
               />
             )}
             {canEdit &&
@@ -295,7 +332,11 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                   invalidText={
                     errors.destinationUuid && errors?.destinationUuid?.message
                   }
-                  parties={destinationPartyList || []}
+                  parties={
+                    destinationPartyList?.filter(destinationPartyListFilter) ||
+                    []
+                  }
+                  filterFunction={destinationPartyListFilter}
                 />
               )}
 
@@ -319,7 +360,10 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
                 invalidText={
                   errors.destinationUuid && errors?.destinationUuid?.message
                 }
-                parties={destinationPartyList || []}
+                parties={
+                  destinationPartyList?.filter(destinationPartyListFilter) || []
+                }
+                filterFunction={destinationPartyListFilter}
               />
             )}
 
@@ -388,20 +432,21 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               />
             )}
 
-        {showReason && canEdit && (
-          <StockOperationReasonSelector
-            controllerName="reasonUuid"
-            name="reasonUuid"
-            control={control}
-            placeholder={t("chooseAReason", "Choose a reason")}
-            title={t("reason", "Reason")}
-            invalid={!!errors.reasonUuid}
-            invalidText={errors.reasonUuid && errors?.reasonUuid?.message}
-            onReasonChange={(reason) => {
-              setValue("reasonUuid", reason.uuid);
-            }}
-          />
-        )}
+            {showReason && canEdit && (
+              <StockOperationReasonSelector
+                controllerName="reasonUuid"
+                name="reasonUuid"
+                control={control}
+                reasonUuid={model?.reasonUuid}
+                placeholder={t("chooseAReason", "Choose a reason")}
+                title={t("reason", "Reason")}
+                invalid={!!errors.reasonUuid}
+                invalidText={errors.reasonUuid && errors?.reasonUuid?.message}
+                onReasonChange={(reason) => {
+                  setValue("reasonUuid", reason.uuid);
+                }}
+              />
+            )}
 
         {showReason && !canEdit && (
           <TextInput

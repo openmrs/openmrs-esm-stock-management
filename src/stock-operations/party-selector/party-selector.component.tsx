@@ -11,7 +11,7 @@ interface PartySelectorProps<T> {
   placeholder?: string;
   invalid?: boolean;
   invalidText?: ReactNode;
-  filter?: (party: Party) => boolean;
+  filterFunction?: (party: Party) => boolean;
 
   // Control
   controllerName: string;

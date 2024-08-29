@@ -130,7 +130,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     selectedStatus.length ||
     selectedOperations.length;
 
-  let operations: StockOperationType[] | null | undefined;
+  const [operations, setOperations] = useState<StockOperationType[]>([]);
 
   const handleOnFilterChange = useCallback((selectedItems, filterType) => {
     if (filterType === StockFilters.SOURCES) {
@@ -157,6 +157,17 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }
   };
 
+  const handleEditClick = (stockOperation, isEditing) => {
+    launchAddOrEditDialog(
+      t,
+      stockOperation,
+      isEditing,
+      operation,
+      operations,
+      false
+    );
+  };
+
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
       ...stockOperation,
@@ -165,8 +176,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       operationTypeName: `${stockOperation?.operationTypeName}`,
       operationNumber: (
         <EditStockOperationActionMenu
-          model={items[index]}
+          model={stockOperation}
           operations={operations}
+          operationUuid={operation.uuid}
+          operationNumber={""}
+          onEdit={() => handleEditClick(stockOperation, true)}
         />
       ),
       status: `${stockOperation?.status}`,
@@ -300,22 +314,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         <Button
           kind="ghost"
           size="md"
-          onClick={() => {
-            launchAddOrEditDialog(
-              t,
-              items[index],
-              true,
-              operation,
-              operations,
-              false
-            );
-          }}
+          onClick={() => handleEditClick(stockOperation, true)}
           iconDescription={t("editStockItem", "Edit Stock Item")}
           renderIcon={(props) => <Edit size={16} {...props} />}
         ></Button>
       ),
     }));
-  }, [items, operation, operations, t]);
+  }, [items, operations, t]);
 
   if (isLoading && !filterApplied) {
     return (
@@ -417,7 +422,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     );
                   }}
                   onOperationLoaded={(ops) => {
-                    operations = ops;
+                    setOperations(ops);
                   }}
                 />
               </TableToolbarContent>

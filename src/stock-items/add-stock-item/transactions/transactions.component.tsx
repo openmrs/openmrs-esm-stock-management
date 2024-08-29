@@ -21,6 +21,7 @@ import TransactionsLocationsFilter from "./transaction-filters/transaction-locat
 import { useForm } from "react-hook-form";
 import { StockItemInventoryFilter } from "../../stock-items.resource";
 import { useTranslation } from "react-i18next";
+import { StockOperationDTO } from "../../../core/api/types/stockOperation/StockOperationDTO";
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -124,6 +125,10 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
           operationUuid={stockItemTransaction?.stockOperationUuid}
           operationNumber={stockItemTransaction?.stockOperationNumber}
           operations={operations}
+          model={undefined}
+          onEdit={function (operation: StockOperationDTO): void {
+            throw new Error("Function not implemented.");
+          }}
         />
       ) : (
         <></>
