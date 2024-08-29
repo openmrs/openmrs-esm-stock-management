@@ -1,7 +1,6 @@
 @use '@carbon/layout';
 @use '@carbon/styles/scss/type';
 @use '~@openmrs/esm-styleguide/src/vars' as *;
-@use '../root.scss';
 
 .headerBtnContainer {
   background-color: $ui-background;

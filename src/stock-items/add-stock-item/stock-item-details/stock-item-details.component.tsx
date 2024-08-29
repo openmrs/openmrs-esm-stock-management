@@ -20,7 +20,7 @@ import StockItemCategorySelector from "../stock-item-category-selector/stock-ite
 import StockItemUnitsEdit from "../stock-item-units-edit/stock-item-units-edit.component";
 import { SaveStockItem } from "../../types";
 import ConceptsSelector from "../concepts-selector/concepts-selector.component";
-import rootStyles from "../../../root.scss";
+import styles from "../../add-stock-item/add-stock-item.scss";
 import { closeOverlay } from "../../../core/components/overlay/hook";
 import { expirationOptions, radioOptions } from "./stock-item-details.resource";
 import { restBaseUrl } from "@openmrs/esm-framework";
@@ -70,9 +70,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     }, [model.hasExpiration, model.isDrug]);
 
     return (
-      <form
-        className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
-      >
+      <form className={`${styles.formContainer} ${styles.verticalForm}`}>
         {!isEditing && (
           <FormGroup
             className="clear-margin-bottom"
