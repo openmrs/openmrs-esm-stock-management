@@ -10,7 +10,7 @@ function StockSettings() {
 
   return (
     <div className={styles.StockSettings}>
-      <div className={styles.title}>
+      <div className={styles.tableHeader}>
         {t(
           "comingSoonUnderDev",
           "Exciting updates are on the way! In the meantime, use the link below to access Admin UI settings."

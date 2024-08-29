@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ModalHeader, ModalBody, ModalFooter } from "@carbon/react";
-import styles from "../root.scss";
+import styles from "./delete-stock-modal.scss";
 
 interface DeleteConfirmationProps {
   uuid?: string;
@@ -20,11 +20,11 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
 
   return (
     <>
-      <ModalHeader closeModal={close} className={styles.productiveHeading03}>
+      <ModalHeader closeModal={close} className={styles.modalHeader}>
         {t("deleteStock", "Delete Stock source")}?
       </ModalHeader>
       <ModalBody>
-        <p className={styles.bodyLong01}>
+        <p className={styles.bodyText}>
           {t(
             "deleteConfirmationText",
             `Are you sure you want to delete this source? This action can't be undone.`,

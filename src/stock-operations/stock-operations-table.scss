@@ -1,12 +1,11 @@
-@use '@carbon/styles/scss/spacing';
-@use '@carbon/styles/scss/type';
-@import "~@openmrs/esm-styleguide/src/vars";
-@import '../root.scss';
+@use '@carbon/layout';
+@use '@carbon/type';
+@use '~@openmrs/esm-styleguide/src/vars' as *;
 
 .tileContainer {
   background-color: $ui-02;
   border-top: 1px solid $ui-03;
-  padding: 5rem 0;
+  padding: layout.$spacing-11 0;
 }
 
 .tile {
@@ -23,7 +22,7 @@
 .content {
   @include type.type-style('heading-compact-02');
   color: $text-02;
-  margin-bottom: 0.5rem;
+  margin-bottom: layout.$spacing-03;
 }
 
 .helper {
@@ -42,7 +41,7 @@
 }
 
 .dateAlign {
-  padding-top: spacing.$spacing-03;
+  padding-top: layout.$spacing-03;
   height: 100%;
 }
 
@@ -50,12 +49,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: spacing.$spacing-05;
+  margin-bottom: layout.$spacing-05;
 }
 
 .rowLoadingContainer {
   text-align: center;
-  padding: 5rem 2rem;
+  padding: layout.$spacing-11 2rem;
   margin: auto;
   width: 20%;
 }

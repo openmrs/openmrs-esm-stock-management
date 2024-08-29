@@ -1,6 +1,8 @@
 @use '@carbon/colors';
 @use '@carbon/layout';
-@use "../root.scss" as *;
+@use '@carbon/type';
+@use '@openmrs/esm-styleguide/src/vars' as *;
+
 
 .StockSettings {
     display: flex;
@@ -18,6 +20,7 @@
     }
 }
 
-.title {
-    @extend .productiveHeading01;
-}
+.tableHeader {
+    @include type.type-style('heading-compact-01');
+    color: $text-02;
+  }
