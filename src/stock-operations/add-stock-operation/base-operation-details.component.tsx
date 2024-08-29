@@ -149,8 +149,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
         operation?.destinationType === "Other");
     return isValid;
   };
-  console.log("operation", operation);
-  console.log("canEdit", canEdit);
   return (
     <div style={{ margin: "10px" }}>
       <form
@@ -246,25 +244,25 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               />
             )}
 
-        {!canEdit && (
-          <>
-            <TextInput
-              id="operationDateLbl"
-              value={formatForDatePicker(model?.operationDate)}
-              readOnly={true}
-              labelText="Operation Date"
-            />
-          </>
-        )}
+            {!canEdit && (
+              <>
+                <TextInput
+                  id="operationDateLbl"
+                  value={formatForDatePicker(model?.operationDate)}
+                  readOnly={true}
+                  labelText="Operation Date"
+                />
+              </>
+            )}
 
-        {isEditing && model?.operationNumber && (
-          <TextInput
-            id="operationNoLbl"
-            value={model?.operationNumber}
-            readOnly={true}
-            labelText={"Operation Number"}
-          />
-        )}
+            {isEditing && model?.operationNumber && (
+              <TextInput
+                id="operationNoLbl"
+                value={model?.operationNumber}
+                readOnly={true}
+                labelText={"Operation Number"}
+              />
+            )}
 
             {canEdit && (operation?.hasSource || model?.atLocationUuid) && (
               <PartySelector
@@ -390,24 +388,24 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               />
             )}
 
-        {isOtherUser && (
-          <ControlledTextInput
-            id="responsiblePersonOther"
-            name="responsiblePersonOther"
-            control={control}
-            controllerName="responsiblePersonOther"
-            maxLength={255}
-            size={"md"}
-            value={`${model?.responsiblePersonOther ?? ""}`}
-            labelText={t("responsiblePerson", "Responsible Person")}
-            placeholder={t("pleaseSpecify", "Please Specify")}
-            invalid={!!errors.responsiblePersonOther}
-            invalidText={
-              errors.responsiblePersonOther &&
-              errors?.responsiblePersonOther?.message
-            }
-          />
-        )}
+            {isOtherUser && (
+              <ControlledTextInput
+                id="responsiblePersonOther"
+                name="responsiblePersonOther"
+                control={control}
+                controllerName="responsiblePersonOther"
+                maxLength={255}
+                size={"md"}
+                value={`${model?.responsiblePersonOther ?? ""}`}
+                labelText={t("responsiblePerson", "Responsible Person")}
+                placeholder={t("pleaseSpecify", "Please Specify")}
+                invalid={!!errors.responsiblePersonOther}
+                invalidText={
+                  errors.responsiblePersonOther &&
+                  errors?.responsiblePersonOther?.message
+                }
+              />
+            )}
 
             {!canEdit && isEditing && (
               <UsersSelector
@@ -448,43 +446,46 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
               />
             )}
 
-        {showReason && !canEdit && (
-          <TextInput
-            id="reasonUuidLbl"
-            value={model?.reasonName ?? ""}
-            readOnly={true}
-            labelText={"Reason:"}
-          />
+            {showReason && !canEdit && (
+              <TextInput
+                id="reasonUuidLbl"
+                value={model?.reasonName ?? ""}
+                readOnly={true}
+                labelText={"Reason:"}
+              />
+            )}
+
+            <ControlledTextArea
+              id="remarks"
+              name="remarks"
+              control={control}
+              controllerName="remarks"
+              maxLength={255}
+              value={`${model?.remarks ?? ""}`}
+              labelText={t("remarks", "Remarks")}
+              invalid={!!errors.remarks}
+              invalidText={errors.remarks && errors?.remarks?.message}
+            />
+
+            <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+              <Button
+                name="save"
+                type="button"
+                className="submitButton"
+                onClick={handleSubmit(handleSave)}
+                kind="primary"
+                renderIcon={ArrowRight}
+              >
+                {isSaving ? <InlineLoading /> : t("next", "Next")}
+              </Button>
+            </div>
+          </>
         )}
-
-        <ControlledTextArea
-          id="remarks"
-          name="remarks"
-          control={control}
-          controllerName="remarks"
-          maxLength={255}
-          value={`${model?.remarks ?? ""}`}
-          labelText={t("remarks", "Remarks")}
-          invalid={!!errors.remarks}
-          invalidText={errors.remarks && errors?.remarks?.message}
-        />
-
-        <div style={{ display: "flex", flexDirection: "row-reverse" }}>
-          <Button
-            name="save"
-            type="button"
-            className="submitButton"
-            onClick={handleSubmit(handleSave)}
-            kind="primary"
-            renderIcon={ArrowRight}
-          >
-            {isSaving ? <InlineLoading /> : t("next", "Next")}
-          </Button>
-        </div>
       </form>
     </div>
   );
 };
+
 function mapIssueStockLocations(stockOperation) {
   /** Since we are using requisition information to issue stock,
       please note that the locations will be inverted: the destination listed on the requisition will become the issuing location.
