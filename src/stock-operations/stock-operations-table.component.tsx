@@ -181,6 +181,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           operationUuid={operation.uuid}
           operationNumber={""}
           onEdit={() => handleEditClick(stockOperation, true)}
+          showIcon={false}
+          showprops={true}
         />
       ),
       status: `${stockOperation?.status}`,
@@ -311,13 +313,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         </div>
       ),
       actions: (
-        <Button
-          kind="ghost"
-          size="md"
-          onClick={() => handleEditClick(stockOperation, true)}
-          iconDescription={t("editStockItem", "Edit Stock Item")}
-          renderIcon={(props) => <Edit size={16} {...props} />}
-        ></Button>
+        <EditStockOperationActionMenu
+          model={stockOperation}
+          operations={operations}
+          operationUuid={operation.uuid}
+          operationNumber={""}
+          onEdit={() => handleEditClick(stockOperation, true)}
+          showIcon={true}
+          showprops={false}
+        />
       ),
     }));
   }, [items, operations, t]);

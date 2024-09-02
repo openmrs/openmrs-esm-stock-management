@@ -12,11 +12,13 @@ interface EditStockOperationActionMenuProps {
   operationUuid: string;
   operationNumber: string;
   onEdit: (operation: StockOperationDTO) => void;
+  showIcon?: boolean;
+  showprops?: boolean;
 }
 
 const EditStockOperationActionMenu: React.FC<
   EditStockOperationActionMenuProps
-> = ({ model, operations }) => {
+> = ({ model, operations, showIcon = true, showprops = true }) => {
   const { t } = useTranslation();
 
   const handleEdit = () => {
@@ -32,9 +34,9 @@ const EditStockOperationActionMenu: React.FC<
       size="sm"
       onClick={handleEdit}
       iconDescription={t("editStockOperation", "Edit Stock Operation")}
-      renderIcon={(props) => <Edit size={16} {...props} />}
+      renderIcon={showIcon ? Edit : undefined}
     >
-      {model.operationNumber}
+      {showprops && model.operationNumber}
     </Button>
   );
 };
