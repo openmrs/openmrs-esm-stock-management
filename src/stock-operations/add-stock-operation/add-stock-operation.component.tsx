@@ -197,9 +197,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 t,
                 model,
                 props.isEditing,
-                props.operation,
-                props.operations,
-                props.canPrint
+                props.operation
               );
             },
 

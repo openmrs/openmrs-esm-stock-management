@@ -1,68 +1,43 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@carbon/react";
+import { Edit } from "@carbon/react/icons";
 import { useTranslation } from "react-i18next";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { launchAddOrEditDialog } from "../stock-operation.utils";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
-import { getStockOperation } from "../stock-operations.resource";
+import { launchAddOrEditDialog } from "../stock-operation.utils";
+
 interface EditStockOperationActionMenuProps {
-  operationUuid?: string;
-  operationNumber?: string;
-  model?: StockOperationDTO;
+  model: StockOperationDTO;
   operations: StockOperationType[];
+  operationUuid: string;
+  operationNumber: string;
+  onEdit: (operation: StockOperationDTO) => void;
+  showIcon?: boolean;
+  showprops?: boolean;
 }
+
 const EditStockOperationActionMenu: React.FC<
   EditStockOperationActionMenuProps
-> = ({ operationUuid, operationNumber, model, operations }) => {
+> = ({ model, operations, showIcon = true, showprops = true }) => {
   const { t } = useTranslation();
-  const [operation, setOperation] = useState<StockOperationDTO | null>(null);
 
-  if (operationUuid && !operation) {
-    getStockOperation(operationUuid)
-      .then((res) => setOperation(res.data))
-      .catch((error) =>
-        console.error("Error fetching stock operation:", error)
-      );
-  }
-  const type: StockOperationType = {
-    uuid: "",
-    name: "",
-    description: "",
-    operationType: "",
-    hasSource: false,
-    sourceType: "Location",
-    hasDestination: false,
-    destinationType: "Location",
-    hasRecipient: false,
-    recipientRequired: false,
-    availableWhenReserved: false,
-    allowExpiredBatchNumbers: false,
-    stockOperationTypeLocationScopes: [],
-    creator: undefined,
-    dateCreated: undefined,
-    changedBy: undefined,
-    dateChanged: undefined,
-    dateVoided: undefined,
-    voidedBy: undefined,
-    voidReason: "",
-    voided: false,
+  const handleEdit = () => {
+    const operation = operations.find(
+      (op) => op.uuid === model.operationTypeUuid
+    );
+    launchAddOrEditDialog(t, model, true, operation, operations, false);
   };
 
   return (
-    <>
-      <Button
-        type="button"
-        size="sm"
-        className="submitButton clear-padding-margin"
-        iconDescription={"View"}
-        kind="ghost"
-        onClick={() => {
-          launchAddOrEditDialog(t, model ?? operation, true, type, operations);
-        }}
-      >
-        {operationNumber ? operationNumber : `${model?.operationNumber}`}
-      </Button>
-    </>
+    <Button
+      kind="ghost"
+      size="sm"
+      onClick={handleEdit}
+      iconDescription={t("editStockOperation", "Edit Stock Operation")}
+      renderIcon={showIcon ? Edit : undefined}
+    >
+      {showprops && model.operationNumber}
+    </Button>
   );
 };
 

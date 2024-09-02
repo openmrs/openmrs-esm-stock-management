@@ -25,10 +25,7 @@ export const addOrEditStockOperation = async (
   t: TFunction,
   stockOperation: StockOperationDTO,
   isEditing: boolean,
-  operation?: StockOperationType,
-  operations?: StockOperationType[],
-  canPrint?: boolean,
-  printEnabled?: boolean
+  operation?: StockOperationType
 ) => {
   const payload = stockOperation;
   try {
@@ -98,15 +95,7 @@ export const launchAddOrEditDialog = (
     <AddStockOperation
       model={stockOperation}
       onSave={(stockOperation) =>
-        addOrEditStockOperation(
-          t,
-          stockOperation,
-          isEditing,
-          operation,
-          operations,
-          canPrint,
-          printEnabled
-        )
+        addOrEditStockOperation(t, stockOperation, isEditing, operation)
       }
       isEditing={isEditing}
       operation={operation}
