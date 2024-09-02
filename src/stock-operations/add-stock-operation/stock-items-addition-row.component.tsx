@@ -406,7 +406,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
             </TableCell>
             {/* Qty UoM Cell (Non-editable) */}
             <TableCell>
-              {canEdit && !currentBatchBalance?.quantityUoM ? (
+              {canEdit &&
+              row?.uuid.startsWith("new-item") &&
+              !currentBatchBalance?.quantityUoM ? (
                 <QtyUomSelector
                   stockItemUuid={row.stockItemUuid}
                   onStockPackageChanged={(selectedItem) => {
