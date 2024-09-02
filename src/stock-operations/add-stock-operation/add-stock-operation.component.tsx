@@ -113,7 +113,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const tabs: TabItem[] = [
     {
       name: isEditing
-        ? `${props?.model?.operationTypeName} Details`
+        ? `${props?.operation?.name} Details`
         : `${props?.operation?.name} Details`,
       component: (
         <BaseOperationDetails
