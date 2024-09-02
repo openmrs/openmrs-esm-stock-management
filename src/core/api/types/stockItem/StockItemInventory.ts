@@ -8,4 +8,5 @@ export interface StockItemInventory {
   quantityUoM: string;
   quantityFactor: string;
   expiration: Date;
+  quantityUoMUuid?: string;
 }

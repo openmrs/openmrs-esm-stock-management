@@ -64,7 +64,11 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     ) {
       setRequisition(props.model?.uuid);
     }
-  }, [currentStockOperationType, props.model?.operationType]);
+  }, [
+    currentStockOperationType,
+    props.model?.operationType,
+    props.model?.uuid,
+  ]);
 
   useEffect(() => {
     if (
@@ -79,7 +83,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         setOperationLinks(resp.data?.results);
       });
     }
-  }, [currentStockOperationType, requisition, props.model?.uuid]);
+  }, [currentStockOperationType, requisition, props.model?.uuid, isEditing]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canDisplayReceivedItems, setCanDisplayReceivedItems] = useState(false);

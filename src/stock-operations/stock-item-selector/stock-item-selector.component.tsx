@@ -68,7 +68,7 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
 };
 
 function stockItemName(item: StockItemDTO): string {
-  return item.drugName || item.conceptName;
+  return item?.drugName || item?.conceptName;
 }
 
 export default StockItemSelector;

@@ -59,12 +59,16 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     return item;
   });
 
+  const filteredBatches = stockItemBatchesInfo?.filter(
+    (s) => s.quantity !== undefined && s.quantity !== 0
+  );
+
   useEffect(() => {
     if (
       !isLoading &&
       stockItemBatchNos &&
       props.selectedItem &&
-      stockItemBatchNos.length === 0
+      (stockItemBatchNos.length === 0 || filteredBatches.length === 0)
     ) {
       setValidationMessage(
         "No stock batch numbers defined. Do a initial/receipt stock operation first."
@@ -72,7 +76,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     } else {
       setValidationMessage(null);
     }
-  }, [isLoading, stockItemBatchNos, props.selectedItem]);
+  }, [isLoading, stockItemBatchNos, props.selectedItem, filteredBatches]);
 
   if (isLoading) return <InlineLoading status="active" />;
 
@@ -90,7 +94,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             controllerName={props.controllerName}
             id={props.name}
             size={"sm"}
-            items={stockItemBatchesInfo || []}
+            items={filteredBatches || []}
             onChange={(data: { selectedItem?: StockBatchDTO }) => {
               setSelectedItem(data.selectedItem || null);
               props.onBatchNoChanged?.(data.selectedItem);
@@ -98,7 +102,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockBatchDTO) =>
-              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? ""}` : ""
+              s?.batchNo ? `${s?.batchNo}` : ""
             }
             placeholder={props.placeholder}
             invalid={props.invalid}
