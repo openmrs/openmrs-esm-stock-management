@@ -35,8 +35,8 @@ import { useStockOperationPages } from "../stock-operations-table.resource";
 import { createBaseOperationPayload } from "./add-stock-utils";
 import { showSnackbar, useSession } from "@openmrs/esm-framework";
 
-import rootStyles from "../../root.scss";
 import { Party } from "../../core/api/types/Party";
+import styles from "../add-stock-operation/base-operation-details.scss";
 
 interface BaseOperationDetailsProps {
   isEditing?: boolean;
@@ -151,9 +151,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   };
   return (
     <div style={{ margin: "10px" }}>
-      <form
-        className={`${rootStyles.formContainer} ${rootStyles.verticalForm}`}
-      >
+      <form className={`${styles.formContainer} ${styles.verticalForm}`}>
         {isCompleteStatus ? (
           <>
             {model?.operationDate && (
