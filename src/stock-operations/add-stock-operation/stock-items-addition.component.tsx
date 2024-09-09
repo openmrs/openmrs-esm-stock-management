@@ -190,7 +190,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     });
   };
 
->>>>>>> fccec91 (Expand the view panel in stock management systen at stock operation)
   return (
     <FormProvider {...formMethods}>
       <div style={{ margin: "10px" }}>
