@@ -21,7 +21,6 @@ import {
   SendFilled,
   Undo,
 } from "@carbon/react/icons";
-import { async } from "rxjs";
 
 interface StockOperationSubmissionProps {
   isEditing?: boolean;
