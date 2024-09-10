@@ -150,6 +150,13 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   renderIcon={Departure}
                 >
                   {t("dispatch", "Dispatch")}
+                  {isSaving ? (
+                    <InlineLoading
+                      description={t("dispatching", "Dispatching")}
+                    />
+                  ) : (
+                    t("dispatch", "Dispatch")
+                  )}
                 </Button>
               )}
               {approvalRequired && (
@@ -160,13 +167,27 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   className="submitButton"
                   kind="primary"
                   onClick={async () => {
+                    delete model?.dateCreated;
+                    delete model?.status;
+                    setIsSaving(true);
                     await actions.onSave(model).then(() => {
+                      model.status = "SUBMITTED";
                       actions.onSubmit(model);
+                      setIsSaving(false);
                     });
                   }}
                   renderIcon={SendFilled}
                 >
-                  {t("submitForReview", "Submit For Review")}
+                  {isSaving ? (
+                    <InlineLoading
+                      description={t(
+                        "submittingForReview",
+                        "Submitting for review"
+                      )}
+                    />
+                  ) : (
+                    t("submitForReview", "Submit For Review")
+                  )}
                 </Button>
               )}
             </>
