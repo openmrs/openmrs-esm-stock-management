@@ -21,6 +21,7 @@ import {
   SendFilled,
   Undo,
 } from "@carbon/react/icons";
+import { async } from "rxjs";
 
 interface StockOperationSubmissionProps {
   isEditing?: boolean;
@@ -140,9 +141,11 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                     delete model?.dateCreated;
                     delete model?.status;
                     setIsSaving(true);
-                    model.status = "DISPATCHED";
-                    await actions.onDispatch(model);
-                    setIsSaving(false);
+                    await actions.onSave(model).then(() => {
+                      model.status = "DISPATCHED";
+                      actions.onDispatch(model);
+                      setIsSaving(false);
+                    });
                   }}
                   renderIcon={Departure}
                 >
@@ -156,7 +159,11 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
-                  onClick={actions.onSubmit}
+                  onClick={async () => {
+                    await actions.onSave(model).then(() => {
+                      actions.onSubmit(model);
+                    });
+                  }}
                   renderIcon={SendFilled}
                 >
                   {t("submitForReview", "Submit For Review")}
