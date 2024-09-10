@@ -29,7 +29,6 @@ import { useValidationSchema } from "./validationSchema";
 import StockItemsAdditionRow from "./stock-items-addition-row.component";
 import { ArrowRight } from "@carbon/react/icons";
 import { errorAlert } from "../../core/utils/alert";
-import { useStockOperationContext } from "./stock-operation-context/useStockOperationContext";
 
 import styles from "./stock-items-addition.component.scss";
 import StockItemSearch from "./stock-item-search/stock-item-search.component";
@@ -204,9 +203,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
             headers={headers}
             isSortable={false}
             useZebraStyles={true}
-            styles={{
-              width: "100%",
-            }}
+            className={styles.dataTable}
             render={({ headers, getHeaderProps, getTableProps }) => (
               <TableContainer>
                 <Table {...getTableProps()}>
@@ -230,24 +227,8 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                         </TableHeader>
                       ))}
                       {canEdit && (
-                        <TableHeader
-                          style={{
-                            width: "3% !important",
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: "3% !important",
-                              display: "flex",
-                              flexDirection: "row",
-                              gap: "8px",
-                            }}
-                          >
-                            {/* <Button
-                              renderIcon={Add}
-                              onClick={addNewItem}
-                              hasIconOnly
-                            ></Button> */}
+                        <TableHeader className={styles.tableHeader}>
+                          <div className={styles.TableBody}>
                             <Button
                               name="save"
                               type="button"

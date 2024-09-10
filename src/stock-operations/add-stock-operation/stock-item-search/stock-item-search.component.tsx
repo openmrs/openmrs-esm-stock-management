@@ -59,7 +59,7 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({
       </div>
       {searchTerm && stockItemsList?.length > 0 && (
         <div className={styles.searchResults}>
-          {stockItemsList?.slice(0, 10).map((stockItem) => (
+          {stockItemsList?.slice(0, 5).map((stockItem) => (
             <ClickableTile
               onClick={() => handleOnSearchResultClick(stockItem)}
               key={stockItem?.uuid}
