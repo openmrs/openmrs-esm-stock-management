@@ -140,13 +140,22 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                     delete model?.dateCreated;
                     delete model?.status;
                     setIsSaving(true);
-                    model.status = "DISPATCHED";
-                    await actions.onDispatch(model);
-                    setIsSaving(false);
+                    await actions.onSave(model).then(() => {
+                      model.status = "DISPATCHED";
+                      actions.onDispatch(model);
+                      setIsSaving(false);
+                    });
                   }}
                   renderIcon={Departure}
                 >
                   {t("dispatch", "Dispatch")}
+                  {isSaving ? (
+                    <InlineLoading
+                      description={t("dispatching", "Dispatching")}
+                    />
+                  ) : (
+                    t("dispatch", "Dispatch")
+                  )}
                 </Button>
               )}
               {approvalRequired && (
@@ -156,10 +165,28 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   style={{ margin: "4px" }}
                   className="submitButton"
                   kind="primary"
-                  onClick={actions.onSubmit}
+                  onClick={async () => {
+                    delete model?.dateCreated;
+                    delete model?.status;
+                    setIsSaving(true);
+                    await actions.onSave(model).then(() => {
+                      model.status = "SUBMITTED";
+                      actions.onSubmit(model);
+                      setIsSaving(false);
+                    });
+                  }}
                   renderIcon={SendFilled}
                 >
-                  {t("submitForReview", "Submit For Review")}
+                  {isSaving ? (
+                    <InlineLoading
+                      description={t(
+                        "submittingForReview",
+                        "Submitting for review"
+                      )}
+                    />
+                  ) : (
+                    t("submitForReview", "Submit For Review")
+                  )}
                 </Button>
               )}
             </>
