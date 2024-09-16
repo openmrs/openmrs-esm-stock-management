@@ -30,6 +30,7 @@ import {
   StockOperationType,
   StockOperationTypeCanBeRelatedToRequisition,
   operationFromString,
+  StockOperationTypeRequiresDispatchAcknowledgement,
 } from "../../core/api/types/stockOperation/StockOperationType";
 import {
   getStockOperationLinks,
@@ -51,6 +52,9 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(
     props?.isEditing
   );
+
+  const [requiresDispatchAcknowledgement, setRequiresDispatchAcknowledgement] =
+    useState(false);
 
   const currentStockOperationType = types?.results?.find(
     (p) => p.operationType === props.model?.operationType
@@ -87,6 +91,18 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canDisplayReceivedItems, setCanDisplayReceivedItems] = useState(false);
+
+  useEffect(() => {
+    const validOperationType = Object.values(OperationType).includes(
+      props.model.operationType as OperationType
+    )
+      ? (props.model.operationType as OperationType)
+      : OperationType.RETURN_OPERATION_TYPE;
+
+    setRequiresDispatchAcknowledgement(
+      StockOperationTypeRequiresDispatchAcknowledgement(validOperationType)
+    );
+  }, [props.model.operationType]); //
 
   useEffect(() => {
     setCanDisplayReceivedItems(
@@ -229,6 +245,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         : []
       : []
   );
+
+  console.log("props.model-->" + JSON.stringify(props.model, null, 2));
 
   return (
     <>
@@ -467,24 +485,15 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 {!props?.model?.permission?.canEdit &&
                   props?.model?.permission?.canApprove && (
                     <>
-                      {(props?.model
-                        ? props?.model?.operationTypeName ===
-                            OperationType.RETURN_OPERATION_TYPE ||
-                          props?.model?.operationTypeName ===
-                            OperationType.STOCK_ISSUE_OPERATION_TYPE
-                        : true) && (
+                      {!requiresDispatchAcknowledgement && (
                         <div style={{ margin: "2px" }}>
                           <StockOperationApprovalButton
                             operation={props?.model}
                           />
                         </div>
                       )}
-                      {!(props?.model
-                        ? props?.model?.operationTypeName ===
-                            OperationType.RETURN_OPERATION_TYPE ||
-                          props?.model?.operationTypeName ===
-                            OperationType.STOCK_ISSUE_OPERATION_TYPE
-                        : true) && (
+
+                      {requiresDispatchAcknowledgement && (
                         <div style={{ margin: "2px" }}>
                           <StockOperationApproveDispatchButton
                             operation={props?.model}
