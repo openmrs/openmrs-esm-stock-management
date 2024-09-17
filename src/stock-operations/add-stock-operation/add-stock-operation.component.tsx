@@ -246,8 +246,6 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       : []
   );
 
-  console.log("props.model-->" + JSON.stringify(props.model, null, 2));
-
   return (
     <>
       {!isEditing && props.operation.name === "Stock Issue" ? (
