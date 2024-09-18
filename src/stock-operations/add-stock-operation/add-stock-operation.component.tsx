@@ -102,7 +102,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
     setRequiresDispatchAcknowledgement(
       StockOperationTypeRequiresDispatchAcknowledgement(validOperationType)
     );
-  }, [props.model.operationType]); //
+  }, [props.model.operationType]);
 
   useEffect(() => {
     setCanDisplayReceivedItems(
