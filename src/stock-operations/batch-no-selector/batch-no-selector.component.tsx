@@ -89,7 +89,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockBatchDTO) =>
-              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? 0}` : ""
+              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? ""}` : ""
             }
             placeholder={props.placeholder}
             invalid={props.invalid}
