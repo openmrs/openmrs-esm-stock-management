@@ -88,7 +88,9 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockBatchDTO) => (s?.batchNo ? `${s?.batchNo}` : '')}
+            itemToString={(s: StockBatchDTO) =>
+              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? 0}` : ""
+            }
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
