@@ -63,7 +63,7 @@ export const BuildStockOperationData = async (
       : "";
   }
   data.remarks = currentOperation.remarks;
-  data.operationNumber = currentOperation.operationNumber;
+  data.operationNumber = currentOperation?.operationNumber;
   data.operationDate =
     parentOperation?.operationDate ?? currentOperation?.operationDate;
   data.location =
@@ -80,10 +80,10 @@ export const BuildStockOperationData = async (
         }`;
   data.organizationName = HEALTH_CENTER_NAME;
   data.documentTitle = `${currentOperation.operationTypeName} ${
-    currentOperation.operationNumber
+    currentOperation?.operationNumber
   }${
     parentOperation
-      ? ` of ${parentOperation.operationTypeName} ${parentOperation.operationNumber}`
+      ? ` of ${parentOperation.operationTypeName} ${parentOperation?.operationNumber}`
       : ""
   }`;
   data.items = stockOperationItems.map((p) => {

@@ -165,7 +165,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             {model?.operationNumber && (
               <TextInput
                 id="operationNoLbl"
-                value={model.operationNumber}
+                value={model?.operationNumber}
                 readOnly={true}
                 labelText={t("operationNumber", "Operation Number")}
               />

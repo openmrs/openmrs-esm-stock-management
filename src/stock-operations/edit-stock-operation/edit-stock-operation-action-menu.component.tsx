@@ -36,7 +36,7 @@ const EditStockOperationActionMenu: React.FC<
       iconDescription={t("editStockOperation", "Edit Stock Operation")}
       renderIcon={showIcon ? Edit : undefined}
     >
-      {showprops && model.operationNumber}
+      {showprops && model?.operationNumber}
     </Button>
   );
 };

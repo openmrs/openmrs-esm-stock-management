@@ -45,14 +45,17 @@ describe("StockSourcesDeleteActionMenu", () => {
     const { getByRole } = render(<StockSourcesDeleteActionMenu uuid={uuid} />);
     const button = getByRole("button", { name: "deleteSource" });
     fireEvent.click(button);
-    expect(showModal).toHaveBeenCalledWith("delete-stock-modal", expect.objectContaining({
-      close: expect.any(Function),
-      uuid: uuid,
-      onConfirmation: expect.any(Function),
-    }));
+    expect(showModal).toHaveBeenCalledWith(
+      "delete-stock-modal",
+      expect.objectContaining({
+        close: expect.any(Function),
+        uuid: uuid,
+        onConfirmation: expect.any(Function),
+      })
+    );
   });
 
-  it('calls onConfirmation when delete is clicked', () => {
+  it("calls onConfirmation when delete is clicked", () => {
     const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
 
@@ -65,7 +68,7 @@ describe("StockSourcesDeleteActionMenu", () => {
 
     expect(screen.getByText(/deleteStockUserScope/i)).toBeInTheDocument();
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole("button", { name: /delete/i });
     fireEvent.click(deleteButton);
 
     expect(mockOnConfirmation).toHaveBeenCalledTimes(1);
@@ -75,7 +78,7 @@ describe("StockSourcesDeleteActionMenu", () => {
   it("calls deleteStockSource with the correct UUID on confirmation", async () => {
     const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
-  
+
     render(
       <DeleteConfirmation
         close={mockClose}
@@ -85,10 +88,10 @@ describe("StockSourcesDeleteActionMenu", () => {
         }}
       />
     );
-  
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+
+    const deleteButton = screen.getByRole("button", { name: /delete/i });
     fireEvent.click(deleteButton);
-  
+
     expect(mockOnConfirmation).toHaveBeenCalledTimes(1);
     expect(deleteStockSource).toHaveBeenCalledWith([uuid]);
   });
@@ -109,17 +112,21 @@ describe("StockSourcesDeleteActionMenu", () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole("button", { name: /delete/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
       expect(deleteStockSource).toHaveBeenCalledWith([uuid]);
-      expect(handleMutate).toHaveBeenCalledWith("/openmrs/ws/rest/v1/stocksource");
+      expect(handleMutate).toHaveBeenCalledWith(
+        "/openmrs/ws/rest/v1/stocksource"
+      );
     });
   });
 
   it("calls showSnackbar with the correct parameters on deletion error", async () => {
-    (deleteStockSource as jest.Mock).mockRejectedValueOnce(new Error("Deletion failed"));
+    (deleteStockSource as jest.Mock).mockRejectedValueOnce(
+      new Error("Deletion failed")
+    );
 
     const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
@@ -140,7 +147,7 @@ describe("StockSourcesDeleteActionMenu", () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole("button", { name: /delete/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -153,7 +160,9 @@ describe("StockSourcesDeleteActionMenu", () => {
   });
 
   it("handles the error state correctly when the delete action fails", async () => {
-    (deleteStockSource as jest.Mock).mockRejectedValueOnce(new Error("Deletion failed"));
+    (deleteStockSource as jest.Mock).mockRejectedValueOnce(
+      new Error("Deletion failed")
+    );
 
     const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
