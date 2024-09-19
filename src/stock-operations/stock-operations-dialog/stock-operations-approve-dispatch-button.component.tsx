@@ -18,7 +18,7 @@ const StockOperationApproveDispatchButton: React.FC<
     const dispose = showModal("stock-operation-dialog", {
       title: "Dispatch",
       operation: operation,
-      requireReason: true,
+      requireReason: false,
       closeModal: () => dispose(),
     });
   }, [operation]);
@@ -28,7 +28,7 @@ const StockOperationApproveDispatchButton: React.FC<
       onClick={launchApproveDispatchModal}
       renderIcon={(props) => <Departure size={16} {...props} />}
     >
-      {t("approve", "Dispatch")}
+      {t("dispatch", "Dispatch")}
     </Button>
   );
 };

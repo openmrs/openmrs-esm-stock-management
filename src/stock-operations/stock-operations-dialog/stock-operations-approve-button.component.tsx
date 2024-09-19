@@ -28,7 +28,7 @@ const StockOperationApprovalButton: React.FC<
       onClick={launchApprovalModal}
       renderIcon={(props) => <CheckmarkOutline size={16} {...props} />}
     >
-      {t("approve", "Approve ")}
+      {t("approve", "Approve")}
     </Button>
   );
 };
