@@ -5,6 +5,27 @@
 .section {
   margin: spacing.$spacing-03;
 }
+.sectionScroll {
+  margin: spacing.$spacing-03;
+  height: 200px;
+  width: 60%;
+  overflow-y: auto;
+  max-height: 200px;
+  border: 1px solid #ddd;
+}
+
+.checkboxGridScroll {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+.checkboxItem {
+  display: flex;
+  flex-direction: row;
+  margin: 4px 0;
+  padding:5px;
+  gap: 8px;
+}
 
 .sectionTitle {
   @include type.type-style('heading-compact-02');
@@ -23,8 +44,8 @@
 
 .checkboxGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust the values as needed */
-  gap: 16px; /* Adjust the gap between checkboxes */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
 }
 
 .hr {
