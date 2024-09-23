@@ -59,10 +59,18 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
 
   const onFileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
-    if (file) {
+    if (file && file.size <= 2 * 1024 * 1024) {
+      // 2MB in bytes
       setSelectedFile(file);
     } else {
-      event.preventDefault();
+      setSelectedFile(null);
+      event.target.value = ""; // Clear the file input
+      showSnackbar({
+        title: t("fileSizeError", "File size error"),
+        kind: "error",
+        isLowContrast: true,
+        subtitle: t("fileSizeErrorMessage", "File size must be 2MB or less"),
+      });
     }
   };
 
@@ -82,7 +90,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({
             labelDescription="Only .csv files at 2mb or less"
             filenameStatus="edit"
             labelTitle=""
-            size="small"
+            size="sm"
             onChange={onFileChanged}
           />
         </ModalBody>
