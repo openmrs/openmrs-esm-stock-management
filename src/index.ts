@@ -1,4 +1,4 @@
-import { defineConfigSchema, getSyncLifecycle } from '@openmrs/esm-framework';
+import { defineConfigSchema, getAsyncLifecycle, getSyncLifecycle } from '@openmrs/esm-framework';
 import { configSchema } from './config-schema';
 import appMenu from './stock-app-menu-item/item.component';
 import bulkImportComponent from './stock-items/add-bulk-stock-item/stock-items-bulk-import.component';
@@ -31,44 +31,48 @@ export const importTranslation = require.context('../translations', false, /.jso
 
 export const stockManagementAdminCardLink = getSyncLifecycle(stockManagementAdminCardLinkComponent, options);
 export const stockNavMenu = getSyncLifecycle(SideMenu, options);
-//t('overview','Overview')
+
+// t("overview","Overview")
 export const stockOverview = getSyncLifecycle(StockHomeLandingPage, options);
 export const stockOverviewLink = getSyncLifecycle(
   createDashboardLink({ title: 'Overview', name: 'stock-management' }),
   options,
 );
-//t('operations','Operations')
+
+// t("operations","Operations")
 export const stockOperations = getSyncLifecycle(StockOperationsComponent, options);
 export const stockOperationsLink = getSyncLifecycle(
   createDashboardLink({ title: 'Operations', name: 'operations' }),
   options,
 );
-//t('items','Items')
+
+// t("items","Items")
 export const stockItems = getSyncLifecycle(StockItems, options);
 export const stockItemsLink = getSyncLifecycle(createDashboardLink({ title: 'Items', name: 'items' }), options);
-//t('useScopes','User role scopes')
+
+// t("useScopes","User role scopes")
 export const stockUserScopes = getSyncLifecycle(StockUserScopes, options);
 export const stockUserScopesLink = getSyncLifecycle(
   createDashboardLink({ title: 'User role scopes', name: 'user-scopes' }),
   options,
 );
 
-//t("sources","Sources")
+// t("sources","Sources")
 export const stockSources = getSyncLifecycle(StockSources, options);
 export const stockSourcesLink = getSyncLifecycle(createDashboardLink({ title: 'Sources', name: 'sources' }), options);
 
-//t("locations","Locations")
+// t("locations","Locations")
 export const stockLocations = getSyncLifecycle(StockLocations, options);
 export const stockLocationsLink = getSyncLifecycle(
   createDashboardLink({ title: 'Locations', name: 'locations' }),
   options,
 );
 
-//t("reports","Reports")
+// t("reports","Reports")
 export const stockReports = getSyncLifecycle(StockReports, options);
 export const stockReportsLink = getSyncLifecycle(createDashboardLink({ title: 'Reports', name: 'reports' }), options);
 
-//t("settings","Settings")
+// t("settings","Settings")
 export const stockSettings = getSyncLifecycle(StockSettings, options);
 export const stockSettingsLink = getSyncLifecycle(
   createDashboardLink({ title: 'Settings', name: 'settings' }),
@@ -79,28 +83,47 @@ export const stockManagement = getSyncLifecycle(stockManagementComponent, option
 
 export const root = getSyncLifecycle(Root, options);
 
-export const stockOperationDialog = getSyncLifecycle(stockOperationDialogComponent, options);
-export const deleteStockModal = getSyncLifecycle(deleteStockModalComponent, {
+export const deleteStockModal = getAsyncLifecycle(() => import('./stock-sources/delete-stock-modal.component'), {
   featureName: 'delete-stock-modal',
   moduleName,
 });
 
-export const deleteUserScopeModal = getSyncLifecycle(deleteUserModalComponent, {
-  featureName: 'delete-stock-user-scope-modal',
-  moduleName,
-});
+export const deleteUserScopeModal = getAsyncLifecycle(
+  () => import('./stock-user-role-scopes/delete-stock-user-scope-modal.component'),
+  {
+    featureName: 'delete-stock-user-scope-modal',
+    moduleName,
+  },
+);
 
-export const deletePackagingUnitModal = getSyncLifecycle(deletePackagingUnitComponent, {
-  featureName: 'delete-packaging-unit-modal',
-  moduleName,
-});
+export const deletePackagingUnitModal = getAsyncLifecycle(
+  () => import('./stock-items/add-stock-item/packaging-units/packaging-units-delete-modal.component'),
+  {
+    featureName: 'delete-packaging-unit-modal',
+    moduleName,
+  },
+);
+
+export const importBulkStockItemsModal = getAsyncLifecycle(
+  () => import('./stock-items/add-bulk-stock-item/stock-items-bulk-import.component'),
+  {
+    featureName: 'import-bulk-stock-items-modal',
+    moduleName,
+  },
+);
+
+export const stockOperationModal = getAsyncLifecycle(
+  () => import('./stock-operations/stock-operations-dialog/stock-operations-dialog.component'),
+  {
+    featureName: 'stock-operation-modal',
+    moduleName,
+  },
+);
 
 export const deletePackagingUnitButton = getSyncLifecycle(deletePackagingUnitModalButtonComponent, {
-  featureName: 'delete-packging-unit-button',
+  featureName: 'delete-packaging-unit-button',
   moduleName,
 });
-
-export const importBulkStockItemsDialog = getSyncLifecycle(bulkImportComponent, options);
 
 export const stockManagementAppMenuItem = getSyncLifecycle(appMenu, options);
 
