@@ -27,7 +27,7 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({ append, fields }) => 
     if (debouncedSearchTerm?.length !== 0) {
       setSearchString(debouncedSearchTerm);
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, setSearchString]);
 
   const handleOnSearchResultClick = (stockItem) => {
     const itemId = `new-item-${getStockOperationUniqueId()}`;
