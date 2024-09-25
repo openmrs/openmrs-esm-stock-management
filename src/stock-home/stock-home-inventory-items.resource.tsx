@@ -8,7 +8,7 @@ export function useStockInventoryItems(v?: ResourceRepresentation) {
     totalCount: true,
   });
 
-  const { items, isLoading, isError } = useStockItems(stockItemFilter);
+  const { items, isLoading, error } = useStockItems(stockItemFilter);
 
   useEffect(() => {
     setStockItemFilter({
@@ -20,6 +20,6 @@ export function useStockInventoryItems(v?: ResourceRepresentation) {
   return {
     items: items?.results ?? [],
     isLoading,
-    isError,
+    error,
   };
 }

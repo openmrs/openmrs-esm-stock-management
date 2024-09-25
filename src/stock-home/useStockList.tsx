@@ -15,7 +15,7 @@ interface StockList {
 const useStockList = () => {
   const url = `${restBaseUrl}/stockmanagement/stockitem?v=default&totalCount=true`;
 
-  const { data, error } = useSWR<{ data: { results: Array<StockList> } }>(url, openmrsFetch);
+  const { data, error, isLoading } = useSWR<{ data: { results: Array<StockList> } }>(url, openmrsFetch);
 
   const stocks = data?.data.results.map((stock) => ({
     uuid: stock.uuid,
@@ -25,7 +25,7 @@ const useStockList = () => {
 
   return {
     stockList: (stocks as Array<any>) ?? [],
-    isLoading: !data && !error,
+    isLoading,
     error,
   };
 };

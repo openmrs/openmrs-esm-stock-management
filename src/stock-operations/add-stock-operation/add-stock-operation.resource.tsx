@@ -4,7 +4,7 @@ import { AddStockOperationProps, InitializeResult } from './types';
 
 export const useInitializeStockOperations = (props: AddStockOperationProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [error, seterror] = useState(false);
   const [result, setResult] = useState<InitializeResult>();
 
   useEffect(() => {
@@ -15,13 +15,13 @@ export const useInitializeStockOperations = (props: AddStockOperationProps) => {
         setIsLoading(false);
       })
       .catch(() => {
-        setIsError(true);
+        seterror(true);
       });
   }, [props.model, props.operation, props.operations]);
 
   return {
     isLoading,
-    isError,
+    error,
     result,
   };
 };

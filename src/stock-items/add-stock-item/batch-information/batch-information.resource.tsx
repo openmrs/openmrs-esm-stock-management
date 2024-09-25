@@ -38,7 +38,7 @@ export function useStockItemBatchInformationHook(filter?: StockItemInventoryFilt
     });
   }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
-  const { items, isLoading, isError } = useStockItemInventory(stockItemFilter);
+  const { items, isLoading, error } = useStockItemInventory(stockItemFilter);
 
   return {
     items: items.results ?? [],
@@ -49,7 +49,7 @@ export function useStockItemBatchInformationHook(filter?: StockItemInventoryFilt
     setPageSize,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setSearchString,
     setStockItemUuid,
     setLocationUuid,

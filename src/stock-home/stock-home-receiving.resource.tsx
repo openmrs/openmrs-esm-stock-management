@@ -1,7 +1,7 @@
 import { StockOperationFilter, useStockOperations } from '../stock-operations/stock-operations.resource';
 
 export function useStockReceiving(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useStockOperations(filter);
+  const { items, isLoading, error } = useStockOperations(filter);
 
   const receivedItems = items?.results?.filter(
     (item) => item?.operationType === 'receipt' && item?.status !== 'COMPLETED',
@@ -9,6 +9,6 @@ export function useStockReceiving(filter: StockOperationFilter) {
   return {
     items: receivedItems,
     isLoading,
-    isError,
+    error,
   };
 }

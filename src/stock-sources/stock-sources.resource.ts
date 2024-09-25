@@ -17,7 +17,7 @@ export function useStockSources(filter: StockSourceFilter) {
   return {
     items: data?.data || <PageableResult<StockSource>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -28,7 +28,7 @@ export function useStockSource(id: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 

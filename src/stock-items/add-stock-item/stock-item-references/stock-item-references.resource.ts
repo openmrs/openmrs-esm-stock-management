@@ -21,13 +21,13 @@ export function useStockItemReferencesHook(v?: ResourceRepresentation) {
     });
   }, [stockItemUuid]);
 
-  const { items, isLoading, isError } = useStockItemReferences(stockItemReferenceFilter);
+  const { items, isLoading, error } = useStockItemReferences(stockItemReferenceFilter);
 
   return {
     items: items.results,
     totalCount: items.totalCount,
     isLoading,
-    isError,
+    error,
     setStockItemUuid,
   };
 }

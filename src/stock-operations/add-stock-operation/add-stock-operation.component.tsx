@@ -37,7 +37,7 @@ import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/Stock
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
   const { isEditing, canEdit, canPrint } = props;
-  const { isLoading, isError, result } = useInitializeStockOperations(props);
+  const { isLoading, error, result } = useInitializeStockOperations(props);
   const [operationLinks, setOperationLinks] = useState<StockOperationLinkDTO[]>();
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
   const { types } = useStockOperationTypes();
@@ -85,7 +85,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   }, [props?.model?.permission]);
 
   if (isLoading) return <AccordionSkeleton />;
-  if (isError) {
+  if (error) {
     closeOverlay();
     showSnackbar({
       kind: 'error',

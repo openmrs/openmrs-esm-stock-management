@@ -77,7 +77,7 @@ export function useStockItems(filter: StockItemFilter) {
   return {
     items: data?.data || <PageableResult<StockItemDTO>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -100,7 +100,7 @@ export function useStockItemTransactions(filter: StockItemTransactionFilter) {
   return {
     items: data?.data || <PageableResult<StockItemTransactionDTO>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -117,7 +117,7 @@ export function useStockItemInventory(filter: StockItemInventoryFilter) {
   return {
     items: data?.data || <StockInventoryResult>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -133,7 +133,7 @@ export function useStockOperationItemsCost(filter: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -149,7 +149,7 @@ export function useStockBatches(filter: StockBatchFilter) {
   return {
     items: data?.data || <PageableResult<StockBatchDTO>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -166,7 +166,7 @@ export function useStockItemPackagingUOMs(filter: StockItemPackagingUOMFilter) {
   return {
     items: data?.data || <PageableResult<StockItemPackagingUOMDTO>>{},
     isLoading,
-    isError: error,
+    error,
     mutate,
   };
 }
@@ -183,7 +183,7 @@ export function useStockItem(id: string) {
   return {
     item: data?.data || <StockItemDTO>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -312,7 +312,7 @@ export function useStockRules(filter: StockRuleFilter) {
   return {
     items: data?.data || <PageableResult<StockRule>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -371,7 +371,7 @@ export function useStockItemReferences(filter: StockItemReferenceFilter) {
   return {
     items: data?.data || <PageableResult<StockItemReferenceDTO>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 

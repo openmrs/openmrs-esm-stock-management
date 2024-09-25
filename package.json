@@ -18,7 +18,8 @@
     "verify": "turbo lint typescript coverage",
     "coverage": "yarn test --coverage",
     "prepare": "husky install",
-    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./i18next-parser.config.js"
+    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./i18next-parser.config.js",
+    "postinstall": "husky"
   },
   "browserslist": [
     "extends browserslist-config-openmrs"
@@ -83,6 +84,7 @@
     "eslint": "^8.44.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-testing-library": "^6.3.0",
+    "husky": "^9.1.6",
     "i18next": "^23.2.8",
     "i18next-parser": "^8.0.0",
     "identity-obj-proxy": "^3.0.0",

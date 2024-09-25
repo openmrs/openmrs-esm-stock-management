@@ -23,7 +23,7 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
     totalCount: true,
   });
 
-  const { items, isLoading, isError } = useStockItems(stockItemFilter);
+  const { items, isLoading, error } = useStockItems(stockItemFilter);
   const pagination = usePagination(items.results, currentPageSize);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
     setPageSize,
     pageSizes,
     isLoading,
-    isError,
+    error,
     isDrug,
     setDrug: (drug: string) => {
       setCurrentPage(1);

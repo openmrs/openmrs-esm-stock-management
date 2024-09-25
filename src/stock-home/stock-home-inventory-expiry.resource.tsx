@@ -22,11 +22,11 @@ export function useStockInventory() {
     });
   }, []);
 
-  const { items, isLoading, isError } = useStockBatches(stockItemFilter);
+  const { items, isLoading, error } = useStockBatches(stockItemFilter);
 
   return {
     items: items.results ?? [],
     isLoading,
-    isError,
+    error,
   };
 }

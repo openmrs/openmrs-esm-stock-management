@@ -10,8 +10,8 @@ const StockSourcesFilter: React.FC<{
 }> = ({ onFilterChange }) => {
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
   // get stock sources
-  const { items, isLoading, isError } = useConcept(stockSourceTypeUUID);
-  if (isLoading || isError) {
+  const { items, isLoading, error } = useConcept(stockSourceTypeUUID);
+  if (isLoading || error) {
     return <DropdownSkeleton />;
   }
   return (

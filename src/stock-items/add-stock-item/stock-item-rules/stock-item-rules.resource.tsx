@@ -3,7 +3,7 @@ import { StockRuleFilter, useStockRules } from '../../stock-items.resource';
 import { usePagination } from '@openmrs/esm-framework';
 
 export function useStockItemRules(filter: StockRuleFilter) {
-  const { items, isLoading, isError } = useStockRules(filter);
+  const { items, isLoading, error } = useStockRules(filter);
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -61,7 +61,7 @@ export function useStockItemRules(filter: StockRuleFilter) {
     goTo,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setPageSize,
     tableHeaders,
   };

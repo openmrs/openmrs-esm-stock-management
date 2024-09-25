@@ -16,7 +16,7 @@ const StockOperationTypesSelector: React.FC<StockOperationTypesSelectorProps> = 
   const {
     types: { results: createOperationTypes },
     isLoading,
-    isError,
+    error,
   } = useStockOperationTypes();
   const { userRoles } = useUserRoles();
 
@@ -31,7 +31,7 @@ const StockOperationTypesSelector: React.FC<StockOperationTypesSelectorProps> = 
     onOperationLoaded?.(filterOperationTypes);
   }, [filterOperationTypes, onOperationLoaded]);
 
-  if (isLoading || isError) return <ButtonSkeleton />;
+  if (isLoading || error) return <ButtonSkeleton />;
 
   return filterOperationTypes && filterOperationTypes.length ? (
     <OverflowMenu

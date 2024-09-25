@@ -48,7 +48,7 @@ export function useStockLocations(filter: LocationFilterCriteria) {
   >(apiUrl, openmrsFetch);
   return {
     locations: data?.data || <PageableResult<OpenMRSLocation>>{},
-    isErrorLocation: error,
+    errorLocation: error,
     isLoadingLocations: isLoading,
   };
 }
@@ -81,7 +81,7 @@ export function useLocationWithIdByUuid(id: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -110,7 +110,7 @@ export function useLocationTags(q: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -126,7 +126,7 @@ export function useRoles(filter: ResourceFilterCriteria) {
   return {
     items: data?.data || <PageableResult<Role>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -142,7 +142,7 @@ export function useStockOperationTypes() {
   return {
     types: data?.data || <PageableResult<StockOperationType>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -163,7 +163,7 @@ export function useUsers(filter: UserFilterCriteria) {
   return {
     items: data?.data || <PageableResult<User>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -179,7 +179,7 @@ export function useUser(id: string) {
   return {
     data: data?.data || <User>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -194,7 +194,7 @@ export function useConcept(conceptUuid: string) {
   return {
     items: data?.data || <Concept>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -210,7 +210,7 @@ export function useParties() {
   return {
     items: data?.data || <PageableResult<Party>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -231,7 +231,7 @@ export function useDrugs(filter: DrugFilterCriteria) {
   return {
     items: data?.data || <PageableResult<Drug>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -247,7 +247,7 @@ export function useConcepts(filter: ConceptFilterCriteria) {
   return {
     items: data?.data || <PageableResult<Concept>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -263,7 +263,7 @@ export function usePatients(filter: ConceptFilterCriteria) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 

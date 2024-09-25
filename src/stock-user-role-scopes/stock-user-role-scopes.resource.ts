@@ -13,7 +13,7 @@ export function useUserRoleScopes(filter: UserRoleScopeFilter) {
   return {
     items: data?.data || <PageableResult<UserRoleScope>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -24,7 +24,7 @@ export function useUserRoleScope(id: string) {
   return {
     items: data.data ? data.data : {},
     isLoading,
-    isError: error,
+    error,
   };
 }
 

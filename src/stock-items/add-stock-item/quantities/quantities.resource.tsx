@@ -36,7 +36,7 @@ export function useStockItemQuantitiesHook(v?: ResourceRepresentation) {
     });
   }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
-  const { items, isLoading, isError } = useStockItemInventory(stockItemFilter);
+  const { items, isLoading, error } = useStockItemInventory(stockItemFilter);
 
   return {
     items: items.results ?? [],
@@ -47,7 +47,7 @@ export function useStockItemQuantitiesHook(v?: ResourceRepresentation) {
     setPageSize,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setSearchString,
     setStockItemUuid,
     setLocationUuid,
