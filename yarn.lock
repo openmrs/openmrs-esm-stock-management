@@ -4165,6 +4165,7 @@ __metadata:
     css-loader: "npm:^6.8.1"
     dayjs: "npm:^1.11.9"
     eslint: "npm:^8.44.0"
+    eslint-plugin-react-hooks: "npm:^4.6.2"
     file-saver: "npm:^2.0.5"
     husky: "npm:^8.0.0"
     i18next: "npm:^23.2.8"
@@ -12508,6 +12509,15 @@ __metadata:
     escodegen: bin/escodegen.js
     esgenerate: bin/esgenerate.js
   checksum: 10/47719a65b2888b4586e3fa93769068b275961c13089e90d5d01a96a6e8e95871b1c3893576814c8fbf08a4a31a496f37e7b2c937cf231270f4d81de012832c7c
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "eslint-plugin-react-hooks@npm:4.6.2"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 10/5a0680941f34e70cf505bcb6082df31a3e445d193ee95a88ff3483041eb944f4cefdaf7e81b0eb1feb4eeceee8c7c6ddb8a2a6e8c4c0388514a42e16ac7b7a69
   languageName: node
   linkType: hard
 

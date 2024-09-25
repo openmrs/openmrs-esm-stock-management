@@ -1,5 +1,7 @@
 /** @type {import('jest').Config} */
-import path from 'path';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
 
 module.exports = {
   clearMocks: true,
