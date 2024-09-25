@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { saveAs } from "file-saver";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { saveAs } from 'file-saver';
 import {
   DataTable,
   OverflowMenu,
@@ -17,15 +17,11 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-} from "@carbon/react";
-import { DocumentDownload } from "@carbon/react/icons";
-import {
-  isDesktop,
-  useLayoutType,
-  usePagination,
-} from "@openmrs/esm-framework";
-import { DataTableRenderProps } from "./types";
-import styles from "./table.scss";
+} from '@carbon/react';
+import { DocumentDownload } from '@carbon/react/icons';
+import { isDesktop, useLayoutType, usePagination } from '@openmrs/esm-framework';
+import { DataTableRenderProps } from './types';
+import styles from './table.scss';
 
 type FilterProps = {
   rowIds: Array<string>;
@@ -44,26 +40,15 @@ interface ListProps {
   hasToolbar?: boolean;
 }
 
-const DataList: React.FC<ListProps> = ({
-  columns,
-  data,
-  children,
-  totalItems,
-  goToPage,
-  hasToolbar = true,
-}) => {
+const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, goToPage, hasToolbar = true }) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const [allRows, setAllRows] = useState([]);
-  const isTablet = useLayoutType() === "tablet";
+  const isTablet = useLayoutType() === 'tablet';
   const [list] = useState(data);
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
-  const {
-    goTo,
-    results: paginatedList,
-    currentPage,
-  } = usePagination(list, currentPageSize);
+  const { goTo, results: paginatedList, currentPage } = usePagination(list, currentPageSize);
 
   useEffect(() => {
     const rows: Array<Record<string, string>> = [];
@@ -74,43 +59,35 @@ const DataList: React.FC<ListProps> = ({
     setAllRows(rows);
   }, [paginatedList, allRows]);
 
-  const handleFilter = ({
-    rowIds,
-    headers,
-    cellsById,
-    inputValue,
-    getCellId,
-  }: FilterProps): Array<string> => {
+  const handleFilter = ({ rowIds, headers, cellsById, inputValue, getCellId }: FilterProps): Array<string> => {
     return rowIds.filter((rowId) =>
       headers.some(({ key }) => {
         const cellId = getCellId(rowId, key);
         const filterableValue = cellsById[cellId].value;
         const filterTerm = inputValue?.toLowerCase();
 
-        if (typeof filterableValue === "boolean") {
+        if (typeof filterableValue === 'boolean') {
           return false;
         }
 
-        return ("" + filterableValue)?.toLowerCase().includes(filterTerm);
-      })
+        return ('' + filterableValue)?.toLowerCase().includes(filterTerm);
+      }),
     );
   };
   const handleExport = (object) => {
     const csvString = convertToCSV(list, columns);
-    if (object.currentTarget.innerText == "Download As CSV") {
-      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8" });
-      saveAs(blob, "data.csv");
-    } else if (object.currentTarget.innerText == "Download As Json") {
-      const jsonBlob = new Blob([csvString], { type: "application/json" });
-      saveAs(jsonBlob, "data.json");
+    if (object.currentTarget.innerText == 'Download As CSV') {
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8' });
+      saveAs(blob, 'data.csv');
+    } else if (object.currentTarget.innerText == 'Download As Json') {
+      const jsonBlob = new Blob([csvString], { type: 'application/json' });
+      saveAs(jsonBlob, 'data.json');
     }
   };
   const convertToCSV = (data, columns) => {
-    const header = columns.map((col) => col.header).join(",");
-    const rows = data.map((row) =>
-      columns.map((col) => JSON.stringify(row[col.key])).join(",")
-    );
-    return [header, ...rows].join("\n");
+    const header = columns.map((col) => col.header).join(',');
+    const rows = data.map((row) => columns.map((col) => JSON.stringify(row[col.key])).join(','));
+    return [header, ...rows].join('\n');
   };
   return (
     <>
@@ -120,7 +97,7 @@ const DataList: React.FC<ListProps> = ({
         headers={columns}
         filterRows={handleFilter}
         overflowMenuOnHover={isDesktop(layout)}
-        size={isTablet ? "lg" : "md"}
+        size={isTablet ? 'lg' : 'md'}
         useZebraStyles
       >
         {({ rows, headers, getHeaderProps, getTableProps, onInputChange }) => (
@@ -129,9 +106,9 @@ const DataList: React.FC<ListProps> = ({
               {hasToolbar && (
                 <TableToolbar
                   style={{
-                    position: "static",
-                    overflow: "visible",
-                    backgroundColor: "color",
+                    position: 'static',
+                    overflow: 'visible',
+                    backgroundColor: 'color',
                   }}
                 >
                   <TableToolbarContent className={styles.toolbarContent}>
@@ -148,24 +125,15 @@ const DataList: React.FC<ListProps> = ({
                           iconDescription="Download As"
                           focusTrap={false}
                         >
-                          <OverflowMenuItem
-                            itemText="Download As CSV"
-                            onClick={handleExport}
-                          />
-                          <OverflowMenuItem
-                            itemText="Download As PDF"
-                            onClick={handleExport}
-                          />
-                          <OverflowMenuItem
-                            itemText="Download As Json"
-                            onClick={handleExport}
-                          />
+                          <OverflowMenuItem itemText="Download As CSV" onClick={handleExport} />
+                          <OverflowMenuItem itemText="Download As PDF" onClick={handleExport} />
+                          <OverflowMenuItem itemText="Download As Json" onClick={handleExport} />
                         </OverflowMenu>
                         <TableToolbarSearch
                           className={styles.itemListSearch}
                           expanded
                           onChange={onInputChange}
-                          placeholder={t("searchThisList", "Search this list")}
+                          placeholder={t('searchThisList', 'Search this list')}
                           size="sm"
                         />
                       </>
@@ -177,9 +145,7 @@ const DataList: React.FC<ListProps> = ({
                 <TableHead>
                   <TableRow>
                     {headers.map((header) => (
-                      <TableHeader {...getHeaderProps({ header })}>
-                        {header.header}
-                      </TableHeader>
+                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
                     ))}
                   </TableRow>
                 </TableHead>
@@ -197,12 +163,8 @@ const DataList: React.FC<ListProps> = ({
                 <div className={styles.tileContainer}>
                   <Tile className={styles.tile}>
                     <div className={styles.tileContent}>
-                      <p className={styles.content}>
-                        {t("noData", "No data to display")}
-                      </p>
-                      <p className={styles.helper}>
-                        {t("checkFilters", "Check the filters above")}
-                      </p>
+                      <p className={styles.content}>{t('noData', 'No data to display')}</p>
+                      <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                     </div>
                   </Tile>
                 </div>

@@ -1,19 +1,15 @@
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useEffect, useState } from "react";
-import {
-  StockItemInventoryFilter,
-  useStockItemInventory,
-} from "../../stock-items.resource";
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useEffect, useState } from 'react';
+import { StockItemInventoryFilter, useStockItemInventory } from '../../stock-items.resource';
 
 export function useStockItemQuantitiesHook(v?: ResourceRepresentation) {
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>({
-      startIndex: 0,
-      v: v || ResourceRepresentation.Default,
-      limit: 10,
-      q: null,
-      totalCount: true,
-    });
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
+    startIndex: 0,
+    v: v || ResourceRepresentation.Default,
+    limit: 10,
+    q: null,
+    totalCount: true,
+  });
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -38,15 +34,7 @@ export function useStockItemQuantitiesHook(v?: ResourceRepresentation) {
       locationUuid: locationUuid,
       stockBatchUuid: stockBatchUuid,
     });
-  }, [
-    searchString,
-    currentPage,
-    currentPageSize,
-    stockItemUuid,
-    partyUuid,
-    locationUuid,
-    stockBatchUuid,
-  ]);
+  }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
   const { items, isLoading, isError } = useStockItemInventory(stockItemFilter);
 

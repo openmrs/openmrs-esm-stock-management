@@ -1,11 +1,11 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { useStockItem } from "../../stock-items.resource";
-import DispensingPackageMeasurement from "../dispensing-package-measurement/dispensing-package-measurement.component";
-import { Control, FormState } from "react-hook-form";
-import { StockItemFormData } from "../../validationSchema";
-import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
-import { NumberInputSkeleton } from "@carbon/react";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useStockItem } from '../../stock-items.resource';
+import DispensingPackageMeasurement from '../dispensing-package-measurement/dispensing-package-measurement.component';
+import { Control, FormState } from 'react-hook-form';
+import { StockItemFormData } from '../../validationSchema';
+import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
+import { NumberInputSkeleton } from '@carbon/react';
 
 interface StockItemUnitsEditProps {
   stockItemUuid: string;
@@ -13,69 +13,38 @@ interface StockItemUnitsEditProps {
   formState: FormState<StockItemFormData>;
 }
 
-const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
-  stockItemUuid,
-  control,
-  formState: { errors },
-}) => {
+const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({ stockItemUuid, control, formState: { errors } }) => {
   const { t } = useTranslation();
 
   const { item: stockItem, isLoading } = useStockItem(stockItemUuid);
 
-  if (
-    !(
-      stockItem &&
-      stockItem.packagingUnits &&
-      stockItem.packagingUnits.length > 0
-    )
-  )
-    return <></>;
+  if (!(stockItem && stockItem.packagingUnits && stockItem.packagingUnits.length > 0)) return <></>;
 
   return (
     <>
       <DispensingPackageMeasurement
-        dispensingUnitPackagingUoMUuid={
-          stockItem?.dispensingUnitPackagingUoMUuid
-        }
+        dispensingUnitPackagingUoMUuid={stockItem?.dispensingUnitPackagingUoMUuid}
         name="dispensingUnitPackagingUoMUuid"
         controllerName="dispensingUnitPackagingUoMUuid"
         control={control}
-        title={
-          t(
-            "dispensingUnitOfMeasurement",
-            "Dispensing packaging unit of measurement"
-          ) + ":"
-        }
-        placeholder={t("chooseAPackagingUoM", "Choose a packaging UoM")}
+        title={t('dispensingUnitOfMeasurement', 'Dispensing packaging unit of measurement') + ':'}
+        placeholder={t('chooseAPackagingUoM', 'Choose a packaging UoM')}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
         invalid={!!errors.dispensingUnitPackagingUoMUuid}
-        invalidText={
-          errors.dispensingUnitPackagingUoMUuid &&
-          errors?.dispensingUnitPackagingUoMUuid?.message
-        }
+        invalidText={errors.dispensingUnitPackagingUoMUuid && errors?.dispensingUnitPackagingUoMUuid?.message}
       />
       <DispensingPackageMeasurement
-        dispensingUnitPackagingUoMUuid={
-          stockItem?.defaultStockOperationsUoMUuid
-        }
+        dispensingUnitPackagingUoMUuid={stockItem?.defaultStockOperationsUoMUuid}
         name="defaultStockOperationsUoMUuid"
         controllerName="defaultStockOperationsUoMUuid"
         control={control}
-        title={
-          t(
-            "defaultStockOperationsPackagingUnit",
-            "Default stock operations packaging unit"
-          ) + ":"
-        }
-        placeholder={t("chooseAPackagingUoM", "Choose a packaging UoM")}
+        title={t('defaultStockOperationsPackagingUnit', 'Default stock operations packaging unit') + ':'}
+        placeholder={t('chooseAPackagingUoM', 'Choose a packaging UoM')}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
         invalid={!!errors.defaultStockOperationsUoMUuid}
-        invalidText={
-          errors.defaultStockOperationsUoMUuid &&
-          errors?.defaultStockOperationsUoMUuid?.message
-        }
+        invalidText={errors.defaultStockOperationsUoMUuid && errors?.defaultStockOperationsUoMUuid?.message}
       />
       {isLoading ? (
         <NumberInputSkeleton />
@@ -85,11 +54,11 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           name="reorderLevel"
           control={control}
           controllerName="reorderLevel"
-          size={"md"}
+          size={'md'}
           allowEmpty={true}
-          label={t("orderLevel", "Reorder level") + ":"}
+          label={t('orderLevel', 'Reorder level') + ':'}
           invalid={!!errors.reorderLevel}
-          value={stockItem.reorderLevel ?? ""}
+          value={stockItem.reorderLevel ?? ''}
           hideSteppers={true}
           invalidText={errors.reorderLevel && errors?.reorderLevel?.message}
         />
@@ -99,16 +68,12 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="reorderLevelUoMUuid"
         controllerName="reorderLevelUoMUuid"
         control={control}
-        title={
-          t("reorderLevelPackagingUnit", "Reorder level packaging unit") + ":"
-        }
-        placeholder={t("notSet", "Not Set")}
+        title={t('reorderLevelPackagingUnit', 'Reorder level packaging unit') + ':'}
+        placeholder={t('notSet', 'Not Set')}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
         invalid={!!errors.reorderLevelUoMUuid}
-        invalidText={
-          errors.reorderLevelUoMUuid && errors?.reorderLevelUoMUuid?.message
-        }
+        invalidText={errors.reorderLevelUoMUuid && errors?.reorderLevelUoMUuid?.message}
       />
       {isLoading ? (
         <NumberInputSkeleton />
@@ -118,10 +83,10 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
           name="purchasePrice"
           control={control}
           controllerName="purchasePrice"
-          size={"md"}
+          size={'md'}
           allowEmpty={true}
-          label={t("purchasePrice", "Purchase Price") + ":"}
-          value={stockItem.purchasePrice ?? ""}
+          label={t('purchasePrice', 'Purchase Price') + ':'}
+          value={stockItem.purchasePrice ?? ''}
           invalid={!!errors.purchasePrice}
           hideSteppers={true}
           invalidText={errors.purchasePrice && errors?.purchasePrice?.message}
@@ -132,16 +97,12 @@ const StockItemUnitsEdit: React.FC<StockItemUnitsEditProps> = ({
         name="purchasePriceUoMUuid"
         controllerName="purchasePriceUoMUuid"
         control={control}
-        title={
-          t("purchasePricePackagingUnit", "Purchase price packaging unit") + ":"
-        }
-        placeholder={t("notSet", "Not Set")}
+        title={t('purchasePricePackagingUnit', 'Purchase price packaging unit') + ':'}
+        placeholder={t('notSet', 'Not Set')}
         isLoading={isLoading}
         packagingUnits={stockItem.packagingUnits}
         invalid={!!errors.purchasePriceUoMUuid}
-        invalidText={
-          errors.purchasePriceUoMUuid && errors?.purchasePriceUoMUuid?.message
-        }
+        invalidText={errors.purchasePriceUoMUuid && errors?.purchasePriceUoMUuid?.message}
       />
     </>
   );

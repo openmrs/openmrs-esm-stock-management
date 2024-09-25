@@ -1,16 +1,14 @@
-import React from "react";
-import { Button } from "@carbon/react";
-import { useTranslation } from "react-i18next";
-import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
-import { launchAddOrEditDialog } from "../stock-item.utils";
+import React from 'react';
+import { Button } from '@carbon/react';
+import { useTranslation } from 'react-i18next';
+import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { launchAddOrEditDialog } from '../stock-item.utils';
 
 interface EditStockItemActionsMenuProps {
   data: StockItemDTO;
 }
 
-const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({
-  data,
-}) => {
+const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({ data }) => {
   const { t } = useTranslation();
 
   return (
@@ -21,7 +19,7 @@ const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({
         data.isDrug = !!data.drugUuid;
         launchAddOrEditDialog(t, data, true);
       }}
-      iconDescription={t("editStockItem", "Edit Stock Item")}
+      iconDescription={t('editStockItem', 'Edit Stock Item')}
     >
       {`${data?.drugName ?? data.conceptName}`}
     </Button>

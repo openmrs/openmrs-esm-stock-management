@@ -1,8 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export interface DataTableRenderProps {
-  onInputChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    defaultValue?: string
-  ) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>, defaultValue?: string) => void;
 }

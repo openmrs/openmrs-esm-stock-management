@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
-import { ComboBox } from "@carbon/react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useStockTagLocations } from "../../../../stock-lookups/stock-lookups.resource";
+import React, { ReactNode } from 'react';
+import { ComboBox } from '@carbon/react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useStockTagLocations } from '../../../../stock-lookups/stock-lookups.resource';
 
 interface TransactionsLocationsFilterProps<T> {
   onLocationIdChange?: (location: string) => void;
@@ -17,9 +17,7 @@ interface TransactionsLocationsFilterProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const TransactionsLocationsFilter = <T,>(
-  props: TransactionsLocationsFilterProps<T>
-) => {
+const TransactionsLocationsFilter = <T,>(props: TransactionsLocationsFilterProps<T>) => {
   const { t } = useTranslation();
   const { stockLocations } = useStockTagLocations();
 
@@ -34,14 +32,14 @@ const TransactionsLocationsFilter = <T,>(
           control={props.control}
           controllerName={props.controllerName}
           id={props.name}
-          size={"md"}
+          size={'md'}
           items={stockLocations ?? []}
           onChange={(data: { selectedItem }) => {
-            props.onLocationIdChange?.(data?.selectedItem?.id ?? "");
-            onChange(data?.selectedItem?.name || "");
+            props.onLocationIdChange?.(data?.selectedItem?.id ?? '');
+            onChange(data?.selectedItem?.name || '');
           }}
           initialSelectedItem={`${stockLocations[0]?.name}`}
-          itemToString={(item) => t("location", `${item?.name}`)}
+          itemToString={(item) => t('location', `${item?.name}`)}
           shouldFilterItem={() => true}
           placeholder={props.placeholder}
           ref={ref}

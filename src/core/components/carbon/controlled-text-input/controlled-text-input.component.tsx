@@ -1,7 +1,7 @@
-import React, { ChangeEvent } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { TextInput } from "@carbon/react";
-import { TextInputProps } from "@carbon/react/lib/components/TextInput/TextInput";
+import React, { ChangeEvent } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { TextInput } from '@carbon/react';
+import { TextInputProps } from '@carbon/react/lib/components/TextInput/TextInput';
 
 interface ControlledTextInputProps<T> extends TextInputProps {
   controllerName: string;

@@ -13,24 +13,24 @@ import {
   ComboBox,
   Select,
   SelectItem,
-} from "@carbon/react";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import styles from "./add-stock-user-role-scope.scss";
+} from '@carbon/react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import styles from './add-stock-user-role-scope.scss';
 import {
   useRoles,
   useStockOperationTypes,
   useStockTagLocations,
   useUser,
   useUsers,
-} from "../../stock-lookups/stock-lookups.resource";
-import { ResourceRepresentation } from "../../core/api/api";
-import { closeOverlay } from "../../core/components/overlay/hook";
-import { useTranslation } from "react-i18next";
-import { UserRoleScope } from "../../core/api/types/identity/UserRoleScope";
-import { createOrUpdateUserRoleScope } from "../stock-user-role-scopes.resource";
-import { restBaseUrl, showSnackbar, useSession } from "@openmrs/esm-framework";
-import { UserRoleScopeOperationType } from "../../core/api/types/identity/UserRoleScopeOperationType";
-import { UserRoleScopeLocation } from "../../core/api/types/identity/UserRoleScopeLocation";
+} from '../../stock-lookups/stock-lookups.resource';
+import { ResourceRepresentation } from '../../core/api/api';
+import { closeOverlay } from '../../core/components/overlay/hook';
+import { useTranslation } from 'react-i18next';
+import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
+import { restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
+import { UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
+import { UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
@@ -41,11 +41,11 @@ import {
   INVENTORY_REPORTING_ROLE_UUID,
   formatForDatePicker,
   today,
-} from "../../constants";
-import { User } from "../../core/api/types/identity/User";
-import { Role } from "../../core/api/types/identity/Role";
-import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
-import { handleMutate } from "../../utils";
+} from '../../constants';
+import { User } from '../../core/api/types/identity/User';
+import { Role } from '../../core/api/types/identity/Role';
+import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { handleMutate } from '../../utils';
 
 const MinDate: Date = today();
 
@@ -54,10 +54,7 @@ interface AddStockUserRoleScopeProps {
   editMode?: boolean;
 }
 
-const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
-  model,
-  editMode,
-}) => {
+const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode }) => {
   const { t } = useTranslation();
   const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
@@ -109,11 +106,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const usersResults = users?.results ?? [];
 
   const filterItems = (query: string) => {
-    if (query && query.trim() !== "") {
+    if (query && query.trim() !== '') {
       const filtered = usersResults
         .filter((item: any) => item.uuid !== loggedInUserUuid)
         .filter((item: any) => {
-          const displayName = item?.person?.display ?? item?.display ?? "";
+          const displayName = item?.person?.display ?? item?.display ?? '';
           return displayName?.toLowerCase().includes(query?.toLowerCase());
         });
       setFilteredItems(filtered);
@@ -128,23 +125,15 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   const handleSearchQueryChange = (query: string) => {
     filterItems(query);
   };
-  const onStockOperationTypeChanged = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const operationType = formModel?.operationTypes?.find(
-      (x) => x.operationTypeUuid === event?.target?.value
-    );
+  const onStockOperationTypeChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const operationType = formModel?.operationTypes?.find((x) => x.operationTypeUuid === event?.target?.value);
     if (operationType) {
       const newOperationTypes = [
-        ...formModel.operationTypes.filter(
-          (x) => x.operationTypeUuid !== operationType?.operationTypeUuid
-        ),
+        ...formModel.operationTypes.filter((x) => x.operationTypeUuid !== operationType?.operationTypeUuid),
       ];
       setFormModel({ ...formModel, operationTypes: newOperationTypes });
     } else {
-      const stockOperationType = stockOperations?.find(
-        (x) => x.uuid === event?.target?.value
-      );
+      const stockOperationType = stockOperations?.find((x) => x.uuid === event?.target?.value);
       const operationType: UserRoleScopeOperationType = {
         operationTypeName: stockOperationType?.name,
         operationTypeUuid: stockOperationType?.uuid,
@@ -156,17 +145,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     }
   };
 
-  const onLocationCheckBoxChanged = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    const selectedLocation = formModel?.locations?.find(
-      (x) => x.locationUuid === event?.target?.value
-    );
+  const onLocationCheckBoxChanged = (event: ChangeEvent<HTMLInputElement>): void => {
+    const selectedLocation = formModel?.locations?.find((x) => x.locationUuid === event?.target?.value);
     if (selectedLocation) {
       const newLocations = [
-        ...(formModel?.locations?.filter(
-          (x) => x.locationUuid !== selectedLocation?.locationUuid
-        ) ?? []),
+        ...(formModel?.locations?.filter((x) => x.locationUuid !== selectedLocation?.locationUuid) ?? []),
       ];
       setFormModel({ ...formModel, locations: newLocations });
     } else {
@@ -181,12 +164,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
     }
   };
 
-  const findCheckedLocation = (
-    location: fhir.Location
-  ): UserRoleScopeLocation | null => {
-    const result = formModel?.locations?.filter(
-      (x) => x.locationUuid === location.id
-    );
+  const findCheckedLocation = (location: fhir.Location): UserRoleScopeLocation | null => {
+    const result = formModel?.locations?.filter((x) => x.locationUuid === location.id);
     return result && result.length > 0 ? result[0] : null;
   };
 
@@ -212,15 +191,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   };
 
   const onRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const rootLocations = stockLocations
-      ?.filter((x) => !x.id)
-      ?.map((x) => x.id);
+    const rootLocations = stockLocations?.filter((x) => !x.id)?.map((x) => x.id);
     const filteredLocations =
       formModel?.locations?.filter(
-        (x) =>
-          !rootLocations ||
-          rootLocations.length === 0 ||
-          !rootLocations.some((p) => p === x.locationUuid)
+        (x) => !rootLocations || rootLocations.length === 0 || !rootLocations.some((p) => p === x.locationUuid),
       ) ?? [];
 
     setFormModel({
@@ -231,11 +205,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
   };
 
   const isOperationChecked = (operationType: StockOperationType) => {
-    return (
-      formModel?.operationTypes?.filter(
-        (x) => x.operationTypeUuid === operationType.uuid
-      )?.length > 0
-    );
+    return formModel?.operationTypes?.filter((x) => x.operationTypeUuid === operationType.uuid)?.length > 0;
   };
 
   const addStockUserRole = async (e) => {
@@ -246,34 +216,27 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
         handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
         showSnackbar({
           isLowContrast: true,
-          title: t("addUserRole", "Add User role"),
-          kind: "success",
-          subtitle: t(
-            "successfullysaved",
-            "You have successfully saved user role scope"
-          ),
+          title: t('addUserRole', 'Add User role'),
+          kind: 'success',
+          subtitle: t('successfullysaved', 'You have successfully saved user role scope'),
         });
         closeOverlay();
       },
       (err) => {
         showSnackbar({
-          title: t("errorSavingUserRoleScope", "Error Saving user role scope"),
-          kind: "error",
+          title: t('errorSavingUserRoleScope', 'Error Saving user role scope'),
+          kind: 'error',
           isLowContrast: true,
           subtitle: err?.message,
         });
 
         closeOverlay();
-      }
+      },
     );
   };
   if (isLoading || loadingRoles || loadingUsers) {
     return (
-      <InlineLoading
-        status="active"
-        iconDescription="Loading"
-        description={t("loadingData", "Loading data...")}
-      />
+      <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
     );
   }
   return (
@@ -285,24 +248,18 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
             <div>
               {users?.results?.length > 0 && (
                 <>
-                  <span className={styles.subTitle}>{t("user", "User")}</span>
+                  <span className={styles.subTitle}>{t('user', 'User')}</span>
                   <ComboBox
                     id="userName"
                     size="md"
-                    labelText={t("user", "User")}
+                    labelText={t('user', 'User')}
                     items={filteredItems.length ? filteredItems : usersResults}
                     onChange={onUserChanged}
                     shouldFilterItem={() => true}
-                    itemToString={(item) =>
-                      `${item?.person?.display ?? item?.display ?? ""}`
-                    }
+                    itemToString={(item) => `${item?.person?.display ?? item?.display ?? ''}`}
                     onInputChange={handleSearchQueryChange}
                     placeholder="Filter..."
-                    initialSelectedItem={
-                      usersResults.find(
-                        (user) => user.uuid === model?.userUuid
-                      ) ?? null
-                    }
+                    initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
                   />
                 </>
               )}
@@ -313,33 +270,18 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               <Select
                 name="role"
                 className="select-field"
-                labelText={t("role", "Role")}
+                labelText={t('role', 'Role')}
                 id="select-role"
-                value={formModel.role ?? "placeholder-item"}
+                value={formModel.role ?? 'placeholder-item'}
                 onChange={onRoleChange}
               >
-                <SelectItem
-                  disabled
-                  hidden
-                  value="placeholder-item"
-                  text={t("chooseARole", "Choose a role")}
-                />
+                <SelectItem disabled hidden value="placeholder-item" text={t('chooseARole', 'Choose a role')} />
 
                 {editMode ? (
-                  <SelectItem
-                    key={formModel?.role}
-                    value={formModel?.role}
-                    text={formModel?.role}
-                  />
+                  <SelectItem key={formModel?.role} value={formModel?.role} text={formModel?.role} />
                 ) : (
                   (user?.roles ?? roles)?.map((role) => {
-                    return (
-                      <SelectItem
-                        key={role.display}
-                        value={role.display}
-                        text={role.display}
-                      />
-                    );
+                    return <SelectItem key={role.display} value={role.display} text={role.display} />;
                   })
                 )}
               </Select>
@@ -350,7 +292,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               <Checkbox
                 onChange={onEnabledChanged}
                 checked={formModel?.enabled}
-                labelText={t("enabled", "Enabled ?")}
+                labelText={t('enabled', 'Enabled ?')}
                 value={model?.enabled}
                 id="chk-userEnabled"
               />
@@ -359,7 +301,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                 name="isPermanent"
                 checked={formModel?.permanent}
                 value={model?.permanent}
-                labelText={t("permanent", "Permanent ?")}
+                labelText={t('permanent', 'Permanent ?')}
                 id="chk-userPermanent"
               />
 
@@ -377,14 +319,14 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                       id="date-picker-input-id-start"
                       name="activeFrom"
                       placeholder={DATE_PICKER_FORMAT}
-                      labelText={t("activeFrom", "Active From")}
+                      labelText={t('activeFrom', 'Active From')}
                       value={formatForDatePicker(formModel?.activeFrom)}
                     />
                     <DatePickerInput
                       id="date-picker-input-id-finish"
                       name="activeTo"
                       placeholder={DATE_PICKER_FORMAT}
-                      labelText={t("activeTo", "Active To")}
+                      labelText={t('activeTo', 'Active To')}
                       value={formatForDatePicker(formModel?.activeTo)}
                     />
                   </DatePicker>
@@ -394,17 +336,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           </section>
           <br />
           <section className={styles.section}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span className={styles.sectionTitle}>
-                {" "}
-                {t("stockOperation", "Stock Operations")}
-              </span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span className={styles.sectionTitle}> {t('stockOperation', 'Stock Operations')}</span>
               <div className={styles.hr} />
               <span className={styles.subTitle}>
-                {t(
-                  "roleDescription",
-                  "The role will be applicable to only selected stock operations."
-                )}
+                {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
               </span>
             </div>
           </section>
@@ -413,7 +349,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
               {stockOperations?.length > 0 &&
                 stockOperations.map((type) => {
                   return (
-                    <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <Checkbox
                         value={type.uuid}
                         checked={isOperationChecked(type)}
@@ -429,17 +365,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
           </section>
           <br />
           <section className={styles.section}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span className={styles.sectionTitle}>
-                {" "}
-                {t("locations", "Locations")}
-              </span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span className={styles.sectionTitle}> {t('locations', 'Locations')}</span>
               <div className={styles.hr} />
               <span className={styles.subTitle}>
-                {t(
-                  "toggleMessage",
-                  "Use the toggle to apply this scope to the locations under the selected location."
-                )}
+                {t('toggleMessage', 'Use the toggle to apply this scope to the locations under the selected location.')}
               </span>
             </div>
           </section>
@@ -450,20 +380,17 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                   const checkedLocation = findCheckedLocation(type);
 
                   const getToggledValue = (locationUuid) => {
-                    const location =
-                      checkedLocation?.locationUuid === locationUuid
-                        ? checkedLocation
-                        : null;
+                    const location = checkedLocation?.locationUuid === locationUuid ? checkedLocation : null;
                     return location?.enableDescendants === true;
                   };
 
                   return (
                     <div
                       style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        margin: "4px",
-                        padding: "5px",
+                        display: 'flex',
+                        flexDirection: 'row',
+                        margin: '4px',
+                        padding: '5px',
                       }}
                     >
                       <Checkbox
@@ -481,7 +408,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
                           value={type.id}
                           hideLabel
                           className={styles.toggle}
-                          size={"sm"}
+                          size={'sm'}
                           onToggleClick={getToggledValue(type.id)}
                           key={`tg-loc-child-key-${type.id}`}
                           id={`tg-loc-child-${type.id}`}
@@ -495,10 +422,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({
         </ModalBody>
         <ModalFooter>
           <Button kind="secondary" onClick={closeOverlay}>
-            {t("cancel", "Cancel")}
+            {t('cancel', 'Cancel')}
           </Button>
           <Button type="submit" onClick={addStockUserRole}>
-            {t("save", "Save")}
+            {t('save', 'Save')}
           </Button>
         </ModalFooter>
       </Form>

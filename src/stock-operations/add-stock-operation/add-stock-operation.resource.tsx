@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { initializeNewStockOperation } from "./add-stock-operation.utils";
-import { AddStockOperationProps, InitializeResult } from "./types";
+import { useEffect, useState } from 'react';
+import { initializeNewStockOperation } from './add-stock-operation.utils';
+import { AddStockOperationProps, InitializeResult } from './types';
 
 export const useInitializeStockOperations = (props: AddStockOperationProps) => {
   const [isLoading, setIsLoading] = useState(true);

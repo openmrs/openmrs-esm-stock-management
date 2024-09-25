@@ -1,22 +1,16 @@
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useEffect, useMemo, useState } from "react";
-import {
-  StockItemInventoryFilter,
-  useStockItemInventory,
-} from "../../stock-items.resource";
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useEffect, useMemo, useState } from 'react';
+import { StockItemInventoryFilter, useStockItemInventory } from '../../stock-items.resource';
 
-export function useStockItemBatchInformationHook(
-  filter?: StockItemInventoryFilter
-) {
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>({
-      startIndex: 0,
-      v: filter?.v || ResourceRepresentation.Default,
-      limit: 10,
-      q: filter?.q,
-      totalCount: true,
-      includeBatchNo: true,
-    });
+export function useStockItemBatchInformationHook(filter?: StockItemInventoryFilter) {
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
+    startIndex: 0,
+    v: filter?.v || ResourceRepresentation.Default,
+    limit: 10,
+    q: filter?.q,
+    totalCount: true,
+    includeBatchNo: true,
+  });
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -24,16 +18,10 @@ export function useStockItemBatchInformationHook(
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [stockItemUuid, setStockItemUuid] = useState<string | null>(
-    filter?.stockItemUuid
-  );
+  const [stockItemUuid, setStockItemUuid] = useState<string | null>(filter?.stockItemUuid);
   const [partyUuid, setPartyUuid] = useState<string | null>(filter?.partyUuid);
-  const [locationUuid, setLocationUuid] = useState<string | null>(
-    filter?.locationUuid
-  );
-  const [stockBatchUuid, setStockBatchUuid] = useState<string | null>(
-    filter?.stockBatchUuid
-  );
+  const [locationUuid, setLocationUuid] = useState<string | null>(filter?.locationUuid);
+  const [stockBatchUuid, setStockBatchUuid] = useState<string | null>(filter?.stockBatchUuid);
 
   useEffect(() => {
     setStockItemFilter({
@@ -48,15 +36,7 @@ export function useStockItemBatchInformationHook(
       stockBatchUuid: stockBatchUuid,
       includeBatchNo: true,
     });
-  }, [
-    searchString,
-    currentPage,
-    currentPageSize,
-    stockItemUuid,
-    partyUuid,
-    locationUuid,
-    stockBatchUuid,
-  ]);
+  }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
   const { items, isLoading, isError } = useStockItemInventory(stockItemFilter);
 

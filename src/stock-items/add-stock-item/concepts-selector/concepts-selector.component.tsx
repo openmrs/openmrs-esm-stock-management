@@ -1,8 +1,8 @@
-import React, { ReactNode, useMemo, useState } from "react";
-import { Concept } from "../../../core/api/types/concept/Concept";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { useConcepts } from "../../../stock-lookups/stock-lookups.resource";
-import { ComboBox, TextInputSkeleton } from "@carbon/react";
+import React, { ReactNode, useMemo, useState } from 'react';
+import { Concept } from '../../../core/api/types/concept/Concept';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { useConcepts } from '../../../stock-lookups/stock-lookups.resource';
+import { ComboBox, TextInputSkeleton } from '@carbon/react';
 
 interface ConceptsSelectorProps<T> {
   conceptUuid?: string;
@@ -23,19 +23,15 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
     items: { results: concepts },
     isLoading,
   } = useConcepts({});
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const handleInputChange = (value) => {
     setInputValue(value);
   };
 
   const filteredConcepts = useMemo(() => {
-    return inputValue.trim() === ""
+    return inputValue.trim() === ''
       ? concepts
-      : concepts.filter((concept) =>
-          concept.display
-            ?.toLowerCase()
-            .includes(inputValue.trim()?.toLowerCase())
-        );
+      : concepts.filter((concept) => concept.display?.toLowerCase().includes(inputValue.trim()?.toLowerCase()));
   }, [inputValue, concepts]);
 
   if (isLoading) return <TextInputSkeleton />;
@@ -51,18 +47,14 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
           control={props.control}
           controllerName={props.controllerName}
           id={props.name}
-          size={"md"}
+          size={'md'}
           items={filteredConcepts}
           onChange={(data: { selectedItem: Concept }) => {
             props.onConceptUuidChange?.(data.selectedItem);
             onChange(data.selectedItem.uuid);
           }}
-          initialSelectedItem={
-            concepts?.find((p) => p.uuid === props.conceptUuid) || {}
-          }
-          itemToString={(item?: Concept) =>
-            item && item?.display ? `${item?.display}` : ""
-          }
+          initialSelectedItem={concepts?.find((p) => p.uuid === props.conceptUuid) || {}}
+          itemToString={(item?: Concept) => (item && item?.display ? `${item?.display}` : '')}
           shouldFilterItem={() => true}
           onInputChange={(event) => handleInputChange(event)}
           inputValue={inputValue}

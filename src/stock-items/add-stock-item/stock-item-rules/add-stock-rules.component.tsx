@@ -10,42 +10,32 @@ import {
   FormGroup,
   Checkbox,
   CheckboxGroup,
-} from "@carbon/react";
-import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
-import styles from "./add-stock-rules.scss";
-import {
-  useRoles,
-  useStockTagLocations,
-} from "../../../stock-lookups/stock-lookups.resource";
-import { createOrUpdateStockRule } from "./stock-rules.resource";
-import { StockRule } from "../../../core/api/types/stockItem/StockRule";
-import { showSnackbar } from "@openmrs/esm-framework";
-import { useTranslation } from "react-i18next";
-import { closeOverlay } from "../../../core/components/overlay/hook";
-import { ResourceRepresentation } from "../../../core/api/api";
-import {
-  StockItemInventoryFilter,
-  useStockItemPackagingUOMs,
-} from "../../stock-items.resource";
+} from '@carbon/react';
+import React, { ChangeEvent, useCallback, useState, useEffect } from 'react';
+import styles from './add-stock-rules.scss';
+import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
+import { createOrUpdateStockRule } from './stock-rules.resource';
+import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { showSnackbar } from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
+import { closeOverlay } from '../../../core/components/overlay/hook';
+import { ResourceRepresentation } from '../../../core/api/api';
+import { StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 
 interface AddStockRuleProps {
   model?: StockRule;
   stockItemUuid?: string;
 }
 
-const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
-  model,
-  stockItemUuid,
-}) => {
+const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUuid }) => {
   const { t } = useTranslation();
 
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>({
-      startIndex: 0,
-      v: ResourceRepresentation.Default,
-      q: null,
-      totalCount: true,
-    });
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
+    startIndex: 0,
+    v: ResourceRepresentation.Default,
+    q: null,
+    totalCount: true,
+  });
 
   useEffect(() => {
     setStockItemFilter({
@@ -78,45 +68,35 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
   }, [model]);
 
   const onNameChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.name = evt.target.value) : "";
+    model ? (model.name = evt.target.value) : '';
     setFormModel({ ...formModel, name: evt.target.value });
   };
 
-  const onQuantityChanged = (
-    evt: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    model ? (model.quantity = Number(evt.target.value)) : "";
+  const onQuantityChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+    model ? (model.quantity = Number(evt.target.value)) : '';
     setFormModel({ ...formModel, quantity: Number(evt.target.value) });
   };
 
-  const onEvaluationFrequencyChanged = (
-    evt: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    model ? (model.evaluationFrequency = Number(evt.target.value)) : "";
+  const onEvaluationFrequencyChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+    model ? (model.evaluationFrequency = Number(evt.target.value)) : '';
     setFormModel({
       ...formModel,
       evaluationFrequency: Number(evt.target.value),
     });
   };
 
-  const onActionFrequencyChanged = (
-    evt: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    model ? (model.actionFrequency = Number(evt.target.value)) : "";
+  const onActionFrequencyChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
+    model ? (model.actionFrequency = Number(evt.target.value)) : '';
     setFormModel({ ...formModel, actionFrequency: Number(evt.target.value) });
   };
 
   const onLocationChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-    const selectedLocation = stockLocations.find(
-      (x) => x.id === evt.target.value
-    );
+    const selectedLocation = stockLocations.find((x) => x.id === evt.target.value);
     setFormModel({ ...formModel, locationUuid: selectedLocation.id });
   };
 
   const onQuantityUnitChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-    const selectedQuantityUnit = dispensingUnits?.results.find(
-      (x) => x.uuid === evt.target.value
-    );
+    const selectedQuantityUnit = dispensingUnits?.results.find((x) => x.uuid === evt.target.value);
     setFormModel({
       ...formModel,
       stockItemPackagingUOMUuid: selectedQuantityUnit.uuid,
@@ -124,17 +104,13 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
   };
 
   const onAlertRoleChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-    const selectedAlertRole = rolesData?.results.find(
-      (x) => x.display === evt.target.value
-    );
+    const selectedAlertRole = rolesData?.results.find((x) => x.display === evt.target.value);
     setFormModel({ ...formModel, alertRole: selectedAlertRole.display });
   };
 
   const onMailRoleChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-    const selectedMailRole = rolesData?.results.find(
-      (x) => x.display === evt.target.value
-    );
-    console.warn("Setting mail role to: ", selectedMailRole);
+    const selectedMailRole = rolesData?.results.find((x) => x.display === evt.target.value);
+    console.warn('Setting mail role to: ', selectedMailRole);
     setFormModel({ ...formModel, mailRole: selectedMailRole.display });
   };
 
@@ -162,27 +138,24 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
           () => {
             showSnackbar({
               isLowContrast: true,
-              title: t("addedRule", "Add Rule"),
-              kind: "success",
-              subtitle: t(
-                "stockRuleAddedSuccessfully",
-                "Stock Rule Added Successfully"
-              ),
+              title: t('addedRule', 'Add Rule'),
+              kind: 'success',
+              subtitle: t('stockRuleAddedSuccessfully', 'Stock Rule Added Successfully'),
             });
             closeOverlay();
           },
           (error) => {
             showSnackbar({
-              title: t("errorAddingRule", "Error adding a rule"),
-              kind: "error",
+              title: t('errorAddingRule', 'Error adding a rule'),
+              kind: 'error',
               isLowContrast: true,
               subtitle: error?.message,
             });
-          }
+          },
         )
         .catch();
     },
-    [formModel, model, t, stockItemUuid]
+    [formModel, model, t, stockItemUuid],
   );
 
   return (
@@ -196,25 +169,14 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
                 <Select
                   name="location"
                   className="select-field"
-                  labelText={t("location", "Location")}
+                  labelText={t('location', 'Location')}
                   id="location"
-                  value={formModel?.locationUuid ? formModel.locationUuid : ""}
+                  value={formModel?.locationUuid ? formModel.locationUuid : ''}
                   onChange={onLocationChange}
                 >
-                  <SelectItem
-                    disabled
-                    hidden
-                    value=""
-                    text={t("chooseLocation", "Choose the location")}
-                  />
+                  <SelectItem disabled hidden value="" text={t('chooseLocation', 'Choose the location')} />
                   {stockLocations?.map((location) => {
-                    return (
-                      <SelectItem
-                        key={location.id}
-                        value={location.id}
-                        text={location.name}
-                      />
-                    );
+                    return <SelectItem key={location.id} value={location.id} text={location.name} />;
                   })}
                 </Select>
               </section>
@@ -223,7 +185,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
                 <TextInput
                   id="name"
                   type="text"
-                  labelText={t("name", "Rule Name")}
+                  labelText={t('name', 'Rule Name')}
                   size="md"
                   onChange={onNameChanged}
                   value={model?.name}
@@ -235,24 +197,12 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
                 <Select
                   name="quantityUnit"
                   className="select-field"
-                  labelText={t("quantityUnit", "Quantity Unit")}
+                  labelText={t('quantityUnit', 'Quantity Unit')}
                   id="quantityUnit"
-                  value={
-                    formModel?.stockItemPackagingUOMUuid
-                      ? formModel.stockItemPackagingUOMUuid
-                      : ""
-                  }
+                  value={formModel?.stockItemPackagingUOMUuid ? formModel.stockItemPackagingUOMUuid : ''}
                   onChange={onQuantityUnitChange}
                 >
-                  <SelectItem
-                    disabled
-                    hidden
-                    value=""
-                    text={t(
-                      "chooseQuantityUnit",
-                      "Choose the Unit of Quantity"
-                    )}
-                  />
+                  <SelectItem disabled hidden value="" text={t('chooseQuantityUnit', 'Choose the Unit of Quantity')} />
                   {dispensingUnits?.results.map((stockItemPackagingUOMUuid) => {
                     return (
                       <SelectItem
@@ -269,7 +219,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
                 <TextInput
                   id="quantity"
                   type="number"
-                  labelText={t("quantity", "Quantity Threshold")}
+                  labelText={t('quantity', 'Quantity Threshold')}
                   size="md"
                   onChange={onQuantityChanged}
                   value={model?.quantity}
@@ -284,25 +234,14 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               <Select
                 name="alertRole"
                 className="select-field"
-                labelText={t("alertRole", "Alert Role")}
+                labelText={t('alertRole', 'Alert Role')}
                 id="alertRole"
-                value={formModel?.alertRole ? formModel.alertRole : ""}
+                value={formModel?.alertRole ? formModel.alertRole : ''}
                 onChange={onAlertRoleChange}
               >
-                <SelectItem
-                  disabled
-                  hidden
-                  value=""
-                  text={t("chooseAlertRole", "Choose an Alert Role")}
-                />
+                <SelectItem disabled hidden value="" text={t('chooseAlertRole', 'Choose an Alert Role')} />
                 {rolesData?.results?.map((alertRole) => {
-                  return (
-                    <SelectItem
-                      key={alertRole.display}
-                      value={alertRole.display}
-                      text={alertRole.display}
-                    />
-                  );
+                  return <SelectItem key={alertRole.display} value={alertRole.display} text={alertRole.display} />;
                 })}
               </Select>
             </section>
@@ -310,25 +249,14 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               <Select
                 name="mailRole"
                 className="select-field"
-                labelText={t("mailRole", "Mail Role")}
+                labelText={t('mailRole', 'Mail Role')}
                 id="mailRole"
-                value={formModel?.mailRole ? formModel.mailRole : ""}
+                value={formModel?.mailRole ? formModel.mailRole : ''}
                 onChange={onMailRoleChange}
               >
-                <SelectItem
-                  disabled
-                  hidden
-                  value=""
-                  text={t("chooseMailRole", "Choose a Mail Role")}
-                />
+                <SelectItem disabled hidden value="" text={t('chooseMailRole', 'Choose a Mail Role')} />
                 {rolesData?.results?.map((mailRole) => {
-                  return (
-                    <SelectItem
-                      key={mailRole.display}
-                      value={mailRole.display}
-                      text={mailRole.display}
-                    />
-                  );
+                  return <SelectItem key={mailRole.display} value={mailRole.display} text={mailRole.display} />;
                 })}
               </Select>
             </section>
@@ -336,10 +264,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               <TextInput
                 id="evaluationFrequency"
                 type="number"
-                labelText={t(
-                  "evaluationFrequency",
-                  "Frequency Check (Minutes)"
-                )}
+                labelText={t('evaluationFrequency', 'Frequency Check (Minutes)')}
                 size="md"
                 onChange={onEvaluationFrequencyChanged}
                 value={model?.evaluationFrequency}
@@ -348,10 +273,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
               <TextInput
                 id="actionFrequency"
                 type="number"
-                labelText={t(
-                  "actionFrequency",
-                  "Notification Frequency (Minutes)"
-                )}
+                labelText={t('actionFrequency', 'Notification Frequency (Minutes)')}
                 size="md"
                 onChange={onActionFrequencyChanged}
                 value={model?.actionFrequency}
@@ -362,9 +284,9 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
 
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              justifyContent: "center",
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              justifyContent: 'center',
             }}
           >
             <FormGroup className="clear-margin-bottom">
@@ -393,18 +315,16 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({
           </div>
 
           <div>
-            This stock rule will be evaluated by checking if the stock
-            quantities have lowered to the threshold or below and a notification
-            will be sent to the personnel with the specified role in the given
-            location. The notification will only be sent once per specified
-            notification frequency.
+            This stock rule will be evaluated by checking if the stock quantities have lowered to the threshold or below
+            and a notification will be sent to the personnel with the specified role in the given location. The
+            notification will only be sent once per specified notification frequency.
           </div>
         </ModalBody>
         <ModalFooter>
           <Button kind="secondary" onClick={closeOverlay}>
-            {t("cancel", "Cancel")}
+            {t('cancel', 'Cancel')}
           </Button>
-          <Button type="submit">{t("save", "Save")}</Button>
+          <Button type="submit">{t('save', 'Save')}</Button>
         </ModalFooter>
       </Form>
     </div>

@@ -1,9 +1,9 @@
-import { PagingCriteria } from "./types/PageableResult";
+import { PagingCriteria } from './types/PageableResult';
 
 export enum ResourceRepresentation {
-  Default = "default",
-  Full = "full",
-  REF = "ref",
+  Default = 'default',
+  Full = 'full',
+  REF = 'ref',
 }
 
 export interface ResourceFilterCriteria extends PagingCriteria {
@@ -15,20 +15,18 @@ export interface ResourceFilterCriteria extends PagingCriteria {
 
 export function toQueryParams<T extends ResourceFilterCriteria>(
   filterCriteria?: T | null,
-  skipEmptyString = true
+  skipEmptyString = true,
 ): string {
-  if (!filterCriteria) return "";
+  if (!filterCriteria) return '';
   const queryParams: string = Object.keys(filterCriteria)
     ?.map((key) => {
       const value = filterCriteria[key];
-      return (skipEmptyString &&
-        (value === false || value === true ? true : value)) ||
-        (!skipEmptyString &&
-          (value === "" || (value === false || value === true ? true : value)))
+      return (skipEmptyString && (value === false || value === true ? true : value)) ||
+        (!skipEmptyString && (value === '' || (value === false || value === true ? true : value)))
         ? `${encodeURIComponent(key)}=${encodeURIComponent(value.toString())}`
         : null;
     })
     .filter((o) => o != null)
-    .join("&");
-  return queryParams.length > 0 ? "?" + queryParams : "";
+    .join('&');
+  return queryParams.length > 0 ? '?' + queryParams : '';
 }

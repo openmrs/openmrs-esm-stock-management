@@ -1,4 +1,4 @@
-import { RecordPermission } from "../RecordPermission";
+import { RecordPermission } from '../RecordPermission';
 
 export interface StockRule {
   id?: string;

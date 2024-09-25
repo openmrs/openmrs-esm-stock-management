@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from 'react';
 import {
   TabPanel,
   DataTable,
@@ -17,41 +17,32 @@ import {
   TableToolbarSearch,
   TableToolbarMenu,
   TableToolbarAction,
-} from "@carbon/react";
-import { isDesktop, restBaseUrl } from "@openmrs/esm-framework";
-import useStockSourcesPage from "./stock-sources-items-table.resource";
-import { ResourceRepresentation } from "../core/api/api";
-import AddStockSourceActionButton from "./add-stock-source-button.component";
-import StockSourcesFilter from "./stock-sources-filter/stock-sources-filter.component";
-import styles from "./stock-sources.scss";
-import { useTranslation } from "react-i18next";
-import StockSourcesDeleteActionMenu from "./stock-sources-delete/stock-sources-delete.component";
-import EditStockSourceActionsMenu from "./edit-stock-source/edit-stock-source.component";
-import { handleMutate } from "../utils";
+} from '@carbon/react';
+import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
+import useStockSourcesPage from './stock-sources-items-table.resource';
+import { ResourceRepresentation } from '../core/api/api';
+import AddStockSourceActionButton from './add-stock-source-button.component';
+import StockSourcesFilter from './stock-sources-filter/stock-sources-filter.component';
+import styles from './stock-sources.scss';
+import { useTranslation } from 'react-i18next';
+import StockSourcesDeleteActionMenu from './stock-sources-delete/stock-sources-delete.component';
+import EditStockSourceActionsMenu from './edit-stock-source/edit-stock-source.component';
+import { handleMutate } from '../utils';
 
 const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
-  const [selectedSourceType, setSelectedSourceType] = React.useState("");
+  const [selectedSourceType, setSelectedSourceType] = React.useState('');
 
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
   };
 
   // get sourcess
-  const {
-    items,
-    totalItems,
-    tableHeaders,
-    currentPage,
-    pageSizes,
-    goTo,
-    currentPageSize,
-    setPageSize,
-    isLoading,
-  } = useStockSourcesPage({
-    v: ResourceRepresentation.Default,
-    totalCount: true,
-  });
+  const { items, totalItems, tableHeaders, currentPage, pageSizes, goTo, currentPageSize, setPageSize, isLoading } =
+    useStockSourcesPage({
+      v: ResourceRepresentation.Default,
+      totalCount: true,
+    });
 
   const tableRows = useMemo(() => {
     return items?.map((entry, index) => {
@@ -89,12 +80,7 @@ const StockSourcesItems: React.FC = () => {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>
-        {t(
-          "panelDescription",
-          "List of partners who provide stock to the facility."
-        )}
-      </TabPanel>
+      <TabPanel>{t('panelDescription', 'List of partners who provide stock to the facility.')}</TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
@@ -104,36 +90,27 @@ const StockSourcesItems: React.FC = () => {
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
-        render={({
-          rows,
-          headers,
-          getHeaderProps,
-          getTableProps,
-          getRowProps,
-          onInputChange,
-        }) => (
+        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
-                position: "static",
-                overflow: "visible",
-                backgroundColor: "color",
+                position: 'static',
+                overflow: 'visible',
+                backgroundColor: 'color',
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <StockSourcesFilter onFilterChange={handleFilterChange} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={handleRefresh}>
-                    Refresh
-                  </TableToolbarAction>
+                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
 
                 <AddStockSourceActionButton />
@@ -144,22 +121,18 @@ const StockSourcesItems: React.FC = () => {
                 <TableRow>
                   {headers.map(
                     (header) =>
-                      header.key !== "details" && (
+                      header.key !== 'details' && (
                         <TableHeader
                           {...getHeaderProps({
                             header,
                             isSortable: header.isSortable,
                           })}
-                          className={
-                            isDesktop
-                              ? styles.desktopHeader
-                              : styles.tabletHeader
-                          }
+                          className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
                         >
                           {header.header?.content ?? header.header}
                         </TableHeader>
-                      )
+                      ),
                   )}
                   <TableHeader></TableHeader>
                 </TableRow>
@@ -168,17 +141,10 @@ const StockSourcesItems: React.FC = () => {
                 {rows.map((row) => {
                   return (
                     <React.Fragment key={row.id}>
-                      <TableRow
-                        className={
-                          isDesktop ? styles.desktopRow : styles.tabletRow
-                        }
-                        {...getRowProps({ row })}
-                      >
+                      <TableRow className={isDesktop ? styles.desktopRow : styles.tabletRow} {...getRowProps({ row })}>
                         {row.cells.map(
                           (cell) =>
-                            cell?.info?.header !== "details" && (
-                              <TableCell key={cell.id}>{cell.value}</TableCell>
-                            )
+                            cell?.info?.header !== 'details' && <TableCell key={cell.id}>{cell.value}</TableCell>,
                         )}
                       </TableRow>
                     </React.Fragment>
@@ -190,12 +156,8 @@ const StockSourcesItems: React.FC = () => {
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>
-                      {t("noSourcesToDisplay", "No Stock sources to display")}
-                    </p>
-                    <p className={styles.helper}>
-                      {t("checkFilters", "Check the filters above")}
-                    </p>
+                    <p className={styles.content}>{t('noSourcesToDisplay', 'No Stock sources to display')}</p>
+                    <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>
               </div>

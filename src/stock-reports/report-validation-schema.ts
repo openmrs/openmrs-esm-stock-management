@@ -1,14 +1,14 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const reportSchema = z
   .object({
     startDate: z.coerce.date().optional(),
     endDate: z.coerce.date().optional(),
-    location: z.string({ required_error: "Location Required" }).min(1, {
-      message: "Location Required",
+    location: z.string({ required_error: 'Location Required' }).min(1, {
+      message: 'Location Required',
     }),
-    reportName: z.string({ required_error: "Report Name Required" }).min(1, {
-      message: "Report Name Required",
+    reportName: z.string({ required_error: 'Report Name Required' }).min(1, {
+      message: 'Report Name Required',
     }),
     stockReportItemCategory: z.string().optional(),
     mostLeastMoving: z.string().optional(),
@@ -34,41 +34,35 @@ export const reportSchema = z
     date: z.coerce.date().optional(),
   })
   .superRefine((data, ctx) => {
-    if (
-      data.reportName !== "Stock Status Report" &&
-      data.reportName !== "Stock-Out Report"
-    ) {
+    if (data.reportName !== 'Stock Status Report' && data.reportName !== 'Stock-Out Report') {
       if (!data.startDate) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Start Date is required ",
-          path: ["startDate"],
+          message: 'Start Date is required ',
+          path: ['startDate'],
         });
       }
       if (!data.endDate) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "End Date is required",
-          path: ["endDate"],
+          message: 'End Date is required',
+          path: ['endDate'],
         });
       }
     }
-    if (
-      data.reportName === "Stock Status Report" ||
-      data.reportName === "Stock-Out Report"
-    ) {
+    if (data.reportName === 'Stock Status Report' || data.reportName === 'Stock-Out Report') {
       if (!data.date) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Date is required ",
-          path: ["date"],
+          message: 'Date is required ',
+          path: ['date'],
         });
       }
       if (!data.inventoryGroupBy) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Inventory by is required ",
-          path: ["inventoryGroupBy"],
+          message: 'Inventory by is required ',
+          path: ['inventoryGroupBy'],
         });
       }
     }

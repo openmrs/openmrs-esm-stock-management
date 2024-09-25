@@ -1,9 +1,9 @@
-import useSWR from "swr";
-import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
-import { BatchJob, BatchJobType } from "../core/api/types/BatchJob";
-import { PageableResult } from "../core/api/types/PageableResult";
-import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
-import { ReportType } from "../stock-reports/ReportType";
+import useSWR from 'swr';
+import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { BatchJob, BatchJobType } from '../core/api/types/BatchJob';
+import { PageableResult } from '../core/api/types/PageableResult';
+import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
+import { ReportType } from '../stock-reports/ReportType';
 
 export interface BatchJobFilter extends ResourceFilterCriteria {
   batchJobType?: BatchJobType | null | undefined;
@@ -17,13 +17,8 @@ export interface BatchJobFilter extends ResourceFilterCriteria {
 
 // getBatchJobs
 export function useBatchJobs(filter: BatchJobFilter) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/batchjob${toQueryParams(
-    filter
-  )}`;
-  const { data, error, isLoading } = useSWR<
-    { data: PageableResult<BatchJob> },
-    Error
-  >(apiUrl, openmrsFetch);
+  const apiUrl = `${restBaseUrl}/stockmanagement/batchjob${toQueryParams(filter)}`;
+  const { data, error, isLoading } = useSWR<{ data: PageableResult<BatchJob> }, Error>(apiUrl, openmrsFetch);
 
   return {
     items: data.data ? data.data : [],
@@ -36,18 +31,18 @@ export function useBatchJobs(filter: BatchJobFilter) {
 export function cancelBatchJobs(ids: string[]) {
   let otherIds = ids.reduce((p, c, i) => {
     if (i === 0) return p;
-    p += (p.length > 0 ? "," : "") + encodeURIComponent(c);
+    p += (p.length > 0 ? ',' : '') + encodeURIComponent(c);
     return p;
-  }, "");
+  }, '');
   if (otherIds.length > 0) {
-    otherIds = "?ids=" + otherIds;
+    otherIds = '?ids=' + otherIds;
   }
   const apiUrl = `${restBaseUrl}/stockmanagement/batchjob/${ids[0]}${otherIds}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     signal: abortController.signal,
   });
@@ -58,9 +53,9 @@ export function createBatchJob(item: BatchJob) {
   const apiUrl = `${restBaseUrl}/stockmanagement/batchjob`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     signal: abortController.signal,
     body: item,
@@ -69,10 +64,7 @@ export function createBatchJob(item: BatchJob) {
 // getReportTypes
 export function useReportTypes() {
   const apiUrl = `${restBaseUrl}/stockmanagement/report?v=default`;
-  const { data, error, isLoading } = useSWR<
-    { data: PageableResult<ReportType> },
-    Error
-  >(apiUrl, openmrsFetch);
+  const { data, error, isLoading } = useSWR<{ data: PageableResult<ReportType> }, Error>(apiUrl, openmrsFetch);
   return {
     items: data.data ? data.data : [],
     isLoading,

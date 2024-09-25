@@ -1,18 +1,14 @@
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useEffect, useState } from "react";
-import {
-  StockItemInventoryFilter,
-  useStockItemPackagingUOMs,
-} from "../../stock-items.resource";
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useEffect, useState } from 'react';
+import { StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 
 export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>({
-      startIndex: 0,
-      v: v || ResourceRepresentation.Default,
-      q: null,
-      totalCount: true,
-    });
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
+    startIndex: 0,
+    v: v || ResourceRepresentation.Default,
+    q: null,
+    totalCount: true,
+  });
 
   const [stockItemUuid, setStockItemUuid] = useState<string | null>();
 
@@ -25,8 +21,7 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
     });
   }, [stockItemUuid]);
 
-  const { items, isLoading, isError, mutate } =
-    useStockItemPackagingUOMs(stockItemFilter);
+  const { items, isLoading, isError, mutate } = useStockItemPackagingUOMs(stockItemFilter);
 
   return {
     items: items.results,

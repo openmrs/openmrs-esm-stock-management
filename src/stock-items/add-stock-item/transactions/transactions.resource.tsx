@@ -1,19 +1,15 @@
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useEffect, useMemo, useState } from "react";
-import {
-  StockItemInventoryFilter,
-  useStockItemTransactions,
-} from "../../stock-items.resource";
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useEffect, useMemo, useState } from 'react';
+import { StockItemInventoryFilter, useStockItemTransactions } from '../../stock-items.resource';
 
 export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>({
-      startIndex: 0,
-      v: filter?.v || ResourceRepresentation.Default,
-      limit: 10,
-      q: filter?.q,
-      totalCount: true,
-    });
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
+    startIndex: 0,
+    v: filter?.v || ResourceRepresentation.Default,
+    limit: 10,
+    q: filter?.q,
+    totalCount: true,
+  });
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -21,16 +17,10 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [stockItemUuid, setStockItemUuid] = useState<string | null>(
-    filter?.stockItemUuid
-  );
+  const [stockItemUuid, setStockItemUuid] = useState<string | null>(filter?.stockItemUuid);
   const [partyUuid, setPartyUuid] = useState<string | null>(filter?.partyUuid);
-  const [locationUuid, setLocationUuid] = useState<string | null>(
-    filter?.locationUuid
-  );
-  const [stockBatchUuid, setStockBatchUuid] = useState<string | null>(
-    filter?.stockBatchUuid
-  );
+  const [locationUuid, setLocationUuid] = useState<string | null>(filter?.locationUuid);
+  const [stockBatchUuid, setStockBatchUuid] = useState<string | null>(filter?.stockBatchUuid);
 
   useEffect(() => {
     setStockItemFilter({
@@ -44,55 +34,46 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
       locationUuid: locationUuid,
       stockBatchUuid: stockBatchUuid,
     });
-  }, [
-    searchString,
-    currentPage,
-    currentPageSize,
-    stockItemUuid,
-    partyUuid,
-    locationUuid,
-    stockBatchUuid,
-  ]);
+  }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
-  const { items, isLoading, isError } =
-    useStockItemTransactions(stockItemFilter);
+  const { items, isLoading, isError } = useStockItemTransactions(stockItemFilter);
 
   const tableHeaders = useMemo(
     () => [
       {
-        key: "date",
-        header: "Date",
+        key: 'date',
+        header: 'Date',
       },
       {
-        key: "location",
-        header: "Location",
+        key: 'location',
+        header: 'Location',
       },
       {
-        key: "transaction",
-        header: "Transaction",
+        key: 'transaction',
+        header: 'Transaction',
       },
       {
-        key: "in",
-        header: "IN",
+        key: 'in',
+        header: 'IN',
       },
       {
-        key: "out",
-        header: "OUT",
+        key: 'out',
+        header: 'OUT',
       },
       {
-        key: "batch",
-        header: "Batch",
+        key: 'batch',
+        header: 'Batch',
       },
       {
-        key: "reference",
-        header: "Reference",
+        key: 'reference',
+        header: 'Reference',
       },
       {
-        key: "status",
-        header: "Status",
+        key: 'status',
+        header: 'Status',
       },
     ],
-    []
+    [],
   );
 
   return {

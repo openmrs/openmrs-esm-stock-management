@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { SaveStockOperation } from "../../stock-items/types";
-import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
-import { InitializeResult } from "./types";
+import React, { useEffect, useState } from 'react';
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { SaveStockOperation } from '../../stock-items/types';
+import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { InitializeResult } from './types';
 import {
   Button,
   DataTable,
@@ -13,25 +13,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@carbon/react";
-import { isDesktop } from "@openmrs/esm-framework";
-import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
-import { getStockOperationUniqueId } from "../stock-operation.utils";
-import { useTranslation } from "react-i18next";
-import {
-  FieldArrayWithId,
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useValidationSchema } from "./validationSchema";
-import StockItemsAdditionRow from "./stock-items-addition-row.component";
-import { ArrowRight } from "@carbon/react/icons";
-import { errorAlert } from "../../core/utils/alert";
+} from '@carbon/react';
+import { isDesktop } from '@openmrs/esm-framework';
+import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
+import { getStockOperationUniqueId } from '../stock-operation.utils';
+import { useTranslation } from 'react-i18next';
+import { FieldArrayWithId, FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useValidationSchema } from './validationSchema';
+import StockItemsAdditionRow from './stock-items-addition-row.component';
+import { ArrowRight } from '@carbon/react/icons';
+import { errorAlert } from '../../core/utils/alert';
 
-import styles from "./stock-items-addition.component.scss";
-import StockItemSearch from "./stock-item-search/stock-item-search.component";
+import styles from './stock-items-addition.component.scss';
+import StockItemSearch from './stock-item-search/stock-item-search.component';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -63,10 +58,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   const validationSchema = useValidationSchema(operationType);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
     if (item.stockItems.length == 0) {
-      errorAlert(
-        "No stock items",
-        "You haven't added any stock items, tap the add button to add some."
-      );
+      errorAlert('No stock items', "You haven't added any stock items, tap the add button to add some.");
       return;
     }
 
@@ -77,11 +69,9 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   const formMethods = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      stockItems: model?.stockOperationItems ?? [
-        { uuid: `new-item-1`, id: `new-item-1` },
-      ],
+      stockItems: model?.stockOperationItems ?? [{ uuid: `new-item-1`, id: `new-item-1` }],
     },
-    mode: "onSubmit",
+    mode: 'onSubmit',
   });
 
   const {
@@ -94,21 +84,13 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   const [isSaving] = useState(false);
 
   const formFieldMethods = useFieldArray({
-    name: "stockItems",
+    name: 'stockItems',
     control,
   });
   const { fields, append, remove } = formFieldMethods;
   const [selectedItems, setSelectedItems] = useState<
-    | FieldArrayWithId<
-        { stockItems: StockOperationItemDTO[] },
-        "stockItems",
-        "id"
-      >
-    | (() => FieldArrayWithId<
-        { stockItems: StockOperationItemDTO[] },
-        "stockItems",
-        "id"
-      >)
+    | FieldArrayWithId<{ stockItems: StockOperationItemDTO[] }, 'stockItems', 'id'>
+    | (() => FieldArrayWithId<{ stockItems: StockOperationItemDTO[] }, 'stockItems', 'id'>)
   >();
 
   useEffect(() => {
@@ -121,59 +103,57 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
 
   const headers = [
     {
-      key: "item",
-      header: t("item", "Item"),
-      styles: { width: "40% !important" },
+      key: 'item',
+      header: t('item', 'Item'),
+      styles: { width: '40% !important' },
     },
     ...(showQuantityRequested
       ? [
           {
-            key: "quantityrequested",
-            header: t("quantityRequested", "Quantity Requested"),
+            key: 'quantityrequested',
+            header: t('quantityRequested', 'Quantity Requested'),
           },
         ]
       : []),
     ...(requiresBatchUuid || requiresActualBatchInformation
       ? [
           {
-            key: "batch",
-            header: t("batchNo", "Batch No"),
-            styles: { width: "15% !important" },
+            key: 'batch',
+            header: t('batchNo', 'Batch No'),
+            styles: { width: '15% !important' },
           },
         ]
       : []),
     ...(requiresActualBatchInformation
       ? [
           {
-            key: "expiry",
-            header: t("expiry", "Expiry"),
+            key: 'expiry',
+            header: t('expiry', 'Expiry'),
           },
         ]
       : []),
     ...(requiresBatchUuid
       ? [
           {
-            key: "expiry",
-            header: t("expiry", "Expiry"),
+            key: 'expiry',
+            header: t('expiry', 'Expiry'),
           },
         ]
       : []),
 
     {
-      key: "quantity",
-      header: showQuantityRequested
-        ? t("qtyIssued", "Qty Issued")
-        : t("qty", "Qty"),
+      key: 'quantity',
+      header: showQuantityRequested ? t('qtyIssued', 'Qty Issued') : t('qty', 'Qty'),
     },
     {
-      key: "quantityuom",
-      header: t("quantityUom", "Qty UoM"),
+      key: 'quantityuom',
+      header: t('quantityUom', 'Qty UoM'),
     },
     ...(canCaptureQuantityPrice
       ? [
           {
-            key: "purchaseprice",
-            header: t("purchasePrice", "Purchase Price"),
+            key: 'purchaseprice',
+            header: t('purchasePrice', 'Purchase Price'),
           },
         ]
       : []),
@@ -185,21 +165,17 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       uuid: itemId,
       id: itemId,
       stockItemUuid: null,
-      stockItemName: "",
+      stockItemName: '',
     });
   };
 
   return (
     <FormProvider {...formMethods}>
-      <div style={{ margin: "10px" }}>
+      <div style={{ margin: '10px' }}>
         <div className={styles.tableContainer}>
           <StockItemSearch {...formFieldMethods} />
           <DataTable
-            rows={
-              model?.stockOperationItems ?? [
-                { uuid: `new-item-1`, id: `new-item-1` },
-              ]
-            }
+            rows={model?.stockOperationItems ?? [{ uuid: `new-item-1`, id: `new-item-1` }]}
             headers={headers}
             isSortable={false}
             useZebraStyles={true}
@@ -215,11 +191,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                             header,
                             isSortable: false,
                           })}
-                          className={
-                            isDesktop
-                              ? styles.desktopHeader
-                              : styles.tabletHeader
-                          }
+                          className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           style={header?.styles}
                           key={`${header.key}`}
                         >
@@ -237,7 +209,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                               kind="primary"
                               renderIcon={ArrowRight}
                             >
-                              {isSaving ? <InlineLoading /> : t("next", "Next")}
+                              {isSaving ? <InlineLoading /> : t('next', 'Next')}
                             </Button>
                           </div>
                         </TableHeader>
@@ -246,11 +218,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                   </TableHead>
                   <TableBody>
                     <StockItemsAdditionRow
-                      rows={
-                        model?.stockOperationItems ?? [
-                          { uuid: `new-item-1`, id: `new-item-1` },
-                        ]
-                      }
+                      rows={model?.stockOperationItems ?? [{ uuid: `new-item-1`, id: `new-item-1` }]}
                       batchBalance={batchBalance}
                       batchNos={batchNos}
                       control={control}
@@ -260,15 +228,13 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                       append={append}
                       canEdit={canEdit}
                       showQuantityRequested={showQuantityRequested}
-                      requiresActualBatchInformation={
-                        requiresActualBatchInformation
-                      }
+                      requiresActualBatchInformation={requiresActualBatchInformation}
                       requiresBatchUuid={requiresBatchUuid}
                       canUpdateBatchInformation={canUpdateBatchInformation}
                       canCapturePurchasePrice={canCaptureQuantityPrice}
                       itemUoM={itemUoM}
                       fields={fields}
-                    />{" "}
+                    />{' '}
                   </TableBody>
                 </Table>
               </TableContainer>

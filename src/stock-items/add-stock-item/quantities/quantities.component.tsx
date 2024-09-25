@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { ResourceRepresentation } from "../../../core/api/api";
-import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
-import { DataTableSkeleton, Tile } from "@carbon/react";
-import DataList from "../../../core/components/table/table.component";
-import styles from "../../stock-items-table.scss";
-import { useStockItemQuantitiesHook } from "./quantities.resource";
+import React, { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ResourceRepresentation } from '../../../core/api/api';
+import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
+import { DataTableSkeleton, Tile } from '@carbon/react';
+import DataList from '../../../core/components/table/table.component';
+import styles from '../../stock-items-table.scss';
+import { useStockItemQuantitiesHook } from './quantities.resource';
 
 interface StockQuantitiesProps {
   onSubmit?: () => void;
@@ -13,8 +13,9 @@ interface StockQuantitiesProps {
 }
 
 const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
-  const { isLoading, items, totalCount, setCurrentPage, setStockItemUuid } =
-    useStockItemQuantitiesHook(ResourceRepresentation.Default);
+  const { isLoading, items, totalCount, setCurrentPage, setStockItemUuid } = useStockItemQuantitiesHook(
+    ResourceRepresentation.Default,
+  );
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -24,19 +25,19 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
   const tableHeaders = useMemo(
     () => [
       {
-        key: "location",
-        header: t("location", "Location"),
+        key: 'location',
+        header: t('location', 'Location'),
       },
       {
-        key: "quantity",
-        header: t("quantity", "Quantity"),
+        key: 'quantity',
+        header: t('quantity', 'Quantity'),
       },
       {
-        key: "packaging",
-        header: t("packagingUnit", "Packaging Unit"),
+        key: 'packaging',
+        header: t('packagingUnit', 'Packaging Unit'),
       },
     ],
-    []
+    [],
   );
 
   const tableRows = useMemo(() => {
@@ -47,9 +48,9 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
       uuid: `${row.partyUuid}${row.stockBatchUuid}${index}`,
       expires: formatDisplayDate(row?.expiration),
       location: row?.partyName,
-      quantity: row?.quantity?.toLocaleString() ?? "",
-      batch: row.batchNumber ?? "",
-      packaging: `${row.quantityUoM ?? ""} of ${row.quantityFactor ?? ""}`,
+      quantity: row?.quantity?.toLocaleString() ?? '',
+      batch: row.batchNumber ?? '',
+      packaging: `${row.quantityUoM ?? ''} of ${row.quantityFactor ?? ''}`,
     }));
   }, [items]);
 

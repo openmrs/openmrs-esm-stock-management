@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { Concept } from "../../core/api/types/concept/Concept";
-import { ComboBox, SelectSkeleton } from "@carbon/react";
-import { useConcept } from "../../stock-lookups/stock-lookups.resource";
-import { type ConfigObject } from "../../config-schema";
-import { useConfig } from "@openmrs/esm-framework";
+import React, { ReactNode } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { Concept } from '../../core/api/types/concept/Concept';
+import { ComboBox, SelectSkeleton } from '@carbon/react';
+import { useConcept } from '../../stock-lookups/stock-lookups.resource';
+import { type ConfigObject } from '../../config-schema';
+import { useConfig } from '@openmrs/esm-framework';
 
 interface StockOperationReasonSelectorProps<T> {
   reasonUuid?: string;
@@ -20,9 +20,7 @@ interface StockOperationReasonSelectorProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const StockOperationReasonSelector = <T,>(
-  props: StockOperationReasonSelectorProps<T>
-) => {
+const StockOperationReasonSelector = <T,>(props: StockOperationReasonSelectorProps<T>) => {
   const { stockAdjustmentReasonUUID } = useConfig<ConfigObject>();
 
   const {
@@ -44,14 +42,10 @@ const StockOperationReasonSelector = <T,>(
           name={props.name}
           controllerName={props.controllerName}
           id={props.name}
-          size={"md"}
+          size={'md'}
           items={reasons}
-          initialSelectedItem={
-            reasons?.find((p) => p.uuid === props.reasonUuid) || {}
-          }
-          itemToString={(item?: Concept) =>
-            item && item?.display ? `${item?.display}` : ""
-          }
+          initialSelectedItem={reasons?.find((p) => p.uuid === props.reasonUuid) || {}}
+          itemToString={(item?: Concept) => (item && item?.display ? `${item?.display}` : '')}
           onChange={(data: { selectedItem?: Concept }) => {
             props.onReasonChange?.(data?.selectedItem);
             onChange(data?.selectedItem?.uuid);

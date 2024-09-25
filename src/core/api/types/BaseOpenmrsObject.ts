@@ -1,3 +1,3 @@
-import { OpenmrsObject } from "./OpenmrsObject";
+import { OpenmrsObject } from './OpenmrsObject';
 
 export type BaseOpenmrsObject = OpenmrsObject;

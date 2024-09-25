@@ -1,6 +1,6 @@
-import { BaseOpenmrsData } from "../BaseOpenmrsData";
-import { UserRoleScopeLocation } from "./UserRoleScopeLocation";
-import { UserRoleScopeOperationType } from "./UserRoleScopeOperationType";
+import { BaseOpenmrsData } from '../BaseOpenmrsData';
+import { UserRoleScopeLocation } from './UserRoleScopeLocation';
+import { UserRoleScopeOperationType } from './UserRoleScopeOperationType';
 
 export interface UserRoleScope extends BaseOpenmrsData {
   userUuid?: string;

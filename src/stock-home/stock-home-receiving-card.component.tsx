@@ -1,15 +1,15 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { Button } from "@carbon/react";
-import { navigate, useLayoutType } from "@openmrs/esm-framework";
-import styles from "./stock-home-detail-card.scss";
-import { Delivery } from "@carbon/react/icons";
-import { ResourceRepresentation } from "../core/api/api";
-import { useStockReceiving } from "./stock-home-receiving.resource";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@carbon/react';
+import { navigate, useLayoutType } from '@openmrs/esm-framework';
+import styles from './stock-home-detail-card.scss';
+import { Delivery } from '@carbon/react/icons';
+import { ResourceRepresentation } from '../core/api/api';
+import { useStockReceiving } from './stock-home-receiving.resource';
 
 const StockHomeReceivingCard = () => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === "tablet";
+  const isTablet = useLayoutType() === 'tablet';
 
   const { items, isLoading } = useStockReceiving({
     v: ResourceRepresentation.Full,
@@ -21,9 +21,7 @@ const StockHomeReceivingCard = () => {
   if (items?.length === 0) {
     return (
       <>
-        <p className={styles.content}>
-          {t("receivedNull", "No received to display")}
-        </p>
+        <p className={styles.content}>{t('receivedNull', 'No received to display')}</p>
       </>
     );
   }
@@ -35,19 +33,18 @@ const StockHomeReceivingCard = () => {
           <div className={styles.card} key={index}>
             <div className={styles.colorLineBlue} />
             <div className={styles.icon}>
-              <Delivery size={40} color={"#0F62FE"} />
+              <Delivery size={40} color={'#0F62FE'} />
             </div>
             <div className={styles.cardText}>
               <p>
                 {item?.status} · {item?.sourceName} · {item?.destinationName}
               </p>
               <p>
-                <strong>{stock?.stockItemName}</strong>{" "}
-                {stock?.stockItemPackagingUOMName}, {stock?.quantity}
+                <strong>{stock?.stockItemName}</strong> {stock?.stockItemPackagingUOMName}, {stock?.quantity}
               </p>
             </div>
           </div>
-        ))
+        )),
       )}
       <Button
         onClick={() => {
@@ -57,7 +54,7 @@ const StockHomeReceivingCard = () => {
         }}
         kind="ghost"
       >
-        {t("receivedView", "View All")}
+        {t('receivedView', 'View All')}
       </Button>
     </>
   );

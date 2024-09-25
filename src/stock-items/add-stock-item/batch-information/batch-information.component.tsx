@@ -1,33 +1,24 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
-import { DataTableSkeleton, Tile } from "@carbon/react";
-import DataList from "../../../core/components/table/table.component";
-import styles from "../../stock-items-table.scss";
-import { useStockItemBatchInformationHook } from "./batch-information.resource";
-import BatchInformationLocationsFilter from "./batch-information-locations/batch-information-locations-filter.component";
-import { useForm } from "react-hook-form";
-import { StockItemInventoryFilter } from "../../stock-items.resource";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
+import { DataTableSkeleton, Tile } from '@carbon/react';
+import DataList from '../../../core/components/table/table.component';
+import styles from '../../stock-items-table.scss';
+import { useStockItemBatchInformationHook } from './batch-information.resource';
+import BatchInformationLocationsFilter from './batch-information-locations/batch-information-locations-filter.component';
+import { useForm } from 'react-hook-form';
+import { StockItemInventoryFilter } from '../../stock-items.resource';
 
 interface BatchInformationProps {
   onSubmit?: () => void;
   stockItemUuid: string;
 }
 
-const BatchInformation: React.FC<BatchInformationProps> = ({
-  stockItemUuid,
-}) => {
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>();
+const BatchInformation: React.FC<BatchInformationProps> = ({ stockItemUuid }) => {
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>();
 
-  const {
-    isLoading,
-    items,
-    totalCount,
-    setCurrentPage,
-    setStockItemUuid,
-    setLocationUuid,
-  } = useStockItemBatchInformationHook(stockItemFilter);
+  const { isLoading, items, totalCount, setCurrentPage, setStockItemUuid, setLocationUuid } =
+    useStockItemBatchInformationHook(stockItemFilter);
   const { t } = useTranslation();
   const { control } = useForm({});
 
@@ -37,27 +28,27 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
   const tableHeaders = useMemo(
     () => [
       {
-        key: "location",
-        header: t("location", "Location"),
+        key: 'location',
+        header: t('location', 'Location'),
       },
       {
-        key: "batch",
-        header: t("batchNumber", "Batch Number"),
+        key: 'batch',
+        header: t('batchNumber', 'Batch Number'),
       },
       {
-        key: "quantity",
-        header: t("quantity", "Quantity"),
+        key: 'quantity',
+        header: t('quantity', 'Quantity'),
       },
       {
-        key: "packaging",
-        header: t("packagingUnit", "Packaging Unit"),
+        key: 'packaging',
+        header: t('packagingUnit', 'Packaging Unit'),
       },
       {
-        key: "expires",
-        header: t("expires", "Expires"),
+        key: 'expires',
+        header: t('expires', 'Expires'),
       },
     ],
-    [t]
+    [t],
   );
 
   const tableRows = useMemo(() => {
@@ -68,9 +59,9 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
       uuid: `${row.partyUuid}${row.stockBatchUuid}${index}`,
       expires: formatDisplayDate(row?.expiration),
       location: row?.partyName,
-      quantity: row?.quantity?.toLocaleString() ?? "",
-      batch: row.batchNumber ?? "",
-      packaging: `${row.quantityUoM ?? ""} of ${row.quantityFactor ?? ""}`,
+      quantity: row?.quantity?.toLocaleString() ?? '',
+      batch: row.batchNumber ?? '',
+      packaging: `${row.quantityUoM ?? ''} of ${row.quantityFactor ?? ''}`,
     }));
   }, [items]);
 
@@ -91,7 +82,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({
                 locationUuid: q,
               });
             }}
-            placeholder={t("filterByLocation", "Filter by Location")}
+            placeholder={t('filterByLocation', 'Filter by Location')}
             name="BatchLocationUuid"
             controllerName="BatchLocationUuid"
           />

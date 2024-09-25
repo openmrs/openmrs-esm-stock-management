@@ -1,5 +1,5 @@
-import { Person } from "./Person";
-import { Role } from "./Role";
+import { Person } from './Person';
+import { Role } from './Role';
 
 export interface SessionPriviledge {
   uuid: string;
