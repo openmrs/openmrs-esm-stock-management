@@ -95,7 +95,7 @@ function StockUserRoleScopesItems() {
         key: 'actions',
       },
     ],
-    [],
+    [t],
   );
 
   const tableRows = useMemo(() => {

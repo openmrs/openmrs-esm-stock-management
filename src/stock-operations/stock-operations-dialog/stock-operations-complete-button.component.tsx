@@ -20,7 +20,7 @@ const StockOperationCompleteButton: React.FC<StockOperationCompleteButtonProps> 
       requireReason: reason,
       closeModal: () => dispose(),
     });
-  }, [operation]);
+  }, [operation, reason]);
 
   return (
     <Button onClick={launchCompleteModal} renderIcon={(props) => <CheckmarkOutline size={16} {...props} />}>

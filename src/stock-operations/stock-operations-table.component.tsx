@@ -135,9 +135,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }
   };
 
-  const handleEditClick = (stockOperation, isEditing) => {
-    launchAddOrEditDialog(t, stockOperation, isEditing, operation, operations, false);
-  };
+  const handleEditClick = useCallback(
+    (stockOperation, isEditing) => {
+      launchAddOrEditDialog(t, stockOperation, isEditing, operation, operations, false);
+    },
+    [t, operation, operations],
+  );
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
@@ -261,7 +264,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         />
       ),
     }));
-  }, [items, operations, t]);
+  }, [items, operations, t, handleEditClick, operation]);
 
   if (isLoading && !filterApplied) {
     return (

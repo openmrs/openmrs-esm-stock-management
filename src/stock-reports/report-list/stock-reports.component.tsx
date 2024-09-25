@@ -101,7 +101,7 @@ const StockReports: React.FC = () => {
         key: 'actions',
       },
     ],
-    [],
+    [t],
   );
 
   const onDownloadReportClick = useCallback((uuid: string, fileExit: string | undefined | null) => {

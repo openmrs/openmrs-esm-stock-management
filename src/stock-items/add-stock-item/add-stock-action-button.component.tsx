@@ -9,7 +9,7 @@ const AddStockItemActionButton: React.FC = () => {
 
   const handleClick = useCallback(() => {
     launchAddOrEditDialog(t, initialValues, false);
-  }, []);
+  }, [t]);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
