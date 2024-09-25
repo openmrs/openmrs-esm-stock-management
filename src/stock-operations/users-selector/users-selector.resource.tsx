@@ -1,10 +1,6 @@
-import {
-  ConceptFilterCriteria,
-  UserFilterCriteria,
-  useUsers,
-} from "../../stock-lookups/stock-lookups.resource";
-import { useEffect, useState } from "react";
-import { ResourceRepresentation } from "../../core/api/api";
+import { ConceptFilterCriteria, UserFilterCriteria, useUsers } from '../../stock-lookups/stock-lookups.resource';
+import { useEffect, useState } from 'react';
+import { ResourceRepresentation } from '../../core/api/api';
 
 export function useUsersHook(filter?: ConceptFilterCriteria) {
   const [conceptFilter, setConceptFilter] = useState<UserFilterCriteria>(
@@ -12,7 +8,7 @@ export function useUsersHook(filter?: ConceptFilterCriteria) {
       v: ResourceRepresentation.Default,
       limit: 10,
       startIndex: 0,
-    }
+    },
   );
 
   const {
@@ -24,9 +20,7 @@ export function useUsersHook(filter?: ConceptFilterCriteria) {
 
   // Drug filter type
   const [limit, setLimit] = useState(filter?.limit || 10);
-  const [representation, setRepresentation] = useState(
-    filter?.v || ResourceRepresentation.Default
-  );
+  const [representation, setRepresentation] = useState(filter?.v || ResourceRepresentation.Default);
 
   useEffect(() => {
     setConceptFilter({

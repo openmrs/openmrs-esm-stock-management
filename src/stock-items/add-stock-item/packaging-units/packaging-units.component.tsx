@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { showSnackbar, restBaseUrl } from "@openmrs/esm-framework";
-import { useTranslation } from "react-i18next";
-import { useStockItemPackageUnitsHook } from "./packaging-units.resource";
+import React, { useEffect, useMemo, useState } from 'react';
+import { showSnackbar, restBaseUrl } from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
+import { useStockItemPackageUnitsHook } from './packaging-units.resource';
 import {
   Button,
   DataTable,
@@ -13,23 +13,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@carbon/react";
-import PackagingUnitsConceptSelector from "../packaging-units-concept-selector/packaging-units-concept-selector.component";
-import ControlledNumberInput from "../../../core/components/carbon/controlled-number-input/controlled-number-input.component";
-import { Save } from "@carbon/react/icons";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PackageUnitFormData, packageUnitSchema } from "./validationSchema";
-import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import {
-  createStockItemPackagingUnit,
-  updateStockItemPackagingUnit,
-} from "../../stock-items.resource";
-import DeleteModalButton from "./packaging-units-delete-modal-button.component";
-import { handleMutate } from "../../../utils";
+} from '@carbon/react';
+import PackagingUnitsConceptSelector from '../packaging-units-concept-selector/packaging-units-concept-selector.component';
+import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
+import { Save } from '@carbon/react/icons';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PackageUnitFormData, packageUnitSchema } from './validationSchema';
+import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { createStockItemPackagingUnit, updateStockItemPackagingUnit } from '../../stock-items.resource';
+import DeleteModalButton from './packaging-units-delete-modal-button.component';
+import { handleMutate } from '../../../utils';
 
-import styles from "./packaging-units.scss";
-import { closeOverlay } from "../../../core/components/overlay/hook";
+import styles from './packaging-units.scss';
+import { closeOverlay } from '../../../core/components/overlay/hook';
 
 interface PackagingUnitsProps {
   isEditing?: boolean;
@@ -38,15 +35,10 @@ interface PackagingUnitsProps {
   handleTabChange: (index) => void;
 }
 
-const PackagingUnits: React.FC<PackagingUnitsProps> = ({
-  stockItemUuid,
-  handleTabChange,
-}) => {
-  const { items, isLoading, setStockItemUuid, mutate } =
-    useStockItemPackageUnitsHook();
+const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid, handleTabChange }) => {
+  const { items, isLoading, setStockItemUuid, mutate } = useStockItemPackageUnitsHook();
 
-  const [packagingUnits, setPackagingUnits] =
-    useState<StockItemPackagingUOMDTO[]>(items);
+  const [packagingUnits, setPackagingUnits] = useState<StockItemPackagingUOMDTO[]>(items);
 
   const [newUnit, setNewUnit] = useState<{
     factor: number;
@@ -55,7 +47,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
   }>({
     packagingUomUuid: undefined,
     factor: 0,
-    packagingUomName: "",
+    packagingUomName: '',
   });
 
   useEffect(() => {
@@ -70,27 +62,27 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
   const tableHeaders = useMemo(
     () => [
       {
-        key: "packaging",
-        header: t("packagingUnit", "Packaging Unit"),
-        styles: { width: "50%" },
+        key: 'packaging',
+        header: t('packagingUnit', 'Packaging Unit'),
+        styles: { width: '50%' },
       },
       {
-        key: "quantity",
-        header: t("packSize", "Pack Size"),
-        styles: { width: "50%" },
+        key: 'quantity',
+        header: t('packSize', 'Pack Size'),
+        styles: { width: '50%' },
       },
       {
-        key: "action",
-        header: t("action", "Actions"),
-        styles: { width: "50%" },
+        key: 'action',
+        header: t('action', 'Actions'),
+        styles: { width: '50%' },
       },
     ],
-    [t]
+    [t],
   );
 
   const packageUnitForm = useForm<PackageUnitFormData>({
     defaultValues: {},
-    mode: "all",
+    mode: 'all',
     resolver: zodResolver(packageUnitSchema),
   });
 
@@ -116,58 +108,48 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       ? createStockItemPackagingUnit(newPayload).then(
           () => {
             showSnackbar({
-              title: t("savePackingUnitTitle", "Package Unit"),
-              subtitle: t(
-                "savePackingUnitMessage",
-                "Package Unit saved successfully"
-              ),
-              kind: "success",
+              title: t('savePackingUnitTitle', 'Package Unit'),
+              subtitle: t('savePackingUnitMessage', 'Package Unit saved successfully'),
+              kind: 'success',
             });
             setNewUnit({
               factor: 0,
               packagingUomUuid: undefined,
-              packagingUomName: "",
+              packagingUomName: '',
             }); // Reset new unit
           },
           () => {
             showSnackbar({
-              title: t("savePackagingUnitErrorTitle", "Package Unit"),
-              subtitle: t(
-                "savePackagingUnitErrorMessage",
-                "Error saving package unit"
-              ),
-              kind: "error",
+              title: t('savePackagingUnitErrorTitle', 'Package Unit'),
+              subtitle: t('savePackagingUnitErrorMessage', 'Error saving package unit'),
+              kind: 'error',
             });
-          }
+          },
         )
-      : Promise.resolve({ status: "no-create" });
+      : Promise.resolve({ status: 'no-create' });
 
     // Update existing units
     const updatePromises = updatedUnits.map((unit) =>
       updateStockItemPackagingUnit(unit, unit.uuid).then(
         () => {
           showSnackbar({
-            title: t("updatePackingUnitTitle", "Package Unit"),
-            subtitle: t(
-              "updatePackingUnitMessage",
-              "Package Unit {{ name }} updated successfully",
-              { name: unit.packagingUomName }
-            ),
-            kind: "success",
+            title: t('updatePackingUnitTitle', 'Package Unit'),
+            subtitle: t('updatePackingUnitMessage', 'Package Unit {{ name }} updated successfully', {
+              name: unit.packagingUomName,
+            }),
+            kind: 'success',
           });
         },
         () => {
           showSnackbar({
-            title: t("updatePackagingUnitErrorTitle", "Package Unit"),
-            subtitle: t(
-              "updatePackagingUnitErrorMessage",
-              "Error updating package unit {{name}}",
-              { name: unit.packagingUomName }
-            ),
-            kind: "error",
+            title: t('updatePackagingUnitErrorTitle', 'Package Unit'),
+            subtitle: t('updatePackagingUnitErrorMessage', 'Error updating package unit {{name}}', {
+              name: unit.packagingUomName,
+            }),
+            kind: 'error',
           });
-        }
-      )
+        },
+      ),
     );
 
     // Wait for all requests to complete
@@ -188,10 +170,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
     });
   };
 
-  const handleNewUnitPackageUnitChange = (unit: {
-    uuid: string;
-    display: string;
-  }) => {
+  const handleNewUnitPackageUnitChange = (unit: { uuid: string; display: string }) => {
     setNewUnit({
       ...newUnit,
       packagingUomUuid: unit.uuid,
@@ -199,28 +178,15 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
     });
   };
 
-  const onFactorFieldUpdate = (
-    row: StockItemPackagingUOMDTO,
-    value: string | number
-  ) => {
-    const qtyValue = typeof value === "number" ? value : parseFloat(value);
+  const onFactorFieldUpdate = (row: StockItemPackagingUOMDTO, value: string | number) => {
+    const qtyValue = typeof value === 'number' ? value : parseFloat(value);
 
     setPackagingUnits((prevState) =>
-      prevState.map((item) =>
-        item.uuid === row.uuid ? { ...item, factor: qtyValue } : item
-      )
+      prevState.map((item) => (item.uuid === row.uuid ? { ...item, factor: qtyValue } : item)),
     );
   };
 
-  if (isLoading)
-    return (
-      <DataTableSkeleton
-        showHeader={false}
-        rowCount={5}
-        columnCount={5}
-        zebra
-      />
-    );
+  if (isLoading) return <DataTableSkeleton showHeader={false} rowCount={5} columnCount={5} zebra />;
 
   return (
     <FormProvider {...packageUnitForm}>
@@ -246,7 +212,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
                       {header.header?.content ?? header.header}
                     </TableHeader>
                   ))}
-                  <TableHeader style={{ width: "70%" }} />
+                  <TableHeader style={{ width: '70%' }} />
                 </TableRow>
               </TableHead>
               <TableBody className={styles.packingTableBody}>
@@ -261,9 +227,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
                   row={newUnit || {}}
                   id="new-package-unit"
                   isEditing
-                  onChangePackageUnit={(value) =>
-                    handleNewUnitPackageUnitChange(value)
-                  }
+                  onChangePackageUnit={(value) => handleNewUnitPackageUnitChange(value)}
                   onChange={(value) => handleNewUnitFactorChange(value)}
                 />
               </TableBody>
@@ -273,7 +237,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
       />
       <div className={styles.packageUnitsBtn}>
         <Button kind="secondary" onClick={handleCancelPackagingUnits}>
-          {t("cancel", "Cancel")}
+          {t('cancel', 'Cancel')}
         </Button>
         <Button
           name="save"
@@ -283,7 +247,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({
           kind="primary"
           renderIcon={Save}
         >
-          {t("save", "Save")}
+          {t('save', 'Save')}
         </Button>
       </div>
     </FormProvider>
@@ -312,7 +276,7 @@ const PackagingUnitRow: React.FC<{
           {isEditing ? (
             <PackagingUnitsConceptSelector
               row={row}
-              controllerName={"packagingUomUuid"}
+              controllerName={'packagingUomUuid'}
               name="packagingUomUuid"
               placeholder="Filter"
               control={control}
@@ -320,8 +284,7 @@ const PackagingUnitRow: React.FC<{
               invalid={!!errors.packagingUomUuid}
             />
           ) : (
-            (!isEditing || !row.uuid.startsWith("new-item")) &&
-            row?.packagingUomName
+            (!isEditing || !row.uuid.startsWith('new-item')) && row?.packagingUomName
           )}
         </TableCell>
         <TableCell>

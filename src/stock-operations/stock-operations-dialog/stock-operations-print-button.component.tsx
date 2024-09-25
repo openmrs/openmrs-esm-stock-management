@@ -1,31 +1,25 @@
-import React from "react";
+import React from 'react';
 
-import { Button } from "@carbon/react";
-import { useTranslation } from "react-i18next";
-import { Printer } from "@carbon/react/icons";
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { StockOperationItemCost } from "../../core/api/types/stockOperation/StockOperationItemCost";
-import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
+import { Button } from '@carbon/react';
+import { useTranslation } from 'react-i18next';
+import { Printer } from '@carbon/react/icons';
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { StockOperationItemCost } from '../../core/api/types/stockOperation/StockOperationItemCost';
+import { StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
 
-import { StockItemInventoryFilter } from "../../stock-items/stock-items.resource";
-import { ResourceRepresentation } from "../../core/api/api";
-import { BuildStockOperationData } from "../stock-print-reports/StockOperationReport";
-import { PrintGoodsReceivedNoteStockOperation } from "../stock-print-reports/GoodsReceivedNote";
-import { PrintTransferOutStockOperation } from "../stock-print-reports/StockTransferDocument";
-import { PrintRequisitionStockOperation } from "../stock-print-reports/RequisitionDocument";
-import {
-  getStockItemInventory,
-  getStockOperation,
-  getStockOperationItemsCost,
-} from "../stock-operations.resource";
+import { StockItemInventoryFilter } from '../../stock-items/stock-items.resource';
+import { ResourceRepresentation } from '../../core/api/api';
+import { BuildStockOperationData } from '../stock-print-reports/StockOperationReport';
+import { PrintGoodsReceivedNoteStockOperation } from '../stock-print-reports/GoodsReceivedNote';
+import { PrintTransferOutStockOperation } from '../stock-print-reports/StockTransferDocument';
+import { PrintRequisitionStockOperation } from '../stock-print-reports/RequisitionDocument';
+import { getStockItemInventory, getStockOperation, getStockOperationItemsCost } from '../stock-operations.resource';
 
 interface StockOperationCancelButtonProps {
   operation: StockOperationDTO;
 }
 
-const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
-  operation,
-}) => {
+const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
 
   const onPrintStockOperation = async () => {
@@ -56,8 +50,8 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
 
       if (
         parentOperation ||
-        parentOperation?.operationType === "stockissue" ||
-        parentOperation?.operationType === "transferout"
+        parentOperation?.operationType === 'stockissue' ||
+        parentOperation?.operationType === 'transferout'
       ) {
         const enableOperationPrintCosts = true;
         if (enableOperationPrintCosts) {
@@ -81,10 +75,7 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
         }
       }
       const enableBalance = true;
-      if (
-        enableBalance &&
-        (parentOperation || parentOperation?.operationType === "requisition")
-      ) {
+      if (enableBalance && (parentOperation || parentOperation?.operationType === 'requisition')) {
         const inventoryFilter: StockItemInventoryFilter = {};
         if (operation?.uuid) {
           inventoryFilter.locationUuid = operation.atLocationUuid;
@@ -94,12 +85,10 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
           inventoryFilter.stockOperationUuid = operation.uuid;
         }
         inventoryFilter.v = ResourceRepresentation.Default;
-        inventoryFilter.groupBy = "LocationStockItem";
-        inventoryFilter.includeStockItemName = "true";
+        inventoryFilter.groupBy = 'LocationStockItem';
+        inventoryFilter.includeStockItemName = 'true';
 
-        inventoryFilter.date = JSON.stringify(
-          parentOperation?.dateCreated ?? operation?.dateCreated
-        );
+        inventoryFilter.date = JSON.stringify(parentOperation?.dateCreated ?? operation?.dateCreated);
 
         // get stock item inventory
         getStockItemInventory(inventoryFilter)
@@ -122,12 +111,12 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
         operation.stockOperationItems,
         parentOperation,
         itemsCost,
-        itemInventory
+        itemInventory,
       );
       if (data) {
-        if (operation?.operationType === "receipt") {
+        if (operation?.operationType === 'receipt') {
           await PrintGoodsReceivedNoteStockOperation(data);
-        } else if (operation?.operationType === "transferout") {
+        } else if (operation?.operationType === 'transferout') {
           await PrintTransferOutStockOperation(data);
         } else {
           await PrintRequisitionStockOperation(data);
@@ -141,12 +130,8 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({
   };
 
   return (
-    <Button
-      onClick={onPrintStockOperation}
-      kind="tertiary"
-      renderIcon={(props) => <Printer size={16} {...props} />}
-    >
-      {t("print", "Print")}
+    <Button onClick={onPrintStockOperation} kind="tertiary" renderIcon={(props) => <Printer size={16} {...props} />}>
+      {t('print', 'Print')}
     </Button>
   );
 };

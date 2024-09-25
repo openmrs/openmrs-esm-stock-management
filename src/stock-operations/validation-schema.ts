@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { StockOperationStatusTypes } from "../core/api/types/stockOperation/StockOperationStatus";
-import { OperationType } from "../core/api/types/stockOperation/StockOperationType";
+import { z } from 'zod';
+import { StockOperationStatusTypes } from '../core/api/types/stockOperation/StockOperationStatus';
+import { OperationType } from '../core/api/types/stockOperation/StockOperationType';
 
 export const stockItemPackagingUOMDTOSchema = z.object({
   id: z.string().nullish(),
@@ -13,9 +13,7 @@ export const stockItemPackagingUOMDTOSchema = z.object({
   isDispensingUnit: z.boolean().nullish(),
 });
 
-export type StockItemPackagingUOMDTOFormData = z.infer<
-  typeof stockItemPackagingUOMDTOSchema
->;
+export type StockItemPackagingUOMDTOFormData = z.infer<typeof stockItemPackagingUOMDTOSchema>;
 
 export const recordPermissionSchema = z.object({
   canView: z.boolean(),
@@ -56,9 +54,7 @@ export const stockOperationItemSchema = z.object({
   acronym: z.string().nullish(),
 });
 
-export type StockOperationItemFormData = z.infer<
-  typeof stockOperationItemSchema
->;
+export type StockOperationItemFormData = z.infer<typeof stockOperationItemSchema>;
 
 export const stockOperationSchema = z.object({
   uuid: z.string().nullish(),
@@ -123,29 +119,27 @@ export const stockOperationSchema = z.object({
 
 export const stockOperationItemDtoSchema = z.object({
   operationDate: z.coerce.date(),
-  sourceUuid: z.string({ required_error: "Location Required" }).min(1, {
-    message: "Location Required",
+  sourceUuid: z.string({ required_error: 'Location Required' }).min(1, {
+    message: 'Location Required',
   }),
-  destinationUuid: z.string({ required_error: "Location Required" }).min(1, {
-    message: "Location Required",
+  destinationUuid: z.string({ required_error: 'Location Required' }).min(1, {
+    message: 'Location Required',
   }),
-  reasonUuid: z.string({ required_error: "Reason Required" }).min(1, {
-    message: "Reason Required",
+  reasonUuid: z.string({ required_error: 'Reason Required' }).min(1, {
+    message: 'Reason Required',
   }),
   responsiblePersonUuid: z
     .string({
-      required_error: "Responsible Person Required",
+      required_error: 'Responsible Person Required',
     })
     .min(1, {
-      message: "Responsible Person Required",
+      message: 'Responsible Person Required',
     }),
   responsiblePersonOther: z.string().nullish(),
   remarks: z.string().nullish(),
 });
 
-export type StockOperationItemDtoSchema = z.infer<
-  typeof stockOperationItemDtoSchema
->;
+export type StockOperationItemDtoSchema = z.infer<typeof stockOperationItemDtoSchema>;
 
 export type StockOperationFormData = z.infer<typeof stockOperationSchema>;
 
@@ -164,29 +158,27 @@ export const operationSchema = (operation: OperationType): z.Schema => {
     case OperationType.STOCK_ISSUE_OPERATION_TYPE:
       return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
         z.object({
-          destinationUuid: z
-            .string({ required_error: "Destination Required" })
-            .min(1, {
-              message: "Destination Required",
-            }),
-        })
+          destinationUuid: z.string({ required_error: 'Destination Required' }).min(1, {
+            message: 'Destination Required',
+          }),
+        }),
       );
     case OperationType.RETURN_OPERATION_TYPE:
     case OperationType.REQUISITION_OPERATION_TYPE:
       return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
         z.object({
-          sourceUuid: z.string({ required_error: "Source Required" }).min(1, {
-            message: "Source Required",
+          sourceUuid: z.string({ required_error: 'Source Required' }).min(1, {
+            message: 'Source Required',
           }),
-        })
+        }),
       );
     case OperationType.RECEIPT_OPERATION_TYPE:
       return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
         z.object({
-          sourceUuid: z.string({ required_error: "Source Required" }).min(1, {
-            message: "Source Required",
+          sourceUuid: z.string({ required_error: 'Source Required' }).min(1, {
+            message: 'Source Required',
           }),
-        })
+        }),
       );
   }
 };

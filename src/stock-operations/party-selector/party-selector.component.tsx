@@ -1,7 +1,7 @@
-import React, { ReactNode, useEffect } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { Party } from "../../core/api/types/Party";
-import { ComboBox } from "@carbon/react";
+import React, { ReactNode, useEffect } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { Party } from '../../core/api/types/Party';
+import { ComboBox } from '@carbon/react';
 
 interface PartySelectorProps<T> {
   partyUuid?: string;
@@ -25,9 +25,7 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
       name={props.controllerName}
       control={props.control}
       render={({ field: { onChange, value, ref } }) => {
-        const selectedParty = props.parties.find(
-          (p) => p.uuid === props.partyUuid
-        );
+        const selectedParty = props.parties.find((p) => p.uuid === props.partyUuid);
 
         if (selectedParty && !value) {
           onChange(selectedParty.uuid);
@@ -37,7 +35,7 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
             titleText={props.title}
             name={props.name}
             id={props.name}
-            size={"md"}
+            size={'md'}
             items={props.parties}
             onChange={(data: { selectedItem: Party }) => {
               props.onPartyChange?.(data.selectedItem);
@@ -45,9 +43,7 @@ const PartySelector = <T,>(props: PartySelectorProps<T>) => {
             }}
             initialSelectedItem={selectedParty}
             selectedItem={props.parties.find((p) => p.uuid === value)}
-            itemToString={(item?: Party) =>
-              item && item?.name ? `${item?.name}` : ""
-            }
+            itemToString={(item?: Party) => (item && item?.name ? `${item?.name}` : '')}
             shouldFilterItem={() => true}
             placeholder={props.placeholder}
             ref={ref}

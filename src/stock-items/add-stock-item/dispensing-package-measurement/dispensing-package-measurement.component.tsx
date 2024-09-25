@@ -1,13 +1,11 @@
-import React, { ReactNode, useMemo, useState } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import { ComboBox, SelectSkeleton } from "@carbon/react";
+import React, { ReactNode, useMemo, useState } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { ComboBox, SelectSkeleton } from '@carbon/react';
 
 interface DispensingPackageMeasurementProps<T> {
   dispensingUnitPackagingUoMUuid?: string;
-  onDispensingUnitPackagingUoMUuidChange?: (
-    unit: StockItemPackagingUOMDTO
-  ) => void;
+  onDispensingUnitPackagingUoMUuidChange?: (unit: StockItemPackagingUOMDTO) => void;
   isLoading?: boolean;
   packagingUnits?: StockItemPackagingUOMDTO[];
   title?: string;
@@ -21,29 +19,24 @@ interface DispensingPackageMeasurementProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const DispensingPackageMeasurement = <T,>(
-  props: DispensingPackageMeasurementProps<T>
-) => {
+const DispensingPackageMeasurement = <T,>(props: DispensingPackageMeasurementProps<T>) => {
   const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
     () =>
       props?.packagingUnits.length > 0
-        ? props?.packagingUnits.find(
-            (u) => u?.uuid === props?.dispensingUnitPackagingUoMUuid
-          )
+        ? props?.packagingUnits.find((u) => u?.uuid === props?.dispensingUnitPackagingUoMUuid)
         : null,
-    [props?.packagingUnits]
+    [props?.packagingUnits],
   );
 
   if (props.isLoading) return <SelectSkeleton />;
 
-  if (!(props?.packagingUnits && props?.packagingUnits.length > 0))
-    return <></>;
+  if (!(props?.packagingUnits && props?.packagingUnits.length > 0)) return <></>;
   return (
     <div>
       <Controller
         name={props.controllerName}
         control={props.control}
-        defaultValue={initialSelectedItem?.uuid ?? ""}
+        defaultValue={initialSelectedItem?.uuid ?? ''}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
             titleText={props.title}
@@ -51,19 +44,15 @@ const DispensingPackageMeasurement = <T,>(
             control={props.control}
             controllerName={props.controllerName}
             id={props.name}
-            size={"sm"}
+            size={'sm'}
             items={props.packagingUnits ?? []}
             onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
-              props.onDispensingUnitPackagingUoMUuidChange?.(
-                data?.selectedItem
-              );
+              props.onDispensingUnitPackagingUoMUuidChange?.(data?.selectedItem);
               onChange(data?.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockItemPackagingUOMDTO) =>
-              s?.packagingUomName
-                ? `${s?.packagingUomName} - ${s?.factor} `
-                : "Not set"
+              s?.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : 'Not set'
             }
             placeholder={props.placeholder}
             invalid={props.invalid}

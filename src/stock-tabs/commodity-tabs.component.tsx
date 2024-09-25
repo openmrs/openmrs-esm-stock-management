@@ -1,10 +1,10 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
-import React from "react";
-import styles from "./commodity-tabs.scss";
-import StockItems from "../stock-items/stock-items.component";
-import StockSources from "../stock-sources/stock-sources.component";
-import StockUserScopes from "../stock-user-role-scopes/stock-user-role-scopes.component";
-import StockOperations from "../stock-operations/stock-operations-table.component";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
+import React from 'react';
+import styles from './commodity-tabs.scss';
+import StockItems from '../stock-items/stock-items.component';
+import StockSources from '../stock-sources/stock-sources.component';
+import StockUserScopes from '../stock-user-role-scopes/stock-user-role-scopes.component';
+import StockOperations from '../stock-operations/stock-operations-table.component';
 
 const StockCommodityTabs: React.FC = () => {
   return (

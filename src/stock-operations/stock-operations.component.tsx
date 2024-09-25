@@ -1,9 +1,9 @@
-import React from "react";
-import StockOperations from "./stock-operations-table.component";
+import React from 'react';
+import StockOperations from './stock-operations-table.component';
 
 function StockOperationsComponent() {
   return (
-    <div style={{ margin: "5px" }}>
+    <div style={{ margin: '5px' }}>
       <StockOperations />
     </div>
   );

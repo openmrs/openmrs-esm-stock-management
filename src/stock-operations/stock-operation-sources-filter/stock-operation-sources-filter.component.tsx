@@ -1,9 +1,9 @@
-import styles from "./stock-operation-sources-filter.scss";
-import { Dropdown, DropdownSkeleton } from "@carbon/react";
-import React from "react";
-import { useConcept } from "../../stock-lookups/stock-lookups.resource";
-import { type ConfigObject } from "../../config-schema";
-import { useConfig } from "@openmrs/esm-framework";
+import styles from './stock-operation-sources-filter.scss';
+import { Dropdown, DropdownSkeleton } from '@carbon/react';
+import React from 'react';
+import { useConcept } from '../../stock-lookups/stock-lookups.resource';
+import { type ConfigObject } from '../../config-schema';
+import { useConfig } from '@openmrs/esm-framework';
 
 const StockOperationSourcesFilter: React.FC = () => {
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
@@ -19,7 +19,7 @@ const StockOperationSourcesFilter: React.FC = () => {
         <Dropdown
           id="stockOperationSourcesFiter"
           items={[...items.answers]}
-          itemToString={(item) => (item ? item.display : "Not Set")}
+          itemToString={(item) => (item ? item.display : 'Not Set')}
           type="inline"
           size="sm"
         />

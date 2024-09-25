@@ -9,7 +9,7 @@
   align-content: space-between;
   flex-direction: column;
 
-    :global(.cds--form-item) {
+  :global(.cds--form-item) {
     flex: none !important;
   }
 
@@ -18,7 +18,7 @@
     display: inline-block;
     font-size: var(--cds-label-01-font-size);
     font-weight: bold;
-    letter-spacing: var(--cds-label-01-letter-spacing, .32px);
+    letter-spacing: var(--cds-label-01-letter-spacing, 0.32px);
     line-height: layout.$spacing-05;
     margin-bottom: layout.$spacing-03;
     vertical-align: baseline;
@@ -26,5 +26,5 @@
 }
 
 .formContainer {
-    margin: layout.$spacing-05;
+  margin: layout.$spacing-05;
 }

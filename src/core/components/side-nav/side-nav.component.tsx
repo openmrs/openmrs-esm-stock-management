@@ -1,8 +1,8 @@
-import React from "react";
-import { SideNavItem } from "./types";
-import { SideNav, SideNavItems, SideNavLink } from "@carbon/react";
-import styles from "./side-nav.scss";
-import { navigate } from "@openmrs/esm-framework";
+import React from 'react';
+import { SideNavItem } from './types';
+import { SideNav, SideNavItems, SideNavLink } from '@carbon/react';
+import styles from './side-nav.scss';
+import { navigate } from '@openmrs/esm-framework';
 
 interface SideNavProps {
   tabs: SideNavItem[];
@@ -10,11 +10,7 @@ interface SideNavProps {
   onSelectTab: (index: number) => void;
 }
 
-const SideNavItemsList: React.FC<SideNavProps> = ({
-  tabs,
-  selectedIndex,
-  onSelectTab,
-}) => {
+const SideNavItemsList: React.FC<SideNavProps> = ({ tabs, selectedIndex, onSelectTab }) => {
   return (
     <div
       className={`
@@ -22,12 +18,7 @@ const SideNavItemsList: React.FC<SideNavProps> = ({
       `}
     >
       <div className={styles.tab}>
-        <SideNav
-          isFixedNav
-          expanded={true}
-          isChildOfHeader={true}
-          aria-label="Side navigation"
-        >
+        <SideNav isFixedNav expanded={true} isChildOfHeader={true} aria-label="Side navigation">
           <SideNavItems>
             {tabs.map((tab: SideNavItem, index: number) => (
               <SideNavLink
@@ -37,14 +28,12 @@ const SideNavItemsList: React.FC<SideNavProps> = ({
                   if (index === tabs.length - 1) {
                     // Check if it's the last item in the list
                     navigate({
-                      to: "/openmrs/admin/maintenance/settings.list?show=Stockmanagement",
+                      to: '/openmrs/admin/maintenance/settings.list?show=Stockmanagement',
                     });
                   } else {
                     onSelectTab(index); // Call onSelectTab to update selectedTab in the parent
                     navigate({
-                      to: `${window.getOpenmrsSpaBase()}stock-management/${
-                        tab.link
-                      }`,
+                      to: `${window.getOpenmrsSpaBase()}stock-management/${tab.link}`,
                     });
                   }
                 }}

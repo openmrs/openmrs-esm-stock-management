@@ -1,9 +1,6 @@
-import {
-  StockBatchFilter,
-  useStockBatches,
-} from "../../stock-items/stock-items.resource";
-import { useEffect, useState } from "react";
-import { ResourceRepresentation } from "../../core/api/api";
+import { StockBatchFilter, useStockBatches } from '../../stock-items/stock-items.resource';
+import { useEffect, useState } from 'react';
+import { ResourceRepresentation } from '../../core/api/api';
 
 export function useStockItemBatchNos(stockItemUuid: string) {
   const [conceptFilter, setConceptFilter] = useState<StockBatchFilter>({
@@ -22,9 +19,7 @@ export function useStockItemBatchNos(stockItemUuid: string) {
 
   // Drug filter type
   const [limit, setLimit] = useState(10);
-  const [representation, setRepresentation] = useState(
-    ResourceRepresentation.Default
-  );
+  const [representation, setRepresentation] = useState(ResourceRepresentation.Default);
 
   useEffect(() => {
     setConceptFilter({

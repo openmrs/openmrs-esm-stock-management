@@ -1,11 +1,11 @@
-import React, { ReactNode } from "react";
-import { Concept } from "../../../core/api/types/concept/Concept";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { useConcept } from "../../../stock-lookups/stock-lookups.resource";
-import { ComboBox, TextInputSkeleton } from "@carbon/react";
-import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
-import { useConfig } from "@openmrs/esm-framework";
-import { type ConfigObject } from "../../../config-schema";
+import React, { ReactNode } from 'react';
+import { Concept } from '../../../core/api/types/concept/Concept';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
+import { ComboBox, TextInputSkeleton } from '@carbon/react';
+import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { useConfig } from '@openmrs/esm-framework';
+import { type ConfigObject } from '../../../config-schema';
 
 interface PackagingUnitsConceptSelectorProps<T> {
   row?: StockItemPackagingUOMDTO;
@@ -21,9 +21,7 @@ interface PackagingUnitsConceptSelectorProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const PackagingUnitsConceptSelector = <T,>(
-  props: PackagingUnitsConceptSelectorProps<T>
-) => {
+const PackagingUnitsConceptSelector = <T,>(props: PackagingUnitsConceptSelectorProps<T>) => {
   const { packagingUnitsUUID } = useConfig<ConfigObject>();
 
   const {
@@ -48,9 +46,7 @@ const PackagingUnitsConceptSelector = <T,>(
           items={
             props.row?.packagingUomUuid !== undefined
               ? [
-                  ...(dispensingUnits.some(
-                    (x) => x.uuid === props.row?.packagingUomUuid
-                  )
+                  ...(dispensingUnits.some((x) => x.uuid === props.row?.packagingUomUuid)
                     ? []
                     : [
                         {
@@ -62,11 +58,9 @@ const PackagingUnitsConceptSelector = <T,>(
                 ]
               : dispensingUnits || []
           }
-          onChange={(data: {
-            selectedItem: { uuid: string; display: string };
-          }) => {
+          onChange={(data: { selectedItem: { uuid: string; display: string } }) => {
             props.onPackageUnitChange?.(data?.selectedItem);
-            onChange(data?.selectedItem?.uuid || ""); // Provide a default value if needed
+            onChange(data?.selectedItem?.uuid || ''); // Provide a default value if needed
           }}
           initialSelectedItem={
             props.row?.packagingUomUuid !== undefined
@@ -84,9 +78,7 @@ const PackagingUnitsConceptSelector = <T,>(
                 }
               : null
           }
-          itemToString={(item?: Concept) =>
-            item && item?.display ? `${item?.display}` : ""
-          }
+          itemToString={(item?: Concept) => (item && item?.display ? `${item?.display}` : '')}
           shouldFilterItem={() => true}
           placeholder={props.placeholder}
           invalid={props.invalid}

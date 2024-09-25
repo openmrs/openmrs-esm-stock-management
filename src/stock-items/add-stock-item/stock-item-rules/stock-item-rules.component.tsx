@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useStockItemRules } from "./stock-item-rules.resource";
+import React, { useState, useEffect, useMemo } from 'react';
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useStockItemRules } from './stock-item-rules.resource';
 import {
   DataTable,
   Pagination,
@@ -18,16 +18,16 @@ import {
   TableToolbarMenu,
   DataTableSkeleton,
   TableToolbarSearch,
-} from "@carbon/react";
-import { formatDisplayDate } from "../../../core/utils/datetimeUtils";
-import styles from "../../stock-items-table.scss";
-import { StockRule } from "../../../core/api/types/stockItem/StockRule";
-import AddStockRuleActionButton from "./add-stock-rule-button.component";
-import { isDesktop } from "@openmrs/esm-framework";
-import StockRulesFilter from "./stock-rules-filter.component";
-import { useTranslation } from "react-i18next";
-import StockRulesDeleteActionMenu from "./stock-rules-delete.component";
-import EditStockRuleActionsMenu from "./edit-stock-rule.component";
+} from '@carbon/react';
+import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
+import styles from '../../stock-items-table.scss';
+import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import AddStockRuleActionButton from './add-stock-rule-button.component';
+import { isDesktop } from '@openmrs/esm-framework';
+import StockRulesFilter from './stock-rules-filter.component';
+import { useTranslation } from 'react-i18next';
+import StockRulesDeleteActionMenu from './stock-rules-delete.component';
+import EditStockRuleActionsMenu from './edit-stock-rule.component';
 
 interface StockItemRulesProps {
   onSubmit?: () => void;
@@ -36,27 +36,14 @@ interface StockItemRulesProps {
   canEdit?: boolean;
 }
 
-const StockItemRules: React.FC<StockItemRulesProps> = ({
-  stockItemUuid,
-  model,
-  canEdit = true,
-}) => {
+const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, canEdit = true }) => {
   const { t } = useTranslation();
-  const {
-    isLoading,
-    items,
-    tableHeaders,
-    currentPage,
-    currentPageSize,
-    pageSizes,
-    totalItems,
-    setPageSize,
-    goTo,
-  } = useStockItemRules({
-    v: ResourceRepresentation.Default,
-    totalCount: true,
-    stockItemUuid: stockItemUuid,
-  });
+  const { isLoading, items, tableHeaders, currentPage, currentPageSize, pageSizes, totalItems, setPageSize, goTo } =
+    useStockItemRules({
+      v: ResourceRepresentation.Default,
+      totalCount: true,
+      stockItemUuid: stockItemUuid,
+    });
 
   const tableRows = useMemo(() => {
     return items?.map((stockRule, index) => ({
@@ -66,22 +53,17 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({
       uuid: `${stockRule?.uuid}`,
       dateCreated: formatDisplayDate(stockRule?.dateCreated),
       location: stockRule?.locationName,
-      quantity: `${stockRule?.quantity?.toLocaleString()} ${
-        stockRule?.packagingUomName ?? ""
-      }`,
+      quantity: `${stockRule?.quantity?.toLocaleString()} ${stockRule?.packagingUomName ?? ''}`,
       name: `${stockRule?.name}`,
       description: `${stockRule?.description}`,
       evaluationFrequency: `${stockRule?.evaluationFrequency} minutes`,
       actionFrequency: `${stockRule?.actionFrequency} minutes`,
       lastActionDate: formatDisplayDate(stockRule?.lastActionDate),
       nextActionDate: formatDisplayDate(stockRule?.nextActionDate),
-      enabled: stockRule.enabled ? "Yes" : "No",
+      enabled: stockRule.enabled ? 'Yes' : 'No',
       actions: (
         <>
-          <EditStockRuleActionsMenu
-            data={items[index]}
-            stockItemUuid={items[index].stockItemUuid}
-          />
+          <EditStockRuleActionsMenu data={items[index]} stockItemUuid={items[index].stockItemUuid} />
           <StockRulesDeleteActionMenu uuid={items[index].uuid} />
         </>
       ),
@@ -103,34 +85,27 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
-        render={({
-          rows,
-          headers,
-          getHeaderProps,
-          getTableProps,
-          getRowProps,
-          onInputChange,
-        }) => (
+        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
-                position: "static",
-                overflow: "visible",
-                backgroundColor: "color",
+                position: 'static',
+                overflow: 'visible',
+                backgroundColor: 'color',
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <StockRulesFilter stockItemUuid={stockItemUuid} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={""}>Refresh</TableToolbarAction>
+                  <TableToolbarAction onClick={''}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
                 <AddStockRuleActionButton stockItemUuid={stockItemUuid} />
               </TableToolbarContent>
@@ -140,22 +115,18 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({
                 <TableRow>
                   {headers.map(
                     (header: any) =>
-                      header.key !== "details" && (
+                      header.key !== 'details' && (
                         <TableHeader
                           {...getHeaderProps({
                             header,
                             isSortable: header.isSortable,
                           })}
-                          className={
-                            isDesktop
-                              ? styles.desktopHeader
-                              : styles.tabletHeader
-                          }
+                          className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
                         >
                           {header.header?.content ?? header.header}
                         </TableHeader>
-                      )
+                      ),
                   )}
                   <TableHeader></TableHeader>
                 </TableRow>
@@ -164,17 +135,10 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({
                 {rows.map((row: any) => {
                   return (
                     <React.Fragment key={row.id}>
-                      <TableRow
-                        className={
-                          isDesktop ? styles.desktopRow : styles.tabletRow
-                        }
-                        {...getRowProps({ row })}
-                      >
+                      <TableRow className={isDesktop ? styles.desktopRow : styles.tabletRow} {...getRowProps({ row })}>
                         {row.cells.map(
                           (cell: any) =>
-                            cell?.info?.header !== "details" && (
-                              <TableCell key={cell.id}>{cell.value}</TableCell>
-                            )
+                            cell?.info?.header !== 'details' && <TableCell key={cell.id}>{cell.value}</TableCell>,
                         )}
                       </TableRow>
                     </React.Fragment>
@@ -186,12 +150,8 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>
-                      {t("noRulesToDisplay", "No Stock rules to display")}
-                    </p>
-                    <p className={styles.helper}>
-                      {t("checkFilters", "Check the filters above")}
-                    </p>
+                    <p className={styles.content}>{t('noRulesToDisplay', 'No Stock rules to display')}</p>
+                    <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>
               </div>

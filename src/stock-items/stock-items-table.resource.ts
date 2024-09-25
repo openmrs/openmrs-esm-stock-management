@@ -1,8 +1,8 @@
-import { StockItemFilter, useStockItems } from "./stock-items.resource";
-import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { ResourceRepresentation } from "../core/api/api";
-import { usePagination } from "@openmrs/esm-framework";
+import { StockItemFilter, useStockItems } from './stock-items.resource';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ResourceRepresentation } from '../core/api/api';
+import { usePagination } from '@openmrs/esm-framework';
 
 export function useStockItemsPages(v?: ResourceRepresentation) {
   const { t } = useTranslation();
@@ -13,7 +13,7 @@ export function useStockItemsPages(v?: ResourceRepresentation) {
   const [searchString, setSearchString] = useState(null);
 
   // Drug filter type
-  const [isDrug, setDrug] = useState("");
+  const [isDrug, setDrug] = useState('');
 
   const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
     startIndex: currentPage - 1,

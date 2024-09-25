@@ -1,27 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useStockItemsTransactions } from "./transactions.resource";
-import {
-  DataTableSkeleton,
-  Tile,
-  DatePicker,
-  DatePickerInput,
-} from "@carbon/react";
-import {
-  DATE_PICKER_CONTROL_FORMAT,
-  DATE_PICKER_FORMAT,
-  formatDisplayDate,
-} from "../../../core/utils/datetimeUtils";
-import { ArrowLeft } from "@carbon/react/icons";
-import DataList from "../../../core/components/table/table.component";
-import styles from "../../stock-items-table.scss";
-import { StockOperationType } from "../../../core/api/types/stockOperation/StockOperationType";
-import EditStockOperationActionMenu from "../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component";
-import TransactionsLocationsFilter from "./transaction-filters/transaction-locations-filter.component";
-import { useForm } from "react-hook-form";
-import { StockItemInventoryFilter } from "../../stock-items.resource";
-import { useTranslation } from "react-i18next";
-import { StockOperationDTO } from "../../../core/api/types/stockOperation/StockOperationDTO";
+import React, { useEffect, useMemo, useState } from 'react';
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useStockItemsTransactions } from './transactions.resource';
+import { DataTableSkeleton, Tile, DatePicker, DatePickerInput } from '@carbon/react';
+import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatDisplayDate } from '../../../core/utils/datetimeUtils';
+import { ArrowLeft } from '@carbon/react/icons';
+import DataList from '../../../core/components/table/table.component';
+import styles from '../../stock-items-table.scss';
+import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import EditStockOperationActionMenu from '../../../stock-operations/edit-stock-operation/edit-stock-operation-action-menu.component';
+import TransactionsLocationsFilter from './transaction-filters/transaction-locations-filter.component';
+import { useForm } from 'react-hook-form';
+import { StockItemInventoryFilter } from '../../stock-items.resource';
+import { useTranslation } from 'react-i18next';
+import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -31,17 +22,9 @@ interface TransactionsProps {
 const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   const { t } = useTranslation();
 
-  const [stockItemFilter, setStockItemFilter] =
-    useState<StockItemInventoryFilter>();
-  const {
-    isLoading,
-    items,
-    tableHeaders,
-    totalCount,
-    setCurrentPage,
-    setStockItemUuid,
-    setLocationUuid,
-  } = useStockItemsTransactions(stockItemFilter);
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>();
+  const { isLoading, items, tableHeaders, totalCount, setCurrentPage, setStockItemUuid, setLocationUuid } =
+    useStockItemsTransactions(stockItemFilter);
 
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
@@ -61,44 +44,29 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
       uuid: `${stockItemTransaction?.uuid}`,
       date: formatDisplayDate(stockItemTransaction?.dateCreated),
       location:
-        stockItemTransaction.operationSourcePartyName &&
-        stockItemTransaction.operationDestinationPartyName ? (
-          stockItemTransaction.operationSourcePartyName ===
-          stockItemTransaction?.partyName ? (
+        stockItemTransaction.operationSourcePartyName && stockItemTransaction.operationDestinationPartyName ? (
+          stockItemTransaction.operationSourcePartyName === stockItemTransaction?.partyName ? (
             stockItemTransaction.quantity > 0 ? (
               <>
-                <span className="transaction-location">
-                  {stockItemTransaction.operationSourcePartyName}
-                </span>
-                <ArrowLeft size={16} />{" "}
-                {stockItemTransaction.operationDestinationPartyName}
+                <span className="transaction-location">{stockItemTransaction.operationSourcePartyName}</span>
+                <ArrowLeft size={16} /> {stockItemTransaction.operationDestinationPartyName}
               </>
             ) : (
               <>
-                <span className="transaction-location">
-                  {stockItemTransaction.operationSourcePartyName}
-                </span>
-                <ArrowLeft size={16} />{" "}
-                {stockItemTransaction.operationDestinationPartyName}
+                <span className="transaction-location">{stockItemTransaction.operationSourcePartyName}</span>
+                <ArrowLeft size={16} /> {stockItemTransaction.operationDestinationPartyName}
               </>
             )
-          ) : stockItemTransaction.operationDestinationPartyName ===
-            stockItemTransaction?.partyName ? (
+          ) : stockItemTransaction.operationDestinationPartyName === stockItemTransaction?.partyName ? (
             stockItemTransaction.quantity > 0 ? (
               <>
-                <span className="transaction-location">
-                  {stockItemTransaction.operationDestinationPartyName}
-                </span>
-                <ArrowLeft size={16} />{" "}
-                {stockItemTransaction.operationSourcePartyName}
+                <span className="transaction-location">{stockItemTransaction.operationDestinationPartyName}</span>
+                <ArrowLeft size={16} /> {stockItemTransaction.operationSourcePartyName}
               </>
             ) : (
               <>
-                <span className="transaction-location">
-                  {stockItemTransaction.operationDestinationPartyName}
-                </span>
-                <ArrowLeft size={16} />{" "}
-                {stockItemTransaction.operationSourcePartyName}
+                <span className="transaction-location">{stockItemTransaction.operationDestinationPartyName}</span>
+                <ArrowLeft size={16} /> {stockItemTransaction.operationSourcePartyName}
               </>
             )
           ) : (
@@ -108,18 +76,14 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
           stockItemTransaction?.partyName
         ),
       transaction: stockItemTransaction?.isPatientTransaction
-        ? "Patient Dispense"
+        ? 'Patient Dispense'
         : stockItemTransaction.stockOperationTypeName,
-      quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${
-        stockItemTransaction?.packagingUomName ?? ""
-      }`,
+      quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''}`,
       batch: stockItemTransaction.stockBatchNo
         ? `${stockItemTransaction.stockBatchNo}${
-            stockItemTransaction.expiration
-              ? ` (${formatDisplayDate(stockItemTransaction.expiration)})`
-              : ""
+            stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
           }`
-        : "",
+        : '',
       reference: stockItemTransaction?.stockOperationUuid ? (
         <EditStockOperationActionMenu
           operationUuid={stockItemTransaction?.stockOperationUuid}
@@ -127,25 +91,25 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
           operations={operations}
           model={undefined}
           onEdit={function (operation: StockOperationDTO): void {
-            throw new Error("Function not implemented.");
+            throw new Error('Function not implemented.');
           }}
         />
       ) : (
         <></>
       ),
-      status: stockItemTransaction?.stockOperationStatus ?? "",
+      status: stockItemTransaction?.stockOperationStatus ?? '',
       in:
         stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${
-              stockItemTransaction?.packagingUomName ?? ""
-            } of ${stockItemTransaction.packagingUomFactor}`
-          : "",
+          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${
+              stockItemTransaction.packagingUomFactor
+            }`
+          : '',
       out:
         stockItemTransaction?.quantity < 0
           ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
-              stockItemTransaction?.packagingUomName ?? ""
+              stockItemTransaction?.packagingUomName ?? ''
             } of ${stockItemTransaction.packagingUomFactor}`
-          : "",
+          : '',
     }));
   }, [items, operations]);
 
@@ -171,14 +135,14 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   return (
     <DataList
       children={() => (
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <TransactionsLocationsFilter
             onLocationIdChange={(q) => {
               setLocationUuid(q);
               setStockItemFilter({ ...stockItemFilter, locationUuid: q });
             }}
-            name={"TransactionLocationUuid"}
-            placeholder={t("filterByLocation", "Filter by Location")}
+            name={'TransactionLocationUuid'}
+            placeholder={t('filterByLocation', 'Filter by Location')}
             control={control}
             controllerName="TransactionLocationUuid"
           />

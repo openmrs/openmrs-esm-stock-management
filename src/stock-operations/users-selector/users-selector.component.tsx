@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { User } from "../../core/api/types/identity/User";
-import { ComboBox, InlineLoading } from "@carbon/react";
-import { useUsersHook } from "./users-selector.resource";
-import { useDebounce } from "../../core/hooks/debounce-hook";
-import { otherUser } from "../../core/utils/utils";
+import React, { ReactNode } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { User } from '../../core/api/types/identity/User';
+import { ComboBox, InlineLoading } from '@carbon/react';
+import { useUsersHook } from './users-selector.resource';
+import { useDebounce } from '../../core/hooks/debounce-hook';
+import { otherUser } from '../../core/utils/utils';
 
 interface UsersSelectorProps<T> {
   placeholder?: string;
@@ -41,15 +41,13 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
             control={props.control}
             controllerName={props.controllerName}
             id={props.name}
-            size={"md"}
+            size={'md'}
             items={userList || []}
             onChange={(data: { selectedItem: User }) => {
               props.onUserChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
-            initialSelectedItem={
-              userList?.find((p) => p.uuid === props.userUuid) ?? ""
-            }
+            initialSelectedItem={userList?.find((p) => p.uuid === props.userUuid) ?? ''}
             itemToString={userName}
             onInputChange={debouncedSearch}
             placeholder={props.placeholder}
@@ -59,19 +57,13 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
           />
         )}
       />
-      {isLoading && (
-        <InlineLoading
-          status="active"
-          iconDescription="Searching"
-          description="Searching..."
-        />
-      )}
+      {isLoading && <InlineLoading status="active" iconDescription="Searching" description="Searching..." />}
     </div>
   );
 };
 
 function userName(item: User): string {
-  return item?.person?.display || "";
+  return item?.person?.display || '';
 }
 
 export default UsersSelector;

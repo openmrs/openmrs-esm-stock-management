@@ -1,8 +1,8 @@
-import React from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { NumberInputProps } from "@carbon/react/lib/components/NumberInput/NumberInput";
-import { NumberInput } from "@carbon/react";
-import { StockItemPackagingUOMDTO } from "../../../api/types/stockItem/StockItemPackagingUOM";
+import React from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { NumberInputProps } from '@carbon/react/lib/components/NumberInput/NumberInput';
+import { NumberInput } from '@carbon/react';
+import { StockItemPackagingUOMDTO } from '../../../api/types/stockItem/StockItemPackagingUOM';
 
 interface ControlledNumberInputProps<T> extends NumberInputProps {
   row?: StockItemPackagingUOMDTO;
@@ -30,7 +30,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
             state: {
               value: number | string;
               direction: string;
-            }
+            },
           ) => {
             onChange(event, state);
 

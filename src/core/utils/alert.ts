@@ -1,10 +1,10 @@
-import { showSnackbar } from "@openmrs/esm-framework";
+import { showSnackbar } from '@openmrs/esm-framework';
 
 export function errorAlert(title: string, msg: string) {
   showSnackbar({
     isLowContrast: true,
     title: title,
-    kind: "error",
+    kind: 'error',
     subtitle: msg,
   });
 }
