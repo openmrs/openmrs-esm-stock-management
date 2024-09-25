@@ -4167,7 +4167,6 @@ __metadata:
     eslint: "npm:^8.44.0"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     file-saver: "npm:^2.0.5"
-    husky: "npm:^8.0.0"
     i18next: "npm:^23.2.8"
     i18next-parser: "npm:^8.0.0"
     identity-obj-proxy: "npm:^3.0.0"
@@ -14802,15 +14801,6 @@ __metadata:
   dependencies:
     ms: "npm:^2.0.0"
   checksum: 10/9c7a74a2827f9294c009266c82031030eae811ca87b0da3dceb8d6071b9bde22c9f3daef0469c3c533cc67a97d8a167cd9fc0389350e5f415f61a79b171ded16
-  languageName: node
-  linkType: hard
-
-"husky@npm:^8.0.0":
-  version: 8.0.3
-  resolution: "husky@npm:8.0.3"
-  bin:
-    husky: lib/bin.js
-  checksum: 10/b754cf70fdc97c3b60fec5b80056b9c11436464953b1691bf2b5dcf0081fb6685d2c5f47abb8b2b1c49f504aabea5321fdd6496f8b755d9f6e7525a493406abb
   languageName: node
   linkType: hard
 
