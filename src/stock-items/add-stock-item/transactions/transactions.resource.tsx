@@ -36,7 +36,7 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     });
   }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
-  const { items, isLoading, isError } = useStockItemTransactions(stockItemFilter);
+  const { items, isLoading, error } = useStockItemTransactions(stockItemFilter);
 
   const tableHeaders = useMemo(
     () => [
@@ -85,7 +85,7 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     setPageSize,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setSearchString,
     tableHeaders,
     setStockItemUuid,

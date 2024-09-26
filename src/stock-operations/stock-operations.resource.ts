@@ -39,7 +39,7 @@ export function useStockOperations(filter: StockOperationFilter) {
   return {
     items: data?.data || <PageableResult<StockOperationDTO>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -64,7 +64,7 @@ export function useStockOperation(id: string) {
   return {
     items: data.data ? data.data : {},
     isLoading,
-    isError: error,
+    error,
   };
 } // getStockOperation
 export function getStockOperation(id: string): Promise<FetchResponse<StockOperationDTO>> {
@@ -80,7 +80,7 @@ export function useStockOperationAndItems(id: string) {
   return {
     items: data.data ? data.data : {},
     isLoading,
-    isError: error,
+    error,
   };
 }
 

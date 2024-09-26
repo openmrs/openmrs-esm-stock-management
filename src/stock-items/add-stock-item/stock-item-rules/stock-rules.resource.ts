@@ -17,7 +17,7 @@ export function useStockRules(filter: StockSourceFilter) {
   return {
     items: data?.data || <PageableResult<StockRule>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -28,7 +28,7 @@ export function useStockRule(id: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 

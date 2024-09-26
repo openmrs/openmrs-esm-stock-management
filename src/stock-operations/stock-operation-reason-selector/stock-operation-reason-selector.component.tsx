@@ -25,11 +25,11 @@ const StockOperationReasonSelector = <T,>(props: StockOperationReasonSelectorPro
 
   const {
     isLoading,
-    isError,
+    error,
     items: { answers: reasons },
   } = useConcept(stockAdjustmentReasonUUID);
 
-  if (isLoading || isError) return <SelectSkeleton />;
+  if (isLoading || error) return <SelectSkeleton />;
 
   return (
     <Controller

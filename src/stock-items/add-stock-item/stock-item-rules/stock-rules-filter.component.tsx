@@ -9,13 +9,13 @@ interface StockRulesFilterProps {
 }
 
 const StockRulesFilter: React.FC<StockRulesFilterProps> = ({ stockItemUuid }) => {
-  const { items, isLoading, isError } = useStockRules({
+  const { items, isLoading, error } = useStockRules({
     v: ResourceRepresentation.Default,
     totalCount: true,
     stockItemUuid: stockItemUuid,
   });
 
-  if (isLoading || isError) {
+  if (isLoading || error) {
     return <DropdownSkeleton />;
   }
   return (

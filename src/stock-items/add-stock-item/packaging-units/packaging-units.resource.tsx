@@ -21,13 +21,13 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
     });
   }, [stockItemUuid]);
 
-  const { items, isLoading, isError, mutate } = useStockItemPackagingUOMs(stockItemFilter);
+  const { items, isLoading, error, mutate } = useStockItemPackagingUOMs(stockItemFilter);
 
   return {
     items: items.results,
     totalCount: items.totalCount,
     isLoading,
-    isError,
+    error,
     setStockItemUuid,
     mutate,
   };

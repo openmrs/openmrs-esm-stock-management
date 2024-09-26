@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { usePagination } from '@openmrs/esm-framework';
 
 export default function useStockUserRoleScopesPage(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useUserRoleScopes(filter);
+  const { items, isLoading, error } = useUserRoleScopes(filter);
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -19,7 +19,7 @@ export default function useStockUserRoleScopesPage(filter: StockOperationFilter)
     goTo,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setPageSize,
   };
 }

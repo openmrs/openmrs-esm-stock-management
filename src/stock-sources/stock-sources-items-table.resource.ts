@@ -4,7 +4,7 @@ import { usePagination } from '@openmrs/esm-framework';
 import { StockOperationFilter } from '../stock-operations/stock-operations.resource';
 
 export default function useStockSourcesPage(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useStockSources(filter);
+  const { items, isLoading, error } = useStockSources(filter);
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -45,7 +45,7 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
     goTo,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setPageSize,
     tableHeaders,
   };

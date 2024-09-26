@@ -23,7 +23,7 @@ export function useBatchJobs(filter: BatchJobFilter) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -68,6 +68,6 @@ export function useReportTypes() {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }

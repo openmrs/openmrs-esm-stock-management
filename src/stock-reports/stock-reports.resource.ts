@@ -9,7 +9,7 @@ export function useReportTypes() {
   return {
     reportTypes: data?.data?.results ?? [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 export function useGetReports() {
@@ -22,7 +22,7 @@ export function useGetReports() {
   return {
     reports: data?.data?.results ?? [],
     isLoading,
-    isError: error,
+    error,
     items: paginatedItems,
     totalItems: data?.data?.results?.length,
     currentPage,

@@ -4,7 +4,7 @@ import { usePagination } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
 
 export function useStockOperationPages(filter: StockOperationFilter) {
-  const { items, isLoading, isError } = useStockOperations(filter);
+  const { items, isLoading, error } = useStockOperations(filter);
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -63,7 +63,7 @@ export function useStockOperationPages(filter: StockOperationFilter) {
     goTo,
     pageSizes,
     isLoading,
-    isError,
+    error,
     setPageSize,
     tableHeaders,
   };
