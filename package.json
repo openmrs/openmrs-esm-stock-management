@@ -15,7 +15,7 @@
     "prettier": "prettier --write \"src/**/*.{css,scss,ts,tsx}\" --list-different",
     "typescript": "tsc",
     "test": "jest --config jest.config.js --passWithNoTests",
-    "verify": "turbo lint typescript coverage",
+    "verify": "turbo run lint typescript coverage",
     "coverage": "yarn test --coverage",
     "prepare": "husky install",
     "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./i18next-parser.config.js"
@@ -99,7 +99,7 @@
     "rxjs": "^6.6.7",
     "swc-loader": "^0.2.3",
     "swr": "^2.2.4",
-    "turbo": "^1.10.7",
+    "turbo": "^2.1.2",
     "typescript": "^4.9.5",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
