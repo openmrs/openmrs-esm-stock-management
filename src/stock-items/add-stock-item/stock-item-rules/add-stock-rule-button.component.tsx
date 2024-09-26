@@ -13,7 +13,7 @@ const AddStockRuleActionButton: React.FC<AddStockRuleActionButtonProps> = ({ sto
 
   const handleClick = useCallback(() => {
     launchOverlay('Add Stock Rule', <StockRulesAddOrUpdate stockItemUuid={stockItemUuid} />);
-  }, []);
+  }, [stockItemUuid]);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">

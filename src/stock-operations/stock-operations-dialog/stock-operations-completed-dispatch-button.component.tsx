@@ -23,7 +23,7 @@ const StockOperationCompleteDispatchButton: React.FC<StockOperationCompleteDispa
       requireReason: reason,
       closeModal: () => dispose(),
     });
-  }, [operation]);
+  }, [operation, reason]);
 
   return (
     <Button onClick={launchcompletedDispatchModal} renderIcon={(props) => <Arrival size={16} {...props} />}>

@@ -25,7 +25,7 @@ const DispensingPackageMeasurement = <T,>(props: DispensingPackageMeasurementPro
       props?.packagingUnits.length > 0
         ? props?.packagingUnits.find((u) => u?.uuid === props?.dispensingUnitPackagingUoMUuid)
         : null,
-    [props?.packagingUnits],
+    [props?.packagingUnits, props?.dispensingUnitPackagingUoMUuid],
   );
 
   if (props.isLoading) return <SelectSkeleton />;

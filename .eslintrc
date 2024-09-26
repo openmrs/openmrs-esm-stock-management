@@ -4,15 +4,18 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/react"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint",
-    "react-hooks"
+    "react-hooks",
+    "testing-library"
   ],
   "root": true,
   "rules": {
+    "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "error",
     // Disabling these rules for now just to keep the diff small. I'll enable them in a future PR that fixes lint issues.
     "@typescript-eslint/no-explicit-any": "off",

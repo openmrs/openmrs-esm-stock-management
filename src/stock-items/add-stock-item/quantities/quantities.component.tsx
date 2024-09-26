@@ -37,7 +37,7 @@ const StockQuantities: React.FC<StockQuantitiesProps> = ({ stockItemUuid }) => {
         header: t('packagingUnit', 'Packaging Unit'),
       },
     ],
-    [],
+    [t],
   );
 
   const tableRows = useMemo(() => {
