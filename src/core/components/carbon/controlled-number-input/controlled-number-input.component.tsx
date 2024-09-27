@@ -19,6 +19,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
       control={props.control}
       render={({ field: { onChange, value, ref } }) => (
         <NumberInput
+          disableWheel
           label={props.label}
           id={`${props.name}-${props.id}-${props.row?.uuid}`}
           value={props.row?.factor ?? value}

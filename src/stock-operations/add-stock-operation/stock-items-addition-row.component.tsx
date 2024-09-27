@@ -3,7 +3,6 @@ import { isDesktop } from '@openmrs/esm-framework';
 import { Button, DatePicker, DatePickerInput, Link, NumberInput, TableCell, TableRow, TextInput } from '@carbon/react';
 import { TrashCan } from '@carbon/react/icons';
 import { StockOperationItemFormData } from '../validation-schema';
-import StockItemSelector from '../stock-item-selector/stock-item-selector.component';
 import {
   Control,
   FieldArrayWithId,
@@ -217,11 +216,12 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
               <div className={styles.cellContent}>
                 {canEdit && (
                   <NumberInput
+                    allowEmpty
                     className="small-placeholder-text"
+                    disableWheel
+                    hideSteppers
                     size="sm"
                     id={`qty-${row?.uuid}`}
-                    hideSteppers={true}
-                    allowEmpty={true}
                     onChange={(e: any) => setValue(`stockItems.${index}.quantity`, e?.target?.value)}
                     value={row?.quantity ?? ''}
                     invalidText={errors?.stockItems?.[index]?.quantity?.message}
@@ -262,11 +262,12 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   <div className={styles.cellContent}>
                     {canEdit && (
                       <NumberInput
+                        allowEmpty
+                        disableWheel
                         size="sm"
                         invalid={!!errors?.stockItems?.[index]?.purchasePrice}
                         invalidText=""
                         id={`purchaseprice-${row.uuid}`}
-                        allowEmpty={true}
                         onChange={(e: any) => setValue(`stockItems.${index}.purchasePrice`, e?.target?.value)}
                         value={row?.purchasePrice ?? ''}
                         title=""

@@ -522,8 +522,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             render={({ field: { onChange, value } }) => (
               <NumberInput
                 id="limitTop"
-                allowEmpty={true}
-                hideSteppers={true}
+                allowEmpty
+                disableWheel
+                hideSteppers
                 value={value}
                 onchange={onChange}
                 label={t('limit', 'Limit')}
