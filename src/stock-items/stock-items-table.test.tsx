@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import StockItemsTableComponent from './stock-items-table.component';
 import { useStockItemsPages } from './stock-items-table.resource';
 import { handleMutate } from '../utils';
@@ -57,8 +58,9 @@ describe('StockItemsTableComponent', () => {
     expect(screen.getByText('panelDescription')).toBeInTheDocument();
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
     
+    const user = userEvent.setup();
     const menuButton = screen.getByTestId('stock-items-menu');
-    fireEvent.click(menuButton);
+    await user.click(menuButton);
   
     await screen.findByText('Refresh');
     
@@ -82,43 +84,47 @@ describe('StockItemsTableComponent', () => {
 
   it('updates search input and triggers search function', async () => {
     render(<StockItemsTableComponent />);
+    const user = userEvent.setup();
     const searchInput = screen.getByRole('searchbox');
-    fireEvent.change(searchInput, { target: { value: 'test search' } });
+    await user.type(searchInput, 'test search');
     await waitFor(() => {
       expect(mockUseStockItemsPages.setSearchString).toHaveBeenCalledWith('test search');
     }, { timeout: 2000 });
   });
 
-  it('updates pagination when page or page size changes', () => {
+  it('updates pagination when page or page size changes', async () => {
     render(<StockItemsTableComponent />);
+    const user = userEvent.setup();
     const nextPageButton = screen.getByLabelText('Next page');
-    fireEvent.click(nextPageButton);
+    await user.click(nextPageButton);
     expect(mockUseStockItemsPages.setCurrentPage).toHaveBeenCalled();
 
     const pageSizeSelect = screen.getByLabelText('Items per page:');
-    fireEvent.change(pageSizeSelect, { target: { value: '20' } });
+    await user.selectOptions(pageSizeSelect, '20');
     expect(mockUseStockItemsPages.setPageSize).toHaveBeenCalledWith(20);
   });
 
   it('triggers handleRefresh when refresh button is clicked', async () => {
     render(<StockItemsTableComponent />);
     
+    const user = userEvent.setup();
     const menuButton = screen.getByTestId('stock-items-menu');
     expect(menuButton).toBeInTheDocument();
-    fireEvent.click(menuButton);
+    await user.click(menuButton);
   
     const refreshButton = await screen.findByText('Refresh');
     expect(refreshButton).toBeInTheDocument();
-    fireEvent.click(refreshButton);
+    await user.click(refreshButton);
     await waitFor(() => {
       expect(handleMutate).toHaveBeenCalledWith(expect.stringContaining('/stockmanagement/stockitem'));
     });
   });
 
-  it('triggers launchAddOrEditDialog when edit button is clicked', () => {
+  it('triggers launchAddOrEditDialog when edit button is clicked', async () => {
     render(<StockItemsTableComponent />);
+    const user = userEvent.setup();
     const editButtons = screen.getAllByLabelText('Edit Stock Item');
-    fireEvent.click(editButtons[0]);
+    await user.click(editButtons[0]);
     expect(launchAddOrEditDialog).toHaveBeenCalledWith(
       expect.any(Function),
       expect.objectContaining({ uuid: 'item-0' }),
