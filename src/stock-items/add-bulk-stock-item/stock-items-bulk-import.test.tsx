@@ -22,7 +22,7 @@ describe('ImportDialogPopup', () => {
 
   it('renders with initial state and UI elements', () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     expect(screen.getByText('Import Stock Items')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Select file' })).toBeInTheDocument();
     expect(screen.getByText('Only .csv files at 2mb or less')).toBeInTheDocument();
@@ -32,29 +32,31 @@ describe('ImportDialogPopup', () => {
 
   it('allows only CSV files', async () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
     expect(fileInput.accept).toBe('.csv');
   });
 
   it('does not allow files larger than 2MB', async () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const largeFile = new File(['x'.repeat(2 * 1024 * 1024 + 1)], 'large.csv', { type: 'text/csv' });
     const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
 
     await userEvent.upload(fileInput, largeFile);
 
     expect(fileInput.files).toHaveLength(0);
-    expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({
-      kind: 'error',
-      title: 'File size error',
-    }));
+    expect(showSnackbar).toHaveBeenCalledWith(
+      expect.objectContaining({
+        kind: 'error',
+        title: 'File size error',
+      }),
+    );
   });
 
   it('allows files 2MB or smaller', async () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const validFile = new File(['x'.repeat(2 * 1024 * 1024)], 'valid.csv', { type: 'text/csv' });
     const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
 
@@ -66,7 +68,7 @@ describe('ImportDialogPopup', () => {
 
   it('closes modal when cancel button is clicked', async () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     await userEvent.click(cancelButton);
 
@@ -75,7 +77,7 @@ describe('ImportDialogPopup', () => {
 
   it('does nothing when upload is clicked without a file', async () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const uploadButton = screen.getByRole('button', { name: 'Upload StockItems' });
     await userEvent.click(uploadButton);
 
@@ -87,7 +89,7 @@ describe('ImportDialogPopup', () => {
   it('uploads file successfully and shows success snackbar', async () => {
     (UploadStockItems as jest.Mock).mockResolvedValue({});
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const validFile = new File(['test content'], 'valid.csv', { type: 'text/csv' });
     const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
     await userEvent.upload(fileInput, validFile);
@@ -95,20 +97,22 @@ describe('ImportDialogPopup', () => {
     const uploadButton = screen.getByRole('button', { name: 'Upload StockItems' });
     await userEvent.click(uploadButton);
 
-    await waitFor(() => {
-      expect(UploadStockItems).toHaveBeenCalled();
-      expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({
-        kind: 'success',
-        title: 'Uploaded Order',
-      }));
-      expect(mockCloseModal).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(UploadStockItems).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(showSnackbar).toHaveBeenCalledWith(
+        expect.objectContaining({
+          kind: 'success',
+          title: 'Uploaded Order',
+        }),
+      ),
+    );
+    await waitFor(() => expect(mockCloseModal).toHaveBeenCalledTimes(1));
   });
 
   it('shows error snackbar on upload failure', async () => {
     (UploadStockItems as jest.Mock).mockRejectedValue(new Error('Upload failed'));
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
-    
+
     const validFile = new File(['test content'], 'valid.csv', { type: 'text/csv' });
     const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
     await userEvent.upload(fileInput, validFile);
@@ -116,13 +120,15 @@ describe('ImportDialogPopup', () => {
     const uploadButton = screen.getByRole('button', { name: 'Upload StockItems' });
     await userEvent.click(uploadButton);
 
-    await waitFor(() => {
-      expect(UploadStockItems).toHaveBeenCalled();
-      expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({
-        kind: 'error',
-        title: 'An error occurred uploading stock items',
-      }));
-      expect(mockCloseModal).not.toHaveBeenCalled();
-    });
+    await waitFor(() => expect(UploadStockItems).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(showSnackbar).toHaveBeenCalledWith(
+        expect.objectContaining({
+          kind: 'error',
+          title: 'An error occurred uploading stock items',
+        }),
+      ),
+    );
+    await waitFor(() => expect(mockCloseModal).not.toHaveBeenCalled());
   });
 });
