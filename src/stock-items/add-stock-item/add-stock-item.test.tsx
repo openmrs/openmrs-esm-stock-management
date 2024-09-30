@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import AddEditStockItem from "./add-stock-item.component";
 import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
 
@@ -164,16 +165,17 @@ describe("AddEditStockItem", () => {
     ).toBeInTheDocument();
   });
 
-  it("changes selected tab when clicking on different tabs", () => {
+  it("changes selected tab when clicking on different tabs", async () => {
+    const user = userEvent.setup();
     render(<AddEditStockItem model={mockModel} isEditing={true} />);
 
-    fireEvent.click(screen.getByText("packagingUnits"));
+    await user.click(screen.getByText("packagingUnits"));
     expect(screen.getByTestId("packaging-units")).toBeInTheDocument();
     expect(
       screen.getByText("Packaging Units: test-uuid-123")
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("transactions"));
+    await user.click(screen.getByText("transactions"));
     expect(screen.getByTestId("transactions")).toBeInTheDocument();
     expect(screen.getByText("Transactions: test-uuid-123")).toBeInTheDocument();
   });
@@ -212,33 +214,34 @@ describe("AddEditStockItem", () => {
     });
   });
 
-  it("renders correct components based on model prop", () => {
+  it("renders correct components based on model prop", async () => {
+    const user = userEvent.setup();
     render(<AddEditStockItem model={mockModel} isEditing={true} />);
 
     expect(
       screen.getByText("Stock Item Details: test-uuid-123")
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("packagingUnits"));
+    await user.click(screen.getByText("packagingUnits"));
     expect(
       screen.getByText("Packaging Units: test-uuid-123")
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("transactions"));
+    await user.click(screen.getByText("transactions"));
     expect(screen.getByText("Transactions: test-uuid-123")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("batchInformation"));
+    await user.click(screen.getByText("batchInformation"));
     expect(
       screen.getByText("Batch Information: test-uuid-123")
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("quantities"));
+    await user.click(screen.getByText("quantities"));
     expect(screen.getByText("Quantities: test-uuid-123")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("stockRules"));
+    await user.click(screen.getByText("stockRules"));
     expect(screen.getByText("Rules: test-uuid-123")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("references"));
+    await user.click(screen.getByText("references"));
     expect(screen.getByText("References: test-uuid-123")).toBeInTheDocument();
   });
 
