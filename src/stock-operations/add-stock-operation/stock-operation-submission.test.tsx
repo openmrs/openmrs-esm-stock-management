@@ -1,9 +1,10 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import StockOperationSubmission from "./stock-operation-submission.component";
 import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
 import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
 import { InitializeResult } from "./types";
+import userEvent from "@testing-library/user-event";
 
 const mockOnGoBack = jest.fn();
 const mockOnSave = jest.fn();
@@ -44,8 +45,11 @@ const defaultProps = {
 };
 
 describe("StockOperationSubmission", () => {
+  let user;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    user = userEvent.setup();
   });
 
   it("renders without crashing", () => {
@@ -57,32 +61,35 @@ describe("StockOperationSubmission", () => {
     ).toBeInTheDocument();
   });
 
-  it("allows approval required to be selected", () => {
+  it("allows approval required to be selected", async () => {
     const { getByLabelText } = render(
       <StockOperationSubmission {...defaultProps} />
     );
 
-    fireEvent.click(getByLabelText(/yes/i));
+    await user.click(getByLabelText(/yes/i));
 
     const yesRadioButton = getByLabelText(/yes/i) as HTMLInputElement;
     expect(yesRadioButton.checked).toBe(true);
   });
 
-  it("allows approval not required to be selected", () => {
+  it("allows approval not required to be selected", async () => {
     const { getByLabelText } = render(
       <StockOperationSubmission {...defaultProps} />
     );
-    fireEvent.click(getByLabelText(/no/i));
+
+    await user.click(getByLabelText(/no/i));
+
     const noRadioButton = getByLabelText(/no/i) as HTMLInputElement;
     expect(noRadioButton.checked).toBe(true);
   });
 
-  it("calls onGoBack when Go Back button is clicked", () => {
+  it("calls onGoBack when Go Back button is clicked", async () => {
     const { getByText } = render(
       <StockOperationSubmission {...defaultProps} />
     );
 
-    fireEvent.click(getByText(/go back/i));
+    await user.click(getByText(/go back/i));
+
     expect(mockOnGoBack).toHaveBeenCalled();
   });
 
@@ -91,7 +98,7 @@ describe("StockOperationSubmission", () => {
       <StockOperationSubmission {...defaultProps} />
     );
 
-    fireEvent.click(getByText(/save/i));
+    await user.click(getByText(/save/i));
 
     await waitFor(() => {
       expect(mockOnSave).toHaveBeenCalled();
@@ -103,7 +110,7 @@ describe("StockOperationSubmission", () => {
       <StockOperationSubmission {...defaultProps} />
     );
 
-    fireEvent.click(getByText(/save/i));
+    await user.click(getByText(/save/i));
 
     await waitFor(() => {
       expect(mockOnSave).toHaveBeenCalled();
@@ -111,18 +118,24 @@ describe("StockOperationSubmission", () => {
   });
 
   it("disables the save button while saving", async () => {
-    const { getByRole } = render(
-      <StockOperationSubmission {...defaultProps} />
+    const mockOnSave = jest.fn<Promise<void>, [StockOperationDTO]>(
+      (model) => new Promise((resolve) => setTimeout(resolve, 500))
     );
 
-    const saveButton = getByRole("button", { name: "Save" });
+    const testProps = {
+      ...defaultProps,
+      actions: {
+        ...defaultProps.actions,
+        onSave: mockOnSave,
+      },
+    };
 
-    fireEvent.click(saveButton);
+    const { getByRole } = render(<StockOperationSubmission {...testProps} />);
+    const saveButton = getByRole("button", { name: "Save" });
+    await user.click(saveButton);
 
     await waitFor(() => {
       expect(saveButton).toBeDisabled();
-    });
-    await waitFor(() => {
       expect(saveButton).not.toBeDisabled();
     });
   });
@@ -131,9 +144,27 @@ describe("StockOperationSubmission", () => {
     const { getByText } = render(
       <StockOperationSubmission {...defaultProps} />
     );
-    fireEvent.click(getByText(/complete/i));
+
+    await user.click(getByText(/complete/i));
+
     await waitFor(() => {
       expect(mockOnComplete).toHaveBeenCalled();
     });
+  });
+
+  it("does not render buttons when locked", () => {
+    const lockedProps = {
+      ...defaultProps,
+      locked: true,
+    };
+
+    const { queryByRole } = render(
+      <StockOperationSubmission {...lockedProps} />
+    );
+
+    expect(queryByRole("button", { name: /save/i })).not.toBeInTheDocument();
+    expect(
+      queryByRole("button", { name: /complete/i })
+    ).not.toBeInTheDocument();
   });
 });
