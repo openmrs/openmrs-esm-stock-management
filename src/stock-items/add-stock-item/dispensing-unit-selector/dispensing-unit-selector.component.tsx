@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
-import { ComboBox, TextInputSkeleton } from "@carbon/react";
-import { useConcept } from "../../../stock-lookups/stock-lookups.resource";
-import { Concept } from "../../../core/api/types/concept/Concept";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { type ConfigObject } from "../../../config-schema";
-import { useConfig } from "@openmrs/esm-framework";
+import React, { ReactNode } from 'react';
+import { ComboBox, TextInputSkeleton } from '@carbon/react';
+import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
+import { Concept } from '../../../core/api/types/concept/Concept';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { type ConfigObject } from '../../../config-schema';
+import { useConfig } from '@openmrs/esm-framework';
 
 interface DispensingUnitSelectorProps<T> {
   dispensingUnitUuid?: string;
@@ -40,21 +40,16 @@ const DispensingUnitSelector = <T,>(props: DispensingUnitSelectorProps<T>) => {
           control={props.control}
           controllerName={props.controllerName}
           id={props.name}
-          size={"md"}
+          size={'md'}
           items={dispensingUnits || []}
           onChange={(data: { selectedItem: Concept }) => {
             props.onDispensingUnitChange?.(data.selectedItem);
             onChange(data.selectedItem.uuid);
           }}
-          initialSelectedItem={
-            dispensingUnits?.find((p) => p.uuid === props.dispensingUnitUuid) ||
-            {}
-          }
-          itemToString={(item?: Concept) =>
-            item && item?.display ? `${item?.display}` : ""
-          }
+          initialSelectedItem={dispensingUnits?.find((p) => p.uuid === props.dispensingUnitUuid) || {}}
+          itemToString={(item?: Concept) => (item && item?.display ? `${item?.display}` : '')}
           shouldFilterItem={() => true}
-          value={dispensingUnits?.find((p) => p.uuid === value)?.display ?? ""}
+          value={dispensingUnits?.find((p) => p.uuid === value)?.display ?? ''}
           placeholder={props.placeholder}
           ref={ref}
           invalid={props.invalid}

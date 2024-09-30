@@ -1,23 +1,14 @@
-import {
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Form,
-  Select,
-  TextInput,
-  SelectItem,
-} from "@carbon/react";
-import React, { ChangeEvent, useCallback, useState } from "react";
-import styles from "./add-stock-sources.scss";
-import { useConcept } from "../../stock-lookups/stock-lookups.resource";
-import { StockSource } from "../../core/api/types/stockOperation/StockSource";
-import { createOrUpdateStockSource } from "../stock-sources.resource";
-import { restBaseUrl, showSnackbar, useConfig } from "@openmrs/esm-framework";
-import { useTranslation } from "react-i18next";
-import { closeOverlay } from "../../core/components/overlay/hook";
-import { type ConfigObject } from "../../config-schema";
-import { handleMutate } from "../../utils";
+import { ModalHeader, ModalBody, ModalFooter, Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
+import styles from './add-stock-sources.scss';
+import { useConcept } from '../../stock-lookups/stock-lookups.resource';
+import { StockSource } from '../../core/api/types/stockOperation/StockSource';
+import { createOrUpdateStockSource } from '../stock-sources.resource';
+import { restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
+import { closeOverlay } from '../../core/components/overlay/hook';
+import { type ConfigObject } from '../../config-schema';
+import { handleMutate } from '../../utils';
 
 interface AddStockSourceProps {
   model?: StockSource;
@@ -33,19 +24,17 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
   const [formModel, setFormModel] = useState<StockSource>({ ...model });
 
   const onNameChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.name = evt.target.value) : "";
+    model ? (model.name = evt.target.value) : '';
     setFormModel({ ...formModel, name: evt.target.value });
   };
 
   const onAcronymChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.acronym = evt.target.value) : "";
+    model ? (model.acronym = evt.target.value) : '';
     setFormModel({ ...formModel, acronym: evt.target.value });
   };
 
   const onSourceTypeChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-    const selectedSourceType = items?.answers.find(
-      (x) => x.uuid === evt.target.value
-    );
+    const selectedSourceType = items?.answers.find((x) => x.uuid === evt.target.value);
     setFormModel({ ...formModel, sourceType: selectedSourceType });
   };
 
@@ -60,12 +49,9 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
           () => {
             showSnackbar({
               isLowContrast: true,
-              title: t("addedSource", "Add Source"),
-              kind: "success",
-              subtitle: t(
-                "stockSourceAddedSuccessfully",
-                "Stock Source Added Successfully"
-              ),
+              title: t('addedSource', 'Add Source'),
+              kind: 'success',
+              subtitle: t('stockSourceAddedSuccessfully', 'Stock Source Added Successfully'),
               timeoutInMs: 5000,
             });
 
@@ -75,16 +61,16 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
           },
           (error) => {
             showSnackbar({
-              title: t("errorAddingSource", "Error adding a source"),
-              kind: "error",
+              title: t('errorAddingSource', 'Error adding a source'),
+              kind: 'error',
               isLowContrast: true,
               subtitle: error?.message,
             });
-          }
+          },
         )
         .catch();
     },
-    [formModel, model, t]
+    [formModel, model, t],
   );
   return (
     <div>
@@ -95,7 +81,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
             <TextInput
               id="fullname"
               type="text"
-              labelText={t("fullName", "Full Name")}
+              labelText={t('fullName', 'Full Name')}
               size="md"
               onChange={onNameChanged}
               value={model?.name}
@@ -110,41 +96,30 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               placeholder="e.g NMS"
               onChange={onAcronymChanged}
               value={model?.acronym}
-              labelText={t("acronym", "Acronym/Code")}
+              labelText={t('acronym', 'Acronym/Code')}
             />
           </section>
           <section className={styles.section}>
             <Select
               name="sourceType"
               className="select-field"
-              labelText={t("sourceType", "Source Type")}
+              labelText={t('sourceType', 'Source Type')}
               id="sourceType"
-              value={formModel?.sourceType ? formModel.sourceType.uuid : ""}
+              value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
               onChange={onSourceTypeChange}
             >
-              <SelectItem
-                disabled
-                hidden
-                value=""
-                text={t("chooseSourceType", "Choose a source type")}
-              />
+              <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
               {items?.answers?.map((sourceType) => {
-                return (
-                  <SelectItem
-                    key={sourceType.uuid}
-                    value={sourceType.uuid}
-                    text={sourceType.display}
-                  />
-                );
+                return <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />;
               })}
             </Select>
           </section>
         </ModalBody>
         <ModalFooter>
           <Button kind="secondary" onClick={closeOverlay}>
-            {t("cancel", "Cancel")}
+            {t('cancel', 'Cancel')}
           </Button>
-          <Button type="submit">{t("save", "Save")}</Button>
+          <Button type="submit">{t('save', 'Save')}</Button>
         </ModalFooter>
       </Form>
     </div>

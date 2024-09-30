@@ -12,13 +12,13 @@ export interface StockOperationActionLineItem {
 }
 
 export const StopOperationActionTypes = [
-  "SUBMIT",
-  "DISPATCH",
-  "APPROVE",
-  "RETURN",
-  "REJECT",
-  "COMPLETE",
-  "CANCEL",
-  "QUANTITY_RECEIVED",
+  'SUBMIT',
+  'DISPATCH',
+  'APPROVE',
+  'RETURN',
+  'REJECT',
+  'COMPLETE',
+  'CANCEL',
+  'QUANTITY_RECEIVED',
 ] as const;
 export type StopOperationActionType = (typeof StopOperationActionTypes)[number];

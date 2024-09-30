@@ -1,8 +1,8 @@
-import { openmrsFetch, restBaseUrl } from "@openmrs/esm-framework";
-import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
-import useSWR from "swr";
-import { PageableResult } from "../core/api/types/PageableResult";
-import { StockSource } from "../core/api/types/stockOperation/StockSource";
+import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
+import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import useSWR from 'swr';
+import { PageableResult } from '../core/api/types/PageableResult';
+import { StockSource } from '../core/api/types/stockOperation/StockSource';
 
 export interface StockSourceFilter extends ResourceFilterCriteria {
   sourceTypeUuid?: string | null;
@@ -10,33 +10,25 @@ export interface StockSourceFilter extends ResourceFilterCriteria {
 
 // getStockSources
 export function useStockSources(filter: StockSourceFilter) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource${toQueryParams(
-    filter
-  )}`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource${toQueryParams(filter)}`;
 
-  const { data, error, isLoading } = useSWR<
-    { data: PageableResult<StockSource> },
-    Error
-  >(apiUrl, openmrsFetch);
+  const { data, error, isLoading } = useSWR<{ data: PageableResult<StockSource> }, Error>(apiUrl, openmrsFetch);
 
   return {
     items: data?.data || <PageableResult<StockSource>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
 // getStockSource
 export function useStockSource(id: string) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stocksource/${id}`;
-  const { data, error, isLoading } = useSWR<{ data: StockSource }, Error>(
-    apiUrl,
-    openmrsFetch
-  );
+  const { data, error, isLoading } = useSWR<{ data: StockSource }, Error>(apiUrl, openmrsFetch);
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -44,18 +36,18 @@ export function useStockSource(id: string) {
 export function deleteStockSource(ids: string[]) {
   let otherIds = ids.reduce((p, c, i) => {
     if (i === 0) return p;
-    p += (p.length > 0 ? "," : "") + encodeURIComponent(c);
+    p += (p.length > 0 ? ',' : '') + encodeURIComponent(c);
     return p;
-  }, "");
+  }, '');
   if (otherIds.length > 0) {
-    otherIds = "?ids=" + otherIds;
+    otherIds = '?ids=' + otherIds;
   }
   const apiUrl = `${restBaseUrl}/stockmanagement/stocksource/${ids[0]}${otherIds}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     signal: abortController.signal,
   });
@@ -65,14 +57,12 @@ export function deleteStockSource(ids: string[]) {
 export function createOrUpdateStockSource(item: StockSource) {
   const isNew = item.uuid != null;
 
-  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource${
-    isNew ? "/" + item.uuid : ""
-  }`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stocksource${isNew ? '/' + item.uuid : ''}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     signal: abortController.signal,
     body: { ...item, sourceType: item?.sourceType?.uuid },

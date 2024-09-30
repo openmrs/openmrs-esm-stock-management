@@ -1,9 +1,6 @@
-import {
-  StockItemFilter,
-  useStockItems,
-} from "../stock-items/stock-items.resource";
-import { useEffect, useState } from "react";
-import { ResourceRepresentation } from "../core/api/api";
+import { StockItemFilter, useStockItems } from '../stock-items/stock-items.resource';
+import { useEffect, useState } from 'react';
+import { ResourceRepresentation } from '../core/api/api';
 export function useStockInventoryItems(v?: ResourceRepresentation) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemFilter>({
     v: v || ResourceRepresentation.Default,
@@ -11,7 +8,7 @@ export function useStockInventoryItems(v?: ResourceRepresentation) {
     totalCount: true,
   });
 
-  const { items, isLoading, isError } = useStockItems(stockItemFilter);
+  const { items, isLoading, error } = useStockItems(stockItemFilter);
 
   useEffect(() => {
     setStockItemFilter({
@@ -23,6 +20,6 @@ export function useStockInventoryItems(v?: ResourceRepresentation) {
   return {
     items: items?.results ?? [],
     isLoading,
-    isError,
+    error,
   };
 }

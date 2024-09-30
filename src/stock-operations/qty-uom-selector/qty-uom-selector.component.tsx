@@ -1,8 +1,8 @@
-import React, { ReactNode, useMemo } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
-import { ComboBox, SkeletonText } from "@carbon/react";
-import { useStockItem } from "../../stock-items/stock-items.resource";
+import React, { ReactNode, useMemo } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { StockItemPackagingUOMDTO } from '../../core/api/types/stockItem/StockItemPackagingUOM';
+import { ComboBox, SkeletonText } from '@carbon/react';
+import { useStockItem } from '../../stock-items/stock-items.resource';
 
 interface QtyUomSelectorProps<T> {
   placeholder?: string;
@@ -20,22 +20,20 @@ interface QtyUomSelectorProps<T> {
 }
 
 const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
-  const { isLoading, isError, item } = useStockItem(
-    props.stockItemUuid ?? props["uuid"]
-  );
+  const { isLoading, error, item } = useStockItem(props.stockItemUuid ?? props['uuid']);
   const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
     () => (item?.packagingUnits?.length > 0 ? item.packagingUnits[0] : null),
-    [item?.packagingUnits]
+    [item?.packagingUnits],
   );
 
-  if (isLoading || isError) return <SkeletonText />;
+  if (isLoading || error) return <SkeletonText />;
 
   return (
     <div>
       <Controller
         name={props.controllerName}
         control={props.control}
-        defaultValue={initialSelectedItem.uuid ?? ""}
+        defaultValue={initialSelectedItem.uuid ?? ''}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
             titleText={props.title}
@@ -43,7 +41,7 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
             control={props.control}
             controllerName={props.controllerName}
             id={props.name}
-            size={"sm"}
+            size={'sm'}
             items={item?.packagingUnits ?? []}
             onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
               props.onStockPackageChanged?.(data.selectedItem);
@@ -51,7 +49,7 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
             }}
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockItemPackagingUOMDTO) =>
-              s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ""
+              s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ''
             }
             placeholder={props.placeholder}
             invalid={props.invalid}

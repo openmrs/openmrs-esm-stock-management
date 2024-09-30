@@ -1,7 +1,4 @@
-import { cleanup } from "@testing-library/react";
-
-describe("Test the controlled number input", () => {
-  afterEach(cleanup);
+describe('Test the controlled number input', () => {
   it(`renders without dying`, () => {
     // render(<ControlledNumberInput />);
   });

@@ -1,7 +1,7 @@
-import React from "react";
-import { TabItem } from "./types";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
-import styles from "./vertical-tabs.scss";
+import React from 'react';
+import { TabItem } from './types';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
+import styles from './vertical-tabs.scss';
 
 interface VerticalTabsProps {
   tabs: TabItem[];
@@ -11,17 +11,11 @@ interface VerticalTabsProps {
   onChange?: (index: number) => void;
 }
 
-const VerticalTabs: React.FC<VerticalTabsProps> = ({
-  tabs,
-  title,
-  hasContainer,
-  selectedIndex,
-  onChange,
-}) => {
+const VerticalTabs: React.FC<VerticalTabsProps> = ({ tabs, title, hasContainer, selectedIndex, onChange }) => {
   return (
     <div
       className={`
-        ${hasContainer ? styles.tabContainer : ""}
+        ${hasContainer ? styles.tabContainer : ''}
         ${styles.cohortBuilder}
       `}
     >

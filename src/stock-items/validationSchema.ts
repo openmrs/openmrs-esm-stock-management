@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const nullableString = z.string().max(255).nullish();
 
@@ -41,27 +41,27 @@ export const stockItemDetailsSchema = z
       return isDrug ? !!drugUuid : true;
     },
     {
-      message: "Drug required",
-      path: ["drugUuid"],
-    }
+      message: 'Drug required',
+      path: ['drugUuid'],
+    },
   )
   .refine(
     ({ isDrug, dispensingUnitUuid }) => {
       return isDrug ? !!dispensingUnitUuid : true;
     },
     {
-      message: "Dispensing Unit required",
-      path: ["dispensingUnitUuid"],
-    }
+      message: 'Dispensing Unit required',
+      path: ['dispensingUnitUuid'],
+    },
   )
   .refine(
     ({ hasExpiration, expiryNotice }) => {
       return hasExpiration ? !!expiryNotice : true;
     },
     {
-      message: "Expiry Notice required",
-      path: ["expiryNotice"],
-    }
+      message: 'Expiry Notice required',
+      path: ['expiryNotice'],
+    },
   );
 
 export type StockItemFormData = z.infer<typeof stockItemDetailsSchema>;

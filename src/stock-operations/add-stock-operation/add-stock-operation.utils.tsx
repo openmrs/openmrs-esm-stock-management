@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { initialStockOperationValue } from "../../core/utils/utils";
-import { MAIN_STORE_LOCATION_TAG, today } from "../../constants";
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { initialStockOperationValue } from '../../core/utils/utils';
+import { MAIN_STORE_LOCATION_TAG, today } from '../../constants';
 import {
   operationFromString,
   StockOperationType,
@@ -13,23 +13,17 @@ import {
   StockOperationTypeRequiresBatchUuid,
   StockOperationTypeRequiresDispatchAcknowledgement,
   StockOperationTypeRequiresStockAdjustmentReason,
-} from "../../core/api/types/stockOperation/StockOperationType";
-import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
-import { InitializeResult } from "./types";
-import {
-  LocationTypeLocation,
-  LocationTypeOther,
-} from "../../core/api/types/stockOperation/LocationType";
-import {
-  getParties,
-  getStockOperationTypes,
-} from "../../stock-lookups/stock-lookups.resource";
-import { Party } from "../../core/api/types/Party";
+} from '../../core/api/types/stockOperation/StockOperationType';
+import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
+import { InitializeResult } from './types';
+import { LocationTypeLocation, LocationTypeOther } from '../../core/api/types/stockOperation/LocationType';
+import { getParties, getStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
+import { Party } from '../../core/api/types/Party';
 
 export async function initializeNewStockOperation(
   currentStockOperationType: StockOperationType,
   stockOperation?: StockOperationDTO,
-  stockOperationTypes?: StockOperationType[]
+  stockOperationTypes?: StockOperationType[],
 ): Promise<InitializeResult> {
   let model: StockOperationDTO;
   const isNew = !!stockOperation;
@@ -37,47 +31,37 @@ export async function initializeNewStockOperation(
   const showQuantityRequested = false;
 
   let operationTypes = stockOperationTypes;
-  const canIssueStock =
-    stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false;
+  const canIssueStock = stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false;
   const sourceTags =
     currentStockOperationType?.stockOperationTypeLocationScopes
       ?.filter((p) => currentStockOperationType?.hasSource && p.isSource)
       .map((p) => p.locationTag) ?? [];
-  const shouldLockSource =
-    sourceTags.length === 1 && sourceTags[0] === MAIN_STORE_LOCATION_TAG;
+  const shouldLockSource = sourceTags.length === 1 && sourceTags[0] === MAIN_STORE_LOCATION_TAG;
 
   const destinationTags =
     currentStockOperationType?.stockOperationTypeLocationScopes
-      ?.filter(
-        (p) => currentStockOperationType?.hasDestination && p.isDestination
-      )
+      ?.filter((p) => currentStockOperationType?.hasDestination && p.isDestination)
       .map((p) => p.locationTag) ?? [];
-  const shouldLockDestination =
-    destinationTags.length === 1 &&
-    destinationTags[0] === MAIN_STORE_LOCATION_TAG;
+  const shouldLockDestination = destinationTags.length === 1 && destinationTags[0] === MAIN_STORE_LOCATION_TAG;
   let location: string | null | undefined = null;
   let sourcePartyList: Party[] | null | undefined;
   let destinationPartyList: Party[] | null | undefined;
 
   const partyList = await getParties();
-  if (!partyList.ok) throw Error("Error loading parties");
+  if (!partyList.ok) throw Error('Error loading parties');
   sourcePartyList = partyList?.data?.results?.filter(
     (p) =>
       (p.locationUuid &&
         currentStockOperationType?.sourceType === LocationTypeLocation &&
-        (sourceTags.length === 0 ||
-          (p.tags && sourceTags.some((x) => p.tags.includes(x))))) ||
-      (p.stockSourceUuid &&
-        currentStockOperationType?.sourceType === LocationTypeOther)
+        (sourceTags.length === 0 || (p.tags && sourceTags.some((x) => p.tags.includes(x))))) ||
+      (p.stockSourceUuid && currentStockOperationType?.sourceType === LocationTypeOther),
   );
   destinationPartyList = partyList?.data?.results?.filter(
     (p) =>
       (p.locationUuid &&
         currentStockOperationType?.destinationType === LocationTypeLocation &&
-        (destinationTags.length === 0 ||
-          (p.tags && destinationTags.some((x) => p.tags.includes(x))))) ||
-      (p.stockSourceUuid &&
-        currentStockOperationType?.destinationType === LocationTypeOther)
+        (destinationTags.length === 0 || (p.tags && destinationTags.some((x) => p.tags.includes(x))))) ||
+      (p.stockSourceUuid && currentStockOperationType?.destinationType === LocationTypeOther),
   );
 
   if (isNew) {
@@ -110,7 +94,7 @@ export async function initializeNewStockOperation(
     if (response.ok) {
       operationTypes = response.data.results;
     } else {
-      throw Error("Error loading operation types");
+      throw Error('Error loading operation types');
     }
   }
 
@@ -119,31 +103,25 @@ export async function initializeNewStockOperation(
     batchBalance: {},
     batchNos: {},
     itemUoM: {},
-    requisition: "",
+    requisition: '',
     showQuantityRequested: false,
     dto: model,
     stockItems: newItemsToCopy,
     isNegativeQuantityAllowed: StockOperationTypeIsNegativeQtyAllowed(opType),
     requiresBatchUuid: StockOperationTypeRequiresBatchUuid(opType),
-    requiresActualBatchInfo:
-      StockOperationTypeRequiresActualBatchInformation(opType),
+    requiresActualBatchInfo: StockOperationTypeRequiresActualBatchInformation(opType),
     isQuantityOptional: StockOperationTypeIsQuantityOptional(opType),
     canCaptureQuantityPrice: StockOperationTypeCanCapturePurchasePrice(opType),
-    requiresStockAdjustmentReason:
-      StockOperationTypeRequiresStockAdjustmentReason(opType),
-    requiresDispatchAcknowledgement:
-      StockOperationTypeRequiresDispatchAcknowledgement(opType),
-    allowExpiredBatchNumbers:
-      currentStockOperationType?.allowExpiredBatchNumbers ?? false,
+    requiresStockAdjustmentReason: StockOperationTypeRequiresStockAdjustmentReason(opType),
+    requiresDispatchAcknowledgement: StockOperationTypeRequiresDispatchAcknowledgement(opType),
+    allowExpiredBatchNumbers: currentStockOperationType?.allowExpiredBatchNumbers ?? false,
     canEditModel: stockOperation?.permission?.canEdit ?? false,
     canViewModel: stockOperation?.permission?.canView ?? false,
     canApproveModel: stockOperation?.permission?.canApprove ?? false,
     canIssueStock,
     canReceiveItems: stockOperation?.permission?.canReceiveItems ?? false,
-    canDisplayReceivedItems:
-      stockOperation?.permission?.canDisplayReceivedItems ?? false,
-    canUpdateItemsBatchInformation:
-      stockOperation?.permission?.canUpdateBatchInformation ?? false,
+    canDisplayReceivedItems: stockOperation?.permission?.canDisplayReceivedItems ?? false,
+    canUpdateItemsBatchInformation: stockOperation?.permission?.canUpdateBatchInformation ?? false,
     canPrint: canIssueStock || StockOperationTypeHasPrint(opType),
     sourceTags,
     destinationTags,
@@ -153,20 +131,16 @@ export async function initializeNewStockOperation(
       return (
         (p.locationUuid &&
           currentStockOperationType?.sourceType === LocationTypeLocation &&
-          (sourceTags.length === 0 ||
-            (p.tags && sourceTags.some((x) => p.tags.includes(x))))) ||
-        (p.stockSourceUuid &&
-          currentStockOperationType?.sourceType === LocationTypeOther)
+          (sourceTags.length === 0 || (p.tags && sourceTags.some((x) => p.tags.includes(x))))) ||
+        (p.stockSourceUuid && currentStockOperationType?.sourceType === LocationTypeOther)
       );
     },
     destinationPartyListFilter: (p) => {
       return (
         (p.locationUuid &&
           currentStockOperationType?.destinationType === LocationTypeLocation &&
-          (destinationTags.length === 0 ||
-            (p.tags && destinationTags.some((x) => p.tags.includes(x))))) ||
-        (p.stockSourceUuid &&
-          currentStockOperationType?.destinationType === LocationTypeOther)
+          (destinationTags.length === 0 || (p.tags && destinationTags.some((x) => p.tags.includes(x))))) ||
+        (p.stockSourceUuid && currentStockOperationType?.destinationType === LocationTypeOther)
       );
     },
     location,

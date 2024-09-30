@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { ComboBox, InlineLoading } from "@carbon/react";
-import { StockItemDTO } from "../../core/api/types/stockItem/StockItem";
-import { useStockItems } from "./stock-item-selector.resource";
-import { useDebounce } from "../../core/hooks/debounce-hook";
+import React, { ReactNode } from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { ComboBox, InlineLoading } from '@carbon/react';
+import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { useStockItems } from './stock-item-selector.resource';
+import { useDebounce } from '../../core/hooks/debounce-hook';
 
 interface StockItemSelectorProps<T> {
   placeholder?: string;
@@ -39,16 +39,14 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
             control={props.control}
             controllerName={props.controllerName}
             id={props.name}
-            size={"sm"}
+            size={'sm'}
             items={stockItemsList || []}
             onChange={(data: { selectedItem: StockItemDTO }) => {
               props.onStockItemChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
-              props?.initialSelectedItem ??
-              stockItemsList?.find((p) => p.uuid === props.stockItemUuid) ??
-              ""
+              props?.initialSelectedItem ?? stockItemsList?.find((p) => p.uuid === props.stockItemUuid) ?? ''
             }
             itemToString={stockItemName}
             onInputChange={debouncedSearch}
@@ -59,13 +57,7 @@ const StockItemSelector = <T,>(props: StockItemSelectorProps<T>) => {
           />
         )}
       />
-      {isLoading && (
-        <InlineLoading
-          status="active"
-          iconDescription="Searching"
-          description="Searching..."
-        />
-      )}
+      {isLoading && <InlineLoading status="active" iconDescription="Searching" description="Searching..." />}
     </div>
   );
 };

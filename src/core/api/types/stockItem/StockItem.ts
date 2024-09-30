@@ -1,12 +1,9 @@
-import { BaseOpenmrsData } from "../BaseOpenmrsData";
-import { Concept } from "../concept/Concept";
-import { Drug } from "../concept/Drug";
-import { RecordPermission } from "../RecordPermission";
-import { StockBatch } from "./StockBatch";
-import {
-  StockItemPackagingUOM,
-  StockItemPackagingUOMDTO,
-} from "./StockItemPackagingUOM";
+import { BaseOpenmrsData } from '../BaseOpenmrsData';
+import { Concept } from '../concept/Concept';
+import { Drug } from '../concept/Drug';
+import { RecordPermission } from '../RecordPermission';
+import { StockBatch } from './StockBatch';
+import { StockItemPackagingUOM, StockItemPackagingUOMDTO } from './StockItemPackagingUOM';
 
 export interface StockItem extends BaseOpenmrsData {
   concept: Concept;
@@ -51,13 +48,9 @@ export interface StockItemDTO {
   expiryNotice: number | null | undefined;
 }
 
-export const LocationStockItemBatchNo = "LocationStockItemBatchNo";
-export const LocationStockItem = "LocationStockItem";
-export const StockItemOnly = "StockItemOnly";
+export const LocationStockItemBatchNo = 'LocationStockItemBatchNo';
+export const LocationStockItem = 'LocationStockItem';
+export const StockItemOnly = 'StockItemOnly';
 
-export const InventoryGroupByOptions = [
-  LocationStockItemBatchNo,
-  LocationStockItem,
-  StockItemOnly,
-] as const;
+export const InventoryGroupByOptions = [LocationStockItemBatchNo, LocationStockItem, StockItemOnly] as const;
 export type InventoryGroupBy = (typeof InventoryGroupByOptions)[number];

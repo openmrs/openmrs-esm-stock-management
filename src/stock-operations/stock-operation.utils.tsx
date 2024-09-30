@@ -1,39 +1,28 @@
-import React from "react";
-import { closeOverlay, launchOverlay } from "../core/components/overlay/hook";
-import {
-  FetchResponse,
-  restBaseUrl,
-  showModal,
-  showSnackbar,
-} from "@openmrs/esm-framework";
-import { TFunction } from "react-i18next";
-import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
-import {
-  createStockOperation,
-  updateStockOperation,
-} from "./stock-operations.resource";
-import AddStockOperation from "./add-stock-operation/add-stock-operation.component";
-import {
-  OperationType,
-  StockOperationType,
-} from "../core/api/types/stockOperation/StockOperationType";
-import { useLocation } from "react-router-dom";
-import { extractErrorMessagesFromResponse } from "../constants";
-import { handleMutate } from "../utils";
+import React from 'react';
+import { closeOverlay, launchOverlay } from '../core/components/overlay/hook';
+import { FetchResponse, restBaseUrl, showModal, showSnackbar } from '@openmrs/esm-framework';
+import { TFunction } from 'react-i18next';
+import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { createStockOperation, updateStockOperation } from './stock-operations.resource';
+import AddStockOperation from './add-stock-operation/add-stock-operation.component';
+import { OperationType, StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { useLocation } from 'react-router-dom';
+import { extractErrorMessagesFromResponse } from '../constants';
+import { handleMutate } from '../utils';
 
 export const addOrEditStockOperation = async (
   t: TFunction,
   stockOperation: StockOperationDTO,
   isEditing: boolean,
-  operation?: StockOperationType
+  operation?: StockOperationType,
 ) => {
   const payload = stockOperation;
   try {
-    if (operation.operationType === "requisition") {
+    if (operation.operationType === 'requisition') {
       delete payload.destinationName;
     }
     if (operation.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE) {
-      const stockIssueOpsTypeUuid = "66666666-6666-6666-6666-666666666666";
+      const stockIssueOpsTypeUuid = '66666666-6666-6666-6666-666666666666';
       delete payload.completedDate;
       delete payload.completedBy;
       delete payload.completedByFamilyName;
@@ -41,23 +30,23 @@ export const addOrEditStockOperation = async (
       delete payload.operationTypeUuid;
       delete payload.permission;
       delete payload.locked;
-      payload["operationTypeUuid"] = stockIssueOpsTypeUuid;
+      payload['operationTypeUuid'] = stockIssueOpsTypeUuid;
     }
-    const response: FetchResponse<StockOperationDTO> = await (isEditing
-      ? updateStockOperation
-      : createStockOperation)(payload);
+    const response: FetchResponse<StockOperationDTO> = await (isEditing ? updateStockOperation : createStockOperation)(
+      payload,
+    );
 
     if (response?.data) {
       handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
       showSnackbar({
         isLowContrast: true,
         title: isEditing
-          ? t("editStockOperation", "Edit stock operation")
-          : t("addStockOperation", "Add stock operation"),
-        kind: "success",
+          ? t('editStockOperation', 'Edit stock operation')
+          : t('addStockOperation', 'Add stock operation'),
+        kind: 'success',
         subtitle: isEditing
-          ? t("stockOperationEdited", "Stock operation edited successfully")
-          : t("stockOperationAdded", "Stock operation added successfully"),
+          ? t('stockOperationEdited', 'Stock operation edited successfully')
+          : t('stockOperationAdded', 'Stock operation added successfully'),
       });
 
       closeOverlay();
@@ -65,9 +54,9 @@ export const addOrEditStockOperation = async (
   } catch (error) {
     const errorMessages = extractErrorMessagesFromResponse(error);
     showSnackbar({
-      subtitle: errorMessages.join(", "),
-      title: t("errorSavingForm", "Error on saving form"),
-      kind: "error",
+      subtitle: errorMessages.join(', '),
+      title: t('errorSavingForm', 'Error on saving form'),
+      kind: 'error',
       isLowContrast: true,
     });
   }
@@ -79,31 +68,26 @@ export const launchAddOrEditDialog = (
   isEditing: boolean,
   operation?: StockOperationType,
   operations?: StockOperationType[],
-  canPrint?: boolean
+  canPrint?: boolean,
 ) => {
-  const printEnabled =
-    canPrint !== undefined ? canPrint : stockOperation?.status === "COMPLETED";
+  const printEnabled = canPrint !== undefined ? canPrint : stockOperation?.status === 'COMPLETED';
 
   launchOverlay(
     isEditing
-      ? t("editOperationTitle", "Edit {{operationType}}", {
+      ? t('editOperationTitle', 'Edit {{operationType}}', {
           operationType: stockOperation?.operationTypeName,
         })
-      : t("newOperationTitle", "New: {{operationName}}", {
+      : t('newOperationTitle', 'New: {{operationName}}', {
           operationName: operation?.name,
         }),
     <AddStockOperation
       model={stockOperation}
-      onSave={(stockOperation) =>
-        addOrEditStockOperation(t, stockOperation, isEditing, operation)
-      }
+      onSave={(stockOperation) => addOrEditStockOperation(t, stockOperation, isEditing, operation)}
       isEditing={isEditing}
       operation={operation}
-      canEdit={
-        isEditing ? (stockOperation?.status === "NEW" ? true : false) : true
-      }
+      canEdit={isEditing ? (stockOperation?.status === 'NEW' ? true : false) : true}
       canPrint={printEnabled}
-    />
+    />,
   );
 };
 
@@ -112,17 +96,11 @@ export const useUrlQueryParams = () => {
 };
 
 export function getStockOperationUniqueId() {
-  return `${new Date().getTime()}-${Math.random()
-    .toString(36)
-    .substring(2, 16)}`;
+  return `${new Date().getTime()}-${Math.random().toString(36).substring(2, 16)}`;
 }
 
-export const showActionDialogButton = async (
-  title: string,
-  requireReason: boolean,
-  operation: StockOperationDTO
-) => {
-  const dispose = showModal("stock-operation-dialog", {
+export const showActionDialogButton = async (title: string, requireReason: boolean, operation: StockOperationDTO) => {
+  const dispose = showModal('stock-operation-dialog', {
     title: title,
     operation: operation,
     requireReason: requireReason,

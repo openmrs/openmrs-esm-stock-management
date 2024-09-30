@@ -1,11 +1,11 @@
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
-import { Party } from "../../core/api/types/Party";
-import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
-import { SaveStockOperation } from "../../stock-items/types";
-import { StockBatchDTO } from "../../core/api/types/stockItem/StockBatchDTO";
-import { StockItemPackagingUOMDTO } from "../../core/api/types/stockItem/StockItemPackagingUOM";
-import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
+import { Party } from '../../core/api/types/Party';
+import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { SaveStockOperation } from '../../stock-items/types';
+import { StockBatchDTO } from '../../core/api/types/stockItem/StockBatchDTO';
+import { StockItemPackagingUOMDTO } from '../../core/api/types/stockItem/StockItemPackagingUOM';
+import { StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
 
 export interface InitializeResult {
   dto?: StockOperationDTO;

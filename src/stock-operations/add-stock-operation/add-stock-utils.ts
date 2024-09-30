@@ -1,5 +1,5 @@
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { OperationType } from "../../core/api/types/stockOperation/StockOperationType";
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
 
 const OPERATION_TYPES_FOR_DESTINATION_NAME_DELETION = [
   OperationType.ADJUSTMENT_OPERATION_TYPE,
@@ -19,16 +19,11 @@ const OPERATION_TYPES_FOR_DESTINATION_UUID_DELETION = [
   OperationType.OPENING_STOCK_OPERATION_TYPE,
 ];
 
-export function getRequisitionStockOperations(
-  items: Array<StockOperationDTO> = []
-) {
+export function getRequisitionStockOperations(items: Array<StockOperationDTO> = []) {
   // Extract stock issued requisition UUIDs
   const stockIssuedRequisitionUuids =
     items
-      ?.filter(
-        (item) =>
-          item.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE
-      )
+      ?.filter((item) => item.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE)
       .map((item) => item.requisitionStockOperationUuid) ?? [];
 
   // Filter requisition stock operations
@@ -36,7 +31,7 @@ export function getRequisitionStockOperations(
     items?.filter(
       (item) =>
         item.operationType === OperationType.REQUISITION_OPERATION_TYPE &&
-        !stockIssuedRequisitionUuids.includes(item.uuid)
+        !stockIssuedRequisitionUuids.includes(item.uuid),
     ) ?? [];
 
   return requisitionStockOperations;
@@ -59,40 +54,40 @@ function shouldDeleteDestinationUuid(operationType) {
 export function createBaseOperationPayload(model, item, operationType) {
   const req = Object.assign(model, item);
   const propertiesToDelete = [
-    "submitted",
-    "cancelledByFamilyName",
-    "atLocationName",
-    "completedByGivenName",
-    "cancelledBy",
-    "submittedByFamilyName",
-    "operationOrder",
-    "dispatchedByGivenName",
-    "submittedByGivenName",
-    "returnedByGivenName",
-    "operationNumber",
-    "responsiblePersonFamilyName",
-    "returnReason",
-    "atLocationUuid",
-    "cancelReason",
-    "rejectedByGivenName",
-    "reasonName",
-    "submittedBy",
-    "creator",
-    "completedByFamilyName",
-    "operationTypeName",
-    "rejectedByFamilyName",
-    "responsiblePerson",
-    "creatorFamilyName",
-    "returnedByFamilyName",
-    "cancelledByGivenName",
-    "operationType",
-    "responsiblePersonGivenName",
-    "sourceName",
-    "rejectionReason",
-    "completedBy",
-    "creatorGivenName",
-    "dispatchedByFamilyName",
-    "uuid",
+    'submitted',
+    'cancelledByFamilyName',
+    'atLocationName',
+    'completedByGivenName',
+    'cancelledBy',
+    'submittedByFamilyName',
+    'operationOrder',
+    'dispatchedByGivenName',
+    'submittedByGivenName',
+    'returnedByGivenName',
+    'operationNumber',
+    'responsiblePersonFamilyName',
+    'returnReason',
+    'atLocationUuid',
+    'cancelReason',
+    'rejectedByGivenName',
+    'reasonName',
+    'submittedBy',
+    'creator',
+    'completedByFamilyName',
+    'operationTypeName',
+    'rejectedByFamilyName',
+    'responsiblePerson',
+    'creatorFamilyName',
+    'returnedByFamilyName',
+    'cancelledByGivenName',
+    'operationType',
+    'responsiblePersonGivenName',
+    'sourceName',
+    'rejectionReason',
+    'completedBy',
+    'creatorGivenName',
+    'dispatchedByFamilyName',
+    'uuid',
   ];
 
   deleteProperties(req, propertiesToDelete);

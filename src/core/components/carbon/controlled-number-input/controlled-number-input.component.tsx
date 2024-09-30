@@ -1,8 +1,8 @@
-import React from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { NumberInputProps } from "@carbon/react/lib/components/NumberInput/NumberInput";
-import { NumberInput } from "@carbon/react";
-import { StockItemPackagingUOMDTO } from "../../../api/types/stockItem/StockItemPackagingUOM";
+import React from 'react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { NumberInputProps } from '@carbon/react/lib/components/NumberInput/NumberInput';
+import { NumberInput } from '@carbon/react';
+import { StockItemPackagingUOMDTO } from '../../../api/types/stockItem/StockItemPackagingUOM';
 
 interface ControlledNumberInputProps<T> extends NumberInputProps {
   row?: StockItemPackagingUOMDTO;
@@ -19,6 +19,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
       control={props.control}
       render={({ field: { onChange, value, ref } }) => (
         <NumberInput
+          disableWheel
           label={props.label}
           id={`${props.name}-${props.id}-${props.row?.uuid}`}
           value={props.row?.factor ?? value}
@@ -30,7 +31,7 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
             state: {
               value: number | string;
               direction: string;
-            }
+            },
           ) => {
             onChange(event, state);
 

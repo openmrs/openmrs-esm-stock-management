@@ -1,14 +1,9 @@
-import { useMemo, useState } from "react";
-import useSWR from "swr";
-import {
-  FetchResponse,
-  openmrsFetch,
-  restBaseUrl,
-  usePagination,
-} from "@openmrs/esm-framework";
-import { useTranslation } from "react-i18next";
-import { StockOperationFilter } from "../stock-operations/stock-operations.resource";
-import { useStockTagLocations } from "../stock-lookups/stock-lookups.resource";
+import { useMemo, useState } from 'react';
+import useSWR from 'swr';
+import { FetchResponse, openmrsFetch, restBaseUrl, usePagination } from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
+import { StockOperationFilter } from '../stock-operations/stock-operations.resource';
+import { useStockTagLocations } from '../stock-lookups/stock-lookups.resource';
 
 export function useStockLocationPages(filter: StockOperationFilter) {
   const { stockLocations, error, isLoading } = useStockTagLocations();
@@ -16,11 +11,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
 
-  const {
-    goTo,
-    results: paginatedQueueEntries,
-    currentPage,
-  } = usePagination(stockLocations, currentPageSize);
+  const { goTo, results: paginatedQueueEntries, currentPage } = usePagination(stockLocations, currentPageSize);
 
   const { t } = useTranslation();
 
@@ -28,26 +19,26 @@ export function useStockLocationPages(filter: StockOperationFilter) {
     () => [
       {
         id: 0,
-        header: t("name", "Name"),
-        key: "name",
+        header: t('name', 'Name'),
+        key: 'name',
       },
       {
         id: 1,
-        header: t("tags", "Tags"),
-        key: "tags",
+        header: t('tags', 'Tags'),
+        key: 'tags',
       },
       {
         id: 2,
-        header: t("childLocations", "Child Locations"),
-        key: "childLocations",
+        header: t('childLocations', 'Child Locations'),
+        key: 'childLocations',
       },
       {
         id: 3,
-        header: t("actions", "Actions"),
-        key: "actions",
+        header: t('actions', 'Actions'),
+        key: 'actions',
       },
     ],
-    [t]
+    [t],
   );
 
   const tableRows = useMemo(() => {
@@ -58,11 +49,10 @@ export function useStockLocationPages(filter: StockOperationFilter) {
       name: `${location?.name}`,
       tags:
         location?.meta.tag
-          ?.filter((tag) => tag.code !== "SUBSETTED")
+          ?.filter((tag) => tag.code !== 'SUBSETTED')
           .map((p) => p.code)
-          ?.join(", ") ?? "",
-      childLocations:
-        location?.childLocations?.map((p) => p.display)?.join(", ") ?? "",
+          ?.join(', ') ?? '',
+      childLocations: location?.childLocations?.map((p) => p.display)?.join(', ') ?? '',
     }));
   }, [stockLocations]);
   return {
@@ -84,10 +74,7 @@ export const useLocationTags = () => {
   const url = `${restBaseUrl}/locationtag/`;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data, isLoading, mutate } = useSWR<{ data }, Error>(
-    url,
-    openmrsFetch
-  );
+  const { data, isLoading, mutate } = useSWR<{ data }, Error>(url, openmrsFetch);
   const results = data?.data?.results ? data?.data?.results : [];
   return {
     locationTagList: results,
@@ -98,16 +85,11 @@ export const useLocationTags = () => {
 interface LocationName {
   name: string;
 }
-export async function saveLocation({
-  locationPayload,
-}): Promise<FetchResponse<LocationName>> {
-  const response: FetchResponse = await openmrsFetch(
-    `${restBaseUrl}/location/`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: locationPayload,
-    }
-  );
+export async function saveLocation({ locationPayload }): Promise<FetchResponse<LocationName>> {
+  const response: FetchResponse = await openmrsFetch(`${restBaseUrl}/location/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: locationPayload,
+  });
   return response;
 }

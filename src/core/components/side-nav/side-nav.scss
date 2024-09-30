@@ -6,11 +6,11 @@
 .heading {
   @include type.type-style('productive-heading-02');
   color: colors.$gray-70;
-  margin-bottom: layout.$spacing-05;;
+  margin-bottom: layout.$spacing-05;
 }
 
 .heading:after {
-  content: "";
+  content: '';
   display: block;
   width: layout.$spacing-07;
   padding-top: 0.188rem;
@@ -78,7 +78,8 @@
   }
 
   :global(.cds--tabs__nav-link) {
-    &:active, &:focus {
+    &:active,
+    &:focus {
       outline: 0 !important;
       outline-offset: 0 !important;
     }
@@ -107,9 +108,9 @@
 .tabContainer {
   background: white;
   padding-left: layout.$spacing-06;
-  padding-right: layout.$spacing-05	;
-  padding-top: layout.$spacing-05	;
-  margin-bottom: layout.$spacing-05	;
+  padding-right: layout.$spacing-05;
+  padding-top: layout.$spacing-05;
+  margin-bottom: layout.$spacing-05;
 }
 
 .optionCell {
@@ -117,7 +118,7 @@
 }
 
 .optionHeader {
-  width: layout.$spacing-06	 !important;
+  width: layout.$spacing-06 !important;
 }
 
 .text {

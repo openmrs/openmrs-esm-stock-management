@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
-import { ComboBox } from "@carbon/react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useStockTagLocations } from "../../../../stock-lookups/stock-lookups.resource";
+import React, { ReactNode } from 'react';
+import { ComboBox } from '@carbon/react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useStockTagLocations } from '../../../../stock-lookups/stock-lookups.resource';
 
 interface BatchInformationLocationsFilterProps<T> {
   onLocationIdChange?: (location: string) => void;
@@ -17,9 +17,7 @@ interface BatchInformationLocationsFilterProps<T> {
   control: Control<FieldValues, T>;
 }
 
-const BatchInformationLocationsFilter = <T,>(
-  props: BatchInformationLocationsFilterProps<T>
-) => {
+const BatchInformationLocationsFilter = <T,>(props: BatchInformationLocationsFilterProps<T>) => {
   const { t } = useTranslation();
 
   const { stockLocations } = useStockTagLocations();
@@ -35,14 +33,14 @@ const BatchInformationLocationsFilter = <T,>(
           control={props.control}
           controllerName={props.controllerName}
           id={props.name}
-          size={"md"}
+          size={'md'}
           items={stockLocations ?? []}
           onChange={(data: { selectedItem }) => {
-            props.onLocationIdChange?.(data?.selectedItem?.id ?? "");
-            onChange(data?.selectedItem?.name || "");
+            props.onLocationIdChange?.(data?.selectedItem?.id ?? '');
+            onChange(data?.selectedItem?.name || '');
           }}
           initialSelectedItem={`${stockLocations[0]?.name}`}
-          itemToString={(item) => t("location", `${item?.name}`)}
+          itemToString={(item) => t('location', `${item?.name}`)}
           shouldFilterItem={() => true}
           placeholder={props.placeholder}
           ref={ref}

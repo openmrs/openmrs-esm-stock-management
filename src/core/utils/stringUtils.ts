@@ -6,8 +6,7 @@ export function toErrorMessage(payload: any) {
     payload?.message ??
     payload?.error ??
     payload;
-  const fieldErrors =
-    payload?.error?.fieldErrors ?? payload?.data?.error?.fieldErrors;
+  const fieldErrors = payload?.error?.fieldErrors ?? payload?.data?.error?.fieldErrors;
 
   if (fieldErrors) {
     let field: keyof typeof fieldErrors;
@@ -15,13 +14,13 @@ export function toErrorMessage(payload: any) {
     for (field in fieldErrors) {
       errors.push(
         fieldErrors[field]?.reduce((p: any, c: any, i: number) => {
-          if (i === 0) return c?.message ?? "";
-          p += (p.length > 0 ? " \r\n" : "") + c?.message;
+          if (i === 0) return c?.message ?? '';
+          p += (p.length > 0 ? ' \r\n' : '') + c?.message;
           return p;
-        }, "")
+        }, ''),
       );
     }
-    return `${errorMessage} ${errors.join(" \r\n")}`;
+    return `${errorMessage} ${errors.join(' \r\n')}`;
   }
   return errorMessage;
 }

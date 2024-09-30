@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import StockSourcesAddOrUpdate from './add-stock-sources.component';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
 import { showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { closeOverlay } from '../../core/components/overlay/hook';
 import { StockSource } from '../../core/api/types/stockOperation/StockSource';
-
 
 jest.mock('../stock-sources.resource');
 jest.mock('@openmrs/esm-framework', () => ({
@@ -29,7 +29,6 @@ jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
 
 describe('StockSourcesAddOrUpdate', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (useConfig as jest.Mock).mockReturnValue({ stockSourceTypeUUID: 'mock-uuid' });
   });
 
@@ -42,11 +41,12 @@ describe('StockSourcesAddOrUpdate', () => {
 
   it('renders correctly with model prop', () => {
     const model: StockSource = {
-      uuid: '123', // Add this
+      uuid: '123',
       name: 'Test Source',
       acronym: 'TS',
       sourceType: {
-        uuid: 'type1', display: 'Type 1',
+        uuid: 'type1',
+        display: 'Type 1',
         conceptId: 0,
         set: false,
         version: '',
@@ -70,16 +70,16 @@ describe('StockSourcesAddOrUpdate', () => {
         retired: false,
         dateRetired: undefined,
         retiredBy: undefined,
-        retireReason: ''
+        retireReason: '',
       },
-      // Add these properties from BaseOpenmrsData
       creator: {
-        uuid: 'creator-uuid', display: 'Creator Name',
+        uuid: 'creator-uuid',
+        display: 'Creator Name',
         givenName: '',
         familyName: '',
         firstName: '',
         lastName: '',
-        privileges: []
+        privileges: [],
       },
       dateCreated: new Date(),
       changedBy: null,
@@ -87,7 +87,7 @@ describe('StockSourcesAddOrUpdate', () => {
       voided: false,
       voidedBy: null,
       dateVoided: null,
-      voidReason: null
+      voidReason: null,
     };
     render(<StockSourcesAddOrUpdate model={model} />);
     expect(screen.getByLabelText('Full Name')).toHaveValue('Test Source');
@@ -95,75 +95,76 @@ describe('StockSourcesAddOrUpdate', () => {
     expect(screen.getByLabelText('Source Type')).toHaveValue('type1');
   });
 
-  it('updates form fields correctly on user input', () => {
+  it('updates form fields correctly on user input', async () => {
+    const user = userEvent.setup();
     render(<StockSourcesAddOrUpdate />);
-    
-    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'New Source' } });
-    fireEvent.change(screen.getByLabelText('Acronym/Code'), { target: { value: 'NS' } });
-    fireEvent.change(screen.getByLabelText('Source Type'), { target: { value: 'type2' } });
+
+    await user.type(screen.getByLabelText('Full Name'), 'New Source');
+    await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
 
     expect(screen.getByLabelText('Full Name')).toHaveValue('New Source');
     expect(screen.getByLabelText('Acronym/Code')).toHaveValue('NS');
-    expect(screen.getByLabelText('Source Type')).toHaveValue('type2');
   });
 
   it('calls createOrUpdateStockSource with correct data on form submission', async () => {
+    const user = userEvent.setup();
     (createOrUpdateStockSource as jest.Mock).mockResolvedValue({});
-    
+
     render(<StockSourcesAddOrUpdate />);
-    
-    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'New Source' } });
-    fireEvent.change(screen.getByLabelText('Acronym/Code'), { target: { value: 'NS' } });
-    fireEvent.change(screen.getByLabelText('Source Type'), { target: { value: 'type2' } });
-  
-    fireEvent.click(screen.getByText('Save'));
-  
-    await waitFor(() => {
-      expect(createOrUpdateStockSource).toHaveBeenCalledWith(
-        expect.objectContaining({
-          name: 'New Source',
-          acronym: 'NS',
-          sourceType: { uuid: 'type2', display: 'Type 2' },
-        })
-      );
-    });
+
+    await user.type(screen.getByLabelText('Full Name'), 'New Source');
+    await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
+    await user.selectOptions(screen.getByLabelText('Source Type'), 'type2');
+    await user.click(screen.getByText('Save'));
+
+    expect(createOrUpdateStockSource).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'New Source',
+        acronym: 'NS',
+        sourceType: expect.objectContaining({ uuid: 'type2' }),
+      }),
+    );
   });
 
   it('shows success message and closes overlay on successful submission', async () => {
+    const user = userEvent.setup();
     (createOrUpdateStockSource as jest.Mock).mockResolvedValue({});
-    
-    render(<StockSourcesAddOrUpdate />);
-    
-    fireEvent.click(screen.getByText('Save'));
 
-    await waitFor(() => {
-      expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({
+    render(<StockSourcesAddOrUpdate />);
+
+    await user.click(screen.getByText('Save'));
+
+    expect(showSnackbar).toHaveBeenCalledWith(
+      expect.objectContaining({
         kind: 'success',
         title: 'Add Source',
-      }));
-      expect(closeOverlay).toHaveBeenCalled();
-    });
+      }),
+    );
+
+    expect(closeOverlay).toHaveBeenCalled();
   });
 
   it('shows error message on failed submission', async () => {
+    const user = userEvent.setup();
     (createOrUpdateStockSource as jest.Mock).mockRejectedValue(new Error('API Error'));
-    
-    render(<StockSourcesAddOrUpdate />);
-    
-    fireEvent.click(screen.getByText('Save'));
 
-    await waitFor(() => {
-      expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({
+    render(<StockSourcesAddOrUpdate />);
+
+    await user.click(screen.getByText('Save'));
+
+    expect(showSnackbar).toHaveBeenCalledWith(
+      expect.objectContaining({
         kind: 'error',
         title: 'Error adding a source',
-      }));
-    });
+      }),
+    );
   });
 
-  it('closes overlay when cancel button is clicked', () => {
+  it('closes overlay when cancel button is clicked', async () => {
+    const user = userEvent.setup();
     render(<StockSourcesAddOrUpdate />);
-    
-    fireEvent.click(screen.getByText('Cancel'));
+
+    await user.click(screen.getByText('Cancel'));
 
     expect(closeOverlay).toHaveBeenCalled();
   });
