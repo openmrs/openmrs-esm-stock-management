@@ -1,12 +1,10 @@
-import { StockItemDTO } from "../core/api/types/stockItem/StockItem";
-import { StockOperationDTO } from "../core/api/types/stockOperation/StockOperationDTO";
-import { KeyedMutator } from "swr";
+import { StockItemDTO } from '../core/api/types/stockItem/StockItem';
+import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { KeyedMutator } from 'swr';
 
 export type SaveStockItem = (item: StockItemDTO) => Promise<void>;
 export type SaveStockOperation = (item: StockOperationDTO) => Promise<void>;
-export type SaveStockOperationAction = (
-  item: StockOperationDTO
-) => Promise<void>;
+export type SaveStockOperationAction = (item: StockOperationDTO) => Promise<void>;
 
 export type LocationMutator = KeyedMutator<{
   data: {

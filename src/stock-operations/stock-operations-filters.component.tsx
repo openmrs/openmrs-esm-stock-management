@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import {
-  getStockOperationTypes,
-  useConcept,
-} from "../stock-lookups/stock-lookups.resource";
-import { DropdownSkeleton, MultiSelect } from "@carbon/react";
-import { StockFilters } from "../constants";
-import { StockOperationStatusTypes } from "../core/api/types/stockOperation/StockOperationStatus";
-import styles from "../stock-items/stock-items-table.scss";
+import React, { useEffect, useState } from 'react';
+import { getStockOperationTypes, useConcept } from '../stock-lookups/stock-lookups.resource';
+import { DropdownSkeleton, MultiSelect } from '@carbon/react';
+import { StockFilters } from '../constants';
+import { StockOperationStatusTypes } from '../core/api/types/stockOperation/StockOperationStatus';
+import styles from '../stock-items/stock-items-table.scss';
 
 interface StockOperationFiltersProps {
   conceptUuid?: string;
@@ -14,11 +11,7 @@ interface StockOperationFiltersProps {
   filterName: string;
 }
 
-const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
-  conceptUuid,
-  onFilterChange,
-  filterName,
-}) => {
+const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptUuid, onFilterChange, filterName }) => {
   const { items, isLoading } = useConcept(conceptUuid);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [dataItems, setDataItems] = useState([]);
@@ -31,7 +24,7 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
           StockOperationStatusTypes.map((option) => ({
             uuid: option,
             display: option,
-          }))
+          })),
         );
         break;
       case StockFilters.SOURCES:
@@ -49,7 +42,7 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
               response.data.results.map((result) => ({
                 uuid: result.uuid,
                 display: result.name,
-              }))
+              })),
             );
           }
 
@@ -71,17 +64,17 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({
       size="md"
       labelInline={true}
       items={dataItems}
-      itemToString={(item) => (item ? item.display : "Not Set")}
+      itemToString={(item) => (item ? item.display : 'Not Set')}
       onChange={({ selectedItems }) => {
         if (selectedItems) {
           onFilterChange(
             selectedItems.map((selectedItem) => selectedItem.uuid),
-            filterName
+            filterName,
           );
         }
       }}
       placeholder={`Filter by ${filterName}`}
-      style={{ minWidth: "auto", width: "auto" }}
+      style={{ minWidth: 'auto', width: 'auto' }}
     />
   );
 };

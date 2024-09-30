@@ -1,7 +1,4 @@
-import { cleanup } from "@testing-library/react";
-
-describe("Test the preferred vendor selector", () => {
-  afterEach(cleanup);
+describe('Test the preferred vendor selector', () => {
   it(`renders without dying`, () => {
     // render(<PreferredVendorSelector />);
   });

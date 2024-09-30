@@ -1,12 +1,12 @@
-import styles from "./stock-operation-operations-filter.scss";
-import { Dropdown, DropdownSkeleton } from "@carbon/react";
-import React from "react";
-import { useStockOperationTypes } from "../../stock-lookups/stock-lookups.resource";
+import styles from './stock-operation-operations-filter.scss';
+import { Dropdown, DropdownSkeleton } from '@carbon/react';
+import React from 'react';
+import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 
 const StockOperationOperationsFilter: React.FC = () => {
   // get stock sources
-  const { types, isLoading, isError } = useStockOperationTypes();
-  if (isLoading || isError) {
+  const { types, isLoading, error } = useStockOperationTypes();
+  if (isLoading || error) {
     return <DropdownSkeleton />;
   }
   return (
@@ -15,7 +15,7 @@ const StockOperationOperationsFilter: React.FC = () => {
         <Dropdown
           id="stockOperationOperationsFiter"
           items={types.results}
-          itemToString={(item) => (item ? item.name : "Not Set")}
+          itemToString={(item) => (item ? item.name : 'Not Set')}
           type="inline"
           size="sm"
         />

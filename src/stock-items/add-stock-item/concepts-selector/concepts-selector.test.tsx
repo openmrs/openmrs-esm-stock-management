@@ -1,7 +1,4 @@
-import { cleanup } from "@testing-library/react";
-
-describe("Test the concepts selector", () => {
-  afterEach(cleanup);
+describe('Test the concepts selector', () => {
   it(`renders without dying`, () => {
     // render(<ConceptsSelector />);
   });

@@ -1,7 +1,4 @@
-import { cleanup } from "@testing-library/react";
-
-describe("Test the controlled dropdown", () => {
-  afterEach(cleanup);
+describe('Test the controlled dropdown', () => {
   it(`renders without dying`, () => {
     // render(<ControlledDropdown />);
   });

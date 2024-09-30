@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { showSnackbar } from "@openmrs/esm-framework";
-import { saveLocation } from "./stock-locations-table.resource";
-import { locationData, LocationMutator } from "../stock-items/types";
-import LocationAdministrationForm from "./location-admin-form.component";
-import { extractErrorMessagesFromResponse } from "../constants";
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { showSnackbar } from '@openmrs/esm-framework';
+import { saveLocation } from './stock-locations-table.resource';
+import { locationData, LocationMutator } from '../stock-items/types';
+import LocationAdministrationForm from './location-admin-form.component';
+import { extractErrorMessagesFromResponse } from '../constants';
 
 interface LocationFormProps {
   showModal: boolean;
@@ -12,17 +12,13 @@ interface LocationFormProps {
   mutate: LocationMutator;
 }
 
-const NewLocationForm: React.FC<LocationFormProps> = ({
-  showModal,
-  onModalChange,
-  mutate,
-}) => {
+const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange, mutate }) => {
   const { t } = useTranslation();
-  const headerTitle = t("addLocation", "Create new Location");
+  const headerTitle = t('addLocation', 'Create new Location');
 
   const initialData: locationData = {
-    uuid: "",
-    name: "",
+    uuid: '',
+    name: '',
     tags: [],
   };
 
@@ -37,14 +33,12 @@ const NewLocationForm: React.FC<LocationFormProps> = ({
       saveLocation({ locationPayload: locationbject })
         .then(() => {
           showSnackbar({
-            title: t("formCreated", "Add Location"),
-            kind: "success",
+            title: t('formCreated', 'Add Location'),
+            kind: 'success',
             isLowContrast: true,
-            subtitle: t(
-              "locationCreatedSuccessfully",
-              "Location {{locationName}} was created successfully.",
-              { locationName: name }
-            ),
+            subtitle: t('locationCreatedSuccessfully', 'Location {{locationName}} was created successfully.', {
+              locationName: name,
+            }),
           });
 
           mutate();
@@ -53,16 +47,16 @@ const NewLocationForm: React.FC<LocationFormProps> = ({
         .catch((error) => {
           const errorMessages = extractErrorMessagesFromResponse(error);
           showSnackbar({
-            title: t("errorCreatingForm", "Error creating location"),
-            kind: "error",
+            title: t('errorCreatingForm', 'Error creating location'),
+            kind: 'error',
             isLowContrast: true,
-            subtitle: errorMessages.join(", "),
+            subtitle: errorMessages.join(', '),
           });
           onModalChange(false);
         });
       onModalChange(false);
     },
-    [onModalChange, mutate, t]
+    [onModalChange, mutate, t],
   );
 
   return (

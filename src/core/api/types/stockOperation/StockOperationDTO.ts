@@ -1,6 +1,6 @@
-import { RecordPermission } from "../RecordPermission";
-import { StockOperationItemDTO } from "./StockOperationItemDTO";
-import { StockOperationStatus } from "./StockOperationStatus";
+import { RecordPermission } from '../RecordPermission';
+import { StockOperationItemDTO } from './StockOperationItemDTO';
+import { StockOperationStatus } from './StockOperationStatus';
 
 export interface StockOperationDTO {
   uuid: string | null | undefined;

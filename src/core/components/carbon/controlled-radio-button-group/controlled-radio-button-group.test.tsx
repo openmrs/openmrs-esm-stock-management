@@ -1,7 +1,4 @@
-import { cleanup } from "@testing-library/react";
-
-describe("Test the controlled radio button group", () => {
-  afterEach(cleanup);
+describe('Test the controlled radio button group', () => {
   it(`renders without dying`, () => {
     // render(<ControlledRadioButtonGroup />);
   });

@@ -1,18 +1,10 @@
-import styles from "./stock-operation-statuses-filter.scss";
-import { Dropdown } from "@carbon/react";
-import React from "react";
+import styles from './stock-operation-statuses-filter.scss';
+import { Dropdown } from '@carbon/react';
+import React from 'react';
 const StockOperationStatusesFilter: React.FC = () => {
   // get stock sources
 
-  const items = [
-    "SUBMITTED",
-    "NEW",
-    "RETURNED",
-    "CANCELLED",
-    "DISPATCHED",
-    "COMPLETED",
-    "REJECTED",
-  ];
+  const items = ['SUBMITTED', 'NEW', 'RETURNED', 'CANCELLED', 'DISPATCHED', 'COMPLETED', 'REJECTED'];
 
   return (
     <>
@@ -20,7 +12,7 @@ const StockOperationStatusesFilter: React.FC = () => {
         <Dropdown
           id="stockOperationStatusesFiter"
           items={items}
-          itemToString={(item) => (item ? item : "Not Set")}
+          itemToString={(item) => (item ? item : 'Not Set')}
           type="inline"
           size="sm"
         />

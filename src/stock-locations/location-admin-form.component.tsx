@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { z } from "zod";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState } from 'react';
+import { z } from 'zod';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   ComposedModal,
@@ -13,11 +13,11 @@ import {
   TextInput,
   InlineNotification,
   FilterableMultiSelect,
-} from "@carbon/react";
-import { useTranslation } from "react-i18next";
-import { locationData } from "../stock-items/types";
-import styles from "./stock-locations-table.scss";
-import { useLocationTags } from "./stock-locations-table.resource";
+} from '@carbon/react';
+import { useTranslation } from 'react-i18next';
+import { locationData } from '../stock-items/types';
+import styles from './stock-locations-table.scss';
+import { useLocationTags } from './stock-locations-table.resource';
 
 const LocationAdministrationSchema = z.object({
   name: z.string().max(255),
@@ -46,7 +46,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
   const { t } = useTranslation();
 
   const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [formStateError, setFormStateError] = useState("");
+  const [formStateError, setFormStateError] = useState('');
 
   // Location tag types
   const { locationTagList: Tags } = useLocationTags();
@@ -57,19 +57,17 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
     getValues,
     formState: { isDirty },
   } = useForm<locationData>({
-    mode: "all",
+    mode: 'all',
     resolver: zodResolver(LocationAdministrationSchema),
     defaultValues: {
-      name: initialData.name || "",
+      name: initialData.name || '',
       tags: initialData.tags || [],
     },
   });
 
   const onSubmit = (formData: locationData) => {
     const formDataFormSubmission = getValues();
-    const locationTagsUuid =
-      formDataFormSubmission?.tags?.["selectedItems"]?.map((tag) => tag.uuid) ??
-      [];
+    const locationTagsUuid = formDataFormSubmission?.tags?.['selectedItems']?.map((tag) => tag.uuid) ?? [];
 
     const payload = {
       name: formDataFormSubmission.name,
@@ -88,17 +86,12 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
   };
 
   return (
-    <ComposedModal
-      open={showModal}
-      onClose={() => onModalChange(false)}
-      preventCloseOnClickOutside
-      size={"md"}
-    >
+    <ComposedModal open={showModal} onClose={() => onModalChange(false)} preventCloseOnClickOutside size={'md'}>
       <ModalHeader title={headerTitle} />
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <ModalBody hasScrollingContent>
           <Stack gap={3}>
-            <FormGroup legendText={""}>
+            <FormGroup legendText={''}>
               <Controller
                 name="name"
                 control={control}
@@ -107,8 +100,8 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                   <>
                     <TextInput
                       id="location"
-                      labelText={t("location", "Location Name")}
-                      placeholder={t("locationPlaceholder", "Add a location")}
+                      labelText={t('location', 'Location Name')}
+                      placeholder={t('locationPlaceholder', 'Add a location')}
                       invalidText={fieldState.error?.message}
                       {...field}
                     />
@@ -122,11 +115,11 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                   render={({ field }) => (
                     <FilterableMultiSelect
                       id="tag"
-                      titleText={t("selectTags", "Select tag(s)")}
+                      titleText={t('selectTags', 'Select tag(s)')}
                       helperText="This is helper text"
                       items={Tags ?? []}
                       {...field}
-                      itemToString={(item) => (item ? item.display : "")}
+                      itemToString={(item) => (item ? item.display : '')}
                       selectionFeedback="top-after-reopen"
                     />
                   )}
@@ -137,14 +130,14 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
             {showErrorNotification && (
               <InlineNotification
                 lowContrast
-                title={t("error", "Error")}
-                style={{ minWidth: "100%", margin: "0rem", padding: "0rem" }}
+                title={t('error', 'Error')}
+                style={{ minWidth: '100%', margin: '0rem', padding: '0rem' }}
                 role="alert"
                 kind="error"
                 subtitle={
-                  t("pleaseFillField", "{{message}}", {
+                  t('pleaseFillField', '{{message}}', {
                     message: formStateError,
-                  }) + "."
+                  }) + '.'
                 }
                 onClose={() => setShowErrorNotification(false)}
               />
@@ -153,10 +146,10 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
         </ModalBody>
         <ModalFooter>
           <Button onClick={() => onModalChange(false)} kind="secondary">
-            {t("cancel", "Cancel")}
+            {t('cancel', 'Cancel')}
           </Button>
           <Button disabled={!isDirty} type="submit">
-            <span>{t("save", "Save")}</span>
+            <span>{t('save', 'Save')}</span>
           </Button>
         </ModalFooter>
       </form>

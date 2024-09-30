@@ -1,9 +1,9 @@
-import { StockItemInventory } from "../../core/api/types/stockItem/StockItemInventory";
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { StockOperationItemCost } from "../../core/api/types/stockOperation/StockOperationItemCost";
-import { StockOperationItemDTO } from "../../core/api/types/stockOperation/StockOperationItemDTO";
-import { HEALTH_CENTER_NAME } from "../../constants";
-import { OperationType } from "../../core/api/types/stockOperation/StockOperationType";
+import { StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { StockOperationItemCost } from '../../core/api/types/stockOperation/StockOperationItemCost';
+import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
+import { HEALTH_CENTER_NAME } from '../../constants';
+import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
 
 export interface StockOperationPrintData {
   operationNumber?: string;
@@ -46,45 +46,28 @@ export const BuildStockOperationData = async (
   stockOperationItems: StockOperationItemDTO[],
   parentOperation?: StockOperationDTO,
   operationItemsCost?: StockOperationItemCost[] | null,
-  inventory?: StockItemInventory[] | null
+  inventory?: StockItemInventory[] | null,
 ): Promise<StockOperationPrintData | null> => {
   const data: StockOperationPrintData = {};
-  if (
-    OperationType.REQUISITION_OPERATION_TYPE !== currentOperation.operationType
-  ) {
+  if (OperationType.REQUISITION_OPERATION_TYPE !== currentOperation.operationType) {
     data.authorizedBy = currentOperation?.dispatchedDate
-      ? `${currentOperation.dispatchedByFamilyName ?? ""} ${
-          currentOperation.dispatchedByGivenName ?? ""
-        }`
+      ? `${currentOperation.dispatchedByFamilyName ?? ''} ${currentOperation.dispatchedByGivenName ?? ''}`
       : currentOperation?.completedDate
-      ? `${currentOperation.completedByFamilyName ?? ""} ${
-          currentOperation.completedByGivenName ?? ""
-        }`
-      : "";
+      ? `${currentOperation.completedByFamilyName ?? ''} ${currentOperation.completedByGivenName ?? ''}`
+      : '';
   }
   data.remarks = currentOperation.remarks;
-  data.operationNumber = currentOperation.operationNumber;
-  data.operationDate =
-    parentOperation?.operationDate ?? currentOperation?.operationDate;
-  data.location =
-    parentOperation?.atLocationName ?? currentOperation?.atLocationName;
+  data.operationNumber = currentOperation?.operationNumber;
+  data.operationDate = parentOperation?.operationDate ?? currentOperation?.operationDate;
+  data.location = parentOperation?.atLocationName ?? currentOperation?.atLocationName;
   data.source = currentOperation?.sourceName;
   data.destination = currentOperation?.destinationName;
-  data.responsiblePerson = data.orderedBy =
-    parentOperation?.responsiblePersonFamilyName
-      ? `${parentOperation.responsiblePersonFamilyName ?? ""} ${
-          parentOperation?.responsiblePersonGivenName ?? ""
-        }`
-      : `${currentOperation.responsiblePersonFamilyName ?? ""} ${
-          currentOperation.responsiblePersonGivenName ?? ""
-        }`;
+  data.responsiblePerson = data.orderedBy = parentOperation?.responsiblePersonFamilyName
+    ? `${parentOperation.responsiblePersonFamilyName ?? ''} ${parentOperation?.responsiblePersonGivenName ?? ''}`
+    : `${currentOperation.responsiblePersonFamilyName ?? ''} ${currentOperation.responsiblePersonGivenName ?? ''}`;
   data.organizationName = HEALTH_CENTER_NAME;
-  data.documentTitle = `${currentOperation.operationTypeName} ${
-    currentOperation.operationNumber
-  }${
-    parentOperation
-      ? ` of ${parentOperation.operationTypeName} ${parentOperation.operationNumber}`
-      : ""
+  data.documentTitle = `${currentOperation.operationTypeName} ${currentOperation?.operationNumber}${
+    parentOperation ? ` of ${parentOperation.operationTypeName} ${parentOperation?.operationNumber}` : ''
   }`;
   data.items = stockOperationItems.map((p) => {
     const item: StockOperationItemData = {};
@@ -98,10 +81,7 @@ export const BuildStockOperationData = async (
       item.quantityRequiredUoM = p?.quantityRequestedPackagingUOMName;
       item.quantityIssued = p?.quantity;
       item.quantityIssuedUoM = p?.stockItemPackagingUOMName;
-    } else if (
-      OperationType.STOCK_ISSUE_OPERATION_TYPE ===
-      currentOperation.operationType
-    ) {
+    } else if (OperationType.STOCK_ISSUE_OPERATION_TYPE === currentOperation.operationType) {
       item.quantityIssued = p?.quantity;
       item.quantityIssuedUoM = p?.stockItemPackagingUOMName;
     } else {
@@ -109,9 +89,7 @@ export const BuildStockOperationData = async (
       item.quantityRequiredUoM = p?.stockItemPackagingUOMName;
     }
     if (operationItemsCost) {
-      const operationItemCost = operationItemsCost.find(
-        (x) => x.uuid === p.uuid
-      );
+      const operationItemCost = operationItemsCost.find((x) => x.uuid === p.uuid);
       if (operationItemCost) {
         item.unitCost = operationItemCost.unitCost;
         item.unitCostUoM = operationItemCost.unitCostUOMName;
@@ -119,9 +97,7 @@ export const BuildStockOperationData = async (
       }
     }
     if (inventory) {
-      const itemInventory = inventory.find(
-        (x) => x.stockItemUuid === p.stockItemUuid
-      );
+      const itemInventory = inventory.find((x) => x.stockItemUuid === p.stockItemUuid);
       if (itemInventory) {
         item.balanceOnHand = itemInventory.quantity;
         item.balanceOnHandUoM = itemInventory.quantityUoM;

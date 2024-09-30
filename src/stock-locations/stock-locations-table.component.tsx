@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useStockLocationPages } from "./stock-locations-table.resource";
+import React, { useState } from 'react';
+import { useStockLocationPages } from './stock-locations-table.resource';
 import {
   Button,
   DataTableSkeleton,
@@ -7,16 +7,16 @@ import {
   TableToolbarMenu,
   TableToolbarSearch,
   Tile,
-} from "@carbon/react";
-import styles from "../stock-items/stock-items-table.scss";
-import { ResourceRepresentation } from "../core/api/api";
-import DataList from "../core/components/table/table.component";
-import { useTranslation } from "react-i18next";
-import { mutate } from "swr";
-import NewLocationForm from "./add-locations-form.component";
-import { Add } from "@carbon/react/icons";
-import { handleMutate } from "../utils";
-import { restBaseUrl } from "@openmrs/esm-framework";
+} from '@carbon/react';
+import styles from '../stock-items/stock-items-table.scss';
+import { ResourceRepresentation } from '../core/api/api';
+import DataList from '../core/components/table/table.component';
+import { useTranslation } from 'react-i18next';
+import { mutate } from 'swr';
+import NewLocationForm from './add-locations-form.component';
+import { Add } from '@carbon/react/icons';
+import { handleMutate } from '../utils';
+import { restBaseUrl } from '@openmrs/esm-framework';
 
 interface StockLocationsTableProps {
   status?: string;
@@ -46,23 +46,17 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
           <>
             <TableToolbarSearch persistent onChange={onInputChange} />
             <TableToolbarMenu>
-              <TableToolbarAction onClick={handleRefresh}>
-                Refresh
-              </TableToolbarAction>
+              <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
             </TableToolbarMenu>
             {showLocationModal ? (
-              <NewLocationForm
-                onModalChange={setAddLocationModal}
-                showModal={showLocationModal}
-                mutate={mutate}
-              />
+              <NewLocationForm onModalChange={setAddLocationModal} showModal={showLocationModal} mutate={mutate} />
             ) : null}
             <Button
               kind="ghost"
               renderIcon={(props) => <Add size={16} {...props} />}
               onClick={() => setAddLocationModal(true)}
             >
-              {t("createLocation", "Create Location")}
+              {t('createLocation', 'Create Location')}
             </Button>
           </>
         )}
@@ -73,9 +67,7 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>
-          {t("noStockItemsToDisplay", "No stock items to display")}
-        </p>
+        <p className={styles.content}>{t('noStockItemsToDisplay', 'No stock items to display')}</p>
       </Tile>
     </div>
   );

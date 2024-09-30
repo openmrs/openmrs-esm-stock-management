@@ -1,11 +1,11 @@
-import React from "react";
-import { TextInputSkeleton, ComboBox } from "@carbon/react";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { StockSource } from "../../../core/api/types/stockOperation/StockSource";
-import { ResourceRepresentation } from "../../../core/api/api";
-import { useStockSources } from "../../../stock-sources/stock-sources.resource";
-import { Concept } from "../../../core/api/types/concept/Concept";
-import { StockItemReferenceDTO } from "../../../core/api/types/stockItem/StockItemReference";
+import React from 'react';
+import { TextInputSkeleton, ComboBox } from '@carbon/react';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { StockSource } from '../../../core/api/types/stockOperation/StockSource';
+import { ResourceRepresentation } from '../../../core/api/api';
+import { useStockSources } from '../../../stock-sources/stock-sources.resource';
+import { Concept } from '../../../core/api/types/concept/Concept';
+import { StockItemReferenceDTO } from '../../../core/api/types/stockItem/StockItemReference';
 
 interface StockSourceSelectorProps<T> {
   row?: StockItemReferenceDTO;
@@ -40,20 +40,16 @@ const StockSourceSelector = <T,>(props: StockSourceSelectorProps<T>) => {
           control={props.control}
           controllerName={props.controllerName}
           id={props.name}
-          size={"md"}
+          size={'md'}
           items={sourcesList || []}
           onChange={(data: { selectedItem: StockSource }) => {
             props.onSourceChange?.(data.selectedItem);
             onChange(data.selectedItem?.uuid);
           }}
-          initialSelectedItem={
-            sourcesList?.find((p) => p.uuid === props.row?.uuid) || {}
-          }
-          itemToString={(item?: Concept) =>
-            item && item?.name ? `${item?.name}` : ""
-          }
+          initialSelectedItem={sourcesList?.find((p) => p.uuid === props.row?.uuid) || {}}
+          itemToString={(item?: Concept) => (item && item?.name ? `${item?.name}` : '')}
           shouldFilterItem={() => true}
-          value={sourcesList?.find((p) => p.uuid === value)?.name ?? ""}
+          value={sourcesList?.find((p) => p.uuid === value)?.name ?? ''}
           placeholder={props.placeholder}
           ref={ref}
           invalid={props.invalid}

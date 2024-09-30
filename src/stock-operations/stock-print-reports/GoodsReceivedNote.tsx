@@ -1,15 +1,10 @@
-import { CLOSE_PRINT_AFTER_PRINT } from "../../constants";
-import { formatDisplayDate } from "../../core/utils/datetimeUtils";
-import {
-  GetHeaderSection,
-  GetPrintTemplate,
-} from "../../core/print/PrintTemplate";
-import { printDocument } from "../../core/print/printUtils";
-import { StockOperationPrintData } from "./StockOperationReport";
+import { CLOSE_PRINT_AFTER_PRINT } from '../../constants';
+import { formatDisplayDate } from '../../core/utils/datetimeUtils';
+import { GetHeaderSection, GetPrintTemplate } from '../../core/print/PrintTemplate';
+import { printDocument } from '../../core/print/printUtils';
+import { StockOperationPrintData } from './StockOperationReport';
 
-export const FormatGoodsReceivedDocument = async (
-  data: StockOperationPrintData
-): Promise<string> => {
+export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData): Promise<string> => {
   const emptyRowCount: number = Math.max(0, 25 - (data?.items?.length ?? 0));
   const headerSection = await GetHeaderSection();
   return `
@@ -20,14 +15,14 @@ export const FormatGoodsReceivedDocument = async (
         </div>
         <div class="heading-row text">
             <span>Name of Health Unit: </span>
-            <b><span>${data?.organizationName ?? ""}</span></b>
+            <b><span>${data?.organizationName ?? ''}</span></b>
         </div>
         <div class="heading-row text">
             <table style="width:99%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td style="text-align: left;">
                         <span>Delivered To: </span>
-                        <b><span>${data?.location ?? ""}</span></b>
+                        <b><span>${data?.location ?? ''}</span></b>
                     </td>
                     <td style="text-align: right;">
                         <span>GRN#: </span>
@@ -41,13 +36,11 @@ export const FormatGoodsReceivedDocument = async (
                 <tr>
                     <td style="text-align: left;">
                         <span>Received From: </span>
-                        <b><span>${data?.source ?? ""}</span></b>
+                        <b><span>${data?.source ?? ''}</span></b>
                     </td>
                     <td style="text-align: right;">                    
                         <span>Date: </span>
-                        <b><span>${formatDisplayDate(
-                          data?.operationDate
-                        )}</span></b>
+                        <b><span>${formatDisplayDate(data?.operationDate)}</span></b>
                     </td>
                 </tr>
             </table>
@@ -67,27 +60,19 @@ export const FormatGoodsReceivedDocument = async (
                     .map((p) => {
                       return `
                 <tr class="data-row">
-                    <td valign="middle">${p.itemCode ?? ""}</td>
-                    <td valign="middle">${
-                      p.itemDescription ?? ""
-                    }</td>                    
-                    <td valign="middle" class="center">${
-                      p.batchNumber ?? ""
-                    }</td>                    
-                    <td valign="middle" class="center">${formatDisplayDate(
-                      p.expiryDate
-                    )}</td>                    
-                    <td valign="middle" class="center">${
-                      p.quantityRequired?.toLocaleString() ?? ""
-                    } ${p.quantityRequiredUoM ?? ""}</td>
-                    <td valign="middle" class="center">${
-                      p.purchasePrice?.toLocaleString() ?? ""
-                    }</td>
+                    <td valign="middle">${p.itemCode ?? ''}</td>
+                    <td valign="middle">${p.itemDescription ?? ''}</td>                    
+                    <td valign="middle" class="center">${p.batchNumber ?? ''}</td>                    
+                    <td valign="middle" class="center">${formatDisplayDate(p.expiryDate)}</td>                    
+                    <td valign="middle" class="center">${p.quantityRequired?.toLocaleString() ?? ''} ${
+                        p.quantityRequiredUoM ?? ''
+                      }</td>
+                    <td valign="middle" class="center">${p.purchasePrice?.toLocaleString() ?? ''}</td>
                 </tr> 
                 `;
                     })
-                    .join("")
-                : ""
+                    .join('')
+                : ''
             }
             ${
               emptyRowCount > 0
@@ -102,21 +87,21 @@ export const FormatGoodsReceivedDocument = async (
             <td valign="middle" class="center">&nbsp;</td>
             <td valign="middle" class="center">&nbsp;</td>
             <td valign="middle" class="center">&nbsp;</td>
-        </tr>`
+        </tr>`,
                     )
-                    .join("")
-                : ""
+                    .join('')
+                : ''
             }    
             <tr class="footer-field">
                 <td valign="middle" colspan="6" style="border:0;padding-top: 15pt;">
                     Remarks:<br/>
-                    ${data?.remarks ?? ""}
+                    ${data?.remarks ?? ''}
                 </td>                
             </tr>   
             <tr class="footer-field">
                 <td valign="middle" colspan="3" style="border:0;padding-top: 15pt;">
                     Received By:<br/>
-                    <b>${data?.responsiblePerson ?? ""}</b>
+                    <b>${data?.responsiblePerson ?? ''}</b>
                 </td>
                 <td valign="middle" colspan="3" style="border:0;padding-top: 15pt;">
                     Checked By:<br/>
@@ -132,16 +117,7 @@ export const FormatGoodsReceivedDocument = async (
     `;
 };
 
-export const PrintGoodsReceivedNoteStockOperation = async (
-  data: StockOperationPrintData
-) => {
+export const PrintGoodsReceivedNoteStockOperation = async (data: StockOperationPrintData) => {
   const printData = await FormatGoodsReceivedDocument(data);
-  printDocument(
-    GetPrintTemplate(
-      printData,
-      data?.documentTitle,
-      true,
-      CLOSE_PRINT_AFTER_PRINT
-    )
-  );
+  printDocument(GetPrintTemplate(printData, data?.documentTitle, true, CLOSE_PRINT_AFTER_PRINT));
 };

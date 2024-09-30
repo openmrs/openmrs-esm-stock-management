@@ -1,5 +1,5 @@
-import { BaseOpenmrsData } from "../BaseOpenmrsData";
-import { Concept } from "../concept/Concept";
+import { BaseOpenmrsData } from '../BaseOpenmrsData';
+import { Concept } from '../concept/Concept';
 
 export interface StockSource extends BaseOpenmrsData {
   name: string;

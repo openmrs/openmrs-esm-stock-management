@@ -1,7 +1,4 @@
-import { cleanup } from "@testing-library/react";
-
-describe("Test the controlled combo box", () => {
-  afterEach(cleanup);
+describe('Test the controlled combo box', () => {
   it(`renders without dying`, () => {
     // render(<ControlledComboBox />);
   });

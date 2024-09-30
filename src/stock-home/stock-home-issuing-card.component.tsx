@@ -1,15 +1,15 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { Button } from "@carbon/react";
-import { navigate, useLayoutType } from "@openmrs/esm-framework";
-import styles from "./stock-home-detail-card.scss";
-import { ResourceRepresentation } from "../core/api/api";
-import { DocumentImport } from "@carbon/react/icons";
-import { useStockIssuing } from "./stock-home-issuing.resource";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@carbon/react';
+import { navigate, useLayoutType } from '@openmrs/esm-framework';
+import styles from './stock-home-detail-card.scss';
+import { ResourceRepresentation } from '../core/api/api';
+import { DocumentImport } from '@carbon/react/icons';
+import { useStockIssuing } from './stock-home-issuing.resource';
 
 const StockHomeIssuingCard = () => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === "tablet";
+  const isTablet = useLayoutType() === 'tablet';
 
   const { items, isLoading } = useStockIssuing({
     v: ResourceRepresentation.Full,
@@ -21,9 +21,7 @@ const StockHomeIssuingCard = () => {
   if (items?.length === 0) {
     return (
       <>
-        <p className={styles.content}>
-          {t("issuingNull", "No issued to display")}
-        </p>
+        <p className={styles.content}>{t('issuingNull', 'No issued to display')}</p>
       </>
     );
   }
@@ -54,15 +52,14 @@ const StockHomeIssuingCard = () => {
         <div className={styles.card} key={index}>
           <div className={styles.colorLineGreen} />
           <div className={styles.icon}>
-            <DocumentImport size={40} color={"#198038"} />
+            <DocumentImport size={40} color={'#198038'} />
           </div>
           <div className={styles.cardText}>
             <p>
               {item?.status} · {item?.sourceName} · {item?.destinationName}
             </p>
             <p>
-              <strong>{item?.stockItemName}</strong>{" "}
-              {item?.stockItemPackagingUOMName}, {item?.quantity}
+              <strong>{item?.stockItemName}</strong> {item?.stockItemPackagingUOMName}, {item?.quantity}
             </p>
           </div>
         </div>

@@ -1,10 +1,10 @@
-import React, { ReactNode, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { ComboBox, InlineLoading } from "@carbon/react";
-import { Drug } from "../../../core/api/types/concept/Drug";
-import { Control, Controller, FieldValues } from "react-hook-form";
-import { useDrugsHook } from "./drug-selector.resource";
-import { fetchStockItem } from "../../stock-items.resource";
+import React, { ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ComboBox, InlineLoading } from '@carbon/react';
+import { Drug } from '../../../core/api/types/concept/Drug';
+import { Control, Controller, FieldValues } from 'react-hook-form';
+import { useDrugsHook } from './drug-selector.resource';
+import { fetchStockItem } from '../../stock-items.resource';
 
 interface DrugSelectorProps<T> {
   placeholder?: string;
@@ -21,7 +21,7 @@ interface DrugSelectorProps<T> {
 }
 
 const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const { t } = useTranslation();
   const { isLoading, drugList } = useDrugsHook(inputValue);
   const [showExistenceError, setShowExistenceError] = useState(false);
@@ -51,11 +51,9 @@ const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
             control={props.control}
             controllerName={props.controllerName}
             id={props.name}
-            size={"md"}
+            size={'md'}
             items={drugList || []}
-            initialSelectedItem={
-              drugList?.find((p) => p.uuid === props.drugUuid) ?? ""
-            }
+            initialSelectedItem={drugList?.find((p) => p.uuid === props.drugUuid) ?? ''}
             itemToString={drugName}
             onChange={(data: { selectedItem: Drug }) => {
               setShowExistenceError(false);
@@ -74,25 +72,13 @@ const DrugSelector = <T,>(props: DrugSelectorProps<T>) => {
           />
         )}
       />
-      {isLoading && (
-        <InlineLoading
-          status="active"
-          iconDescription="Searching"
-          description="Searching..."
-        />
-      )}
-      {showExistenceError && (
-        <div style={{ color: "#da1e28" }}>
-          {t("itemAlreadyExists", "Item already exits")}
-        </div>
-      )}
+      {isLoading && <InlineLoading status="active" iconDescription="Searching" description="Searching..." />}
+      {showExistenceError && <div style={{ color: '#da1e28' }}>{t('itemAlreadyExists', 'Item already exits')}</div>}
     </div>
   );
 };
 function drugName(item: Drug): string {
-  return item
-    ? `${item.name}${item.concept ? ` (${item.concept.display})` : ""}`
-    : "";
+  return item ? `${item.name}${item.concept ? ` (${item.concept.display})` : ''}` : '';
 }
 
 export default DrugSelector;

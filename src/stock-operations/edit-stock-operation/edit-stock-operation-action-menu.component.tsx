@@ -1,10 +1,10 @@
-import React from "react";
-import { Button } from "@carbon/react";
-import { Edit } from "@carbon/react/icons";
-import { useTranslation } from "react-i18next";
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
-import { StockOperationType } from "../../core/api/types/stockOperation/StockOperationType";
-import { launchAddOrEditDialog } from "../stock-operation.utils";
+import React from 'react';
+import { Button } from '@carbon/react';
+import { Edit } from '@carbon/react/icons';
+import { useTranslation } from 'react-i18next';
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { launchAddOrEditDialog } from '../stock-operation.utils';
 
 interface EditStockOperationActionMenuProps {
   model: StockOperationDTO;
@@ -16,15 +16,16 @@ interface EditStockOperationActionMenuProps {
   showprops?: boolean;
 }
 
-const EditStockOperationActionMenu: React.FC<
-  EditStockOperationActionMenuProps
-> = ({ model, operations, showIcon = true, showprops = true }) => {
+const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> = ({
+  model,
+  operations,
+  showIcon = true,
+  showprops = true,
+}) => {
   const { t } = useTranslation();
 
   const handleEdit = () => {
-    const operation = operations.find(
-      (op) => op.uuid === model.operationTypeUuid
-    );
+    const operation = operations.find((op) => op.uuid === model.operationTypeUuid);
     launchAddOrEditDialog(t, model, true, operation, operations, false);
   };
 
@@ -33,10 +34,10 @@ const EditStockOperationActionMenu: React.FC<
       kind="ghost"
       size="sm"
       onClick={handleEdit}
-      iconDescription={t("editStockOperation", "Edit Stock Operation")}
+      iconDescription={t('editStockOperation', 'Edit Stock Operation')}
       renderIcon={showIcon ? Edit : undefined}
     >
-      {showprops && model.operationNumber}
+      {showprops && model?.operationNumber}
     </Button>
   );
 };

@@ -1,5 +1,5 @@
 const printDocumentInternal = (content: string) => {
-  const newWin = window.open("", "Print-Window");
+  const newWin = window.open('', 'Print-Window');
   if (newWin) {
     newWin.document.open();
     newWin.document.write(content);

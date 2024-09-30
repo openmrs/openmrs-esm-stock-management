@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
-import { Button } from "@carbon/react";
-import { TrashCan } from "@carbon/react/icons";
-import { showModal } from "@openmrs/esm-framework";
-import { StockItemPackagingUOMDTO } from "../../../core/api/types/stockItem/StockItemPackagingUOM";
+import React, { useCallback } from 'react';
+import { Button } from '@carbon/react';
+import { TrashCan } from '@carbon/react/icons';
+import { showModal } from '@openmrs/esm-framework';
+import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 
 interface DeleteModalButtonProps {
   row?: StockItemPackagingUOMDTO;
@@ -11,7 +11,7 @@ interface DeleteModalButtonProps {
 
 const DeleteModalButton: React.FC<DeleteModalButtonProps> = ({ row }) => {
   const launchDeleteModal = useCallback(() => {
-    const dispose = showModal("delete-packaging-unit-modal", {
+    const dispose = showModal('delete-packaging-unit-modal', {
       closeModal: () => dispose(),
       row,
     });
@@ -22,7 +22,7 @@ const DeleteModalButton: React.FC<DeleteModalButtonProps> = ({ row }) => {
         type="button"
         size="sm"
         className="submitButton clear-padding-margin"
-        iconDescription={"Delete"}
+        iconDescription={'Delete'}
         kind="ghost"
         renderIcon={TrashCan}
         onClick={launchDeleteModal}

@@ -5,24 +5,21 @@ import {
   openmrsFetch,
   useSession,
   restBaseUrl,
-} from "@openmrs/esm-framework";
-import { ResourceFilterCriteria, toQueryParams } from "../core/api/api";
-import { PageableResult } from "../core/api/types/PageableResult";
-import {
-  OpenMRSLocation,
-  OpenMRSLocationTag,
-} from "../core/api/types/Location";
-import useSWR from "swr";
-import { Role } from "../core/api/types/identity/Role";
-import { User } from "../core/api/types/identity/User";
-import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
-import { Concept } from "../core/api/types/concept/Concept";
-import { Party } from "../core/api/types/Party";
-import { Drug } from "../core/api/types/concept/Drug";
-import { Patient } from "../core/api/types/identity/Patient";
-import { useMemo } from "react";
-import { uniqBy } from "lodash-es";
-import { UserRoleScope } from "../core/api/types/identity/UserRoleScope";
+} from '@openmrs/esm-framework';
+import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { PageableResult } from '../core/api/types/PageableResult';
+import { OpenMRSLocation, OpenMRSLocationTag } from '../core/api/types/Location';
+import useSWR from 'swr';
+import { Role } from '../core/api/types/identity/Role';
+import { User } from '../core/api/types/identity/User';
+import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { Concept } from '../core/api/types/concept/Concept';
+import { Party } from '../core/api/types/Party';
+import { Drug } from '../core/api/types/concept/Drug';
+import { Patient } from '../core/api/types/identity/Patient';
+import { useMemo } from 'react';
+import { uniqBy } from 'lodash-es';
+import { UserRoleScope } from '../core/api/types/identity/UserRoleScope';
 
 export type PatientFilterCriteria = ResourceFilterCriteria;
 
@@ -51,7 +48,7 @@ export function useStockLocations(filter: LocationFilterCriteria) {
   >(apiUrl, openmrsFetch);
   return {
     locations: data?.data || <PageableResult<OpenMRSLocation>>{},
-    isErrorLocation: error,
+    errorLocation: error,
     isLoadingLocations: isLoading,
   };
 }
@@ -60,16 +57,13 @@ export function useStockLocations(filter: LocationFilterCriteria) {
 */
 export function useStockTagLocations() {
   const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary `;
-  const { data, error, isLoading } = useSWR<{ data: FHIRResponse }>(
-    apiUrl,
-    openmrsFetch
-  );
+  const { data, error, isLoading } = useSWR<{ data: FHIRResponse }>(apiUrl, openmrsFetch);
   const stockLocations = useMemo(
     () => data?.data?.entry?.map((response) => response.resource) ?? [],
-    [data?.data?.entry]
+    [data?.data?.entry],
   );
   return {
-    stockLocations: uniqBy(stockLocations, "id") ?? [],
+    stockLocations: uniqBy(stockLocations, 'id') ?? [],
     isLoading,
     error,
   };
@@ -87,7 +81,7 @@ export function useLocationWithIdByUuid(id: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -96,9 +90,9 @@ export function deleteLocation(id: string) {
   const apiUrl = `${restBaseUrl}/stockmanagement/location/${id}`;
   const abortController = new AbortController();
   return openmrsFetch(apiUrl, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     signal: abortController.signal,
   });
@@ -106,9 +100,7 @@ export function deleteLocation(id: string) {
 
 // getLocationTags
 export function useLocationTags(q: string) {
-  const apiUrl = `${restBaseUrl}/locationtag?v=default${
-    q && q.length > 0 ? "&q=" + encodeURIComponent(q) : ""
-  }`;
+  const apiUrl = `${restBaseUrl}/locationtag?v=default${q && q.length > 0 ? '&q=' + encodeURIComponent(q) : ''}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<OpenMRSLocationTag>;
@@ -118,7 +110,7 @@ export function useLocationTags(q: string) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -134,7 +126,7 @@ export function useRoles(filter: ResourceFilterCriteria) {
   return {
     items: data?.data || <PageableResult<Role>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -150,13 +142,11 @@ export function useStockOperationTypes() {
   return {
     types: data?.data || <PageableResult<StockOperationType>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
-export function getStockOperationTypes(): Promise<
-  FetchResponse<PageableResult<StockOperationType>>
-> {
+export function getStockOperationTypes(): Promise<FetchResponse<PageableResult<StockOperationType>>> {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationtype?v=default`;
   return openmrsFetch(apiUrl);
 }
@@ -173,7 +163,7 @@ export function useUsers(filter: UserFilterCriteria) {
   return {
     items: data?.data || <PageableResult<User>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -189,7 +179,7 @@ export function useUser(id: string) {
   return {
     data: data?.data || <User>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -204,7 +194,7 @@ export function useConcept(conceptUuid: string) {
   return {
     items: data?.data || <Concept>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -220,7 +210,7 @@ export function useParties() {
   return {
     items: data?.data || <PageableResult<Party>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -241,7 +231,7 @@ export function useDrugs(filter: DrugFilterCriteria) {
   return {
     items: data?.data || <PageableResult<Drug>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -257,7 +247,7 @@ export function useConcepts(filter: ConceptFilterCriteria) {
   return {
     items: data?.data || <PageableResult<Concept>>{},
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -273,7 +263,7 @@ export function usePatients(filter: ConceptFilterCriteria) {
   return {
     items: data.data ? data.data : [],
     isLoading,
-    isError: error,
+    error,
   };
 }
 
@@ -292,22 +282,15 @@ type UserRole = {
 export const useUserRoles = () => {
   const { user: loggedInUser } = useSession();
   const url = `${restBaseUrl}/stockmanagement/userrolescope`;
-  const { data, isLoading, error } = useSWR<{ data: UserRole }>(
-    url,
-    openmrsFetch
-  );
-  const currentUserRoles = data?.data?.results.find(
-    (user) => user.userUuid === loggedInUser.uuid
-  );
+  const { data, isLoading, error } = useSWR<{ data: UserRole }>(url, openmrsFetch);
+  const currentUserRoles = data?.data?.results.find((user) => user.userUuid === loggedInUser.uuid);
   return {
     userRoles: currentUserRoles,
     isLoading,
     error,
   };
 };
-export function getUserRoleScopes(): Promise<
-  FetchResponse<PageableResult<UserRoleScope>>
-> {
+export function getUserRoleScopes(): Promise<FetchResponse<PageableResult<UserRoleScope>>> {
   const apiUrl = `${restBaseUrl}/stockmanagement/userrolescope`;
   return openmrsFetch(apiUrl);
 }

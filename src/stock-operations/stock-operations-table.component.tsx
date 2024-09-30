@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { useStockOperationPages } from "./stock-operations-table.resource";
-import { ResourceRepresentation } from "../core/api/api";
+import React, { useCallback, useMemo, useState } from 'react';
+import { useStockOperationPages } from './stock-operations-table.resource';
+import { ResourceRepresentation } from '../core/api/api';
 import {
   DataTable,
   TabPanel,
@@ -30,36 +30,27 @@ import {
   TableToolbarAction,
   Button,
   InlineLoading,
-} from "@carbon/react";
-import { ArrowRight, Edit } from "@carbon/react/icons";
-import { formatDisplayDate } from "../core/utils/datetimeUtils";
+} from '@carbon/react';
+import { ArrowRight, Edit } from '@carbon/react/icons';
+import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import {
   StockOperationStatusCancelled,
   StockOperationStatusNew,
   StockOperationStatusRejected,
   StockOperationStatusReturned,
-} from "../core/api/types/stockOperation/StockOperationStatus";
-import {
-  isDesktop,
-  restBaseUrl,
-  useConfig,
-  showModal,
-} from "@openmrs/esm-framework";
-import StockOperationTypesSelector from "./stock-operation-types-selector/stock-operation-types-selector.component";
-import { launchAddOrEditDialog } from "./stock-operation.utils";
-import { initialStockOperationValue } from "../core/utils/utils";
-import { StockOperationType } from "../core/api/types/stockOperation/StockOperationType";
-import { useTranslation } from "react-i18next";
-import EditStockOperationActionMenu from "./edit-stock-operation/edit-stock-operation-action-menu.component";
-import StockOperationsFilters from "./stock-operations-filters.component";
-import {
-  DATE_PICKER_CONTROL_FORMAT,
-  DATE_PICKER_FORMAT,
-  StockFilters,
-} from "../constants";
-import { handleMutate } from "../utils";
+} from '../core/api/types/stockOperation/StockOperationStatus';
+import { isDesktop, restBaseUrl, useConfig, showModal } from '@openmrs/esm-framework';
+import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
+import { launchAddOrEditDialog } from './stock-operation.utils';
+import { initialStockOperationValue } from '../core/utils/utils';
+import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { useTranslation } from 'react-i18next';
+import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
+import StockOperationsFilters from './stock-operations-filters.component';
+import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
+import { handleMutate } from '../utils';
 
-import styles from "./stock-operations-table.scss";
+import styles from './stock-operations-table.scss';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -72,14 +63,14 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   };
   const operation: StockOperationType = useMemo(
     () => ({
-      uuid: "",
-      name: "",
-      description: "",
-      operationType: "",
+      uuid: '',
+      name: '',
+      description: '',
+      operationType: '',
       hasSource: false,
-      sourceType: "Location",
+      sourceType: 'Location',
       hasDestination: false,
-      destinationType: "Location",
+      destinationType: 'Location',
       hasRecipient: false,
       recipientRequired: false,
       availableWhenReserved: false,
@@ -91,10 +82,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       dateChanged: undefined,
       dateVoided: undefined,
       voidedBy: undefined,
-      voidReason: "",
+      voidReason: '',
       voided: false,
     }),
-    []
+    [],
   );
 
   const [selectedFromDate, setSelectedFromDate] = useState(null);
@@ -103,32 +94,19 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [selectedOperations, setSelectedOperations] = useState<string[]>([]);
 
-  const {
-    items,
-    tableHeaders,
-    currentPage,
-    pageSizes,
-    totalItems,
-    goTo,
-    currentPageSize,
-    setPageSize,
-    isLoading,
-  } = useStockOperationPages({
-    v: ResourceRepresentation.Full,
-    totalCount: true,
-    operationDateMin: selectedFromDate?.toISOString(),
-    operationDateMax: selectedToDate?.toISOString(),
-    status: selectedStatus.join(","),
-    sourceTypeUuid: selectedSources.join(","),
-    operationTypeUuid: selectedOperations.join(","),
-  });
+  const { items, tableHeaders, currentPage, pageSizes, totalItems, goTo, currentPageSize, setPageSize, isLoading } =
+    useStockOperationPages({
+      v: ResourceRepresentation.Full,
+      totalCount: true,
+      operationDateMin: selectedFromDate?.toISOString(),
+      operationDateMax: selectedToDate?.toISOString(),
+      status: selectedStatus.join(','),
+      sourceTypeUuid: selectedSources.join(','),
+      operationTypeUuid: selectedOperations.join(','),
+    });
 
   const filterApplied =
-    selectedFromDate ||
-    selectedToDate ||
-    selectedSources.length ||
-    selectedStatus.length ||
-    selectedOperations.length;
+    selectedFromDate || selectedToDate || selectedSources.length || selectedStatus.length || selectedOperations.length;
 
   const [operations, setOperations] = useState<StockOperationType[]>([]);
 
@@ -157,16 +135,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }
   };
 
-  const handleEditClick = (stockOperation, isEditing) => {
-    launchAddOrEditDialog(
-      t,
-      stockOperation,
-      isEditing,
-      operation,
-      operations,
-      false
-    );
-  };
+  const handleEditClick = useCallback(
+    (stockOperation, isEditing) => {
+      launchAddOrEditDialog(t, stockOperation, isEditing, operation, operations, false);
+    },
+    [t, operation, operations],
+  );
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => ({
@@ -179,45 +153,35 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           model={stockOperation}
           operations={operations}
           operationUuid={operation.uuid}
-          operationNumber={""}
+          operationNumber={''}
           onEdit={() => handleEditClick(stockOperation, true)}
           showIcon={false}
           showprops={true}
         />
       ),
       status: `${stockOperation?.status}`,
-      source: `${stockOperation?.sourceName ?? ""}`,
-      destination: `${stockOperation?.destinationName ?? ""}`,
+      source: `${stockOperation?.sourceName ?? ''}`,
+      destination: `${stockOperation?.destinationName ?? ''}`,
       location: (
         <>
-          {" "}
-          {stockOperation?.sourceName ?? ""}{" "}
-          {stockOperation?.sourceName && stockOperation?.destinationName ? (
-            <ArrowRight size={16} />
-          ) : (
-            ""
-          )}{" "}
-          {stockOperation?.destinationName ?? ""}{" "}
+          {' '}
+          {stockOperation?.sourceName ?? ''}{' '}
+          {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
+          {stockOperation?.destinationName ?? ''}{' '}
         </>
       ),
       responsiblePerson: `${
-        stockOperation?.responsiblePersonFamilyName ??
-        stockOperation?.responsiblePersonOther ??
-        ""
-      } ${stockOperation?.responsiblePersonGivenName ?? ""}`,
+        stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
+      } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
       operationDate: formatDisplayDate(stockOperation?.operationDate),
       details: (
         <div className="tbl-expand-display-fields">
           <div className="field-label">
-            <span className="field-title"> {t("created", "Created")}</span>
+            <span className="field-title"> {t('created', 'Created')}</span>
             <span className="field-desc">
-              <span className="action-date">
-                {formatDisplayDate(stockOperation?.dateCreated)}
-              </span>{" "}
-              {t("by", "By")}
+              <span className="action-date">{formatDisplayDate(stockOperation?.dateCreated)}</span> {t('by', 'By')}
               <span className="action-by">
-                {stockOperation.creatorFamilyName ?? ""}{" "}
-                {stockOperation.creatorGivenName ?? ""}
+                {stockOperation.creatorFamilyName ?? ''} {stockOperation.creatorGivenName ?? ''}
               </span>
             </span>
           </div>
@@ -225,17 +189,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             stockOperation?.status !== StockOperationStatusReturned &&
             stockOperation?.submittedDate && (
               <div className="field-label">
-                <span className="field-title">
-                  {t("submitted", "Submitted")}
-                </span>
+                <span className="field-title">{t('submitted', 'Submitted')}</span>
                 <span className="field-desc">
-                  <span className="action-date">
-                    {formatDisplayDate(stockOperation?.submittedDate)}
-                  </span>{" "}
-                  {t("by", "By")}
+                  <span className="action-date">{formatDisplayDate(stockOperation?.submittedDate)}</span>{' '}
+                  {t('by', 'By')}
                   <span className="action-by">
-                    {stockOperation.submittedByFamilyName ?? ""}{" "}
-                    {stockOperation.submittedByGivenName ?? ""}
+                    {stockOperation.submittedByFamilyName ?? ''} {stockOperation.submittedByGivenName ?? ''}
                   </span>
                 </span>
               </div>
@@ -243,15 +202,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
           {stockOperation?.completedDate && (
             <div className="field-label">
-              <span className="field-title">{t("completed", "Completed")}</span>
+              <span className="field-title">{t('completed', 'Completed')}</span>
               <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.completedDate)}
-                </span>{" "}
-                {t("by", "By")}
+                <span className="action-date">{formatDisplayDate(stockOperation?.completedDate)}</span> {t('by', 'By')}
                 <span className="action-by">
-                  {stockOperation.completedByFamilyName ?? ""}{" "}
-                  {stockOperation.completedByGivenName ?? ""}
+                  {stockOperation.completedByFamilyName ?? ''} {stockOperation.completedByGivenName ?? ''}
                 </span>
               </span>
             </div>
@@ -259,18 +214,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
           {stockOperation?.status === StockOperationStatusCancelled && (
             <div className="field-label">
-              <span className="field-title">
-                {" "}
-                {t("cancelled", "Cancelled")}
-              </span>
+              <span className="field-title"> {t('cancelled', 'Cancelled')}</span>
               <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.cancelledDate)}
-                </span>{" "}
-                {t("by", "By")}
+                <span className="action-date">{formatDisplayDate(stockOperation?.cancelledDate)}</span> {t('by', 'By')}
                 <span className="action-by">
-                  {stockOperation.cancelledByFamilyName ?? ""}{" "}
-                  {stockOperation.cancelledByGivenName ?? ""}
+                  {stockOperation.cancelledByFamilyName ?? ''} {stockOperation.cancelledByGivenName ?? ''}
                 </span>
                 <p>{stockOperation.cancelReason}</p>
               </span>
@@ -281,13 +229,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             <div className="field-label">
               <span className="field-title">Rejected</span>
               <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.rejectedDate)}
-                </span>{" "}
-                {t("by", "By")}
+                <span className="action-date">{formatDisplayDate(stockOperation?.rejectedDate)}</span> {t('by', 'By')}
                 <span className="action-by">
-                  {stockOperation.rejectedByFamilyName ?? ""}{" "}
-                  {stockOperation.rejectedByGivenName ?? ""}
+                  {stockOperation.rejectedByFamilyName ?? ''} {stockOperation.rejectedByGivenName ?? ''}
                 </span>
                 <p>{stockOperation.rejectionReason}</p>
               </span>
@@ -298,13 +242,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             <div className="field-label">
               <span className="field-title">Returned</span>
               <span className="field-desc">
-                <span className="action-date">
-                  {formatDisplayDate(stockOperation?.returnedDate)}
-                </span>{" "}
-                By
+                <span className="action-date">{formatDisplayDate(stockOperation?.returnedDate)}</span> By
                 <span className="action-by">
-                  {stockOperation.returnedByFamilyName ?? ""}{" "}
-                  {stockOperation.returnedByGivenName ?? ""}
+                  {stockOperation.returnedByFamilyName ?? ''} {stockOperation.returnedByGivenName ?? ''}
                 </span>
                 <p>{stockOperation.returnReason}</p>
               </span>
@@ -317,35 +257,24 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           model={stockOperation}
           operations={operations}
           operationUuid={operation.uuid}
-          operationNumber={""}
+          operationNumber={''}
           onEdit={() => handleEditClick(stockOperation, true)}
           showIcon={true}
           showprops={false}
         />
       ),
     }));
-  }, [items, operations, t]);
+  }, [items, operations, t, handleEditClick, operation]);
 
   if (isLoading && !filterApplied) {
     return (
-      <DataTableSkeleton
-        className={styles.dataTableSkeleton}
-        showHeader={false}
-        rowCount={5}
-        columnCount={5}
-        zebra
-      />
+      <DataTableSkeleton className={styles.dataTableSkeleton} showHeader={false} rowCount={5} columnCount={5} zebra />
     );
   }
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>
-        {t(
-          "stockOperationTrackMovement",
-          "Stock operations to track movement of stock."
-        )}
-      </TabPanel>
+      <TabPanel>{t('stockOperationTrackMovement', 'Stock operations to track movement of stock.')}</TabPanel>
       <div id="table-tool-bar">
         <div></div>
         <div className="right-filters"></div>
@@ -355,20 +284,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
-        render={({
-          rows,
-          headers,
-          getHeaderProps,
-          getTableProps,
-          getRowProps,
-          onInputChange,
-        }) => (
+        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
-                position: "static",
-                overflow: "visible",
-                backgroundColor: "color",
+                position: 'static',
+                overflow: 'visible',
+                backgroundColor: 'color',
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
@@ -393,37 +315,19 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
                   </DatePicker>
 
-                  <StockOperationsFilters
-                    filterName={StockFilters.SOURCES}
-                    onFilterChange={handleOnFilterChange}
-                  />
+                  <StockOperationsFilters filterName={StockFilters.SOURCES} onFilterChange={handleOnFilterChange} />
 
-                  <StockOperationsFilters
-                    filterName={StockFilters.STATUS}
-                    onFilterChange={handleOnFilterChange}
-                  />
+                  <StockOperationsFilters filterName={StockFilters.STATUS} onFilterChange={handleOnFilterChange} />
 
-                  <StockOperationsFilters
-                    filterName={StockFilters.OPERATION}
-                    onFilterChange={handleOnFilterChange}
-                  />
+                  <StockOperationsFilters filterName={StockFilters.OPERATION} onFilterChange={handleOnFilterChange} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={handleRefresh}>
-                    Refresh
-                  </TableToolbarAction>
+                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
 
                 <StockOperationTypesSelector
                   onOperationTypeSelected={(operation) => {
-                    launchAddOrEditDialog(
-                      t,
-                      initialStockOperationValue(),
-                      false,
-                      operation,
-                      operations,
-                      false
-                    );
+                    launchAddOrEditDialog(t, initialStockOperationValue(), false, operation, operations, false);
                   }}
                   onOperationLoaded={(ops) => {
                     setOperations(ops);
@@ -437,22 +341,18 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   <TableExpandHeader />
                   {headers.map(
                     (header: any) =>
-                      header.key !== "details" && (
+                      header.key !== 'details' && (
                         <TableHeader
                           {...getHeaderProps({
                             header,
                             isSortable: header.isSortable,
                           })}
-                          className={
-                            isDesktop
-                              ? styles.desktopHeader
-                              : styles.tabletHeader
-                          }
+                          className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
                         >
                           {header.header?.content ?? header.header}
                         </TableHeader>
-                      )
+                      ),
                   )}
                   <TableHeader></TableHeader>
                 </TableRow>
@@ -462,97 +362,65 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableExpandRow
-                        className={
-                          isDesktop ? styles.desktopRow : styles.tabletRow
-                        }
+                        className={isDesktop ? styles.desktopRow : styles.tabletRow}
                         {...getRowProps({ row })}
                       >
                         {row.cells.map(
                           (cell: any) =>
-                            cell?.info?.header !== "details" && (
-                              <TableCell key={cell.id}>{cell.value}</TableCell>
-                            )
+                            cell?.info?.header !== 'details' && <TableCell key={cell.id}>{cell.value}</TableCell>,
                         )}
                       </TableExpandRow>
                       <TableExpandedRow colSpan={headers.length + 2}>
                         <>
                           <StructuredListHead>
                             <StructuredListRow head>
-                              <StructuredListCell head>
-                                {t("dateCreated", "Date Created")}
-                              </StructuredListCell>
-                              <StructuredListCell head>
-                                {t("dateCompleted", "Date Completed")}
-                              </StructuredListCell>
+                              <StructuredListCell head>{t('dateCreated', 'Date Created')}</StructuredListCell>
+                              <StructuredListCell head>{t('dateCompleted', 'Date Completed')}</StructuredListCell>
                             </StructuredListRow>
                           </StructuredListHead>
                           <StructuredListBody>
                             <StructuredListRow>
                               <StructuredListCell noWrap>
-                                {items[index]?.dateCreated
-                                  ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ""}
+                                {items[index]?.dateCreated ? formatDisplayDate(items[index]?.dateCreated) : ''}
                                 &nbsp;
-                                {items[index]?.dateCreated ? "By" : ""}
+                                {items[index]?.dateCreated ? 'By' : ''}
                                 &nbsp;
-                                {items[index]?.dateCreated
-                                  ? items[index]?.creatorFamilyName
-                                  : ""}
+                                {items[index]?.dateCreated ? items[index]?.creatorFamilyName : ''}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.completedDate
-                                  ? formatDisplayDate(
-                                      items[index]?.completedDate
-                                    )
-                                  : ""}
+                                {items[index]?.completedDate ? formatDisplayDate(items[index]?.completedDate) : ''}
                                 &nbsp;
-                                {items[index]?.completedDate ? "By" : ""}
+                                {items[index]?.completedDate ? 'By' : ''}
                                 &nbsp;
-                                {items[index]?.completedDate
-                                  ? items[index]?.creatorFamilyName
-                                  : ""}
+                                {items[index]?.completedDate ? items[index]?.creatorFamilyName : ''}
                               </StructuredListCell>
                             </StructuredListRow>
                             <StructuredListRow>
                               <StructuredListCell noWrap>
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
+                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
                                   ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ""}
+                                  : ''}
                                 &nbsp;
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
-                                  ? "By"
-                                  : ""}
+                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] ? 'By' : ''}
                                 &nbsp;
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
+                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
                                   ? items[index]?.creatorFamilyName
-                                  : ""}
+                                  : ''}
                               </StructuredListCell>
                               <StructuredListCell>
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1]
-                                  ? formatDisplayDate(
-                                      items[index]?.completedDate
-                                    )
-                                  : ""}
+                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
+                                  ? formatDisplayDate(items[index]?.completedDate)
+                                  : ''}
                                 &nbsp;
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1] && items[index]?.completedDate
-                                  ? "By"
-                                  : ""}
+                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] &&
+                                items[index]?.completedDate
+                                  ? 'By'
+                                  : ''}
                                 &nbsp;
-                                {items[index]?.stockOperationItems.map(
-                                  (item) => item.quantity
-                                )[1] && items[index]?.completedDate
+                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] &&
+                                items[index]?.completedDate
                                   ? items[index]?.creatorFamilyName
-                                  : ""}
+                                  : ''}
                               </StructuredListCell>
                             </StructuredListRow>
                           </StructuredListBody>
@@ -567,19 +435,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>
-                      {t("noOperationsToDisplay", "No Stock Items to display")}
-                    </p>
-                    <p className={styles.helper}>
-                      {t("checkFilters", "Check the filters above")}
-                    </p>
+                    <p className={styles.content}>{t('noOperationsToDisplay', 'No Stock Items to display')}</p>
+                    <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>
               </div>
             ) : null}
             {filterApplied && isLoading && (
               <div className={styles.rowLoadingContainer}>
-                <InlineLoading description={t("loading", "Loading...")} />
+                <InlineLoading description={t('loading', 'Loading...')} />
               </div>
             )}
           </TableContainer>

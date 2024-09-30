@@ -1,22 +1,20 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 
-import { Button } from "@carbon/react";
-import { showModal } from "@openmrs/esm-framework";
-import { useTranslation } from "react-i18next";
-import { Error } from "@carbon/react/icons";
-import { StockOperationDTO } from "../../core/api/types/stockOperation/StockOperationDTO";
+import { Button } from '@carbon/react';
+import { showModal } from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
+import { Error } from '@carbon/react/icons';
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 
 interface StockOperationCancelButtonProps {
   operation: StockOperationDTO;
 }
 
-const StockOperationCancelButton: React.FC<StockOperationCancelButtonProps> = ({
-  operation,
-}) => {
+const StockOperationCancelButton: React.FC<StockOperationCancelButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
   const launchCancelModal = useCallback(() => {
-    const dispose = showModal("stock-operation-dialog", {
-      title: "Cancel",
+    const dispose = showModal('stock-operation-dialog', {
+      title: 'Cancel',
       operation: operation,
       requireReason: true,
       closeModal: () => dispose(),
@@ -24,12 +22,8 @@ const StockOperationCancelButton: React.FC<StockOperationCancelButtonProps> = ({
   }, [operation]);
 
   return (
-    <Button
-      onClick={launchCancelModal}
-      kind="danger--ghost"
-      renderIcon={(props) => <Error size={16} {...props} />}
-    >
-      {t("cancel", "Cancel ")}
+    <Button onClick={launchCancelModal} kind="danger--ghost" renderIcon={(props) => <Error size={16} {...props} />}>
+      {t('cancel', 'Cancel ')}
     </Button>
   );
 };

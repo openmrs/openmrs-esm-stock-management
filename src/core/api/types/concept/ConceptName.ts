@@ -1,5 +1,5 @@
-import { BaseOpenmrsObject } from "../BaseOpenmrsObject";
-import { Concept } from "./Concept";
+import { BaseOpenmrsObject } from '../BaseOpenmrsObject';
+import { Concept } from './Concept';
 
 export interface ConceptName extends BaseOpenmrsObject {
   conceptNameId: number;
