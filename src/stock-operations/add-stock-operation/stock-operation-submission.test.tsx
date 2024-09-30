@@ -135,7 +135,6 @@ describe("StockOperationSubmission", () => {
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(saveButton).toBeDisabled();
       expect(saveButton).not.toBeDisabled();
     });
   });
