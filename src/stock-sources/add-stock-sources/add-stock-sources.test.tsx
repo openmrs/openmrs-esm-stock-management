@@ -41,7 +41,7 @@ describe('StockSourcesAddOrUpdate', () => {
 
   it('renders correctly with model prop', () => {
     const model: StockSource = {
-      uuid: '123', // Add this
+      uuid: '123',
       name: 'Test Source',
       acronym: 'TS',
       sourceType: {
@@ -72,7 +72,6 @@ describe('StockSourcesAddOrUpdate', () => {
         retiredBy: undefined,
         retireReason: '',
       },
-      // Add these properties from BaseOpenmrsData
       creator: {
         uuid: 'creator-uuid',
         display: 'Creator Name',
@@ -115,13 +114,14 @@ describe('StockSourcesAddOrUpdate', () => {
 
     await user.type(screen.getByLabelText('Full Name'), 'New Source');
     await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
-    await user.type(screen.getByLabelText('Source Type'), 'type2');
+    await user.selectOptions(screen.getByLabelText('Source Type'), 'type2');
     await user.click(screen.getByText('Save'));
 
     expect(createOrUpdateStockSource).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'New Source',
         acronym: 'NS',
+        sourceType: expect.objectContaining({ uuid: 'type2' }),
       }),
     );
   });
