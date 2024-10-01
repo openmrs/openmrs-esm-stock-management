@@ -26,14 +26,8 @@ import {
   TableToolbarAction,
   InlineLoading,
 } from '@carbon/react';
-import { ArrowRight, Edit } from '@carbon/react/icons';
+import { ArrowRight } from '@carbon/react/icons';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
-import {
-  StockOperationStatusCancelled,
-  StockOperationStatusNew,
-  StockOperationStatusRejected,
-  StockOperationStatusReturned,
-} from '../core/api/types/stockOperation/StockOperationStatus';
 import { isDesktop, restBaseUrl, useConfig, showModal, parseDate, formatDate } from '@openmrs/esm-framework';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
 import { launchAddOrEditDialog } from './stock-operation.utils';
@@ -46,6 +40,7 @@ import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '..
 import { handleMutate } from '../utils';
 
 import styles from './stock-operations-table.scss';
+import StockOperationStatus from './add-stock-operation/stock-operation-status.component';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -159,94 +154,15 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
       destination: `${stockOperation?.destinationName ?? ''}`,
       location: (
         <>
-          {' '}
-          {stockOperation?.sourceName ?? ''}{' '}
+          {stockOperation?.sourceName ?? ''}
           {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
-          {stockOperation?.destinationName ?? ''}{' '}
+          {stockOperation?.destinationName ?? ''}
         </>
       ),
       responsiblePerson: `${
         stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
       } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
       operationDate: formatDisplayDate(stockOperation?.operationDate),
-      details: (
-        <div className="tbl-expand-display-fields">
-          <div className="field-label">
-            <span className="field-title"> {t('created', 'Created')}</span>
-            <span className="field-desc">
-              <span className="action-date">{formatDisplayDate(stockOperation?.dateCreated)}</span> {t('by', 'By')}
-              <span className="action-by">
-                {stockOperation.creatorFamilyName ?? ''} {stockOperation.creatorGivenName ?? ''}
-              </span>
-            </span>
-          </div>
-          {stockOperation?.status !== StockOperationStatusNew &&
-            stockOperation?.status !== StockOperationStatusReturned &&
-            stockOperation?.submittedDate && (
-              <div className="field-label">
-                <span className="field-title">{t('submitted', 'Submitted')}</span>
-                <span className="field-desc">
-                  <span className="action-date">{formatDisplayDate(stockOperation?.submittedDate)}</span>{' '}
-                  {t('by', 'By')}
-                  <span className="action-by">
-                    {stockOperation.submittedByFamilyName ?? ''} {stockOperation.submittedByGivenName ?? ''}
-                  </span>
-                </span>
-              </div>
-            )}
-
-          {stockOperation?.completedDate && (
-            <div className="field-label">
-              <span className="field-title">{t('completed', 'Completed')}</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.completedDate)}</span> {t('by', 'By')}
-                <span className="action-by">
-                  {stockOperation.completedByFamilyName ?? ''} {stockOperation.completedByGivenName ?? ''}
-                </span>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusCancelled && (
-            <div className="field-label">
-              <span className="field-title"> {t('cancelled', 'Cancelled')}</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.cancelledDate)}</span> {t('by', 'By')}
-                <span className="action-by">
-                  {stockOperation.cancelledByFamilyName ?? ''} {stockOperation.cancelledByGivenName ?? ''}
-                </span>
-                <p>{stockOperation.cancelReason}</p>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusRejected && (
-            <div className="field-label">
-              <span className="field-title">Rejected</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.rejectedDate)}</span> {t('by', 'By')}
-                <span className="action-by">
-                  {stockOperation.rejectedByFamilyName ?? ''} {stockOperation.rejectedByGivenName ?? ''}
-                </span>
-                <p>{stockOperation.rejectionReason}</p>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusReturned && (
-            <div className="field-label">
-              <span className="field-title">Returned</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.returnedDate)}</span> By
-                <span className="action-by">
-                  {stockOperation.returnedByFamilyName ?? ''} {stockOperation.returnedByGivenName ?? ''}
-                </span>
-                <p>{stockOperation.returnReason}</p>
-              </span>
-            </div>
-          )}
-        </div>
-      ),
       actions: (
         <EditStockOperationActionMenu
           model={stockOperation}
@@ -259,15 +175,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         />
       ),
     }));
-  }, [items, operations, t, handleEditClick, operation]);
+  }, [items, operations, handleEditClick, operation]);
 
   if (isLoading && !filterApplied) {
     return (
       <DataTableSkeleton className={styles.dataTableSkeleton} showHeader={false} rowCount={5} columnCount={5} zebra />
     );
   }
-
-  console.log('tableRows-->>', JSON.stringify(tableRows, null, 2));
 
   return (
     <div className={styles.tableOverride}>
@@ -355,171 +269,24 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any, index) => {
+                {rows?.map((row: any, index) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableExpandRow
                         className={isDesktop ? styles.desktopRow : styles.tabletRow}
                         {...getRowProps({ row })}
                       >
-                        {row.cells.map(
-                          (cell: any) =>
-                            cell?.info?.header !== 'details' && <TableCell key={cell.id}>{cell.value}</TableCell>,
-                        )}
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
                       </TableExpandRow>
-                      <TableExpandedRow colSpan={headers.length + 2}>
-                        <div className={styles.statusContainer}>
-                          {row?.dateCreated && (
-                            <div>
-                              <span className={styles.textHeading}>{t('started', 'Started')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.dateCreated.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.creatorFamilyName} &nbsp;
-                                  {row?.creatorGivenName}
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {row.submittedDate && (
-                            <div>
-                              <span className={styles.textHeading}>{t('submitted', 'Submitted')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.submittedDate.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.submittedByFamilyName} &nbsp;
-                                  {row?.submittedByGivenName}
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {row?.dispatchedDate && (
-                            <div>
-                              <span className={styles.textHeading}>{t('dispatched', 'Dispatched')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.dispatchedDate.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.dispatchedByFamilyName} &nbsp;
-                                  {row?.dispatchedByGivenName}
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {row?.returnedDate && (
-                            <div>
-                              <span className={styles.textHeading}>{t('returned', 'Returned')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.returnedDate.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.returnedByFamilyName} &nbsp;
-                                  {row?.returnedByGivenName}
-                                </span>
-                                <span className={styles.text}>{row?.returnReason}</span>
-                              </div>
-                            </div>
-                          )}
-
-                          {row?.completedDate && (
-                            <div>
-                              <span className={styles.textHeading}>{t('completed', 'Completed')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.completedDate.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.completedByFamilyName} &nbsp;
-                                  {row?.completedByGivenName}
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {row?.status === 'CANCELLED' && (
-                            <div>
-                              <span className={styles.textHeading}>{t('cancelled', 'Cancelled')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.cancelledDate.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.cancelledByFamilyName} &nbsp;
-                                  {row?.cancelledByGivenName}
-                                  <span className={styles.text}>{row?.cancelReason}</span>
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {row?.status === 'REJECTED' && (
-                            <div>
-                              <span className={styles.textHeading}>{t('rejected', 'Rejected')}:</span>
-                              <div className={styles.statusDescriptions}>
-                                <span className={styles.text}>
-                                  {formatDate(parseDate(row?.rejectedDate.toString()), {
-                                    time: true,
-                                    mode: 'standard',
-                                  })}
-                                </span>
-
-                                <span className={styles.text}>By</span>
-
-                                <span className={styles.text}>
-                                  {row?.rejectedByFamilyName} &nbsp;
-                                  {row?.rejectedByGivenName}
-                                  <span>{row?.rejectionReason}</span>
-                                </span>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </TableExpandedRow>
+                      {row.isExpanded ? (
+                        <TableExpandedRow colSpan={headers.length + 2}>
+                          <StockOperationStatus model={items[index]} hasReason={false} />
+                        </TableExpandedRow>
+                      ) : (
+                        <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
+                      )}
                     </React.Fragment>
                   );
                 })}
