@@ -20,15 +20,10 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  StructuredListHead,
-  StructuredListRow,
-  StructuredListCell,
-  StructuredListBody,
   DatePickerInput,
   DatePicker,
   TableToolbarMenu,
   TableToolbarAction,
-  Button,
   InlineLoading,
 } from '@carbon/react';
 import { ArrowRight, Edit } from '@carbon/react/icons';
@@ -39,7 +34,7 @@ import {
   StockOperationStatusRejected,
   StockOperationStatusReturned,
 } from '../core/api/types/stockOperation/StockOperationStatus';
-import { isDesktop, restBaseUrl, useConfig, showModal } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl, useConfig, showModal, parseDate, formatDate } from '@openmrs/esm-framework';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
 import { launchAddOrEditDialog } from './stock-operation.utils';
 import { initialStockOperationValue } from '../core/utils/utils';
@@ -272,6 +267,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     );
   }
 
+  console.log('tableRows-->>', JSON.stringify(tableRows, null, 2));
+
   return (
     <div className={styles.tableOverride}>
       <TabPanel>{t('stockOperationTrackMovement', 'Stock operations to track movement of stock.')}</TabPanel>
@@ -371,60 +368,157 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                         )}
                       </TableExpandRow>
                       <TableExpandedRow colSpan={headers.length + 2}>
-                        <>
-                          <StructuredListHead>
-                            <StructuredListRow head>
-                              <StructuredListCell head>{t('dateCreated', 'Date Created')}</StructuredListCell>
-                              <StructuredListCell head>{t('dateCompleted', 'Date Completed')}</StructuredListCell>
-                            </StructuredListRow>
-                          </StructuredListHead>
-                          <StructuredListBody>
-                            <StructuredListRow>
-                              <StructuredListCell noWrap>
-                                {items[index]?.dateCreated ? formatDisplayDate(items[index]?.dateCreated) : ''}
-                                &nbsp;
-                                {items[index]?.dateCreated ? 'By' : ''}
-                                &nbsp;
-                                {items[index]?.dateCreated ? items[index]?.creatorFamilyName : ''}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.completedDate ? formatDisplayDate(items[index]?.completedDate) : ''}
-                                &nbsp;
-                                {items[index]?.completedDate ? 'By' : ''}
-                                &nbsp;
-                                {items[index]?.completedDate ? items[index]?.creatorFamilyName : ''}
-                              </StructuredListCell>
-                            </StructuredListRow>
-                            <StructuredListRow>
-                              <StructuredListCell noWrap>
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
-                                  ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] ? 'By' : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
-                                  ? items[index]?.creatorFamilyName
-                                  : ''}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
-                                  ? formatDisplayDate(items[index]?.completedDate)
-                                  : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] &&
-                                items[index]?.completedDate
-                                  ? 'By'
-                                  : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] &&
-                                items[index]?.completedDate
-                                  ? items[index]?.creatorFamilyName
-                                  : ''}
-                              </StructuredListCell>
-                            </StructuredListRow>
-                          </StructuredListBody>
-                        </>
+                        <div className={styles.statusContainer}>
+                          {row?.dateCreated && (
+                            <div>
+                              <span className={styles.textHeading}>{t('started', 'Started')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.dateCreated.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.creatorFamilyName} &nbsp;
+                                  {row?.creatorGivenName}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {row.submittedDate && (
+                            <div>
+                              <span className={styles.textHeading}>{t('submitted', 'Submitted')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.submittedDate.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.submittedByFamilyName} &nbsp;
+                                  {row?.submittedByGivenName}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {row?.dispatchedDate && (
+                            <div>
+                              <span className={styles.textHeading}>{t('dispatched', 'Dispatched')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.dispatchedDate.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.dispatchedByFamilyName} &nbsp;
+                                  {row?.dispatchedByGivenName}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {row?.returnedDate && (
+                            <div>
+                              <span className={styles.textHeading}>{t('returned', 'Returned')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.returnedDate.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.returnedByFamilyName} &nbsp;
+                                  {row?.returnedByGivenName}
+                                </span>
+                                <span className={styles.text}>{row?.returnReason}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {row?.completedDate && (
+                            <div>
+                              <span className={styles.textHeading}>{t('completed', 'Completed')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.completedDate.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.completedByFamilyName} &nbsp;
+                                  {row?.completedByGivenName}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {row?.status === 'CANCELLED' && (
+                            <div>
+                              <span className={styles.textHeading}>{t('cancelled', 'Cancelled')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.cancelledDate.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.cancelledByFamilyName} &nbsp;
+                                  {row?.cancelledByGivenName}
+                                  <span className={styles.text}>{row?.cancelReason}</span>
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {row?.status === 'REJECTED' && (
+                            <div>
+                              <span className={styles.textHeading}>{t('rejected', 'Rejected')}:</span>
+                              <div className={styles.statusDescriptions}>
+                                <span className={styles.text}>
+                                  {formatDate(parseDate(row?.rejectedDate.toString()), {
+                                    time: true,
+                                    mode: 'standard',
+                                  })}
+                                </span>
+
+                                <span className={styles.text}>By</span>
+
+                                <span className={styles.text}>
+                                  {row?.rejectedByFamilyName} &nbsp;
+                                  {row?.rejectedByGivenName}
+                                  <span>{row?.rejectionReason}</span>
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </TableExpandedRow>
                     </React.Fragment>
                   );

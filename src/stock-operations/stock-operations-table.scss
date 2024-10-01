@@ -58,3 +58,21 @@
   margin: auto;
   width: 20%;
 }
+
+.statusContainer {
+  display: flex;
+  margin-top: 4px;
+  gap: 1rem;
+}
+
+.textHeading {
+  font-weight: bold;
+}
+
+.statusDescriptions {
+  margin-top: 4px;
+
+  .text {
+    margin-right: 4px;
+  }
+}
