@@ -1,10 +1,26 @@
-import { renderHook, act } from '@testing-library/react';
+import React from 'react';
+import { renderHook, act, render, screen } from '@testing-library/react';
 import useStockSourcesPage from './stock-sources-items-table.resource';
 import { useStockSources } from './stock-sources.resource';
 import { usePagination } from '@openmrs/esm-framework';
+import '@testing-library/jest-dom/extend-expect';
+import EditStockSourceActionsMenu from './edit-stock-source/edit-stock-source.component';
+import { launchOverlay } from '../core/components/overlay/hook';
+import StockSourcesAddOrUpdate from './add-stock-sources/add-stock-sources.component';
+import userEvent from '@testing-library/user-event';
 
 jest.mock('./stock-sources.resource');
 jest.mock('@openmrs/esm-framework');
+
+jest.mock('../core/components/overlay/hook', () => ({
+  launchOverlay: jest.fn(),
+}));
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key, fallback) => fallback,
+  }),
+}));
 
 describe('useStockSourcesPage', () => {
   const mockFilter = {};
@@ -73,5 +89,21 @@ describe('useStockSourcesPage', () => {
     expect(result.current.isLoading).toBe(true);
     expect(result.current.error).toBe(null);
     expect(result.current.totalItems).toBe(0);
+  });
+
+  describe('EditStockSourceActionsMenu', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('renders the edit button and opens overlay when clicked without data', async () => {
+      render(<EditStockSourceActionsMenu />);
+
+      const button = screen.getByRole('button');
+      expect(button).toBeInTheDocument();
+
+      await userEvent.click(button);
+      expect(launchOverlay).toHaveBeenCalledWith('Edit Stock Source', <StockSourcesAddOrUpdate model={undefined} />);
+    });
   });
 });
