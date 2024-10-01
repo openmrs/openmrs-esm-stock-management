@@ -33,6 +33,7 @@ import { getStockOperationLinks, operationStatusColor } from '../stock-operation
 import styles from './add-stock-operation.scss';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/StockOperationLinkDTO';
+import StockOperationStatus from './stock-operation-status.component';
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -200,7 +201,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         >
           <div style={{ margin: '10px' }}>
             {isEditing && (
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '10px' }}>
                 <span className={styles.textHeading}>{t('status', 'Status ')}:</span>
                 <span
                   style={{
@@ -212,157 +213,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                 </span>
               </div>
             )}
-            <div className={styles.statusContainer}>
-              {props?.model?.dateCreated && (
-                <div>
-                  <span className={styles.textHeading}>{t('started', 'Started')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.dateCreated.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.creatorFamilyName} &nbsp;
-                      {props?.model?.creatorGivenName}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {props?.model?.submittedDate && (
-                <div>
-                  <span className={styles.textHeading}>{t('submitted', 'Submitted')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.submittedDate.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.submittedByFamilyName} &nbsp;
-                      {props?.model?.submittedByGivenName}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {props?.model?.dispatchedDate && (
-                <div>
-                  <span className={styles.textHeading}>{t('dispatched', 'Dispatched')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.dispatchedDate.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.dispatchedByFamilyName} &nbsp;
-                      {props?.model?.dispatchedByGivenName}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {props?.model?.returnedDate && (
-                <div>
-                  <span className={styles.textHeading}>{t('returned', 'Returned')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.returnedDate.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.returnedByFamilyName} &nbsp;
-                      {props?.model?.returnedByGivenName}
-                    </span>
-                    <span className={styles.text}>{props?.model?.returnReason}</span>
-                  </div>
-                </div>
-              )}
-
-              {props?.model?.completedDate && (
-                <div>
-                  <span className={styles.textHeading}>{t('completed', 'Completed')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.completedDate.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.completedByFamilyName} &nbsp;
-                      {props?.model?.completedByGivenName}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {props?.model?.status === 'CANCELLED' && (
-                <div>
-                  <span className={styles.textHeading}>{t('cancelled', 'Cancelled')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.cancelledDate.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.cancelledByFamilyName} &nbsp;
-                      {props?.model?.cancelledByGivenName}
-                      <span className={styles.text}>{props?.model?.cancelReason}</span>
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {props?.model?.status === 'REJECTED' && (
-                <div>
-                  <span className={styles.textHeading}>{t('rejected', 'Rejected')}:</span>
-                  <div className={styles.statusDescriptions}>
-                    <span className={styles.text}>
-                      {formatDate(parseDate(props?.model?.rejectedDate.toString()), {
-                        time: true,
-                        mode: 'standard',
-                      })}
-                    </span>
-
-                    <span className={styles.text}>By</span>
-
-                    <span className={styles.text}>
-                      {props?.model?.rejectedByFamilyName} &nbsp;
-                      {props?.model?.rejectedByGivenName}
-                      <span>{props?.model?.rejectionReason}</span>
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
+            <StockOperationStatus model={props?.model} />
           </div>
 
           {((!props?.model?.permission?.canEdit &&

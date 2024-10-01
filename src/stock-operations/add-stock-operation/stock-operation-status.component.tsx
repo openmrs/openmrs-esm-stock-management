@@ -6,7 +6,6 @@ import styles from '../stock-operations-table.scss';
 
 interface StockOperationStatusProps {
   model: StockOperationDTO;
-  hasReason: boolean;
 }
 
 const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
