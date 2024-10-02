@@ -28,7 +28,7 @@ import {
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
-import { isDesktop, restBaseUrl, useConfig, showModal, parseDate, formatDate } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
 import { launchAddOrEditDialog } from './stock-operation.utils';
 import { initialStockOperationValue } from '../core/utils/utils';
