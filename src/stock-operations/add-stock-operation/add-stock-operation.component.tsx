@@ -192,13 +192,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       {!isEditing && props.operation.name === 'Stock Issue' ? (
         <></>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            margin: '5px',
-          }}
-        >
+        <div className={styles.statusBody}>
           <div style={{ margin: '10px' }}>
             {isEditing && (
               <div className={styles.statusLabel}>

@@ -43,7 +43,13 @@
 }
 
 .statusLabel {
-  display: 'flex';
+  display: flex;
   flex-direction: row;
-  margin-left: '10px';
+  margin-left: 10px;
+}
+
+.statusBody {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
 }
