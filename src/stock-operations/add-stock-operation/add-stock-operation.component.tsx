@@ -20,7 +20,7 @@ import StockOperationApproveDispatchButton from '../stock-operations-dialog/stoc
 import StockOperationCompleteDispatchButton from '../stock-operations-dialog/stock-operations-completed-dispatch-button.component';
 import StockOperationIssueStockButton from '../stock-operations-dialog/stock-operations-issue-stock-button.component';
 import { StockOperation } from './stock-operation-context/useStockOperationContext';
-import { formatDate, parseDate, showSnackbar } from '@openmrs/esm-framework';
+import { showSnackbar } from '@openmrs/esm-framework';
 import {
   OperationType,
   StockOperationTypeIsStockIssue,
@@ -201,7 +201,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
         >
           <div style={{ margin: '10px' }}>
             {isEditing && (
-              <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '10px' }}>
+              <div className={styles.statusLabel}>
                 <span className={styles.textHeading}>{t('status', 'Status ')}:</span>
                 <span
                   style={{

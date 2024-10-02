@@ -24,7 +24,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.creatorFamilyName} &nbsp;
@@ -45,7 +45,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.submittedByFamilyName} &nbsp;
@@ -66,7 +66,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.dispatchedByFamilyName} &nbsp;
@@ -87,7 +87,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.returnedByFamilyName} &nbsp;
@@ -109,7 +109,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.completedByFamilyName} &nbsp;
@@ -130,7 +130,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.cancelledByFamilyName} &nbsp;
@@ -152,7 +152,7 @@ const StockOperationStatus: React.FC<StockOperationStatusProps> = (props) => {
                 })}
               </span>
 
-              <span className={styles.text}>By</span>
+              <span className={styles.text}>{t('by', 'By')}</span>
 
               <span className={styles.text}>
                 {props.model?.rejectedByFamilyName} &nbsp;
