@@ -34,6 +34,7 @@ import styles from './add-stock-operation.scss';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/StockOperationLinkDTO';
 import StockOperationStatus from './stock-operation-status.component';
+import StockOperationRelatedLink from './stock-operation-related-link.component';
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -297,13 +298,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                     <span> </span>
                     {item?.childVoided && item?.childOperationNumber}
                     {!item?.childVoided && (
-                      <span
-                        style={{
-                          marginLeft: '2px',
-                          color: '#0f62fe',
-                        }}
-                      >
-                        {item?.childOperationNumber}
+                      <span className={styles.relatedLink}>
+                        <StockOperationRelatedLink
+                          operationTypes={types.results}
+                          operationUuid={item?.childUuid}
+                          operationNumber={item?.childOperationNumber}
+                        />
                       </span>
                     )}
                   </span>
@@ -322,13 +322,12 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                     <span> </span>
                     {item?.parentVoided && item?.parentOperationNumber}
                     {!item?.parentVoided && (
-                      <span
-                        style={{
-                          marginLeft: '2px',
-                          color: '#0f62fe',
-                        }}
-                      >
-                        {item?.parentOperationNumber}
+                      <span className={styles.relatedLink}>
+                        <StockOperationRelatedLink
+                          operationTypes={types.results}
+                          operationUuid={item?.parentUuid}
+                          operationNumber={item?.parentOperationNumber}
+                        />
                       </span>
                     )}
                   </span>
