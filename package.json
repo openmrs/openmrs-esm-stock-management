@@ -20,7 +20,8 @@
     "prepare": "husky install",
     "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./i18next-parser.config.js",
     "postinstall": "husky",
-    "test-e2e": "playwright test"
+    "test-e2e": "playwright test",
+    "playwright": "playwright test"
   },
   "browserslist": [
     "extends browserslist-config-openmrs"
@@ -44,6 +45,7 @@
   "dependencies": {
     "@carbon/react": "^1.33.1",
     "@hookform/resolvers": "^3.3.0",
+    "@playwright/test": "^1.47.2",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "lodash-es": "^4.17.21",
