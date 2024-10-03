@@ -41,9 +41,6 @@ jobs:
       - name: Run dev server
         run: yarn start --sources 'packages/esm-*-app/' --port 8180 &
 
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:8180
-
       - name: Run E2E tests
         run: yarn playwright test
 
