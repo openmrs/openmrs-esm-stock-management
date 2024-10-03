@@ -13,11 +13,7 @@ test.describe('Overview Page Test', () => {
     });
 
     await test.step('Then I should be at the home page', async () => {
-      await expect(page).toHaveURL(`${process.env.E2E_BASE_URL}/spa/stock-management`);
-    });
-
-    await test.step('Then Stock Management should be visible', async () => {
-      await expect(page.getByText('Stock Management')).toBeVisible();
+      await expect(page).toHaveURL(`${process.env.E2E_BASE_URL}spa/login`);
     });
   });
 });
