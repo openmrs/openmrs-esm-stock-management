@@ -11,6 +11,7 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -26,21 +27,22 @@ jobs:
           node-version: 18
 
       - name: Cache dependencies
-        id: cache
         uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Install Playwright Browsers
         run: npx playwright install chromium --with-deps
 
       - name: Run dev server
-        run: yarn start --sources 'packages/esm-*-app/' --port 8180 & # Refer to O3-1994
+        run: yarn start --sources 'packages/esm-*-app/' --port 8180 &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:8180
 
       - name: Run E2E tests
         run: yarn playwright test
@@ -52,12 +54,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
-  github-action:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Run Playwright tests with GitHub Action
-        run: yarn playwright test
