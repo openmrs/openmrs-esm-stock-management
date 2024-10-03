@@ -4164,6 +4164,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     css-loader: "npm:^6.8.1"
     dayjs: "npm:^1.11.9"
+    dotenv: "npm:^16.4.5"
     eslint: "npm:^8.44.0"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     eslint-plugin-testing-library: "npm:^6.3.0"
@@ -12013,6 +12014,13 @@ __metadata:
   dependencies:
     is-obj: "npm:^1.0.0"
   checksum: 10/25372bc0a4c3921d8056b8f14f44758154cfbd80e85f5fc35fef278b88c320921213d5d8ba64cff8cfc58a57f3e2f10e10e59a48d0bf146a23cf2a7ebe0292f1
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 10/55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
   languageName: node
   linkType: hard
 
