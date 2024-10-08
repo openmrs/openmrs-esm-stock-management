@@ -12,7 +12,7 @@ interface StockOperationReferenceProps {
 
 const StockOperationReference = (props: StockOperationReferenceProps) => {
   const { t } = useTranslation();
-  const { types } = useStockOperationTypes();
+  const { stockOperationTypes } = useStockOperationTypes();
 
   let model: StockOperationDTO;
 
@@ -21,12 +21,12 @@ const StockOperationReference = (props: StockOperationReferenceProps) => {
   });
 
   const handleEdit = () => {
-    const operation = types.results?.find((op) => op?.uuid === model?.operationTypeUuid);
+    const operation = stockOperationTypes?.find((op) => op?.uuid === model?.operationTypeUuid);
 
     if (!operation) {
       return;
     }
-    launchAddOrEditDialog(t, model, true, operation, types?.results, false);
+    launchAddOrEditDialog(t, model, true, operation, stockOperationTypes, false);
   };
   return (
     <a onClick={handleEdit} style={{ cursor: 'pointer' }}>
