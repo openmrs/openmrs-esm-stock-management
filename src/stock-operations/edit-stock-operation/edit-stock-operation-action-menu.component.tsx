@@ -25,7 +25,7 @@ const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> 
   const { t } = useTranslation();
 
   const handleEdit = () => {
-    const operation = operations.find((op) => op.uuid === model.operationTypeUuid);
+    const operation = operations?.find((op) => op?.uuid === model?.operationTypeUuid);
     launchAddOrEditDialog(t, model, true, operation, operations, false);
   };
 
