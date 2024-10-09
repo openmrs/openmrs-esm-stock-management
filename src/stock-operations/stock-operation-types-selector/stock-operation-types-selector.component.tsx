@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { ButtonSkeleton, OverflowMenu, OverflowMenuItem } from '@carbon/react';
 import { OverflowMenuVertical } from '@carbon/react/icons';
-import { useStockOperationTypes, useUserRoles } from '../../stock-lookups/stock-lookups.resource';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { useConfig } from '@openmrs/esm-framework';
-import { ConfigObject } from '../../config-schema';
+import { useAvailableOperationTypes } from './useAvailableOperationTypes';
 
 interface StockOperationTypesSelectorProps {
   onOperationTypeSelected?: (selectedOperation: StockOperationType) => void;
@@ -15,20 +13,7 @@ const StockOperationTypesSelector: React.FC<StockOperationTypesSelectorProps> = 
   onOperationTypeSelected,
   onOperationsLoaded,
 }) => {
-  const { stockOperationTypes, isLoading, error } = useStockOperationTypes();
-  const { userRoles } = useUserRoles();
-  const { excludeStockOperationTypes } = useConfig<ConfigObject>();
-
-  const availableOperationTypes = useMemo(() => {
-    if (!stockOperationTypes || !userRoles?.operationTypes) return [];
-
-    const userOperationTypeUuids = new Set(userRoles.operationTypes.map((role) => role.operationTypeUuid));
-
-    return stockOperationTypes.filter(
-      (operationType) =>
-        userOperationTypeUuids.has(operationType.uuid) && !excludeStockOperationTypes.includes(operationType.uuid),
-    );
-  }, [stockOperationTypes, userRoles, excludeStockOperationTypes]);
+  const { availableOperationTypes, isLoading, error } = useAvailableOperationTypes();
 
   useEffect(() => {
     onOperationsLoaded?.(availableOperationTypes);

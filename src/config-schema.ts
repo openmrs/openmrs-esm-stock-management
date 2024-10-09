@@ -35,11 +35,6 @@ export const configSchema = {
     _description: 'UUID for the stock item category',
     _default: '6d24eb6e-b42f-4706-ab2d-ae4472161f6a',
   },
-  excludeStockOperationTypes: {
-    _type: Type.Array,
-    _default: ['66666666-6666-6666-6666-666666666666'],
-    _description: 'Exclude stock operation types from the stock operation types selector',
-  },
   logo: {
     src: {
       _type: Type.String,
@@ -72,5 +67,4 @@ export type ConfigObject = {
     alt: string;
     name: string;
   };
-  excludeStockOperationTypes: Array<string>;
 };

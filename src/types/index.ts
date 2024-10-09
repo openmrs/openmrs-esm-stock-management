@@ -10,3 +10,12 @@ export interface DashboardConfig {
 export type StockOperationTypeResponse = {
   data: PageableResult<StockOperationType>;
 };
+
+export type SystemSettingResponse = {
+  results: Array<{
+    uuid: string;
+    display: string;
+    value: string;
+    property: string;
+  }>;
+};
