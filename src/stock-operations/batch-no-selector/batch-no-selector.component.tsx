@@ -65,7 +65,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
     }
   }, [isLoading, stockItemBatchNos, props.selectedItem, filteredBatches]);
 
-  if (isLoading) return <InlineLoading status="active" />;
+  if (isLoading) return <InlineLoading status="active" data-testid="loading" />;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -88,9 +88,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockBatchDTO) =>
-              s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? "Unknown"}` : ""
-            }
+            itemToString={(s: StockBatchDTO) => (s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'}` : '')}
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
@@ -99,7 +97,11 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
         )}
       />
       {isLoading && <InlineLoading status="active" />}
-      {validationMessage && <div style={{ color: 'red', marginTop: '8px' }}>{t(validationMessage)}</div>}
+      {validationMessage && (
+        <div data-testid="validation-message" style={{ color: 'red', marginTop: '8px' }}>
+          {t(validationMessage)}
+        </div>
+      )}
     </div>
   );
 };
