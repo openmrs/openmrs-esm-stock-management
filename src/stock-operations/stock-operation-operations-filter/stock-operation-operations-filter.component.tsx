@@ -5,7 +5,7 @@ import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resour
 
 const StockOperationOperationsFilter: React.FC = () => {
   // get stock sources
-  const { types, isLoading, error } = useStockOperationTypes();
+  const { stockOperationTypes, isLoading, error } = useStockOperationTypes();
   if (isLoading || error) {
     return <DropdownSkeleton />;
   }
@@ -14,7 +14,7 @@ const StockOperationOperationsFilter: React.FC = () => {
       <div className={styles.filterContainer}>
         <Dropdown
           id="stockOperationOperationsFiter"
-          items={types.results}
+          items={stockOperationTypes}
           itemToString={(item) => (item ? item.name : 'Not Set')}
           type="inline"
           size="sm"
