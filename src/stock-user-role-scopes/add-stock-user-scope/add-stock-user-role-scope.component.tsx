@@ -64,10 +64,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   const loggedInUserUuid = currentUser?.user?.uuid;
 
   // operation types
-  const {
-    types: { results: stockOperations },
-    isLoading,
-  } = useStockOperationTypes();
+  const { stockOperationTypes, isLoading } = useStockOperationTypes();
 
   // get users
   const { items: users, isLoading: loadingUsers } = useUsers({
@@ -133,7 +130,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
       ];
       setFormModel({ ...formModel, operationTypes: newOperationTypes });
     } else {
-      const stockOperationType = stockOperations?.find((x) => x.uuid === event?.target?.value);
+      const stockOperationType = stockOperationTypes?.find((x) => x.uuid === event?.target?.value);
       const operationType: UserRoleScopeOperationType = {
         operationTypeName: stockOperationType?.name,
         operationTypeUuid: stockOperationType?.uuid,
@@ -346,8 +343,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           </section>
           <section className={styles.section}>
             <CheckboxGroup className={styles.checkboxGrid}>
-              {stockOperations?.length > 0 &&
-                stockOperations.map((type) => {
+              {stockOperationTypes?.length > 0 &&
+                stockOperationTypes.map((type) => {
                   return (
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <Checkbox

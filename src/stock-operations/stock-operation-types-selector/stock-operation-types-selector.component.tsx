@@ -1,39 +1,29 @@
 import React, { useEffect, useMemo } from 'react';
 import { ButtonSkeleton, OverflowMenu, OverflowMenuItem } from '@carbon/react';
 import { OverflowMenuVertical } from '@carbon/react/icons';
-import { useStockOperationTypes, useUserRoles } from '../../stock-lookups/stock-lookups.resource';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { useAvailableOperationTypes } from './useAvailableOperationTypes';
 
 interface StockOperationTypesSelectorProps {
-  onOperationTypeSelected?: (operation: StockOperationType) => void;
-  onOperationLoaded?: (operation: StockOperationType[]) => void;
+  onOperationTypeSelected?: (selectedOperation: StockOperationType) => void;
+  onOperationsLoaded?: (availableOperations: StockOperationType[]) => void;
 }
 
 const StockOperationTypesSelector: React.FC<StockOperationTypesSelectorProps> = ({
   onOperationTypeSelected,
-  onOperationLoaded,
+  onOperationsLoaded,
 }) => {
-  const {
-    types: { results: createOperationTypes },
-    isLoading,
-    error,
-  } = useStockOperationTypes();
-  const { userRoles } = useUserRoles();
-
-  const filterOperationTypes = useMemo(() => {
-    const applicablePrivilegeScopes = userRoles?.operationTypes?.map((p) => p.operationTypeUuid) || [];
-    const uniqueApplicablePrivilegeScopes = [...new Set(applicablePrivilegeScopes)];
-
-    return createOperationTypes?.filter((p) => uniqueApplicablePrivilegeScopes.includes(p.uuid)) || [];
-  }, [createOperationTypes, userRoles]);
+  const { availableOperationTypes, isLoading, error } = useAvailableOperationTypes();
 
   useEffect(() => {
-    onOperationLoaded?.(filterOperationTypes);
-  }, [filterOperationTypes, onOperationLoaded]);
+    onOperationsLoaded?.(availableOperationTypes);
+  }, [availableOperationTypes, onOperationsLoaded]);
 
   if (isLoading || error) return <ButtonSkeleton />;
 
-  return filterOperationTypes && filterOperationTypes.length ? (
+  if (!availableOperationTypes.length) return null;
+
+  return (
     <OverflowMenu
       renderIcon={() => (
         <>
@@ -42,30 +32,30 @@ const StockOperationTypesSelector: React.FC<StockOperationTypesSelectorProps> = 
         </>
       )}
       menuOffset={{ right: '-100px' }}
-      style={{
-        backgroundColor: '#007d79',
-        backgroundImage: 'none',
-        color: '#fff',
-        minHeight: '1rem',
-        padding: '.95rem !important',
-        width: '8rem',
-        marginRight: '0.5rem',
-        whiteSpace: 'nowrap',
-      }}
+      style={menuStyle}
     >
-      {filterOperationTypes
+      {availableOperationTypes
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((operation) => (
           <OverflowMenuItem
             key={operation.uuid}
             itemText={operation.name}
-            onClick={() => {
-              onOperationTypeSelected?.(operation);
-            }}
+            onClick={() => onOperationTypeSelected?.(operation)}
           />
         ))}
     </OverflowMenu>
-  ) : null;
+  );
 };
+
+const menuStyle = {
+  backgroundColor: '#007d79',
+  backgroundImage: 'none',
+  color: '#fff',
+  minHeight: '1rem',
+  padding: '.95rem !important',
+  width: '8rem',
+  marginRight: '0.5rem',
+  whiteSpace: 'nowrap',
+} as const;
 
 export default StockOperationTypesSelector;

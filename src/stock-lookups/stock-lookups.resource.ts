@@ -20,6 +20,8 @@ import { Patient } from '../core/api/types/identity/Patient';
 import { useMemo } from 'react';
 import { uniqBy } from 'lodash-es';
 import { UserRoleScope } from '../core/api/types/identity/UserRoleScope';
+import { StockOperationTypeResponse } from '../types';
+import useSWRImmutable from 'swr/immutable';
 
 export type PatientFilterCriteria = ResourceFilterCriteria;
 
@@ -130,19 +132,29 @@ export function useRoles(filter: ResourceFilterCriteria) {
   };
 }
 
-// getStockOperationTypes
+/**
+ * Custom hook to fetch stock operation types.
+ *
+ * @returns {Object} An object containing:
+ *   - stockOperationTypes: Array of stock operation types
+ *   - isLoading: Boolean indicating if the data is being fetched
+ *   - error: Any error that occurred during fetching
+ */
 export function useStockOperationTypes() {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationtype?v=default`;
-  const { data, isLoading, error } = useSWR<
-    {
-      data: PageableResult<StockOperationType>;
-    },
-    Error
-  >(apiUrl, openmrsFetch);
+
+  const { data, error, isLoading, isValidating } = useSWRImmutable<StockOperationTypeResponse, Error>(
+    apiUrl,
+    openmrsFetch,
+  );
+
+  const stockOperationTypes = data?.data?.results ?? [];
+
   return {
-    types: data?.data || <PageableResult<StockOperationType>>{},
+    stockOperationTypes,
     isLoading,
     error,
+    isValidating,
   };
 }
 
