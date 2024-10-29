@@ -22,7 +22,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StockReportSchema, reportSchema } from '../report-validation-schema';
 import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
-import { ConfigObject, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import { ConfigObject, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { Concept } from '../../core/api/types/concept/Concept';
 import { createBatchJob } from '../../stock-batch/stock-batch.resource';
 import {
@@ -34,6 +34,7 @@ import {
 } from '../ReportType';
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
 import { BatchJobTypeReport } from '../../core/api/types/BatchJob';
+import { handleMutate } from '../../utils';
 interface CreateReportProps {
   model?: ReportModel;
 }
@@ -319,6 +320,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
               subtitle: t('BatchJobSuccess', 'Batch job created successfully'),
               kind: 'success',
             });
+            handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
           } else {
             showSnackbar({
               title: t('BatchJobErrorTitle', 'Batch job'),

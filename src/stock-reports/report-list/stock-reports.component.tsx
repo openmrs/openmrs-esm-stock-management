@@ -59,7 +59,7 @@ const StockReports: React.FC = () => {
   const { t } = useTranslation();
 
   const handleRefresh = () => {
-    handleMutate(`${restBaseUrl}/stockmanagement/report?v=default`);
+    handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
   };
   const { reports, isLoading, currentPage, pageSizes, totalItems, goTo, currentPageSize, setPageSize } =
     useGetReports();
