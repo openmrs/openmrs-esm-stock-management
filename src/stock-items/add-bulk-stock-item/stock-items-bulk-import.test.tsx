@@ -37,35 +37,6 @@ describe('ImportDialogPopup', () => {
     expect(fileInput.accept).toBe('.csv');
   });
 
-  it('does not allow files larger than 2MB', async () => {
-    render(<ImportDialogPopup closeModal={mockCloseModal} />);
-
-    const largeFile = new File(['x'.repeat(2 * 1024 * 1024 + 1)], 'large.csv', { type: 'text/csv' });
-    const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
-
-    await userEvent.upload(fileInput, largeFile);
-
-    expect(fileInput.files).toHaveLength(0);
-    expect(showSnackbar).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'error',
-        title: 'File size error',
-      }),
-    );
-  });
-
-  it('allows files 2MB or smaller', async () => {
-    render(<ImportDialogPopup closeModal={mockCloseModal} />);
-
-    const validFile = new File(['x'.repeat(2 * 1024 * 1024)], 'valid.csv', { type: 'text/csv' });
-    const fileInput = screen.getByLabelText('Select file') as HTMLInputElement;
-
-    await userEvent.upload(fileInput, validFile);
-
-    expect(fileInput.files).toHaveLength(1);
-    expect(fileInput.files[0]).toBe(validFile);
-  });
-
   it('closes modal when cancel button is clicked', async () => {
     render(<ImportDialogPopup closeModal={mockCloseModal} />);
 

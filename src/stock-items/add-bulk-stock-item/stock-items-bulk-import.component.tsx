@@ -44,17 +44,10 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({ closeModal }) => 
 
   const onFileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
-    if (file && file.size <= 2 * 1024 * 1024) {
+    if (file) {
       setSelectedFile(file);
     } else {
-      setSelectedFile(null);
-      event.target.value = "";
-      showSnackbar({
-        title: t("fileSizeError", "File size error"),
-        kind: "error",
-        isLowContrast: true,
-        subtitle: t("fileSizeErrorMessage", "File size must be 2MB or less"),
-      });
+      event.preventDefault();
     }
   };
 
