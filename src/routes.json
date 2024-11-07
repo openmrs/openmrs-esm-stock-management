@@ -1,207 +1,209 @@
 {
-    "$schema": "https://json.openmrs.org/routes.schema.json",
-    "backendDependencies": {
-        "fhir2": ">=1.2",
-        "webservices.rest": "^2.24.0"
+  "$schema": "https://json.openmrs.org/routes.schema.json",
+  "backendDependencies": {
+    "fhir2": ">=1.2",
+    "webservices.rest": "^2.24.0"
+  },
+  "extensions": [
+    {
+      "name": "stock-nav-menu",
+      "slot": "stock-sidebar-slot",
+      "component": "stockNavMenu",
+      "online": true,
+      "offline": true
     },
-    "extensions": [
-        {
-            "name": "stock-nav-menu",
-            "slot": "stock-sidebar-slot",
-            "component": "stockNavMenu",
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "overview-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockOverviewLink",
-            "meta": {
-                "name": "overview",
-                "slot": "overview-dashboard-slot",
-                "title": "overview"
-            },
-            "order": 0,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-overview-db",
-            "slot": "overview-dashboard-slot",
-            "component": "stockOverview"
-        },
-        {
-            "name": "operations-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockOperationsLink",
-            "meta": {
-                "name": "operations",
-                "slot": "operations-dashboard-slot",
-                "title": "operations"
-            },
-            "order": 2,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-operations-db",
-            "slot": "operations-dashboard-slot",
-            "component": "stockOperations"
-        },
-        {
-            "name": "items-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockItemsLink",
-            "meta": {
-                "name": "items",
-                "slot": "items-dashboard-slot",
-                "title": "items"
-            },
-            "order": 1,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-items-db",
-            "slot": "items-dashboard-slot",
-            "component": "stockItems"
-        },
-        {
-            "name": "user-scopes-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockUserScopesLink",
-            "meta": {
-                "name": "user-scopes",
-                "slot": "user-scopes-dashboard-slot",
-                "title": "user-scopes"
-            },
-            "order": 3,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-user-scopes-db",
-            "slot": "user-scopes-dashboard-slot",
-            "component": "stockUserScopes"
-        },
-        {
-            "name": "sources-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockSourcesLink",
-            "meta": {
-                "name": "sources",
-                "slot": "sources-dashboard-slot",
-                "title": "Sources"
-            },
-            "order": 2,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-sources-db",
-            "slot": "sources-dashboard-slot",
-            "component": "stockSources"
-        },
-        {
-            "name": "locations-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockLocationsLink",
-            "meta": {
-                "name": "locations",
-                "slot": "locations-dashboard-slot",
-                "title": "Locations"
-            },
-            "order": 4,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-locations-db",
-            "slot": "locations-dashboard-slot",
-            "component": "stockLocations"
-        },
-        {
-            "name": "reports-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockReportsLink",
-            "meta": {
-                "name": "reports",
-                "slot": "reports-dashboard-slot",
-                "title": "Reports"
-            },
-            "order": 5,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-reports-db",
-            "slot": "reports-dashboard-slot",
-            "component": "stockReports"
-        },
-        {
-            "name": "settings-db-link",
-            "slot": "stock-page-dashboard-slot",
-            "component": "stockSettingsLink",
-            "meta": {
-                "name": "settings",
-                "slot": "settings-dashboard-slot",
-                "title": "Settings"
-            },
-            "order": 6,
-            "online": true,
-            "offline": true
-        },
-        {
-            "name": "stock-settings-db",
-            "slot": "settings-dashboard-slot",
-            "component": "stockSettings"
-        },
-        {
-            "name": "stock-management-admin-card-link",
-            "slot": "system-admin-page-card-link-slot",
-            "component": "stockManagementAdminCardLink"
-        },
-        {
-            "name": "stock-operation-dialog",
-            "component": "stockOperationDialog"
-        },
-        {
-            "name": "import-bulk-stock-items",
-            "component": "importBulkStockItemsDialog"
-        },
-        {
-            "name": "delete-stock-modal",
-            "component": "deleteStockModal"
-        },
-        {
-            "name": "delete-stock-user-scope-modal",
-            "component": "deleteUserScopeModal"
-        },
-        {
-            "name": "stock-management-app-menu-item",
-            "component": "stockManagementAppMenuItem",
-            "slot": "app-menu-item-slot",
-            "meta": {
-                "name": " Stock Management"
-            }
-        },
-        {
-            "name": "delete-stock-rule-modal",
-            "component": "deleteStockRuleModal"
-        },
-        {
-            "name": "delete-packaging-unit-modal",
-            "component": "deletePackagingUnitModal"
-        },
-        {
-            "name": "delete-packaging-unit-button",
-            "component": "deletePackagingUnitButton"
-        }
-    ],
-    "pages": [
-        {
-            "component": "root",
-            "route": "stock-management"
-        }
-    ]
+    {
+      "name": "overview-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockOverviewLink",
+      "meta": {
+        "name": "overview",
+        "slot": "overview-dashboard-slot",
+        "title": "overview"
+      },
+      "order": 0,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-overview-db",
+      "slot": "overview-dashboard-slot",
+      "component": "stockOverview"
+    },
+    {
+      "name": "operations-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockOperationsLink",
+      "meta": {
+        "name": "operations",
+        "slot": "operations-dashboard-slot",
+        "title": "operations"
+      },
+      "order": 2,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-operations-db",
+      "slot": "operations-dashboard-slot",
+      "component": "stockOperations"
+    },
+    {
+      "name": "items-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockItemsLink",
+      "meta": {
+        "name": "items",
+        "slot": "items-dashboard-slot",
+        "title": "items"
+      },
+      "order": 1,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-items-db",
+      "slot": "items-dashboard-slot",
+      "component": "stockItems"
+    },
+    {
+      "name": "user-scopes-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockUserScopesLink",
+      "meta": {
+        "name": "user-scopes",
+        "slot": "user-scopes-dashboard-slot",
+        "title": "user-scopes"
+      },
+      "order": 3,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-user-scopes-db",
+      "slot": "user-scopes-dashboard-slot",
+      "component": "stockUserScopes"
+    },
+    {
+      "name": "sources-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockSourcesLink",
+      "meta": {
+        "name": "sources",
+        "slot": "sources-dashboard-slot",
+        "title": "Sources"
+      },
+      "order": 2,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-sources-db",
+      "slot": "sources-dashboard-slot",
+      "component": "stockSources"
+    },
+    {
+      "name": "locations-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockLocationsLink",
+      "meta": {
+        "name": "locations",
+        "slot": "locations-dashboard-slot",
+        "title": "Locations"
+      },
+      "order": 4,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-locations-db",
+      "slot": "locations-dashboard-slot",
+      "component": "stockLocations"
+    },
+    {
+      "name": "reports-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockReportsLink",
+      "meta": {
+        "name": "reports",
+        "slot": "reports-dashboard-slot",
+        "title": "Reports"
+      },
+      "order": 5,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-reports-db",
+      "slot": "reports-dashboard-slot",
+      "component": "stockReports"
+    },
+    {
+      "name": "settings-db-link",
+      "slot": "stock-page-dashboard-slot",
+      "component": "stockSettingsLink",
+      "meta": {
+        "name": "settings",
+        "slot": "settings-dashboard-slot",
+        "title": "Settings"
+      },
+      "order": 6,
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "stock-settings-db",
+      "slot": "settings-dashboard-slot",
+      "component": "stockSettings"
+    },
+    {
+      "name": "stock-management-admin-card-link",
+      "slot": "system-admin-page-card-link-slot",
+      "component": "stockManagementAdminCardLink"
+    },
+    {
+      "name": "stock-management-app-menu-item",
+      "component": "stockManagementAppMenuItem",
+      "slot": "app-menu-item-slot",
+      "meta": {
+        "name": " Stock Management"
+      }
+    },
+    {
+      "name": "delete-packaging-unit-button",
+      "component": "deletePackagingUnitButton"
+    }
+  ],
+  "modals": [
+    {
+      "name": "delete-stock-modal",
+      "component": "deleteStockModal"
+    },
+    {
+      "name": "delete-stock-user-scope-modal",
+      "component": "deleteUserScopeModal"
+    },
+    {
+      "name": "delete-stock-rule-modal",
+      "component": "deleteStockRuleModal"
+    },
+    {
+      "name": "delete-packaging-unit-modal",
+      "component": "deletePackagingUnitModal"
+    },
+    {
+      "name": "import-bulk-stock-items",
+      "component": "importBulkStockItemsModal"
+    },
+    {
+      "name": "stock-operation-dialog",
+      "component": "stockOperationModal"
+    }
+  ],
+  "pages": [
+    {
+      "component": "root",
+      "route": "stock-management"
+    }
+  ]
 }
