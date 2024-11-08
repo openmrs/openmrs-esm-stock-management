@@ -133,48 +133,55 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   );
 
   const tableRows = useMemo(() => {
-    return items?.map((stockOperation, index) => ({
-      ...stockOperation,
-      id: stockOperation?.uuid,
-      key: `key-${stockOperation?.uuid}`,
-      operationTypeName: `${stockOperation?.operationTypeName}`,
-      operationNumber: (
-        <EditStockOperationActionMenu
-          model={stockOperation}
-          operations={operations}
-          operationUuid={operation.uuid}
-          operationNumber={''}
-          onEdit={() => handleEditClick(stockOperation, true)}
-          showIcon={false}
-          showprops={true}
-        />
-      ),
-      status: `${stockOperation?.status}`,
-      source: `${stockOperation?.sourceName ?? ''}`,
-      destination: `${stockOperation?.destinationName ?? ''}`,
-      location: (
-        <>
-          {stockOperation?.sourceName ?? ''}
-          {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
-          {stockOperation?.destinationName ?? ''}
-        </>
-      ),
-      responsiblePerson: `${
-        stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
-      } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
-      operationDate: formatDisplayDate(stockOperation?.operationDate),
-      actions: (
-        <EditStockOperationActionMenu
-          model={stockOperation}
-          operations={operations}
-          operationUuid={operation.uuid}
-          operationNumber={''}
-          onEdit={() => handleEditClick(stockOperation, true)}
-          showIcon={true}
-          showprops={false}
-        />
-      ),
-    }));
+    return items?.map((stockOperation, index) => {
+      const commonNames = stockOperation?.stockOperationItems
+        ? stockOperation?.stockOperationItems.map((item) => item.commonName).join(', ')
+        : '';
+
+      return {
+        ...stockOperation,
+        id: stockOperation?.uuid,
+        key: `key-${stockOperation?.uuid}`,
+        operationTypeName: `${stockOperation?.operationTypeName}`,
+        operationNumber: (
+          <EditStockOperationActionMenu
+            model={stockOperation}
+            operations={operations}
+            operationUuid={operation.uuid}
+            operationNumber={''}
+            onEdit={() => handleEditClick(stockOperation, true)}
+            showIcon={false}
+            showprops={true}
+          />
+        ),
+        stockOperationItems: commonNames,
+        status: `${stockOperation?.status}`,
+        source: `${stockOperation?.sourceName ?? ''}`,
+        destination: `${stockOperation?.destinationName ?? ''}`,
+        location: (
+          <>
+            {stockOperation?.sourceName ?? ''}
+            {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
+            {stockOperation?.destinationName ?? ''}
+          </>
+        ),
+        responsiblePerson: `${
+          stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
+        } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
+        operationDate: formatDisplayDate(stockOperation?.operationDate),
+        actions: (
+          <EditStockOperationActionMenu
+            model={stockOperation}
+            operations={operations}
+            operationUuid={operation.uuid}
+            operationNumber={''}
+            onEdit={() => handleEditClick(stockOperation, true)}
+            showIcon={true}
+            showprops={false}
+          />
+        ),
+      };
+    });
   }, [items, operations, handleEditClick, operation]);
 
   if (isLoading && !filterApplied) {
