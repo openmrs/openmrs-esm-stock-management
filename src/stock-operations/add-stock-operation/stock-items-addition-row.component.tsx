@@ -134,6 +134,22 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 </Link>
               )}
             </TableCell>
+            <TableCell>
+              <div className={styles.cellContent}>
+                {row?.stockItemUuid && (
+                  <>
+                    <div>{`#${row?.stockItemUuid?.toString()?.slice(0, 8)}`}</div>
+                    <div className={styles.availability}>
+                      {batchBalance?.[row?.stockBatchUuid]
+                        ? `Available: ${batchBalance[row?.stockBatchUuid]?.quantity?.toLocaleString() ?? 0} ${
+                            batchBalance[row?.stockBatchUuid]?.quantityUoM ?? ''
+                          }`
+                        : 'No stock available'}
+                    </div>
+                  </>
+                )}
+              </div>
+            </TableCell>
             {showQuantityRequested && (
               <TableCell>
                 <div className={styles.cellContent}>
