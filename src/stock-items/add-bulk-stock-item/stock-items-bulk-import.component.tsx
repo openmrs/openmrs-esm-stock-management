@@ -64,7 +64,7 @@ const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({ closeModal }) => 
             labelDescription="Only .csv files at 2mb or less"
             filenameStatus="edit"
             labelTitle=""
-            size="small"
+            size="sm"
             onChange={onFileChanged}
           />
         </ModalBody>
