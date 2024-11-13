@@ -1,5 +1,12 @@
 .availability {
   font-size: 0.875rem;
-  color: #525252;
-  margin-top: 0.25rem;
+
+  .outOfStock {
+    color: #da1e28;
+  }
+}
+.cellContent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
