@@ -54,6 +54,7 @@ function addRequisitionStockOperation(stockOperation) {
   return {
     ...stockOperation,
     requisitionStockOperationUuid: uuid,
+    isStockIssueFromRequisition: true,
   };
 }
 

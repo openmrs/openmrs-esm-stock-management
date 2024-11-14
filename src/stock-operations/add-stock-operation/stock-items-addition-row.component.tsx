@@ -27,6 +27,7 @@ import QtyUomSelector from '../qty-uom-selector/qty-uom-selector.component';
 import BatchNoSelector from '../batch-no-selector/batch-no-selector.component';
 
 import styles from './stock-items-addition-row.scss';
+import { Checkbox } from '@carbon/react';
 
 interface StockItemsAdditionRowProps {
   canEdit?: boolean;
@@ -36,6 +37,9 @@ interface StockItemsAdditionRowProps {
   requiresBatchUuid?: boolean;
   canUpdateBatchInformation?: boolean;
   canCapturePurchasePrice?: boolean;
+  isStockIssueFromRequisition?: boolean;
+  selectedItems?: Set<string>;
+  onItemSelect?: (itemId: string, selected: boolean) => void;
   batchNos?: {
     [key: string]: StockBatchDTO[];
   };
@@ -82,6 +86,9 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   errors,
   remove,
   fields,
+  isStockIssueFromRequisition,
+  selectedItems,
+  onItemSelect,
 }) => {
   const [stockItemUuid, setStockItemUuid] = useState<string | null | undefined>();
   const [stockItemExpiry, setStockItemExpiy] = useState<Date | null | undefined>();
@@ -123,6 +130,17 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
         const stockItemId = `stockItems.${index}.stockItemUuid`;
         return (
           <TableRow className={isDesktop ? styles.desktopRow : styles.tabletRow} key={row?.uuid}>
+            {isStockIssueFromRequisition && (
+              <TableCell className={styles.checkboxCell}>
+                <Checkbox
+                  id={`select-${row.uuid}`}
+                  checked={selectedItems?.has(row.uuid)}
+                  onChange={(event) => onItemSelect?.(row.uuid, event.target.checked)}
+                  labelText=""
+                  disabled={!canEdit}
+                />
+              </TableCell>
+            )}
             <TableCell>
               {row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
                 <Link target={'_blank'} to={URL_STOCK_ITEM(row?.stockItemUuid)}>

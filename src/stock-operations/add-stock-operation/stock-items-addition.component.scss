@@ -15,3 +15,9 @@
 .dataTable {
   width: 100%;
 }
+.selectAllContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  justify-content: flex-end;
+}
