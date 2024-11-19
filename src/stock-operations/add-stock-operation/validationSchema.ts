@@ -37,5 +37,18 @@ export function useValidationSchema(operationType?: string) {
       stockItems: z.array(customSchema),
     });
   }
+  if (operationType === 'adjustment') {
+    const customSchema = stockItemTableSchema.extend({
+      quantity: z.coerce
+        .number()
+        .refine((value) => value !== 0, {
+          message: 'Quantity cannot be zero.',
+        })
+        .or(z.literal(0, { invalid_type_error: 'Invalid quantity format' })),
+    });
+    return z.object({
+      stockItems: z.array(customSchema),
+    });
+  }
   return stockOperationItemsSchema;
 }
