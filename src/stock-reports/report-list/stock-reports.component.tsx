@@ -20,6 +20,9 @@ import {
   InlineLoading,
   TableToolbarMenu,
   TableToolbarAction,
+  TableExpandHeader,
+  TableExpandRow,
+  TableExpandedRow,
 } from '@carbon/react';
 import { isDesktop, restBaseUrl, useSession } from '@openmrs/esm-framework';
 import NewReportActionButton from './new-report-button.component';
@@ -49,12 +52,14 @@ import {
 } from '@carbon/react/icons';
 import { handleMutate } from '../../utils';
 import { PrivilagedView } from '../../core/components/privilages-component/privilages.component';
+import StockReportStatus from './stock-report-status.component';
+import StockReportParameters from './stock-report-parameters.component';
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
 
   const handleRefresh = () => {
-    handleMutate(`${restBaseUrl}/stockmanagement/report?v=default`);
+    handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
   };
   const { reports, isLoading, currentPage, pageSizes, totalItems, goTo, currentPageSize, setPageSize } =
     useGetReports();
@@ -111,16 +116,16 @@ const StockReports: React.FC = () => {
   }, []);
 
   const tableRows = useMemo(() => {
-    return reports?.map((batchJob) => ({
+    return reports?.map((batchJob, index) => ({
       ...batchJob,
       checkbox: 'isBatchJobActive',
       id: batchJob?.uuid,
       key: `key-${batchJob?.uuid}`,
       uuid: `${batchJob?.uuid}`,
-      batchJobType: batchJob.batchJobType,
+      batchJobType: batchJob?.batchJobType,
       dateRequested: formatDisplayDateTime(batchJob.dateCreated),
-      parameters: '',
-      report: batchJob.description,
+      parameters: <StockReportParameters model={reports[index]} />,
+      report: batchJob?.description,
       requestedBy: batchJob?.owners?.map((p, index) => (
         <div key={`${batchJob.uuid}-owner-${index}`}>{`${p.ownerFamilyName} ${p.ownerGivenName}`}</div>
       )),
@@ -218,34 +223,42 @@ const StockReports: React.FC = () => {
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
-                  {headers.map(
-                    (header: any) =>
-                      header.key !== 'details' && (
-                        <TableHeader
-                          {...getHeaderProps({
-                            header,
-                            isSortable: header.isSortable,
-                          })}
-                          className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
-                          key={`${header.key}`}
-                        >
-                          {header.header?.content ?? header.header}
-                        </TableHeader>
-                      ),
-                  )}
+                  <TableExpandHeader />
+                  {headers.map((header: any) => (
+                    <TableHeader
+                      {...getHeaderProps({
+                        header,
+                        isSortable: header.isSortable,
+                      })}
+                      className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
+                      key={`${header.key}`}
+                    >
+                      {header.header?.content ?? header.header}
+                    </TableHeader>
+                  ))}
                   <TableHeader></TableHeader>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any) => {
+                {rows.map((row: any, index) => {
                   return (
                     <React.Fragment key={row.id}>
-                      <TableRow className={isDesktop ? styles.desktopRow : styles.tabletRow} {...getRowProps({ row })}>
-                        {row.cells.map(
-                          (cell: any) =>
-                            cell?.info?.header !== 'details' && <TableCell key={cell.id}>{cell.value}</TableCell>,
-                        )}
-                      </TableRow>
+                      <TableExpandRow
+                        className={isDesktop ? styles.desktopRow : styles.tabletRow}
+                        {...getRowProps({ row })}
+                      >
+                        {row.cells.map((cell: any) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
+                      </TableExpandRow>
+
+                      {row.isExpanded ? (
+                        <TableExpandedRow colSpan={headers.length + 2}>
+                          <StockReportStatus model={reports[index]} />
+                        </TableExpandedRow>
+                      ) : (
+                        <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
+                      )}
                     </React.Fragment>
                   );
                 })}

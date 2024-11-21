@@ -20,7 +20,6 @@ interface TransactionsLocationsFilterProps<T> {
 const TransactionsLocationsFilter = <T,>(props: TransactionsLocationsFilterProps<T>) => {
   const { t } = useTranslation();
   const { stockLocations } = useStockTagLocations();
-
   return (
     <Controller
       name={props.controllerName}

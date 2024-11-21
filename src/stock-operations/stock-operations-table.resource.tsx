@@ -8,6 +8,7 @@ export function useStockOperationPages(filter: StockOperationFilter) {
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
+  console.log(items.results);
 
   const { goTo, results: paginatedItems, currentPage } = usePagination(items.results, currentPageSize);
 
@@ -27,26 +28,31 @@ export function useStockOperationPages(filter: StockOperationFilter) {
       },
       {
         id: 2,
+        header: t('stockOperationItems', 'Items'),
+        key: 'stockOperationItems',
+      },
+      {
+        id: 3,
         header: t('status', 'Status'),
         key: 'status',
       },
       {
-        id: 3,
+        id: 4,
         header: t('location', 'Location'),
         key: 'location',
       },
       {
-        id: 4,
+        id: 5,
         header: t('responsiblePerson', 'Responsible Person'),
         key: 'responsiblePerson',
       },
       {
-        id: 5,
+        id: 6,
         header: t('date', 'Date'),
         key: 'operationDate',
       },
       {
-        id: 6,
+        id: 7,
         key: 'details',
       },
       { key: 'actions', header: '' },

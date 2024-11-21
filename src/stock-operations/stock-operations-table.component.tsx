@@ -20,26 +20,15 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tile,
-  StructuredListHead,
-  StructuredListRow,
-  StructuredListCell,
-  StructuredListBody,
   DatePickerInput,
   DatePicker,
   TableToolbarMenu,
   TableToolbarAction,
-  Button,
   InlineLoading,
 } from '@carbon/react';
-import { ArrowRight, Edit } from '@carbon/react/icons';
+import { ArrowRight } from '@carbon/react/icons';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
-import {
-  StockOperationStatusCancelled,
-  StockOperationStatusNew,
-  StockOperationStatusRejected,
-  StockOperationStatusReturned,
-} from '../core/api/types/stockOperation/StockOperationStatus';
-import { isDesktop, restBaseUrl, useConfig, showModal } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
 import { launchAddOrEditDialog } from './stock-operation.utils';
 import { initialStockOperationValue } from '../core/utils/utils';
@@ -51,6 +40,7 @@ import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '..
 import { handleMutate } from '../utils';
 
 import styles from './stock-operations-table.scss';
+import StockOperationStatus from './add-stock-operation/stock-operation-status.component';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -143,128 +133,56 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   );
 
   const tableRows = useMemo(() => {
-    return items?.map((stockOperation, index) => ({
-      ...stockOperation,
-      id: stockOperation?.uuid,
-      key: `key-${stockOperation?.uuid}`,
-      operationTypeName: `${stockOperation?.operationTypeName}`,
-      operationNumber: (
-        <EditStockOperationActionMenu
-          model={stockOperation}
-          operations={operations}
-          operationUuid={operation.uuid}
-          operationNumber={''}
-          onEdit={() => handleEditClick(stockOperation, true)}
-          showIcon={false}
-          showprops={true}
-        />
-      ),
-      status: `${stockOperation?.status}`,
-      source: `${stockOperation?.sourceName ?? ''}`,
-      destination: `${stockOperation?.destinationName ?? ''}`,
-      location: (
-        <>
-          {' '}
-          {stockOperation?.sourceName ?? ''}{' '}
-          {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
-          {stockOperation?.destinationName ?? ''}{' '}
-        </>
-      ),
-      responsiblePerson: `${
-        stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
-      } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
-      operationDate: formatDisplayDate(stockOperation?.operationDate),
-      details: (
-        <div className="tbl-expand-display-fields">
-          <div className="field-label">
-            <span className="field-title"> {t('created', 'Created')}</span>
-            <span className="field-desc">
-              <span className="action-date">{formatDisplayDate(stockOperation?.dateCreated)}</span> {t('by', 'By')}
-              <span className="action-by">
-                {stockOperation.creatorFamilyName ?? ''} {stockOperation.creatorGivenName ?? ''}
-              </span>
-            </span>
-          </div>
-          {stockOperation?.status !== StockOperationStatusNew &&
-            stockOperation?.status !== StockOperationStatusReturned &&
-            stockOperation?.submittedDate && (
-              <div className="field-label">
-                <span className="field-title">{t('submitted', 'Submitted')}</span>
-                <span className="field-desc">
-                  <span className="action-date">{formatDisplayDate(stockOperation?.submittedDate)}</span>{' '}
-                  {t('by', 'By')}
-                  <span className="action-by">
-                    {stockOperation.submittedByFamilyName ?? ''} {stockOperation.submittedByGivenName ?? ''}
-                  </span>
-                </span>
-              </div>
-            )}
+    return items?.map((stockOperation, index) => {
+      const commonNames = stockOperation?.stockOperationItems
+        ? stockOperation?.stockOperationItems.map((item) => item.commonName).join(', ')
+        : '';
 
-          {stockOperation?.completedDate && (
-            <div className="field-label">
-              <span className="field-title">{t('completed', 'Completed')}</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.completedDate)}</span> {t('by', 'By')}
-                <span className="action-by">
-                  {stockOperation.completedByFamilyName ?? ''} {stockOperation.completedByGivenName ?? ''}
-                </span>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusCancelled && (
-            <div className="field-label">
-              <span className="field-title"> {t('cancelled', 'Cancelled')}</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.cancelledDate)}</span> {t('by', 'By')}
-                <span className="action-by">
-                  {stockOperation.cancelledByFamilyName ?? ''} {stockOperation.cancelledByGivenName ?? ''}
-                </span>
-                <p>{stockOperation.cancelReason}</p>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusRejected && (
-            <div className="field-label">
-              <span className="field-title">Rejected</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.rejectedDate)}</span> {t('by', 'By')}
-                <span className="action-by">
-                  {stockOperation.rejectedByFamilyName ?? ''} {stockOperation.rejectedByGivenName ?? ''}
-                </span>
-                <p>{stockOperation.rejectionReason}</p>
-              </span>
-            </div>
-          )}
-
-          {stockOperation?.status === StockOperationStatusReturned && (
-            <div className="field-label">
-              <span className="field-title">Returned</span>
-              <span className="field-desc">
-                <span className="action-date">{formatDisplayDate(stockOperation?.returnedDate)}</span> By
-                <span className="action-by">
-                  {stockOperation.returnedByFamilyName ?? ''} {stockOperation.returnedByGivenName ?? ''}
-                </span>
-                <p>{stockOperation.returnReason}</p>
-              </span>
-            </div>
-          )}
-        </div>
-      ),
-      actions: (
-        <EditStockOperationActionMenu
-          model={stockOperation}
-          operations={operations}
-          operationUuid={operation.uuid}
-          operationNumber={''}
-          onEdit={() => handleEditClick(stockOperation, true)}
-          showIcon={true}
-          showprops={false}
-        />
-      ),
-    }));
-  }, [items, operations, t, handleEditClick, operation]);
+      return {
+        ...stockOperation,
+        id: stockOperation?.uuid,
+        key: `key-${stockOperation?.uuid}`,
+        operationTypeName: `${stockOperation?.operationTypeName}`,
+        operationNumber: (
+          <EditStockOperationActionMenu
+            model={stockOperation}
+            operations={operations}
+            operationUuid={operation.uuid}
+            operationNumber={''}
+            onEdit={() => handleEditClick(stockOperation, true)}
+            showIcon={false}
+            showprops={true}
+          />
+        ),
+        stockOperationItems: commonNames,
+        status: `${stockOperation?.status}`,
+        source: `${stockOperation?.sourceName ?? ''}`,
+        destination: `${stockOperation?.destinationName ?? ''}`,
+        location: (
+          <>
+            {stockOperation?.sourceName ?? ''}
+            {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
+            {stockOperation?.destinationName ?? ''}
+          </>
+        ),
+        responsiblePerson: `${
+          stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
+        } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
+        operationDate: formatDisplayDate(stockOperation?.operationDate),
+        actions: (
+          <EditStockOperationActionMenu
+            model={stockOperation}
+            operations={operations}
+            operationUuid={operation.uuid}
+            operationNumber={''}
+            onEdit={() => handleEditClick(stockOperation, true)}
+            showIcon={true}
+            showprops={false}
+          />
+        ),
+      };
+    });
+  }, [items, operations, handleEditClick, operation]);
 
   if (isLoading && !filterApplied) {
     return (
@@ -358,74 +276,24 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row: any, index) => {
+                {rows?.map((row: any, index) => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableExpandRow
                         className={isDesktop ? styles.desktopRow : styles.tabletRow}
                         {...getRowProps({ row })}
                       >
-                        {row.cells.map(
-                          (cell: any) =>
-                            cell?.info?.header !== 'details' && <TableCell key={cell.id}>{cell.value}</TableCell>,
-                        )}
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
                       </TableExpandRow>
-                      <TableExpandedRow colSpan={headers.length + 2}>
-                        <>
-                          <StructuredListHead>
-                            <StructuredListRow head>
-                              <StructuredListCell head>{t('dateCreated', 'Date Created')}</StructuredListCell>
-                              <StructuredListCell head>{t('dateCompleted', 'Date Completed')}</StructuredListCell>
-                            </StructuredListRow>
-                          </StructuredListHead>
-                          <StructuredListBody>
-                            <StructuredListRow>
-                              <StructuredListCell noWrap>
-                                {items[index]?.dateCreated ? formatDisplayDate(items[index]?.dateCreated) : ''}
-                                &nbsp;
-                                {items[index]?.dateCreated ? 'By' : ''}
-                                &nbsp;
-                                {items[index]?.dateCreated ? items[index]?.creatorFamilyName : ''}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.completedDate ? formatDisplayDate(items[index]?.completedDate) : ''}
-                                &nbsp;
-                                {items[index]?.completedDate ? 'By' : ''}
-                                &nbsp;
-                                {items[index]?.completedDate ? items[index]?.creatorFamilyName : ''}
-                              </StructuredListCell>
-                            </StructuredListRow>
-                            <StructuredListRow>
-                              <StructuredListCell noWrap>
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
-                                  ? formatDisplayDate(items[index]?.dateCreated)
-                                  : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] ? 'By' : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
-                                  ? items[index]?.creatorFamilyName
-                                  : ''}
-                              </StructuredListCell>
-                              <StructuredListCell>
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1]
-                                  ? formatDisplayDate(items[index]?.completedDate)
-                                  : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] &&
-                                items[index]?.completedDate
-                                  ? 'By'
-                                  : ''}
-                                &nbsp;
-                                {items[index]?.stockOperationItems.map((item) => item.quantity)[1] &&
-                                items[index]?.completedDate
-                                  ? items[index]?.creatorFamilyName
-                                  : ''}
-                              </StructuredListCell>
-                            </StructuredListRow>
-                          </StructuredListBody>
-                        </>
-                      </TableExpandedRow>
+                      {row.isExpanded ? (
+                        <TableExpandedRow colSpan={headers.length + 2}>
+                          <StockOperationStatus model={items[index]} />
+                        </TableExpandedRow>
+                      ) : (
+                        <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
+                      )}
                     </React.Fragment>
                   );
                 })}

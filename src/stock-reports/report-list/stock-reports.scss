@@ -60,3 +60,21 @@
   flex-direction: column;
   align-items: center;
 }
+
+.statusContainer {
+  display: flex;
+  margin: 10px;
+  gap: 1rem;
+}
+
+.textHeading {
+  font-weight: bold;
+}
+
+.statusDescriptions {
+  margin-top: 4px;
+
+  .text {
+    margin-right: 4px;
+  }
+}

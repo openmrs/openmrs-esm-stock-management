@@ -298,5 +298,6 @@
   "user": "User",
   "view": "View",
   "whoIsThePreferredVendor": "Who is the preferred vendor?",
-  "yes": "Yes"
+  "yes": "Yes",
+  "stockOperationItems": "Items"
 }
