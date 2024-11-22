@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = {
   clearMocks: true,
-  collectCoverageFrom: ['**/src/**/*.component.tsx', '!**/node_modules/**', '!**/src/declarations.d.ts'],
+  collectCoverageFrom: ['**/src/**/*.component.tsx', '!**/node_modules/**', '!**/src/declarations.d.ts', '!**/e2e/**'],
   transform: {
     '^.+\\.tsx?$': ['@swc/jest'],
   },
@@ -23,4 +23,8 @@ module.exports = {
   testEnvironmentOptions: {
     url: 'http://localhost/',
   },
+  testPathIgnorePatterns: [
+    "/node_modules/",
+      "/e2e/"  // Ignore the e2e directory containing Playwright tests
+    ]
 };
