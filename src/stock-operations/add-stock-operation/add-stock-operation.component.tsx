@@ -42,13 +42,13 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { isLoading, error, result } = useInitializeStockOperations(props);
   const [operationLinks, setOperationLinks] = useState<StockOperationLinkDTO[]>();
   const [manageStockItems, setManageStockItems] = useState(props?.isEditing);
-  const { types } = useStockOperationTypes();
+  const { stockOperationTypes } = useStockOperationTypes();
   const [requisition, setRequisition] = useState(props?.model?.uuid);
   const [manageSubmitOrComplete, setManageSubmitOrComplete] = useState(props?.isEditing);
 
   const [requiresDispatchAcknowledgement, setRequiresDispatchAcknowledgement] = useState(false);
 
-  const currentStockOperationType = types?.results?.find((p) => p.operationType === props.model?.operationType);
+  const currentStockOperationType = stockOperationTypes?.find((p) => p.operationType === props.model?.operationType);
 
   useEffect(() => {
     if (
@@ -300,7 +300,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                     {!item?.childVoided && (
                       <span className={styles.relatedLink}>
                         <StockOperationRelatedLink
-                          operationTypes={types.results}
+                          operationTypes={stockOperationTypes}
                           operationUuid={item?.childUuid}
                           operationNumber={item?.childOperationNumber}
                         />
@@ -324,7 +324,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
                     {!item?.parentVoided && (
                       <span className={styles.relatedLink}>
                         <StockOperationRelatedLink
-                          operationTypes={types.results}
+                          operationTypes={stockOperationTypes}
                           operationUuid={item?.parentUuid}
                           operationNumber={item?.parentOperationNumber}
                         />

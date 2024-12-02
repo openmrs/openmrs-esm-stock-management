@@ -247,7 +247,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   onOperationTypeSelected={(operation) => {
                     launchAddOrEditDialog(t, initialStockOperationValue(), false, operation, operations, false);
                   }}
-                  onOperationLoaded={(ops) => {
+                  onOperationsLoaded={(ops) => {
                     setOperations(ops);
                   }}
                 />
@@ -309,11 +309,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </Tile>
               </div>
             ) : null}
-            {filterApplied && isLoading && (
+            {filterApplied && isLoading ? (
               <div className={styles.rowLoadingContainer}>
                 <InlineLoading description={t('loading', 'Loading...')} />
               </div>
-            )}
+            ) : null}
           </TableContainer>
         )}
       ></DataTable>
