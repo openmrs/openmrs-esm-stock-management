@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import { isDesktop } from '@openmrs/esm-framework';
 import { Button, DatePicker, DatePickerInput, Link, NumberInput, TableCell, TableRow, TextInput } from '@carbon/react';
 import { TrashCan } from '@carbon/react/icons';
@@ -27,6 +27,7 @@ import QtyUomSelector from '../qty-uom-selector/qty-uom-selector.component';
 import BatchNoSelector from '../batch-no-selector/batch-no-selector.component';
 
 import styles from './stock-items-addition-row.scss';
+import { useStockItemBatchInformationHook } from '../../stock-items/add-stock-item/batch-information/batch-information.resource';
 
 interface StockItemsAdditionRowProps {
   canEdit?: boolean;
@@ -117,6 +118,36 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
   const isStockItem = (obj: any): obj is StockItemDTO => {
     return typeof obj === 'object' && obj !== null && 'drugName' in obj;
   };
+
+  const StockAvailability: React.FC<{ stockItemUuid: string }> = ({ stockItemUuid }) => {
+    const { items } = useStockItemBatchInformationHook({
+      stockItemUuid: stockItemUuid,
+      includeBatchNo: true,
+    });
+
+    const totalQuantity = useMemo(() => {
+      if (!items?.length) return 0;
+      return items.reduce((total, batch) => {
+        return total + (Number(batch.quantity) || 0);
+      }, 0);
+    }, [items]);
+    const commonUOM = useMemo(() => {
+      if (!items?.length) return '';
+      return items[0]?.quantityUoM || '';
+    }, [items]);
+
+    return (
+      <div className={styles.availability}>
+        {totalQuantity > 0 ? (
+          <span>
+            Available: {totalQuantity.toLocaleString()} {commonUOM}
+          </span>
+        ) : (
+          <span className={styles.outOfStock}>Out of Stock</span>
+        )}
+      </div>
+    );
+  };
   return (
     <>
       {fields?.map((row, index) => {
@@ -133,6 +164,11 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                   {row?.stockItemName || 'No name available'}
                 </Link>
               )}
+            </TableCell>
+            <TableCell>
+              <div className={styles.cellContent}>
+                {row?.stockItemUuid && <StockAvailability stockItemUuid={row.stockItemUuid} />}
+              </div>
             </TableCell>
             {showQuantityRequested && (
               <TableCell>
