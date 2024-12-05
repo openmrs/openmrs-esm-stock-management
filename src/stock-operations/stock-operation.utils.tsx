@@ -30,6 +30,7 @@ export const addOrEditStockOperation = async (
       delete payload.operationTypeUuid;
       delete payload.permission;
       delete payload.locked;
+
       payload['operationTypeUuid'] = stockIssueOpsTypeUuid;
     }
     const response: FetchResponse<StockOperationDTO> = await (isEditing ? updateStockOperation : createStockOperation)(

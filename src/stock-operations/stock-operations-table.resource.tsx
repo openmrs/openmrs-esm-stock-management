@@ -8,7 +8,6 @@ export function useStockOperationPages(filter: StockOperationFilter) {
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
-  console.log(items.results);
 
   const { goTo, results: paginatedItems, currentPage } = usePagination(items.results, currentPageSize);
 

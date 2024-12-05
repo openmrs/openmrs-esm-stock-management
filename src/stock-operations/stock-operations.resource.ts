@@ -58,18 +58,23 @@ export function getStockOperationLinks(filter: string) {
 }
 
 // getStockOperation
-export function useStockOperation(id: string) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}`;
-  const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, openmrsFetch);
+
+export function useStockOperation(id: string | null) {
+  const apiUrl = id ? `${restBaseUrl}/stockmanagement/stockoperation/${id}` : null;
+  const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, apiUrl ? openmrsFetch : null);
   return {
-    items: data.data ? data.data : {},
+    items: data?.data || {},
     isLoading,
     error,
   };
-} // getStockOperation
-export function getStockOperation(id: string): Promise<FetchResponse<StockOperationDTO>> {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
+}
 
+// getStockOperation
+export function getStockOperation(id: string): Promise<FetchResponse<StockOperationDTO>> {
+  if (!id) {
+    return;
+  }
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
   return openmrsFetch(apiUrl);
 }
 

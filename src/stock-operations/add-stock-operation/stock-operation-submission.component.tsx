@@ -49,7 +49,6 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             name="rbgApprovelRequired"
             legendText={t('doesThisTransactionRequireApproval', 'Does the transaction require approval ?')}
             onChange={handleRadioButtonChange}
-            defaultSelected={model?.approvalRequired === null ? false : approvalRequired}
           >
             <RadioButton value={true} id="rbgApprovelRequired-true" labelText={t('yes', 'Yes')} />
             <RadioButton value={false} id="rbgApprovelRequired-false" labelText={t('no', 'No')} />
@@ -115,7 +114,6 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   }}
                   renderIcon={Departure}
                 >
-                  {t('dispatch', 'Dispatch')}
                   {isSaving ? (
                     <InlineLoading description={t('dispatching', 'Dispatching')} />
                   ) : (

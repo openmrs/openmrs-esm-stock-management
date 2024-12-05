@@ -43,7 +43,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({ title, requ
       case 'complete':
         actionName = 'COMPLETE';
         break;
-      case 'completedispatch':
+      case 'complete dispatch':
         actionName = 'COMPLETE';
         break;
       case 'cancel':

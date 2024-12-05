@@ -15,10 +15,11 @@ const StockOperationReference = (props: StockOperationReferenceProps) => {
   const { types } = useStockOperationTypes();
 
   let model: StockOperationDTO;
-
-  getStockOperation(props?.operationUuid).then((resp) => {
-    model = resp.data;
-  });
+  if (props?.operationUuid) {
+    getStockOperation(props?.operationUuid).then((resp) => {
+      model = resp?.data;
+    });
+  }
 
   const handleEdit = () => {
     const operation = types.results?.find((op) => op?.uuid === model?.operationTypeUuid);
