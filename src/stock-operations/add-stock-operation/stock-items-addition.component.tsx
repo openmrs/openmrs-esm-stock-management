@@ -107,6 +107,11 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
       header: t('item', 'Item'),
       styles: { width: '40% !important' },
     },
+    {
+      key: 'itemDetails',
+      header: t('itemDetails', 'Item Details'),
+      styles: { width: '20% !important' },
+    },
     ...(showQuantityRequested
       ? [
           {
