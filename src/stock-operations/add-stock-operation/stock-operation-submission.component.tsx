@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { SaveStockOperation, SaveStockOperationAction } from '../../stock-items/types';
@@ -6,8 +6,8 @@ import { StockOperationType } from '../../core/api/types/stockOperation/StockOpe
 import { InitializeResult } from './types';
 import { Button, InlineLoading, RadioButton, RadioButtonGroup, TextInput } from '@carbon/react';
 import { Departure, ListChecked, Save, SendFilled, Undo } from '@carbon/react/icons';
+import { DrugIssuanceStatus } from '../stock-operation.utils';
 import { showSnackbar } from '@openmrs/esm-framework';
-import { Checkbox } from '@carbon/react';
 
 interface StockOperationSubmissionProps {
   isEditing?: boolean;
@@ -18,18 +18,17 @@ interface StockOperationSubmissionProps {
   canEdit?: boolean;
   locked?: boolean;
   requiresDispatchAcknowledgement?: boolean;
-  actions: {
-    onGoBack: () => void;
-    onSave?: SaveStockOperation;
-    onComplete: SaveStockOperationAction;
-    onSubmit: SaveStockOperationAction;
-    onDispatch: SaveStockOperationAction;
-  };
+  drugIssuanceStatus?: DrugIssuanceStatus[];
+  actions: Partial<StockOperationActions>;
 }
-interface DrugIssuanceStatus {
-  drugUuid: string;
-  isIssued: boolean;
-}
+
+type StockOperationActions = {
+  onGoBack: () => void;
+  onSave?: SaveStockOperation;
+  onComplete: SaveStockOperationAction;
+  onSubmit: SaveStockOperationAction;
+  onDispatch: SaveStockOperationAction;
+};
 
 const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   canEdit,
@@ -38,65 +37,68 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
   requiresDispatchAcknowledgement,
   actions,
   isEditing,
+  drugIssuanceStatus,
 }) => {
   const { t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(model?.approvalRequired);
-  const [drugIssuanceStatus, setDrugIssuanceStatus] = useState<DrugIssuanceStatus[]>([]);
-  useEffect(() => {
-    if (model?.stockOperationItems) {
-      setDrugIssuanceStatus(
-        model.stockOperationItems.map((item) => ({
-          drugUuid: item.stockItemUuid,
-          isIssued: true,
-        })),
-      );
-    }
-  }, [model]);
-
-  const handleDrugIssuanceToggle = (drugUuid: string) => {
-    setDrugIssuanceStatus((prev) => {
-      const newStatus = prev.map((status) =>
-        status.drugUuid === drugUuid ? { ...status, isIssued: !status.isIssued } : status,
-      );
-      return newStatus;
-    });
+  const handleRadioButtonChange = (selectedItem: boolean) => {
+    setApprovalRequired(selectedItem);
   };
 
-  const handlePartialIssuance = async () => {
+  const handleSaveAndIssue = async () => {
     try {
       setIsSaving(true);
-      const issuedItems = model.stockOperationItems.filter((item) =>
-        drugIssuanceStatus.find((status) => status.drugUuid === item.stockItemUuid && status.isIssued),
-      );
-      const partialModel = {
-        ...model,
-        stockOperationItems: issuedItems,
-      };
-      delete partialModel?.dateCreated;
-      delete partialModel?.status;
-      await actions.onSave(partialModel);
-      partialModel.status = 'COMPLETED';
-      await actions.onComplete(partialModel);
+      delete model?.dateCreated;
+      delete model?.status;
+
+      model.approvalRequired = approvalRequired ? true : false;
+
+      if (requiresDispatchAcknowledgement) {
+        const selectedItems = model.stockOperationItems.filter((item) =>
+          drugIssuanceStatus?.find((status) => status.drugUuid === item.stockItemUuid && status.isIssued),
+        );
+        const unselectedItems = model.stockOperationItems.filter(
+          (item) => !drugIssuanceStatus?.find((status) => status.drugUuid === item.stockItemUuid && status.isIssued),
+        );
+
+        if (selectedItems.length > 0) {
+          const selectedOperation: StockOperationDTO = {
+            ...model,
+            stockOperationItems: selectedItems,
+            status: 'DISPATCHED' as const,
+          };
+          await actions?.onSave?.(selectedOperation);
+          await actions?.onDispatch?.(selectedOperation);
+        }
+
+        if (unselectedItems.length > 0) {
+          const remainingOperation: StockOperationDTO = {
+            ...model,
+            stockOperationItems: unselectedItems,
+            status: 'NEW' as const,
+          };
+          await actions?.onSave?.(remainingOperation);
+        }
+      } else {
+        // Regular save logic
+        await actions?.onSave?.(model);
+      }
       showSnackbar({
-        title: t('issuanceComplete', 'Issuance Complete'),
+        title: t('saveSuccess', 'Save Successful'),
         kind: 'success',
-        subtitle: t('selectedDrugsIssued', 'Selected drugs have been issued successfully'),
+        subtitle: t('operationSaved', 'Operation saved successfully'),
       });
     } catch (error) {
-      console.error('Error during partial issuance:', error);
+      console.error('Error saving operation:', error);
       showSnackbar({
-        title: t('issuanceError', 'Issuance Error'),
+        title: t('saveError', 'Save Error'),
         kind: 'error',
-        subtitle: t('errorIssuingDrugs', 'An error occurred while issuing drugs'),
+        subtitle: t('errorSavingOperation', 'An error occurred while saving the operation'),
       });
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleRadioButtonChange = (selectedItem: boolean) => {
-    setApprovalRequired(selectedItem);
   };
 
   return (
@@ -112,22 +114,6 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             <RadioButton value={true} id="rbgApprovelRequired-true" labelText={t('yes', 'Yes')} />
             <RadioButton value={false} id="rbgApprovelRequired-false" labelText={t('no', 'No')} />
           </RadioButtonGroup>
-        </div>
-      )}
-      {model?.stockOperationItems && model?.requisitionStockOperationUuid && (
-        <div style={{ margin: '20px 0' }}>
-          <h4>{t('selectDrugsToIssue', 'Select drugs to issue')}</h4>
-          {model.stockOperationItems.map((item) => (
-            <div key={item.stockItemUuid} style={{ margin: '10px 0' }}>
-              <Checkbox
-                id={`drug-${item.stockItemUuid}`}
-                labelText={item.stockItemName}
-                checked={drugIssuanceStatus.find((status) => status.drugUuid === item.stockItemUuid)?.isIssued ?? true}
-                onChange={() => handleDrugIssuanceToggle(item.stockItemUuid)}
-                disabled={locked || !canEdit}
-              />
-            </div>
-          ))}
         </div>
       )}
       {!canEdit && (
@@ -158,11 +144,10 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                     setIsSaving(true);
                     if (!isEditing) {
                       delete model.status;
-                      await actions.onSave(model);
-                      setIsSaving(false);
+                      await actions?.onSave?.(model);
                     }
                     model.status = 'COMPLETED';
-                    actions.onComplete(model);
+                    await actions.onComplete(model);
                     setIsSaving(false);
                   }}
                   renderIcon={ListChecked}
@@ -177,19 +162,9 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                   style={{ margin: '4px' }}
                   className="submitButton"
                   kind="primary"
-                  onClick={async () => {
-                    delete model?.dateCreated;
-                    delete model?.status;
-                    setIsSaving(true);
-                    await actions.onSave(model).then(() => {
-                      model.status = 'DISPATCHED';
-                      actions.onDispatch(model);
-                      setIsSaving(false);
-                    });
-                  }}
+                  onClick={handleSaveAndIssue}
                   renderIcon={Departure}
                 >
-                  {t('dispatch', 'Dispatch')}
                   {isSaving ? (
                     <InlineLoading description={t('dispatching', 'Dispatching')} />
                   ) : (
@@ -208,11 +183,10 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
                     delete model?.dateCreated;
                     delete model?.status;
                     setIsSaving(true);
-                    await actions.onSave(model).then(() => {
-                      model.status = 'SUBMITTED';
-                      actions.onSubmit(model);
-                      setIsSaving(false);
-                    });
+                    await actions.onSave(model);
+                    model.status = 'SUBMITTED';
+                    await actions.onSubmit(model);
+                    setIsSaving(false);
                   }}
                   renderIcon={SendFilled}
                 >
@@ -228,43 +202,25 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
         </div>
       )}
       <div style={{ display: 'flex', flexDirection: 'row', margin: '10px' }}>
-        {model?.stockOperationItems &&
-          model?.requisitionStockOperationUuid &&
-          drugIssuanceStatus.some((status) => status.isIssued) && (
-            <Button
-              name="partialIssue"
-              type="button"
-              style={{ margin: '4px' }}
-              className="submitButton"
-              kind="primary"
-              onClick={handlePartialIssuance}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <InlineLoading description={t('issuing', 'Issuing...')} />
-              ) : (
-                t('issueSelected', 'Issue Selected')
-              )}
-            </Button>
-          )}
         <Button
           name="save"
           type="button"
           className="submitButton"
           style={{ margin: '4px' }}
           disabled={isSaving}
-          onClick={async () => {
-            delete model?.dateCreated;
-            delete model?.status;
-            setIsSaving(true);
-            model.approvalRequired = approvalRequired ? true : false;
-            await actions.onSave(model);
-            setIsSaving(false);
-          }}
-          kind="secondary"
+          onClick={handleSaveAndIssue}
+          kind="primary"
           renderIcon={Save}
         >
-          {isSaving ? <InlineLoading /> : t('save', 'Save')}
+          {isSaving ? (
+            <InlineLoading
+              description={requiresDispatchAcknowledgement ? t('issuing', 'Issuing...') : t('saving', 'Saving...')}
+            />
+          ) : requiresDispatchAcknowledgement ? (
+            t('saveAndIssue', 'Save & Issue')
+          ) : (
+            t('save', 'Save')
+          )}
         </Button>
         {!isSaving && (
           <Button
@@ -272,7 +228,7 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
             style={{ margin: '4px' }}
             className="cancelButton"
             kind="tertiary"
-            onClick={actions.onGoBack}
+            onClick={actions?.onGoBack}
             renderIcon={Undo}
           >
             {t('goBack', 'Go Back')}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { SaveStockOperation } from '../../stock-items/types';
+import { SaveStockOperation, SaveStockOperationAction } from '../../stock-items/types';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { InitializeResult } from './types';
 import {
@@ -13,8 +13,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Checkbox,
 } from '@carbon/react';
-import { isDesktop } from '@openmrs/esm-framework';
+import { isDesktop, showSnackbar } from '@openmrs/esm-framework';
 import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
 import { getStockOperationUniqueId } from '../stock-operation.utils';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,8 @@ import { errorAlert } from '../../core/utils/alert';
 
 import styles from './stock-items-addition.component.scss';
 import StockItemSearch from './stock-item-search/stock-item-search.component';
+import StockOperationSubmission from './stock-operation-submission.component';
+import { DrugIssuanceStatus } from '../stock-operation.utils';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -35,6 +38,13 @@ interface StockItemsAdditionProps {
   onSave?: SaveStockOperation;
   operation: StockOperationType;
   setup: InitializeResult;
+  actions?: {
+    onGoBack: () => void;
+    onSave?: SaveStockOperation;
+    onComplete: SaveStockOperationAction;
+    onSubmit: SaveStockOperationAction;
+    onDispatch: SaveStockOperationAction;
+  };
 }
 
 const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
@@ -52,10 +62,15 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   model,
   onSave,
   operation,
+  actions,
+  isEditing,
+  setup,
 }) => {
   const { t } = useTranslation();
   const { operationType } = operation ?? {};
   const validationSchema = useValidationSchema(operationType);
+  const [isSaving, setIsSaving] = useState(false);
+  const [drugIssuanceStatus, setDrugIssuanceStatus] = useState<DrugIssuanceStatus[]>([]);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
     if (item.stockItems.length == 0) {
       errorAlert('No stock items', "You haven't added any stock items, tap the add button to add some.");
@@ -81,8 +96,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     formState: { errors },
   } = formMethods;
 
-  const [isSaving] = useState(false);
-
   const formFieldMethods = useFieldArray({
     name: 'stockItems',
     control,
@@ -101,7 +114,82 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     }
   }, [fields]);
 
+  const handleDrugIssuanceToggle = (drugUuid: string) => {
+    setDrugIssuanceStatus((prevStatus) => {
+      const existingStatus = prevStatus.find((status) => status.drugUuid === drugUuid);
+      if (existingStatus) {
+        return prevStatus.map((status) =>
+          status.drugUuid === drugUuid ? { ...status, isIssued: !status.isIssued } : status,
+        );
+      }
+      return [...prevStatus, { drugUuid, isIssued: true }];
+    });
+  };
+
+  const handlePartialIssuance = async () => {
+    try {
+      setIsSaving(true);
+      const issuedItems = model.stockOperationItems.filter((item) =>
+        drugIssuanceStatus.find((status) => status.drugUuid === item.stockItemUuid && status.isIssued),
+      );
+
+      const remainingItems = model.stockOperationItems.filter(
+        (item) => !drugIssuanceStatus.find((status) => status.drugUuid === item.stockItemUuid && status.isIssued),
+      );
+
+      const partialModel = {
+        ...model,
+        stockOperationItems: issuedItems,
+      };
+      delete partialModel?.dateCreated;
+      delete partialModel?.status;
+      await actions?.onSave(partialModel);
+      partialModel.status = 'COMPLETED' as const;
+      await actions?.onComplete(partialModel);
+
+      if (remainingItems.length > 0) {
+        const newRequisition = {
+          ...model,
+          uuid: null,
+          dateCreated: null,
+          status: 'NEW' as const,
+          stockOperationItems: remainingItems,
+        };
+        await actions?.onSave(newRequisition);
+
+        showSnackbar({
+          title: t('issuanceComplete', 'Partial Issuance Complete'),
+          kind: 'success',
+          subtitle: t(
+            'partialIssuanceSuccess',
+            'Selected drugs issued successfully. A new requisition has been created for remaining items.',
+          ),
+        });
+      } else {
+        showSnackbar({
+          title: t('issuanceComplete', 'Issuance Complete'),
+          kind: 'success',
+          subtitle: t('allDrugsIssued', 'All selected drugs have been issued successfully'),
+        });
+      }
+    } catch (error) {
+      console.error('Error during partial issuance:', error);
+      showSnackbar({
+        title: t('issuanceError', 'Issuance Error'),
+        kind: 'error',
+        subtitle: t('errorIssuingDrugs', 'An error occurred while issuing drugs'),
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const headers = [
+    {
+      key: 'checkbox',
+      header: '',
+      styles: { width: '48px' },
+    },
     {
       key: 'item',
       header: t('item', 'Item'),
@@ -145,7 +233,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
           },
         ]
       : []),
-
     {
       key: 'quantity',
       header: showQuantityRequested ? t('qtyIssued', 'Qty Issued') : t('qty', 'Qty'),
@@ -239,14 +326,30 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                       canCapturePurchasePrice={canCaptureQuantityPrice}
                       itemUoM={itemUoM}
                       fields={fields}
-                    />{' '}
+                      model={model}
+                      onDrugIssuanceToggle={handleDrugIssuanceToggle}
+                      drugIssuanceStatus={drugIssuanceStatus}
+                    />
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-          ></DataTable>
+          />
         </div>
       </div>
+      <StockOperationSubmission
+        isEditing={isEditing}
+        canEdit={canEdit}
+        model={{
+          ...model,
+          stockOperationItems: fields,
+        }}
+        operation={operation}
+        setup={setup}
+        actions={actions}
+        drugIssuanceStatus={drugIssuanceStatus}
+        requiresDispatchAcknowledgement={model?.requisitionStockOperationUuid != null}
+      />
     </FormProvider>
   );
 };

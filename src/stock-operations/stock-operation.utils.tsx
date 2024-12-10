@@ -10,6 +10,11 @@ import { useLocation } from 'react-router-dom';
 import { extractErrorMessagesFromResponse } from '../constants';
 import { handleMutate } from '../utils';
 
+export interface DrugIssuanceStatus {
+  drugUuid: string;
+  isIssued: boolean;
+}
+
 export const addOrEditStockOperation = async (
   t: TFunction,
   stockOperation: StockOperationDTO,
