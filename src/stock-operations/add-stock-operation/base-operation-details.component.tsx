@@ -91,8 +91,6 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       setIsSaving(false);
     }
   };
-
-  const isCompleteStatus = model?.status === 'COMPLETED';
   const sourceTags =
     operation?.stockOperationTypeLocationScopes
       ?.filter((p) => operation?.hasSource && p.isSource)
@@ -125,7 +123,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   return (
     <div style={{ margin: '10px' }}>
       <form className={`${styles.formContainer} ${styles.verticalForm}`}>
-        {isCompleteStatus ? (
+        {!canEdit || operationType === 'stockissue' ? (
           <>
             {model?.operationDate && (
               <TextInput
@@ -146,7 +144,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             {model?.atLocationName && (
               <TextInput
                 id="sourceLbl"
-                value={model.atLocationName}
+                value={operationType === 'stockissue' ? issueStockOperation.sourceName : model?.sourceName ?? ''}
                 readOnly={true}
                 labelText={t('source', 'Source')}
               />
@@ -154,7 +152,9 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             {model?.destinationName && (
               <TextInput
                 id="destinationLbl"
-                value={model.destinationName}
+                value={
+                  operationType === 'stockissue' ? issueStockOperation.destinationName : model?.destinationName ?? ''
+                }
                 readOnly={true}
                 labelText={t('destination', 'Destination')}
               />
@@ -172,6 +172,20 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
             )}
             {model?.remarks && (
               <TextInput id="remarksLbl" value={model.remarks} readOnly={true} labelText={t('remarks', 'Remarks')} />
+            )}
+            {operationType === 'stockissue' && (
+              <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                <Button
+                  name="save"
+                  type="button"
+                  className="submitButton"
+                  onClick={handleSubmit(handleSave)}
+                  kind="primary"
+                  renderIcon={ArrowRight}
+                >
+                  {isSaving ? <InlineLoading /> : t('next', 'Next')}
+                </Button>
+              </div>
             )}
           </>
         ) : (
