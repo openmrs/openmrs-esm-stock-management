@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { useStockOperationPages } from './stock-operations-table.resource';
-import { ResourceRepresentation } from '../core/api/api';
 import {
   DataTable,
-  TabPanel,
   DataTableSkeleton,
+  DatePicker,
+  DatePickerInput,
+  InlineLoading,
   Pagination,
   Table,
   TableBody,
@@ -17,30 +16,31 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarContent,
-  TableToolbarSearch,
-  Tile,
-  DatePickerInput,
-  DatePicker,
-  TableToolbarMenu,
   TableToolbarAction,
-  InlineLoading,
+  TableToolbarContent,
+  TableToolbarMenu,
+  TableToolbarSearch,
+  TabPanel,
+  Tile,
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
-import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
+import { ResourceRepresentation } from '../core/api/api';
+import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { formatDisplayDate } from '../core/utils/datetimeUtils';
+import { initialStockOperationValue } from '../core/utils/utils';
+import { handleMutate } from '../utils';
+import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
 import { launchAddOrEditDialog } from './stock-operation.utils';
-import { initialStockOperationValue } from '../core/utils/utils';
-import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
-import { useTranslation } from 'react-i18next';
-import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
 import StockOperationsFilters from './stock-operations-filters.component';
-import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
-import { handleMutate } from '../utils';
+import { useStockOperationPages } from './stock-operations-table.resource';
 
+import StockOperationExpandedRow from './add-stock-operation/stock-operations-expanded-row/stock-operation-expanded-row.component';
 import styles from './stock-operations-table.scss';
-import StockOperationStatus from './add-stock-operation/stock-operation-status.component';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -134,9 +134,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => {
-      const commonNames = stockOperation?.stockOperationItems
-        ? stockOperation?.stockOperationItems.map((item) => item.commonName).join(', ')
-        : '';
+      const threshHold = 1;
+      const itemCountGreaterThanThreshhold = (stockOperation?.stockOperationItems?.length ?? 0) > threshHold;
+      const commonNames =
+        stockOperation?.stockOperationItems
+          ?.slice(0, itemCountGreaterThanThreshhold ? threshHold : undefined)
+          .map((item) => item.commonName)
+          .join(', ') ?? '';
 
       return {
         ...stockOperation,
@@ -154,7 +158,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             showprops={true}
           />
         ),
-        stockOperationItems: commonNames,
+        stockOperationItems:
+          commonNames +
+          (itemCountGreaterThanThreshhold
+            ? `, ...(${stockOperation?.stockOperationItems?.length - threshHold} more)`
+            : ''),
         status: `${stockOperation?.status}`,
         source: `${stockOperation?.sourceName ?? ''}`,
         destination: `${stockOperation?.destinationName ?? ''}`,
@@ -289,7 +297,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                       </TableExpandRow>
                       {row.isExpanded ? (
                         <TableExpandedRow colSpan={headers.length + 2}>
-                          <StockOperationStatus model={items[index]} />
+                          <StockOperationExpandedRow model={items[index]} />
                         </TableExpandedRow>
                       ) : (
                         <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
