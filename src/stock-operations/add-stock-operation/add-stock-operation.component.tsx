@@ -35,6 +35,8 @@ import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resour
 import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/StockOperationLinkDTO';
 import StockOperationStatus from './stock-operation-status.component';
 import StockOperationRelatedLink from './stock-operation-related-link.component';
+import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
+import { CircleDash, Printer } from '@carbon/react/icons';
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();
@@ -340,7 +342,18 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       )}
 
       <StockOperation>
-        <VerticalTabs tabs={tabs} selectedIndex={selectedIndex} onChange={setSelectedIndex} />
+        <StockOperationStepper
+          steps={tabs.map((tab, index) => ({
+            title: tab.name,
+            component: tab.component,
+            disabled: tab.disabled,
+            subTitle: `Subtitle  for ${tab.name}`,
+            icon: <CircleDash />,
+          }))}
+          selectedIndex={selectedIndex}
+          onChange={setSelectedIndex}
+        />
+        {/* <VerticalTabs tabs={tabs} selectedIndex={selectedIndex} onChange={setSelectedIndex} /> */}
       </StockOperation>
     </>
   );
