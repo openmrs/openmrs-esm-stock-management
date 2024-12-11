@@ -127,6 +127,11 @@ export const deletePackagingUnitButton = getSyncLifecycle(deletePackagingUnitMod
 
 export const stockManagementAppMenuItem = getSyncLifecycle(appMenu, options);
 
+export const stockOperationStockItemForm = getAsyncLifecycle(
+  () => import('./stock-operations/add-stock-operation/stock-item-form/stock-item-form.workspace'),
+  options,
+);
+
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }

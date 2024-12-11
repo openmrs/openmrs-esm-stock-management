@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Search, ClickableTile } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { useDebounce } from '@openmrs/esm-framework';
+import { launchWorkspace, useDebounce } from '@openmrs/esm-framework';
 import { useStockItems } from '../../stock-item-selector/stock-item-selector.resource';
 import { useFormContext, type UseFieldArrayReturn } from 'react-hook-form';
 import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
@@ -31,15 +31,19 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({ append, fields }) => 
 
   const handleOnSearchResultClick = (stockItem) => {
     const itemId = `new-item-${getStockOperationUniqueId()}`;
-    append({
-      ...stockItem,
-      uuid: itemId,
+    launchWorkspace('stock-operation-stock-items-form', {
+      workspaceTitle: t('stockItem', 'StockItem'),
       id: itemId,
-      stockItemUuid: stockItem.uuid,
-      stockItemName: stockItem.commonName,
     });
+    // append({
+    //   ...stockItem,
+    //   uuid: itemId,
+    //   id: itemId,
+    //   stockItemUuid: stockItem.uuid,
+    //   stockItemName: stockItem.commonName,
+    // });
     setSearchTerm('');
-    setValue(`stockItems[${fields.length}].stockItemUuid`, stockItem.uuid);
+    // setValue(`stockItems[${fields.length}].stockItemUuid`, stockItem.uuid);
   };
   return (
     <div className={styles.stockItemSearchContainer}>
