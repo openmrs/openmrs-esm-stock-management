@@ -14,11 +14,16 @@ export function useReportTypes() {
 }
 export function useGetReports() {
   const apiUrl = `${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default&limit=10&totalCount=true`;
-  const { data, error, isLoading } = useSWR<{ data: { results: any } }, Error>(apiUrl, openmrsFetch);
+
+  const { data, error, isLoading, mutate } = useSWR<{ data: { results: any } }, Error>(apiUrl, openmrsFetch, {
+    refreshInterval: 1000,
+    dedupingInterval: 1000,
+  });
+
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
-
   const { goTo, results: paginatedItems, currentPage } = usePagination(data?.data?.results, currentPageSize);
+
   return {
     reports: data?.data?.results ?? [],
     isLoading,
@@ -31,5 +36,6 @@ export function useGetReports() {
     goTo,
     pageSizes,
     setPageSize,
+    mutate,
   };
 }
