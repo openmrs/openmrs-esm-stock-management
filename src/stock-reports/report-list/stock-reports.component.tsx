@@ -101,6 +101,11 @@ const StockReports: React.FC = () => {
         key: 'status',
       },
       {
+        id: 5,
+        header: t('timeTaken', 'Time Taken'),
+        key: 'timeTaken',
+      },
+      {
         id: 8,
         header: t('actions', 'Actions'),
         key: 'actions',
@@ -131,9 +136,13 @@ const StockReports: React.FC = () => {
       )),
       status: (
         <>
-          {batchJob.status === BatchJobStatusPending && (
-            <InlineLoading status="active" iconDescription="Loading" description="Generating report..." />
-          )}
+          {batchJob.status === BatchJobStatusPending ? (
+            <InlineLoading
+              status={batchJob.status === BatchJobStatusPending ? 'active' : 'inactive'}
+              iconDescription="Loading"
+              description={batchJob.status === BatchJobStatusPending ? 'Generating report...' : ''}
+            />
+          ) : null}
           {batchJob.status === BatchJobStatusFailed && (
             <WarningAltFilled className="report-failed" title={batchJob.status} />
           )}
@@ -148,6 +157,7 @@ const StockReports: React.FC = () => {
           )}
         </>
       ),
+      timeTaken: formatDuration(batchJob.dateCreated, batchJob.endTime),
       actions: (
         <div key={`${batchJob?.uuid}-actions`} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
           {batchJob.outputArtifactViewable && batchJob.batchJobType === 'hide' && (
@@ -299,6 +309,21 @@ const StockReports: React.FC = () => {
       />
     </div>
   );
+};
+
+const formatDuration = (start: string, end: string) => {
+  const startDate = new Date(start).getTime();
+  const endDate = new Date(end).getTime();
+
+  if (!startDate || !endDate) return '';
+
+  const durationInMillis = endDate - startDate;
+  const totalSeconds = Math.floor(durationInMillis / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return [hours, minutes, seconds].map((unit) => String(unit).padStart(2, '0')).join(':');
 };
 
 export default StockReports;
