@@ -1,10 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Control, Controller, FieldValues } from 'react-hook-form';
 import { User } from '../../core/api/types/identity/User';
 import { ComboBox, InlineLoading } from '@carbon/react';
 import { useUsersHook } from './users-selector.resource';
 import { useDebounce } from '../../core/hooks/debounce-hook';
 import { otherUser } from '../../core/utils/utils';
+import { useSession } from '@openmrs/esm-framework';
+import { use } from 'i18next';
 
 interface UsersSelectorProps<T> {
   placeholder?: string;
@@ -22,6 +24,7 @@ interface UsersSelectorProps<T> {
 
 const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
   const { isLoading, userList, setSearchString } = useUsersHook();
+  const { user } = useSession();
 
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
@@ -36,6 +39,7 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
         control={props.control}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
+            disabled={true}
             titleText={props.title}
             name={props.name}
             control={props.control}
@@ -47,7 +51,7 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
               props.onUserChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
-            initialSelectedItem={userList?.find((p) => p.uuid === props.userUuid) ?? ''}
+            initialSelectedItem={userList?.find((p) => p.uuid === user.uuid) ?? ''}
             itemToString={userName}
             onInputChange={debouncedSearch}
             placeholder={props.placeholder}
