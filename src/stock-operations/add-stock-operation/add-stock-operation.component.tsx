@@ -48,16 +48,16 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
   const [requiresDispatchAcknowledgement, setRequiresDispatchAcknowledgement] = useState(false);
 
-  const currentStockOperationType = types?.results?.find((p) => p.operationType === props.model?.operationType);
+  const currentStockOperationType = types?.results?.find((p) => p.operationType === props?.model?.operationType);
 
   useEffect(() => {
     if (
       currentStockOperationType?.operationType === OperationType.REQUISITION_OPERATION_TYPE ||
-      props.model?.operationType === OperationType.REQUISITION_OPERATION_TYPE
+      props?.model?.operationType === OperationType.REQUISITION_OPERATION_TYPE
     ) {
-      setRequisition(props.model?.uuid);
+      setRequisition(props?.model?.uuid);
     }
-  }, [currentStockOperationType, props.model?.operationType, props.model?.uuid]);
+  }, [currentStockOperationType, props?.model?.operationType, props?.model?.uuid]);
 
   useEffect(() => {
     if (
@@ -110,8 +110,8 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           {...props}
           isEditing={props?.operation?.name === 'Stock Issue' ? !isEditing : isEditing}
           setup={result}
-          canEdit={props?.operation?.name === 'Stock Issue' ? !canEdit : canEdit}
-          model={isEditing ? props?.model : props?.operation?.name === 'Stock Issue' ? props?.model : result?.dto} // check if type is stockIssue and pass requisition data
+          canEdit={canEdit}
+          model={isEditing ? props?.model : props?.operation?.name === 'Stock Issue' ? props?.model : result?.dto}
           onSave={async () => {
             setManageStockItems(true);
             setSelectedIndex(1);
@@ -291,7 +291,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           <h6 style={{ color: '#24a148' }}>Related Transactions:</h6>
           {operationLinks.map(
             (item) =>
-              (props.model?.uuid === item?.parentUuid || currentStockOperationType.uuid === item?.parentUuid) && (
+              (props?.model?.uuid === item?.parentUuid || currentStockOperationType?.uuid === item?.parentUuid) && (
                 <>
                   <span>{item?.childOperationTypeName}</span>
                   <span className={item?.childVoided ? 'voided' : ''}>
