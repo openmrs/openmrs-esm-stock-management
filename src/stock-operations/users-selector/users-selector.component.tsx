@@ -26,7 +26,6 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
   const { isLoading, userList, setSearchString } = useUsersHook();
   const { user } = useSession();
   const { autoPopulateResponsiblePerson } = useConfig<ConfigObject>();
-
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
   }, 1000);
@@ -40,7 +39,6 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
         control={props.control}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
-            disabled={autoPopulateResponsiblePerson ? true : false}
             titleText={props.title}
             name={props.name}
             control={props.control}
@@ -53,7 +51,7 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
-              userList?.find((p) => p.uuid === (autoPopulateResponsiblePerson ? user.uuid : props.userUuid)) ?? ''
+              userList?.find((p) => p.uuid === (autoPopulateResponsiblePerson ? user.uuid : props.userUuid)) ?? user
             }
             itemToString={userName}
             onInputChange={debouncedSearch}
