@@ -20,6 +20,7 @@ import StockSources from './stock-sources/stock-sources.component';
 import StockLocations from './stock-locations/stock-locations.component';
 import StockReports from './stock-reports/report-list/stock-reports.component';
 import StockSettings from './stock-settings/stock-settings.component';
+import TransactionsPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-preview.modal';
 const moduleName = '@openmrs/esm-stock-management-app';
 
 const options = {
@@ -126,7 +127,7 @@ export const deletePackagingUnitButton = getSyncLifecycle(deletePackagingUnitMod
 });
 
 export const stockManagementAppMenuItem = getSyncLifecycle(appMenu, options);
-
+export const transactionPrintPreviewModal = getSyncLifecycle(TransactionsPrintPreview, options)
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }

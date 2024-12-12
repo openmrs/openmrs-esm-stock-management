@@ -1,15 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStockItemsTransactions } from './transactions.resource';
-import { DataTableSkeleton } from '@carbon/react';
+import { DataTableSkeleton, Button } from '@carbon/react';
 import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
 import { ArrowLeft } from '@carbon/react/icons';
 import DataList from '../../../core/components/table/table.component';
 import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import TransactionsLocationsFilter from './transaction-filters/transaction-locations-filter.component';
 import { useForm } from 'react-hook-form';
-import { StockItemInventoryFilter } from '../../stock-items.resource';
+import { StockItemInventoryFilter, useStockItem } from '../../stock-items.resource';
 import { useTranslation } from 'react-i18next';
 import StockOperationReference from '../../../stock-operations/add-stock-operation/stock-operation-reference.component';
+import { Add } from '@carbon/react/icons';
+import { Printer } from '@carbon/react/icons';
+import TransactionsPrintout from './printout/transactions-printout.component';
+import TransactionsPrintAction from './transactions-print-action.component';
+
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -73,9 +78,8 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
         : stockItemTransaction.stockOperationTypeName,
       quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''}`,
       batch: stockItemTransaction.stockBatchNo
-        ? `${stockItemTransaction.stockBatchNo}${
-            stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
-          }`
+        ? `${stockItemTransaction.stockBatchNo}${stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
+        }`
         : '',
       reference: (
         <StockOperationReference
@@ -86,15 +90,13 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
       status: stockItemTransaction?.stockOperationStatus ?? '',
       in:
         stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${
-              stockItemTransaction.packagingUomFactor
-            }`
+          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${stockItemTransaction.packagingUomFactor
+          }`
           : '',
       out:
         stockItemTransaction?.quantity < 0
-          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
-              stockItemTransaction?.packagingUomName ?? ''
-            } of ${stockItemTransaction.packagingUomFactor}`
+          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''
+          } of ${stockItemTransaction.packagingUomFactor}`
           : '',
     }));
   }, [items]);
@@ -103,19 +105,28 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
+  // return <pre>{JSON.stringify(stockItem, null, 2)}</pre>
+
+  // return <TransactionsPrintout title={stockItem.drugName || stockItem.conceptName || ''} columns={tableHeaders}
+  // data={tableRows}/>
+
   return (
     <DataList
       children={() => (
-        <TransactionsLocationsFilter
-          onLocationIdChange={(q) => {
-            setLocationUuid(q);
-            setStockItemFilter({ ...stockItemFilter, locationUuid: q });
-          }}
-          name={'TransactionLocationUuid'}
-          placeholder={t('filterByLocation', 'Filter by Location')}
-          control={control}
-          controllerName="TransactionLocationUuid"
-        />
+        <>
+          <TransactionsPrintAction columns={tableHeaders}
+            data={tableRows} itemUuid={stockItemUuid} />
+          <TransactionsLocationsFilter
+            onLocationIdChange={(q) => {
+              setLocationUuid(q);
+              setStockItemFilter({ ...stockItemFilter, locationUuid: q });
+            }}
+            name={'TransactionLocationUuid'}
+            placeholder={t('filterByLocation', 'Filter by Location')}
+            control={control}
+            controllerName="TransactionLocationUuid"
+          />
+        </>
       )}
       columns={tableHeaders}
       data={tableRows}

@@ -4187,6 +4187,7 @@ __metadata:
     react-i18next: "npm:^11.18.6"
     react-image-annotate: "npm:^1.8.0"
     react-router-dom: "npm:^6.14.1"
+    react-to-print: "npm:^2.14.13"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
     swr: "npm:^2.2.4"
@@ -21142,6 +21143,16 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 10/4ade4329374f77414f55074826617e388d884b6c9401e0877b63d7f3715db07041431bb757265fb971c4ef15f3fde70ff6a05a5abb09ad3ff89334e1ff5c39ea
+  languageName: node
+  linkType: hard
+
+"react-to-print@npm:^2.14.13":
+  version: 2.15.1
+  resolution: "react-to-print@npm:2.15.1"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10/0786fd5dd055b5b50f9a0dba99f0ccb30b9407b8e77748f5fc2557446ed0d0c65759e927cc2cdaa9e34f286838bbb230d3b0ba03d20b9754d0469fc4dac7c529
   languageName: node
   linkType: hard
 
