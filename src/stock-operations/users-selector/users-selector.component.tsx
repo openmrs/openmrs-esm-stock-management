@@ -51,7 +51,8 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={
-              userList?.find((p) => p.uuid === (autoPopulateResponsiblePerson ? user.uuid : props.userUuid)) ?? user
+              userList?.find((p) => p.uuid === (props?.userUuid ?? autoPopulateResponsiblePerson ? user.uuid : '')) ??
+              ''
             }
             itemToString={userName}
             onInputChange={debouncedSearch}
