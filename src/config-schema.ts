@@ -8,7 +8,7 @@ export const configSchema = {
   autoPopulateResponsiblePerson: {
     type: Type.Boolean,
     _default: true,
-    _description: 'Auto Populate Responsible person in stock operations with the currently logged in user',
+    _description: 'Auto populate responsible person in stock operations with the currently logged in user',
   },
   printBalanceOnHand: {
     type: Type.Boolean,
