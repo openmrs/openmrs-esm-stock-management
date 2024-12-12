@@ -5,8 +5,8 @@ import { ComboBox, InlineLoading } from '@carbon/react';
 import { useUsersHook } from './users-selector.resource';
 import { useDebounce } from '../../core/hooks/debounce-hook';
 import { otherUser } from '../../core/utils/utils';
-import { useSession } from '@openmrs/esm-framework';
-import { use } from 'i18next';
+import { useConfig, useSession } from '@openmrs/esm-framework';
+import { ConfigObject } from '../../config-schema';
 
 interface UsersSelectorProps<T> {
   placeholder?: string;
@@ -25,6 +25,7 @@ interface UsersSelectorProps<T> {
 const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
   const { isLoading, userList, setSearchString } = useUsersHook();
   const { user } = useSession();
+  const { autoPopulateResponsiblePerson } = useConfig<ConfigObject>();
 
   const debouncedSearch = useDebounce((query: string) => {
     setSearchString(query);
@@ -39,7 +40,7 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
         control={props.control}
         render={({ field: { onChange, ref } }) => (
           <ComboBox
-            disabled={true}
+            disabled={autoPopulateResponsiblePerson ? true : false}
             titleText={props.title}
             name={props.name}
             control={props.control}
@@ -51,7 +52,9 @@ const UsersSelector = <T,>(props: UsersSelectorProps<T>) => {
               props.onUserChanged?.(data.selectedItem);
               onChange(data.selectedItem?.uuid);
             }}
-            initialSelectedItem={userList?.find((p) => p.uuid === user.uuid) ?? ''}
+            initialSelectedItem={
+              userList?.find((p) => p.uuid === (autoPopulateResponsiblePerson ? user.uuid : props.userUuid)) ?? ''
+            }
             itemToString={userName}
             onInputChange={debouncedSearch}
             placeholder={props.placeholder}

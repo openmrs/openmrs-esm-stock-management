@@ -5,6 +5,11 @@ export const configSchema = {
     _default: false,
     _description: 'Whether to print item costs on the print out',
   },
+  autoPopulateResponsiblePerson: {
+    type: Type.Boolean,
+    _default: true,
+    _description: 'Auto Populate Responsible person in stock operations with the currently logged in user',
+  },
   printBalanceOnHand: {
     type: Type.Boolean,
     _default: false,
@@ -55,6 +60,7 @@ export const configSchema = {
 };
 
 export type ConfigObject = {
+  autoPopulateResponsiblePerson: boolean;
   printItemCost: boolean;
   printBalanceOnHand: boolean;
   packagingUnitsUUID: string;
