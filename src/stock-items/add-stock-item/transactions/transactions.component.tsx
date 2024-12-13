@@ -85,8 +85,9 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
         : stockItemTransaction.stockOperationTypeName,
       quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''}`,
       batch: stockItemTransaction.stockBatchNo
-        ? `${stockItemTransaction.stockBatchNo}${stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
-        }`
+        ? `${stockItemTransaction.stockBatchNo}${
+            stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
+          }`
         : '',
       reference: (
         <StockOperationReference
@@ -97,13 +98,23 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
       status: stockItemTransaction?.stockOperationStatus ?? '',
       in:
         stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${stockItemTransaction.packagingUomFactor
-          }`
+          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${
+              stockItemTransaction.packagingUomFactor
+            }`
           : '',
       out:
         stockItemTransaction?.quantity < 0
-          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''
-          } of ${stockItemTransaction.packagingUomFactor}`
+          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
+              stockItemTransaction?.packagingUomName ?? ''
+            } of ${stockItemTransaction.packagingUomFactor}`
+          : '',
+      totalin:
+        stockItemTransaction?.quantity >= 0
+          ? `${stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
+          : '',
+      totalout:
+        stockItemTransaction?.quantity < 0
+          ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
           : '',
       totalin:
         stockItemTransaction?.quantity >= 0
@@ -119,11 +130,6 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
   }
-
-  // return <pre>{JSON.stringify(stockItem, null, 2)}</pre>
-
-  // return <TransactionsPrintout title={stockItem.drugName || stockItem.conceptName || ''} columns={tableHeaders}
-  // data={tableRows}/>
 
   return (
     <DataList
