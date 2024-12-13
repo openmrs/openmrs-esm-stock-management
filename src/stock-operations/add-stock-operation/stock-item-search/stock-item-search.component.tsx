@@ -1,26 +1,19 @@
+import { ClickableTile, Search } from '@carbon/react';
+import { useDebounce } from '@openmrs/esm-framework';
 import React, { useEffect, useState } from 'react';
-import { Search, ClickableTile } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { launchWorkspace, useDebounce } from '@openmrs/esm-framework';
+import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import { useStockItems } from '../../stock-item-selector/stock-item-selector.resource';
-import { useFormContext, type UseFieldArrayReturn } from 'react-hook-form';
-import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
-import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import styles from './stock-item-search.scss';
 
-type StockItemSearchProps = UseFieldArrayReturn<
-  {
-    stockItems: StockOperationItemDTO[];
-  },
-  'stockItems',
-  'id'
->;
+type StockItemSearchProps = {
+  onSelectedItem?: (stockItem: StockItemDTO) => void;
+};
 
-const StockItemSearch: React.FC<StockItemSearchProps> = ({ append, fields }) => {
+const StockItemSearch: React.FC<StockItemSearchProps> = ({ onSelectedItem }) => {
   const { t } = useTranslation();
   const { isLoading, stockItemsList, setSearchString } = useStockItems({});
   const [searchTerm, setSearchTerm] = useState('');
-  const { setValue, getValues } = useFormContext();
   const debouncedSearchTerm = useDebounce(searchTerm);
 
   useEffect(() => {
@@ -29,19 +22,14 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({ append, fields }) => 
     }
   }, [debouncedSearchTerm, setSearchString]);
 
-  const handleOnSearchResultClick = (stockItem) => {
-    const itemId = `new-item-${getStockOperationUniqueId()}`;
-    launchWorkspace('stock-operation-stock-items-form', {
-      workspaceTitle: t('stockItem', 'StockItem'),
-      id: itemId,
-    });
-    // append({
-    //   ...stockItem,
-    //   uuid: itemId,
+  const handleOnSearchResultClick = (stockItem: StockItemDTO) => {
+    // const itemId = `new-item-${getStockOperationUniqueId()}`;
+    // launchWorkspace('stock-operation-stock-items-form', {
+    //   workspaceTitle: t('stockItem', 'StockItem'),
     //   id: itemId,
-    //   stockItemUuid: stockItem.uuid,
-    //   stockItemName: stockItem.commonName,
+
     // });
+    onSelectedItem?.(stockItem);
     setSearchTerm('');
     // setValue(`stockItems[${fields.length}].stockItemUuid`, stockItem.uuid);
   };

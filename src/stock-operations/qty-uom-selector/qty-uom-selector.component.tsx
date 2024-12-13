@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode, useEffect, useMemo } from 'react';
 import { Control, Controller, FieldValues } from 'react-hook-form';
 import { StockItemPackagingUOMDTO } from '../../core/api/types/stockItem/StockItemPackagingUOM';
 import { ComboBox, SkeletonText } from '@carbon/react';
@@ -29,36 +29,31 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
   if (isLoading || error) return <SkeletonText />;
 
   return (
-    <div>
-      <Controller
-        name={props.controllerName}
-        control={props.control}
-        defaultValue={initialSelectedItem.uuid ?? ''}
-        render={({ field: { onChange, ref } }) => (
-          <ComboBox
-            titleText={props.title}
-            name={props.name}
-            control={props.control}
-            controllerName={props.controllerName}
-            id={props.name}
-            size={'sm'}
-            items={item?.packagingUnits ?? []}
-            onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
-              props.onStockPackageChanged?.(data.selectedItem);
-              onChange(data.selectedItem?.uuid);
-            }}
-            initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockItemPackagingUOMDTO) =>
-              s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ''
-            }
-            placeholder={props.placeholder}
-            invalid={props.invalid}
-            invalidText={props.invalidText}
-            ref={ref}
-          />
-        )}
-      />
-    </div>
+    <Controller
+      name={props.controllerName}
+      control={props.control}
+      defaultValue={initialSelectedItem.uuid ?? ''}
+      render={({ field: { onChange, ref }, fieldState: { error } }) => (
+        <ComboBox
+          titleText={props.title}
+          name={props.name}
+          id={props.name}
+          items={item?.packagingUnits ?? []}
+          onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
+            props.onStockPackageChanged?.(data.selectedItem);
+            onChange(data.selectedItem?.uuid);
+          }}
+          initialSelectedItem={initialSelectedItem}
+          itemToString={(s: StockItemPackagingUOMDTO) =>
+            s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ''
+          }
+          placeholder={props.placeholder}
+          invalid={props.invalid ?? error?.message}
+          invalidText={props.invalidText ?? error?.message}
+          ref={ref}
+        />
+      )}
+    />
   );
 };
 

@@ -1,8 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { SaveStockOperation } from '../../stock-items/types';
-import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { InitializeResult } from './types';
 import {
   Button,
   DataTable,
@@ -14,19 +9,29 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import { isDesktop } from '@openmrs/esm-framework';
-import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
-import { getStockOperationUniqueId } from '../stock-operation.utils';
-import { useTranslation } from 'react-i18next';
-import { FieldArrayWithId, FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useValidationSchema } from './validationSchema';
-import StockItemsAdditionRow from './stock-items-addition-row.component';
-import { ArrowRight } from '@carbon/react/icons';
+import { isDesktop, launchWorkspace } from '@openmrs/esm-framework';
+import React, { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { StockOperationItemDTO } from '../../core/api/types/stockOperation/StockOperationItemDTO';
+import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { errorAlert } from '../../core/utils/alert';
+import { SaveStockOperation } from '../../stock-items/types';
+import { InitializeResult } from './types';
+import { useValidationSchema } from './validationSchema';
 
-import styles from './stock-items-addition.component.scss';
+import { TableCell } from '@carbon/react';
+import { formatForDatePicker, URL_STOCK_ITEM } from '../../constants';
+import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import StockAvailability from './stock-item-form/stock-availability.component';
 import StockItemSearch from './stock-item-search/stock-item-search.component';
+import styles from './stock-items-addition.component.scss';
+import { Link } from '@carbon/react';
+import { StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
+import { getStockOperationUniqueId } from '../stock-operation.utils';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -54,6 +59,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   operation,
 }) => {
   const { t } = useTranslation();
+  const [items, setItems] = useState<Array<StockOperationItemDTO>>(model.stockOperationItems);
   const { operationType } = operation ?? {};
   const validationSchema = useValidationSchema(operationType);
   const handleSave = async (item: { stockItems: StockOperationItemDTO[] }) => {
@@ -82,24 +88,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   } = formMethods;
 
   const [isSaving] = useState(false);
-
-  const formFieldMethods = useFieldArray({
-    name: 'stockItems',
-    control,
-  });
-  const { fields, append, remove } = formFieldMethods;
-  const [selectedItems, setSelectedItems] = useState<
-    | FieldArrayWithId<{ stockItems: StockOperationItemDTO[] }, 'stockItems', 'id'>
-    | (() => FieldArrayWithId<{ stockItems: StockOperationItemDTO[] }, 'stockItems', 'id'>)
-  >();
-
-  useEffect(() => {
-    if (fields.length > 0) {
-      const lastItemIndex = fields.length - 1;
-      const item = fields[lastItemIndex];
-      setSelectedItems(item);
-    }
-  }, [fields]);
 
   const headers = [
     {
@@ -163,14 +151,74 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
         ]
       : []),
   ];
+  const isStockItem = (obj: any): obj is StockItemDTO => {
+    return typeof obj === 'object' && obj !== null && 'drugName' in obj;
+  };
 
-  const addNewItem = () => {
+  const handleAddStockItem = (stockItem: StockItemDTO) => {
     const itemId = `new-item-${getStockOperationUniqueId()}`;
-    append({
-      uuid: itemId,
-      id: itemId,
-      stockItemUuid: null,
-      stockItemName: '',
+    launchWorkspace('stock-operation-stock-items-form', {
+      workspaceTitle: t('stockItem', 'StockItem'),
+      ...({
+        batchBalance,
+        batchNos,
+        showQuantityRequested,
+        requiresActualBatchInformation,
+        requiresBatchUuid,
+        canUpdateBatchInformation,
+        canCapturePurchasePrice: canCaptureQuantityPrice,
+        itemUoM,
+        operationType,
+        stockOperationItem: {
+          uuid: itemId,
+          id: itemId,
+          permission: stockItem.permission,
+          stockItemUuid: stockItem.uuid,
+          acronym: stockItem.acronym,
+          commonName: stockItem.commonName,
+          hasExpiration: stockItem.hasExpiration,
+          purchasePrice: stockItem.purchasePrice,
+          packagingUnits: stockItem.packagingUnits,
+        },
+        onSave: (item) => {
+          setItems((state) => [
+            ...state,
+            {
+              ...stockItem,
+              ...item,
+              uuid: itemId,
+              id: itemId,
+              stockItemUuid: stockItem.uuid,
+              stockItemName: stockItem.commonName,
+            },
+          ]);
+        },
+      } as StockItemFormProps),
+    });
+  };
+  const handleUpdateStockItem = (stockOperationItem: StockOperationItemDTO) => {
+    launchWorkspace('stock-operation-stock-items-form', {
+      workspaceTitle: t('stockItem', 'StockItem'),
+      ...({
+        batchBalance,
+        batchNos,
+        showQuantityRequested,
+        requiresActualBatchInformation,
+        requiresBatchUuid,
+        canUpdateBatchInformation,
+        canCapturePurchasePrice: canCaptureQuantityPrice,
+        itemUoM,
+        operationType,
+        stockOperationItem: stockOperationItem,
+        onSave: (item) => {
+          const currItems = items;
+          const updateIndex = currItems.findIndex((it) => it.uuid === stockOperationItem.uuid);
+          if (updateIndex !== -1) {
+            currItems[updateIndex] = { ...item, uuid: stockOperationItem.uuid, id: stockOperationItem.id };
+            setItems(currItems);
+          }
+        },
+      } as StockItemFormProps),
     });
   };
 
@@ -178,14 +226,34 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     <FormProvider {...formMethods}>
       <div style={{ margin: '10px' }}>
         <div className={styles.tableContainer}>
-          <StockItemSearch {...formFieldMethods} />
+          <StockItemSearch onSelectedItem={handleAddStockItem} />
           <DataTable
-            rows={model?.stockOperationItems ?? [{ uuid: `new-item-1`, id: `new-item-1` }]}
+            rows={(items ?? []).map((row) => ({
+              id: row.uuid,
+              item:
+                row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
+                  <Link target={'_blank'} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
+                    {row?.stockItemUuid.drugName || 'No stock item name'}
+                  </Link>
+                ) : (
+                  <Link target={'_blank'} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
+                    {row?.stockItemName || 'No name available'}
+                  </Link>
+                ),
+              itemDetails: row?.stockItemUuid ? <StockAvailability stockItemUuid={row.stockItemUuid} /> : '--',
+              quantityrequested: `${row?.quantityRequested?.toLocaleString() ?? ''} ${
+                row?.quantityRequestedPackagingUOMName ?? ''
+              }`,
+              batch: row?.batchNo ?? '--',
+              expiry: formatForDatePicker(row.expiration),
+              quantity: row?.quantity?.toLocaleString(),
+              quantityuom: row?.stockItemPackagingUOMName ?? '--',
+            }))}
             headers={headers}
             isSortable={false}
             useZebraStyles={true}
             className={styles.dataTable}
-            render={({ headers, getHeaderProps, getTableProps }) => (
+            render={({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
               <TableContainer>
                 <Table {...getTableProps()}>
                   <TableHead>
@@ -210,7 +278,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                               name="save"
                               type="button"
                               className="submitButton"
-                              onClick={() => handleSubmit(handleSave)()}
+                              onClick={() => handleSubmit((_) => handleSave({ stockItems: items }))()}
                               kind="primary"
                               renderIcon={ArrowRight}
                             >
@@ -222,7 +290,43 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <StockItemsAdditionRow
+                    {rows.map((row) => (
+                      <TableRow {...getRowProps({ row })}>
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
+                        {canEdit && (
+                          <TableCell>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="submitButton clear-padding-margin"
+                              iconDescription={'Edit'}
+                              kind="ghost"
+                              renderIcon={Edit}
+                              onClick={() => {
+                                //  TODO handle update item
+                                const item = items.find(({ uuid }) => uuid === row.id);
+                                handleUpdateStockItem(item);
+                              }}
+                            />
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="submitButton clear-padding-margin"
+                              iconDescription={'Delete'}
+                              kind="ghost"
+                              renderIcon={TrashCan}
+                              onClick={() => {
+                                //  TODO handle remove item
+                              }}
+                            />
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+
+                    {/* <StockItemsAdditionRow
                       rows={model?.stockOperationItems ?? [{ uuid: `new-item-1`, id: `new-item-1` }]}
                       batchBalance={batchBalance}
                       batchNos={batchNos}
@@ -239,7 +343,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                       canCapturePurchasePrice={canCaptureQuantityPrice}
                       itemUoM={itemUoM}
                       fields={fields}
-                    />{' '}
+                    />{' '} */}
                   </TableBody>
                 </Table>
               </TableContainer>

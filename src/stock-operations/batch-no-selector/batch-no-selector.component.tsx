@@ -24,14 +24,10 @@ interface BatchNoSelectorProps<T> {
 
 const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNos(props.stockItemUuid);
+  console.log('stockItemBatchNos', stockItemBatchNos);
   const [validationMessage, setValidationMessage] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<StockBatchDTO | null>(null);
   const { t } = useTranslation();
-
-  const initialSelectedItem = useMemo(
-    () => stockItemBatchNos?.find((stockItem) => stockItem.uuid === props.batchUuid) ?? '',
-    [stockItemBatchNos, props.batchUuid],
-  );
 
   const { items, setStockItemUuid } = useStockItemBatchInformationHook();
 
@@ -51,6 +47,10 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
   });
 
   const filteredBatches = stockItemBatchesInfo?.filter((s) => s.quantity !== undefined && s.quantity !== 0);
+  const initialSelectedItem = useMemo(
+    () => filteredBatches?.find((s) => s.uuid === props.batchUuid),
+    [filteredBatches, props.batchUuid],
+  );
 
   useEffect(() => {
     if (
@@ -72,7 +72,7 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
       <Controller
         name={props.controllerName}
         control={props.control}
-        render={({ field: { onChange, ref } }) => (
+        render={({ field: { onChange, ref, value }, fieldState: { error } }) => (
           <ComboBox
             style={{ flexGrow: '1' }}
             titleText={props.title}
@@ -80,7 +80,6 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             control={props.control}
             controllerName={props.controllerName}
             id={props.name}
-            size={'sm'}
             items={filteredBatches || []}
             onChange={(data: { selectedItem?: StockBatchDTO }) => {
               setSelectedItem(data.selectedItem || null);
@@ -90,8 +89,8 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
             initialSelectedItem={initialSelectedItem}
             itemToString={(s: StockBatchDTO) => (s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'}` : '')}
             placeholder={props.placeholder}
-            invalid={props.invalid}
-            invalidText={props.invalidText}
+            invalid={props.invalid ?? error?.message}
+            invalidText={props.invalidText ?? error?.message}
             ref={ref}
           />
         )}
