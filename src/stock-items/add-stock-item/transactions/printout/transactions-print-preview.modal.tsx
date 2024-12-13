@@ -19,7 +19,7 @@ const TransactionsPrintPreview: React.FC<Props> = ({ onClose, title, columns, da
   });
   return (
     <>
-      <ModalHeader closeModal={onClose} title={t('print', 'Print')} />
+      <ModalHeader closeModal={onClose} title={t('printbincard', 'Print Bin Card')} />
       <ModalBody>
         <div ref={ref}>
           <TransactionsPrintout title={title} columns={columns} data={data} />

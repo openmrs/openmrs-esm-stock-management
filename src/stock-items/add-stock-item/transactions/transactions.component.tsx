@@ -13,8 +13,7 @@ import StockOperationReference from '../../../stock-operations/add-stock-operati
 import { Add } from '@carbon/react/icons';
 import { Printer } from '@carbon/react/icons';
 import TransactionsPrintout from './printout/transactions-printout.component';
-import TransactionsPrintAction from './transactions-print-action.component';
-
+import TransactionsPrintAction from './printout/transactions-print-action.component';
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -25,8 +24,16 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   const { t } = useTranslation();
 
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>();
-  const { isLoading, items, tableHeaders, totalCount, setCurrentPage, setStockItemUuid, setLocationUuid } =
-    useStockItemsTransactions(stockItemFilter);
+  const {
+    isLoading,
+    items,
+    tableHeaders,
+    totalCount,
+    setCurrentPage,
+    setStockItemUuid,
+    setLocationUuid,
+    printHeaders,
+  } = useStockItemsTransactions(stockItemFilter);
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
@@ -78,8 +85,9 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
         : stockItemTransaction.stockOperationTypeName,
       quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''}`,
       batch: stockItemTransaction.stockBatchNo
-        ? `${stockItemTransaction.stockBatchNo}${stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
-        }`
+        ? `${stockItemTransaction.stockBatchNo}${
+            stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
+          }`
         : '',
       reference: (
         <StockOperationReference
@@ -90,13 +98,23 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
       status: stockItemTransaction?.stockOperationStatus ?? '',
       in:
         stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${stockItemTransaction.packagingUomFactor
-          }`
+          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${
+              stockItemTransaction.packagingUomFactor
+            }`
           : '',
       out:
         stockItemTransaction?.quantity < 0
-          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''
-          } of ${stockItemTransaction.packagingUomFactor}`
+          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
+              stockItemTransaction?.packagingUomName ?? ''
+            } of ${stockItemTransaction.packagingUomFactor}`
+          : '',
+      totalin:
+        stockItemTransaction?.quantity >= 0
+          ? `${stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
+          : '',
+      totalout:
+        stockItemTransaction?.quantity < 0
+          ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
           : '',
     }));
   }, [items]);
@@ -105,17 +123,11 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  // return <pre>{JSON.stringify(stockItem, null, 2)}</pre>
-
-  // return <TransactionsPrintout title={stockItem.drugName || stockItem.conceptName || ''} columns={tableHeaders}
-  // data={tableRows}/>
-
   return (
     <DataList
       children={() => (
         <>
-          <TransactionsPrintAction columns={tableHeaders}
-            data={tableRows} itemUuid={stockItemUuid} />
+          <TransactionsPrintAction columns={printHeaders} data={tableRows} itemUuid={stockItemUuid} />
           <TransactionsLocationsFilter
             onLocationIdChange={(q) => {
               setLocationUuid(q);

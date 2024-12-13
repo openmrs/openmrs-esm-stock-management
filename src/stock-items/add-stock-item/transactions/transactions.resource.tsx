@@ -76,6 +76,44 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     [],
   );
 
+  const printHeaders = useMemo(
+    () => [
+      {
+        key: 'date',
+        header: 'Date',
+      },
+      {
+        key: 'location',
+        header: 'Location',
+      },
+      {
+        key: 'transaction',
+        header: 'Transaction',
+      },
+      {
+        key: 'totalin',
+        header: 'IN',
+      },
+      {
+        key: 'totalout',
+        header: 'OUT',
+      },
+      {
+        key: 'batch',
+        header: 'Batch',
+      },
+      {
+        key: 'reference',
+        header: 'Reference',
+      },
+      {
+        key: 'status',
+        header: 'Status',
+      },
+    ],
+    [],
+  );
+
   return {
     items: items.results,
     totalCount: items.totalCount,
@@ -92,5 +130,6 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     setLocationUuid,
     setPartyUuid,
     setStockBatchUuid,
+    printHeaders,
   };
 }
