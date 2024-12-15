@@ -39,6 +39,7 @@ import { launchAddOrEditDialog } from './stock-operation.utils';
 import StockOperationsFilters from './stock-operations-filters.component';
 import { useStockOperationPages } from './stock-operations-table.resource';
 
+import { Link } from '@carbon/react';
 import StockOperationExpandedRow from './add-stock-operation/stock-operations-expanded-row/stock-operation-expanded-row.component';
 import styles from './stock-operations-table.scss';
 
@@ -158,11 +159,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             showprops={true}
           />
         ),
-        stockOperationItems:
-          commonNames +
-          (itemCountGreaterThanThreshhold
-            ? `, ...(${stockOperation?.stockOperationItems?.length - threshHold} more)`
-            : ''),
+        stockOperationItems: {
+          commonNames,
+          more: itemCountGreaterThanThreshhold ? stockOperation?.stockOperationItems?.length - threshHold : 0,
+        },
         status: `${stockOperation?.status}`,
         source: `${stockOperation?.sourceName ?? ''}`,
         destination: `${stockOperation?.destinationName ?? ''}`,
@@ -210,7 +210,16 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
+        render={({
+          rows,
+          headers,
+          getHeaderProps,
+          getTableProps,
+          getRowProps,
+          onInputChange,
+          getExpandedRowProps,
+          expandRow,
+        }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -285,18 +294,28 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               </TableHead>
               <TableBody>
                 {rows?.map((row: any, index) => {
+                  const props = getRowProps({ row });
+                  const expandedRowProps = getExpandedRowProps({ row });
                   return (
                     <React.Fragment key={row.id}>
-                      <TableExpandRow
-                        className={isDesktop ? styles.desktopRow : styles.tabletRow}
-                        {...getRowProps({ row })}
-                      >
+                      <TableExpandRow className={isDesktop ? styles.desktopRow : styles.tabletRow} {...props}>
                         {row.cells.map((cell) => (
-                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                          <TableCell key={cell.id}>
+                            {cell?.info?.header === 'stockOperationItems' ? (
+                              <span>
+                                <span>{cell.value.commonNames}</span>
+                                {cell.value.more > 0 && (
+                                  <Link onClick={() => expandRow(row.id)}>{`...(${cell.value.more} more)`}</Link>
+                                )}
+                              </span>
+                            ) : (
+                              cell.value
+                            )}
+                          </TableCell>
                         ))}
                       </TableExpandRow>
                       {row.isExpanded ? (
-                        <TableExpandedRow colSpan={headers.length + 2}>
+                        <TableExpandedRow colSpan={headers.length + 2} {...expandedRowProps}>
                           <StockOperationExpandedRow model={items[index]} />
                         </TableExpandedRow>
                       ) : (

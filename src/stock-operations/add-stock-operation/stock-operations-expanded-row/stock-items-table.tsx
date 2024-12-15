@@ -47,7 +47,7 @@ const StockItemsTable: React.FC<Props> = ({ items }) => {
         key: 'expiration',
       },
       {
-        header: t('quantity', 'Qty'),
+        header: t('qty', 'Qty'),
         key: 'quantity',
       },
       {
