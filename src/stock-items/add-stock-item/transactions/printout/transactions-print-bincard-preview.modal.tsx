@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import TransactionsPrintout from './transactions-printout.component';
+import TransactionsBincardPrintout from './transactions-bincard-printout.component';
 import { ModalBody, ModalHeader, ModalFooter, Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
@@ -8,9 +8,10 @@ type Props = {
   title?: string;
   columns: any;
   data: any;
+  binOrStockCard: number;
 };
 
-const TransactionsPrintPreview: React.FC<Props> = ({ onClose, title, columns, data }) => {
+const TransactionsBincardPrintPreview: React.FC<Props> = ({ onClose, title, columns, data, binOrStockCard }) => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -22,7 +23,7 @@ const TransactionsPrintPreview: React.FC<Props> = ({ onClose, title, columns, da
       <ModalHeader closeModal={onClose} title={t('printbincard', 'Print Bin Card')} />
       <ModalBody>
         <div ref={ref}>
-          <TransactionsPrintout title={title} columns={columns} data={data} />
+          <TransactionsBincardPrintout title={title} columns={columns} data={data} />
         </div>
       </ModalBody>
       <ModalFooter>
@@ -37,4 +38,4 @@ const TransactionsPrintPreview: React.FC<Props> = ({ onClose, title, columns, da
   );
 };
 
-export default TransactionsPrintPreview;
+export default TransactionsBincardPrintPreview;

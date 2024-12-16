@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import StockOperationReference from '../../../stock-operations/add-stock-operation/stock-operation-reference.component';
 import { Add } from '@carbon/react/icons';
 import { Printer } from '@carbon/react/icons';
-import TransactionsPrintout from './printout/transactions-printout.component';
+import TransactionsPrintout from './printout/transactions-bincard-printout.component';
 import TransactionsPrintAction from './printout/transactions-print-action.component';
 
 interface TransactionsProps {
@@ -32,7 +32,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     setCurrentPage,
     setStockItemUuid,
     setLocationUuid,
-    printHeaders,
+    binCardHeaders,
   } = useStockItemsTransactions(stockItemFilter);
 
   useEffect(() => {
@@ -135,7 +135,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     <DataList
       children={() => (
         <>
-          <TransactionsPrintAction columns={printHeaders} data={tableRows} itemUuid={stockItemUuid} />
+          <TransactionsPrintAction columns={binCardHeaders} data={tableRows} itemUuid={stockItemUuid} />
           <TransactionsLocationsFilter
             onLocationIdChange={(q) => {
               setLocationUuid(q);
