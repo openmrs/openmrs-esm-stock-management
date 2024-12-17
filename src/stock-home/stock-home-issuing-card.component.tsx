@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
 import { navigate, useLayoutType } from '@openmrs/esm-framework';
@@ -6,6 +6,7 @@ import styles from './stock-home-detail-card.scss';
 import { ResourceRepresentation } from '../core/api/api';
 import { DocumentImport } from '@carbon/react/icons';
 import { useStockIssuing } from './stock-home-issuing.resource';
+import IssuingStockModal from './stock-home-issuing-modal.component';
 
 const StockHomeIssuingCard = () => {
   const { t } = useTranslation();
@@ -15,6 +16,8 @@ const StockHomeIssuingCard = () => {
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   if (isLoading) return <></>;
 
@@ -64,7 +67,7 @@ const StockHomeIssuingCard = () => {
           </div>
         </div>
       ))}
-      <Button
+      {/* <Button
         onClick={() => {
           navigate({
             to: `${window.getOpenmrsSpaBase()}stock-management/requisitions`,
@@ -73,7 +76,12 @@ const StockHomeIssuingCard = () => {
         kind="ghost"
       >
         View All
+      </Button> */}
+      <Button onClick={() => setModalOpen(true)} kind="ghost">
+        View All
       </Button>
+
+      <IssuingStockModal open={isModalOpen} onClose={() => setModalOpen(false)} issuingStock={items} />
     </>
   );
 };
