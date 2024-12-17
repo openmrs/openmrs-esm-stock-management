@@ -116,14 +116,6 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
         stockItemTransaction?.quantity < 0
           ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
           : '',
-      totalin:
-        stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
-          : '',
-      totalout:
-        stockItemTransaction?.quantity < 0
-          ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
-          : '',
     }));
   }, [items]);
 
