@@ -38,7 +38,7 @@ const TransactionsLocationsFilter = <T,>(props: TransactionsLocationsFilterProps
             onChange(data?.selectedItem?.name || '');
           }}
           initialSelectedItem={`${stockLocations[0]?.name}`}
-          itemToString={(item) => t('location', `${item?.name}`)}
+          itemToString={(item) => (item ? item.name : '')}
           shouldFilterItem={() => true}
           placeholder={props.placeholder}
           ref={ref}
