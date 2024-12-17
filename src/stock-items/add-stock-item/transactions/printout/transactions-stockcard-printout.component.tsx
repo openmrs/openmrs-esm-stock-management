@@ -27,8 +27,6 @@ type Props = {
 };
 
 const TransactionsStockcardPrintout: React.FC<Props> = ({ columns, items, title }) => {
-  console.warn('ITEMS: ' + JSON.stringify(items, null, 2));
-
   const [mappedData, setMappedData] = useState([]);
   const [patientData, setPatientData] = useState({});
 
@@ -56,8 +54,6 @@ const TransactionsStockcardPrintout: React.FC<Props> = ({ columns, items, title 
 
     fetchPatients();
   }, [items]);
-
-  console.warn('PATIENTS: ' + JSON.stringify(patientData, null, 2));
 
   useEffect(() => {
     // Map items with patient data
@@ -130,8 +126,6 @@ const TransactionsStockcardPrintout: React.FC<Props> = ({ columns, items, title 
 
     setMappedData(data);
   }, [items, patientData]);
-
-  console.warn('MAPPED ITEMS: ' + JSON.stringify(mappedData, null, 2));
 
   return (
     <div>
