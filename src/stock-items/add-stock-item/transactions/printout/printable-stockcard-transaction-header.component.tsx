@@ -8,14 +8,14 @@ interface PrintableTransactionHeaderProps {
   itemName: string;
 }
 
-const PrintableTransactionHeader: React.FC<PrintableTransactionHeaderProps> = ({ itemName }) => {
+const PrintableStockcardTransactionHeader: React.FC<PrintableTransactionHeaderProps> = ({ itemName }) => {
   const { t } = useTranslation();
   const { logo } = useConfig({ externalModuleName: '@kenyaemr/esm-login-app' });
 
   return (
     <div className={styles.container}>
       <div className={styles.printableHeader}>
-        <p className={styles.heading}>{t('bincard', 'Bin Card')}</p>
+        <p className={styles.heading}>{t('bincard', 'Stock Card')}</p>
         {logo?.src ? (
           <img className={styles.img} height={60} width={250} src={logo.src} alt={logo.alt} />
         ) : logo?.name ? (
@@ -49,4 +49,4 @@ const PrintableTransactionHeader: React.FC<PrintableTransactionHeaderProps> = ({
   );
 };
 
-export default PrintableTransactionHeader;
+export default PrintableStockcardTransactionHeader;

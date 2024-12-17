@@ -76,7 +76,7 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     [],
   );
 
-  const printHeaders = useMemo(
+  const binCardHeaders = useMemo(
     () => [
       {
         key: 'date',
@@ -130,6 +130,6 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     setLocationUuid,
     setPartyUuid,
     setStockBatchUuid,
-    printHeaders,
+    binCardHeaders,
   };
 }
