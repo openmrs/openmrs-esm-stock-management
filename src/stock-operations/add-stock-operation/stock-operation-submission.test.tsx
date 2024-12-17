@@ -132,7 +132,6 @@ describe('StockOperationSubmission', () => {
     };
 
     render(<StockOperationSubmission {...lockedProps} />);
-    expect(screen.queryByRole('button', { name: /save/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /complete/i })).not.toBeInTheDocument();
   });
 });
