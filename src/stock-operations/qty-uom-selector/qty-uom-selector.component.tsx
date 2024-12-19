@@ -20,6 +20,7 @@ interface QtyUomSelectorProps<T> {
 }
 
 const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
+  const { onStockPackageChanged } = props;
   const { isLoading, error, item } = useStockItem(props.stockItemUuid ?? props['uuid']);
   const initialSelectedItem = useMemo<StockItemPackagingUOMDTO | null>(
     () => (item?.packagingUnits?.length > 0 ? item.packagingUnits[0] : null),
@@ -27,8 +28,8 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
   );
 
   useEffect(() => {
-    if (initialSelectedItem) props.onStockPackageChanged?.(initialSelectedItem);
-  }, [initialSelectedItem, props]);
+    if (initialSelectedItem) onStockPackageChanged?.(initialSelectedItem);
+  }, [initialSelectedItem, onStockPackageChanged]);
 
   if (isLoading || error) return <SkeletonText />;
 
