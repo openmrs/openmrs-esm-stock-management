@@ -1,15 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStockItemsTransactions } from './transactions.resource';
-import { DataTableSkeleton } from '@carbon/react';
+import { DataTableSkeleton, Button } from '@carbon/react';
 import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
 import { ArrowLeft } from '@carbon/react/icons';
 import DataList from '../../../core/components/table/table.component';
 import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import TransactionsLocationsFilter from './transaction-filters/transaction-locations-filter.component';
 import { useForm } from 'react-hook-form';
-import { StockItemInventoryFilter } from '../../stock-items.resource';
+import { StockItemInventoryFilter, useStockItem } from '../../stock-items.resource';
 import { useTranslation } from 'react-i18next';
 import StockOperationReference from '../../../stock-operations/add-stock-operation/stock-operation-reference.component';
+import { Add } from '@carbon/react/icons';
+import { Printer } from '@carbon/react/icons';
+import TransactionsPrintout from './printout/transactions-bincard-printout.component';
+import TransactionsPrintAction from './printout/transactions-print-action.component';
 
 interface TransactionsProps {
   onSubmit?: () => void;
@@ -20,8 +24,16 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   const { t } = useTranslation();
 
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>();
-  const { isLoading, items, tableHeaders, totalCount, setCurrentPage, setStockItemUuid, setLocationUuid } =
-    useStockItemsTransactions(stockItemFilter);
+  const {
+    isLoading,
+    items,
+    tableHeaders,
+    totalCount,
+    setCurrentPage,
+    setStockItemUuid,
+    setLocationUuid,
+    binCardHeaders,
+  } = useStockItemsTransactions(stockItemFilter);
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
@@ -96,6 +108,14 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
               stockItemTransaction?.packagingUomName ?? ''
             } of ${stockItemTransaction.packagingUomFactor}`
           : '',
+      totalin:
+        stockItemTransaction?.quantity >= 0
+          ? `${stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
+          : '',
+      totalout:
+        stockItemTransaction?.quantity < 0
+          ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
+          : '',
     }));
   }, [items]);
 
@@ -106,16 +126,19 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   return (
     <DataList
       children={() => (
-        <TransactionsLocationsFilter
-          onLocationIdChange={(q) => {
-            setLocationUuid(q);
-            setStockItemFilter({ ...stockItemFilter, locationUuid: q });
-          }}
-          name={'TransactionLocationUuid'}
-          placeholder={t('filterByLocation', 'Filter by Location')}
-          control={control}
-          controllerName="TransactionLocationUuid"
-        />
+        <>
+          <TransactionsPrintAction columns={binCardHeaders} data={tableRows} itemUuid={stockItemUuid} />
+          <TransactionsLocationsFilter
+            onLocationIdChange={(q) => {
+              setLocationUuid(q);
+              setStockItemFilter({ ...stockItemFilter, locationUuid: q });
+            }}
+            name={'TransactionLocationUuid'}
+            placeholder={t('filterByLocation', 'Filter by Location')}
+            control={control}
+            controllerName="TransactionLocationUuid"
+          />
+        </>
       )}
       columns={tableHeaders}
       data={tableRows}

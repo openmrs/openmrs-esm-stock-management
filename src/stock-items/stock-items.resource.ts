@@ -39,6 +39,7 @@ export interface StockItemInventoryFilter extends ResourceFilterCriteria {
   date?: string | null;
   includeStockItemName?: 'true' | 'false' | '0' | '1';
   excludeExpired?: boolean | null;
+  isPatientTransaction?: 'true' | 'false';
 }
 
 export interface StockItemPackagingUOMFilter extends ResourceFilterCriteria {

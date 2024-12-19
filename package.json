@@ -50,6 +50,7 @@
     "lodash-es": "^4.17.21",
     "react-hook-form": "^7.45.4",
     "react-image-annotate": "^1.8.0",
+    "react-to-print": "^2.14.13",
     "yup": "^1.2.0",
     "zod": "^3.22.2"
   },

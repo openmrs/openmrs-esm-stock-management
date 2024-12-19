@@ -20,6 +20,9 @@ import StockSources from './stock-sources/stock-sources.component';
 import StockLocations from './stock-locations/stock-locations.component';
 import StockReports from './stock-reports/report-list/stock-reports.component';
 import StockSettings from './stock-settings/stock-settings.component';
+import TransactionsBincardPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-bincard-preview.modal';
+import TransactionsStockcardPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-stockcard-preview.modal';
+
 const moduleName = '@openmrs/esm-stock-management-app';
 
 const options = {
@@ -131,6 +134,8 @@ export const stockOperationStockItemForm = getAsyncLifecycle(
   () => import('./stock-operations/add-stock-operation/stock-item-form/stock-item-form.workspace'),
   options,
 );
+export const transactionBincardPrintPreviewModal = getSyncLifecycle(TransactionsBincardPrintPreview, options);
+export const transactionStockcardPrintPreviewModal = getSyncLifecycle(TransactionsStockcardPrintPreview, options);
 
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);

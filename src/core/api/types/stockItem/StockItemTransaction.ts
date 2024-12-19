@@ -20,4 +20,6 @@ export interface StockItemTransactionDTO {
   packagingUomName: string;
   operationSourcePartyName: string;
   operationDestinationPartyName: string;
+  patientId: number;
+  patientUuid: string;
 }
