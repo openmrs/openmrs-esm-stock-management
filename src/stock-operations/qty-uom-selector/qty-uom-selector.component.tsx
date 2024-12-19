@@ -26,6 +26,10 @@ const QtyUomSelector = <T,>(props: QtyUomSelectorProps<T>) => {
     [item?.packagingUnits],
   );
 
+  useEffect(() => {
+    if (initialSelectedItem) props.onStockPackageChanged?.(initialSelectedItem);
+  }, [initialSelectedItem, props]);
+
   if (isLoading || error) return <SkeletonText />;
 
   return (

@@ -66,9 +66,8 @@ const StockOperationSubmission: React.FC<StockOperationSubmissionProps> = ({
           />
         </>
       )}
-
       {canEdit && !locked && (
-        <div className="stkpg-form-buttons" style={{ margin: '10px' }}>
+        <div style={{ margin: '10px' }}>
           {approvalRequired != null && (
             <>
               {!requiresDispatchAcknowledgement && !approvalRequired && (

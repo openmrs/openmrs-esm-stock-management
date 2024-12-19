@@ -48,7 +48,6 @@ export interface StockItemFormProps {
 interface Props extends DefaultWorkspaceProps, StockItemFormProps {}
 const StockItemForm: React.FC<Props> = ({
   closeWorkspace,
-  promptBeforeClosing,
   batchBalance,
   canCapturePurchasePrice,
   canUpdateBatchInformation,
@@ -66,12 +65,6 @@ const StockItemForm: React.FC<Props> = ({
     },
   });
   const { t } = useTranslation();
-
-  useEffect(() => {
-    return () => {
-      promptBeforeClosing(() => form.formState.isDirty);
-    };
-  }, [promptBeforeClosing, form.formState.isDirty]);
 
   const onSubmit = (data: StockItemFormData) => {
     onSave?.(data);
@@ -200,9 +193,8 @@ const StockItemForm: React.FC<Props> = ({
           <QtyUomSelector
             stockItemUuid={stockOperationItem?.stockItemUuid}
             onStockPackageChanged={(selectedItem) => {
-              // alert(JSON.stringify(selectedItem, null, 2));
               form.setValue('stockItemPackagingUOMUuid', selectedItem.uuid);
-              // setValue(`stockItems.${index}.stockItemPackagingUOMUuid`, selectedItem?.uuid);
+              form.setValue('stockItemPackagingUOMName', selectedItem.packagingUomName);
             }}
             placeholder={'Filter...'}
             title={t('quantityUom', 'Qty UoM')}

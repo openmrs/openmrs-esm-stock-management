@@ -79,8 +79,9 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   const handleSave = async (item: StockOperationDTO) => {
     try {
       setIsSaving(true);
-      const payload = createBaseOperationPayload(model, item, operationType);
-      await onSave(payload);
+      const currModel: StockOperationDTO = { ...model };
+      const payload = createBaseOperationPayload(currModel, item, operationType);
+      await onSave({ ...payload, uuid: model.uuid });
     } catch (e) {
       showSnackbar({
         title: t('errorSavingBaseOperation', 'Error saving base operation'),

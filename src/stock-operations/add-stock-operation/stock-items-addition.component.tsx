@@ -12,7 +12,7 @@ import {
 import { ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isDesktop, launchWorkspace } from '@openmrs/esm-framework';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
@@ -23,15 +23,14 @@ import { SaveStockOperation } from '../../stock-items/types';
 import { InitializeResult } from './types';
 import { useValidationSchema } from './validationSchema';
 
-import { TableCell } from '@carbon/react';
+import { Link, TableCell } from '@carbon/react';
 import { formatForDatePicker, URL_STOCK_ITEM } from '../../constants';
 import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { getStockOperationUniqueId } from '../stock-operation.utils';
 import StockAvailability from './stock-item-form/stock-availability.component';
+import { StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
 import StockItemSearch from './stock-item-search/stock-item-search.component';
 import styles from './stock-items-addition.component.scss';
-import { Link } from '@carbon/react';
-import { StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
-import { getStockOperationUniqueId } from '../stock-operation.utils';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -75,17 +74,24 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   const formMethods = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      stockItems: model?.stockOperationItems ?? [{ uuid: `new-item-1`, id: `new-item-1` }],
+      stockItems: model?.stockOperationItems ?? [],
     },
     mode: 'onSubmit',
   });
 
   const {
     handleSubmit,
-    control,
-    setValue,
     formState: { errors },
   } = formMethods;
+
+  useEffect(() => {
+    if (errors && Object.keys(errors).length > 0) {
+      Object.keys(errors).forEach((key) => {
+        alert(`${key} error:${JSON.stringify(errors[key])}`);
+        errorAlert(key, JSON.stringify(errors[key]));
+      });
+    }
+  }, [errors]);
 
   const [isSaving] = useState(false);
 
@@ -145,7 +151,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     ...(canCaptureQuantityPrice
       ? [
           {
-            key: 'purchaseprice',
+            key: 'purchasePrice',
             header: t('purchasePrice', 'Purchase Price'),
           },
         ]
@@ -211,17 +217,23 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
         operationType,
         stockOperationItem: stockOperationItem,
         onSave: (item) => {
-          const currItems = items;
-          const updateIndex = currItems.findIndex((it) => it.uuid === stockOperationItem.uuid);
-          if (updateIndex !== -1) {
-            currItems[updateIndex] = { ...item, uuid: stockOperationItem.uuid, id: stockOperationItem.id };
-            setItems(currItems);
-          }
+          setItems((prevItems) => {
+            return prevItems.map((currentItem) => {
+              if (currentItem.uuid === stockOperationItem.uuid) {
+                return {
+                  ...currentItem,
+                  ...item,
+                  uuid: stockOperationItem.uuid,
+                  id: stockOperationItem.id,
+                };
+              }
+              return currentItem;
+            });
+          });
         },
       } as StockItemFormProps),
     });
   };
-
   return (
     <FormProvider {...formMethods}>
       <div style={{ margin: '10px' }}>
@@ -248,6 +260,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
               expiry: formatForDatePicker(row.expiration),
               quantity: row?.quantity?.toLocaleString(),
               quantityuom: row?.stockItemPackagingUOMName ?? '--',
+              purchasePrice: row.purchasePrice,
             }))}
             headers={headers}
             isSortable={false}
@@ -278,7 +291,17 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                               name="save"
                               type="button"
                               className="submitButton"
-                              onClick={() => handleSubmit((_) => handleSave({ stockItems: items }))()}
+                              onClick={() =>
+                                handleSubmit((_) => {
+                                  handleSave({
+                                    stockItems: items.map((item) => ({
+                                      ...item,
+                                      id: item?.id?.startsWith('new-item') || !item.id ? undefined : item.id,
+                                      uuid: item?.uuid?.startsWith('new-item') || !item.uuid ? undefined : item.uuid,
+                                    })),
+                                  });
+                                })()
+                              }
                               kind="primary"
                               renderIcon={ArrowRight}
                             >
@@ -319,6 +342,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
                               renderIcon={TrashCan}
                               onClick={() => {
                                 //  TODO handle remove item
+                                setItems((prevItems) => prevItems.filter(({ uuid }) => uuid !== row.id));
                               }}
                             />
                           </TableCell>
