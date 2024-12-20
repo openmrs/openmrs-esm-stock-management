@@ -58,6 +58,7 @@ const StockItemForm: React.FC<Props> = ({
   stockOperationItem,
 }) => {
   const schema = useStockItemValidationSchema(operationType);
+  const fields = schema.keyof().options;
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -75,24 +76,6 @@ const StockItemForm: React.FC<Props> = ({
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
         <p className={styles.title}>{stockOperationItem?.commonName}</p>
-        {/* <pre>
-          {JSON.stringify(
-            {
-              // batchBalance,
-              // batchNos,
-              // canCapturePurchasePrice,
-              // canUpdateBatchInformation,
-              // itemUoM,
-              // requiresActualBatchInformation,
-              // requiresBatchUuid,
-              // showQuantityRequested,
-              stockOperationItem,
-            },
-            null,
-            2,
-          )}
-        </pre> */}
-        <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
         {requiresActualBatchInformation && (
           <Column>
             <Controller
@@ -130,7 +113,7 @@ const StockItemForm: React.FC<Props> = ({
             stockItemUuid={stockOperationItem.stockItemUuid}
           />
         )}
-        {(requiresActualBatchInformation || requiresBatchUuid) && (
+        {(requiresActualBatchInformation || requiresBatchUuid) && fields.includes('expiration' as any) && (
           <Column>
             <Controller
               control={form.control}

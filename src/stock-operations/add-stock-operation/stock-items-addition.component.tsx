@@ -87,7 +87,6 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   useEffect(() => {
     if (errors && Object.keys(errors).length > 0) {
       Object.keys(errors).forEach((key) => {
-        alert(`${key} error:${JSON.stringify(errors[key])}`);
         errorAlert(key, JSON.stringify(errors[key]));
       });
     }
