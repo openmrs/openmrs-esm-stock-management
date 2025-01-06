@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { useOrderPrice } from '../hooks/useOrderPrice';
 import styles from './order-price-details.scss';
 import { SkeletonText, Tooltip } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { getLocale, InformationIcon } from '@openmrs/esm-framework';
+import { Information } from '@carbon/react/icons';
+import { useStockItem } from '../stock-items.resource';
 
 interface OrderPriceDetailsComponentProps {
   orderItemUuid: string;
@@ -11,38 +11,14 @@ interface OrderPriceDetailsComponentProps {
 
 const OrderPriceDetailsComponent: React.FC<OrderPriceDetailsComponentProps> = ({ orderItemUuid }) => {
   const { t } = useTranslation();
-  const locale = getLocale();
-  const { data: priceData, isLoading, error } = useOrderPrice(orderItemUuid);
+  const { item: priceData, isLoading, error } = useStockItem(orderItemUuid);
 
   const amount = useMemo(() => {
-    if (!priceData || priceData.entry.length === 0) {
+    if (!priceData || priceData) {
       return null;
     }
-    return priceData.entry[0].resource.propertyGroup[0]?.priceComponent[0]?.amount;
+    return priceData.purchasePrice;
   }, [priceData]);
-
-  const formattedPrice = useMemo((): string => {
-    if (!amount) return '';
-    try {
-      new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: amount.currency,
-      });
-
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: amount.currency,
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(amount.value);
-    } catch (error) {
-      console.error(`Invalid currency code: ${amount.currency}. Error: ${error.message}`);
-      return `${new Intl.NumberFormat(locale, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(amount.value)} ${amount.currency}`;
-    }
-  }, [locale, amount]);
 
   if (isLoading) {
     return <SkeletonText width="100px" role="progressbar" />;
@@ -55,7 +31,7 @@ const OrderPriceDetailsComponent: React.FC<OrderPriceDetailsComponentProps> = ({
   return (
     <div className={styles.priceDetailsContainer}>
       <span className={styles.priceLabel}>{t('price', 'Price')}:</span>
-      {formattedPrice}
+      {amount}
       <Tooltip
         align="bottom-left"
         className={styles.priceToolTip}
@@ -65,7 +41,7 @@ const OrderPriceDetailsComponent: React.FC<OrderPriceDetailsComponentProps> = ({
         )}
       >
         <button className={styles.priceToolTipTrigger} type="button">
-          <InformationIcon size={16} />
+          <Information size={16} />
         </button>
       </Tooltip>
     </div>

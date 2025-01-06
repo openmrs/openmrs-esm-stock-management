@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { CheckmarkFilledIcon, CloseFilledIcon } from '@openmrs/esm-framework';
-import { useOrderStockInfo } from '../hooks/useOrderStockInfo';
 import styles from './order-stock-details.scss';
 import { SkeletonText } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
+import { useStockItem } from '../stock-items.resource';
+import { CheckmarkOutline, Misuse } from '@carbon/react/icons';
 
 interface OrderStockDetailsComponentProps {
   orderItemUuid: string;
@@ -11,23 +11,20 @@ interface OrderStockDetailsComponentProps {
 
 const OrderStockDetailsComponent: React.FC<OrderStockDetailsComponentProps> = ({ orderItemUuid }) => {
   const { t } = useTranslation();
-  const { data: stockData, isLoading, error } = useOrderStockInfo(orderItemUuid);
+  const { item: stockData, isLoading, error } = useStockItem(orderItemUuid);
 
   const isInStock = useMemo(() => {
-    if (!stockData?.entry?.length) {
+    if (!stockData) {
       return false;
     }
-    const resource = stockData.entry[0]?.resource;
-    return (
-      resource?.status === 'active' && typeof resource?.netContent?.value === 'number' && resource.netContent.value > 0
-    );
+    return true;
   }, [stockData]);
 
   if (isLoading) {
     return <SkeletonText width="100px" role="progressbar" />;
   }
 
-  if (!stockData?.entry || error) {
+  if (!stockData || error) {
     return null;
   }
 
@@ -35,11 +32,11 @@ const OrderStockDetailsComponent: React.FC<OrderStockDetailsComponentProps> = ({
     <div>
       {isInStock ? (
         <div className={styles.itemInStock}>
-          <CheckmarkFilledIcon size={16} className={styles.itemInStockIcon} /> {t('inStock', 'In stock')}
+          <CheckmarkOutline size={16} className={styles.itemInStockIcon} /> {t('inStock', 'In stock')}
         </div>
       ) : (
         <div className={styles.itemOutOfStock}>
-          <CloseFilledIcon size={16} className={styles.itemOutOfStockIcon} /> {t('outOfStock', 'Out of stock')}
+          <Misuse size={16} className={styles.itemOutOfStockIcon} /> {t('outOfStock', 'Out of stock')}
         </div>
       )}
     </div>
