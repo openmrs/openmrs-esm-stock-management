@@ -28,19 +28,15 @@ const OrderStockDetailsComponent: React.FC<OrderStockDetailsComponentProps> = ({
   }, [item]);
 
   const isInStock = useMemo(() => {
-    if (results && results.length > 0) {
-      // Find the default dispensing unit
-      const defaultDispensingUnit = results[0].packagingUnits.find((unit) => {
-        return unit?.isDefaultStockOperationsUoM && unit?.isDispensingUnit;
-      });
+    if (!results || results.length === 0) return false;
 
-      // Check if the factor of the default dispensing unit is greater than 0
-      if (defaultDispensingUnit && defaultDispensingUnit.factor > 0) {
-        return true; // In Stock
-      }
-    }
+    // Extract the default dispensing unit with factor > 0
+    const defaultDispensingUnit = results[0].packagingUnits.find(
+      (unit) => unit?.isDefaultStockOperationsUoM && unit?.isDispensingUnit && unit?.factor > 0,
+    );
 
-    return false; // Out of Stock
+    // Return true if a valid unit with factor > 0 is found
+    return !!defaultDispensingUnit;
   }, [results]);
 
   return (

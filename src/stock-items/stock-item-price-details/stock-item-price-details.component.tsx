@@ -12,23 +12,38 @@ interface OrderPriceDetailsComponentProps {
 
 const OrderPriceDetailsComponent: React.FC<OrderPriceDetailsComponentProps> = ({ orderItemUuid }) => {
   const { t } = useTranslation();
-
   const { item } = useOrderItemDetails(orderItemUuid);
-
   const [results, setResults] = useState<StockItemDTO[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (item && item.uuid) {
-      fetchStockItem(item.uuid).then((response) => {
-        setResults(response);
-      });
-    }
-  }, [item]);
+    const fetchResults = async () => {
+      if (item?.uuid) {
+        setIsLoading(true);
+        try {
+          const response = await fetchStockItem(item.uuid);
+          setResults(response);
+        } catch (error) {
+          setIsLoading(false);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchResults();
+  }, [item?.uuid]);
+
+  const purchasePrice = results[0]?.purchasePrice;
 
   return (
     <div className={styles.priceDetailsContainer}>
       <span className={styles.priceLabel}>{t('price', 'Price')}:</span>
-      {results[0]?.purchasePrice}
+      {isLoading ? (
+        <SkeletonText width="100px" role="progressbar" />
+      ) : (
+        <span>{purchasePrice ? purchasePrice : t('noPrice', 'N/A')}</span>
+      )}
       <Tooltip
         align="bottom-left"
         className={styles.priceToolTip}
