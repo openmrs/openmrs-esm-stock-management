@@ -3,7 +3,8 @@ import { Button, Stack, ComboButton, MenuItem } from '@carbon/react';
 import { Printer } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { useStockItem } from '../../../stock-items.resource';
-import { showModal } from '@openmrs/esm-framework';
+import { showModal, useConfig } from '@openmrs/esm-framework';
+import { type ConfigObject } from '../../../../config-schema';
 import styles from './printable-transaction.scss';
 import { useEffect, useMemo, useState } from 'react';
 import { StockItemInventoryFilter, useStockItemTransactions } from '../../../stock-items.resource';
@@ -17,6 +18,8 @@ type Props = {
 
 const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid }) => {
   const { t } = useTranslation();
+
+  const { enablePrintButton } = useConfig<ConfigObject>();
 
   const [stockCardItemFilter, setStockCardItemFilter] = useState<StockItemInventoryFilter>({
     startIndex: 0,
@@ -86,22 +89,24 @@ const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid }) =
 
   return (
     <>
-      <ComboButton label="Print">
-        <MenuItem
-          label={t('printStockCard', 'Print Stock Card')}
-          renderIcon={(props) => <Printer size={24} {...props} />}
-          iconDescription="Print Stock Card"
-          onClick={handleStockcardClick}
-          disabled={isStockItemLoading || isStockCardLoading}
-        />
-        <MenuItem
-          label={t('printBinCard', 'Print Bin Card')}
-          renderIcon={(props) => <Printer size={24} {...props} />}
-          iconDescription="Print Bin Card"
-          onClick={handleBincardClick}
-          disabled={isStockItemLoading}
-        />
-      </ComboButton>
+      {enablePrintButton && (
+        <ComboButton label="Print">
+          <MenuItem
+            label={t('printStockCard', 'Print Stock Card')}
+            renderIcon={(props) => <Printer size={24} {...props} />}
+            iconDescription="Print Stock Card"
+            onClick={handleStockcardClick}
+            disabled={isStockItemLoading || isStockCardLoading}
+          />
+          <MenuItem
+            label={t('printBinCard', 'Print Bin Card')}
+            renderIcon={(props) => <Printer size={24} {...props} />}
+            iconDescription="Print Bin Card"
+            onClick={handleBincardClick}
+            disabled={isStockItemLoading}
+          />
+        </ComboButton>
+      )}
     </>
   );
 };
