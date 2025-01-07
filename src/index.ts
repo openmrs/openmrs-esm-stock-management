@@ -86,11 +86,11 @@ export const stockManagement = getSyncLifecycle(stockManagementComponent, option
 
 // stock details  (balances and prices)
 export const orderPriceDetailsExtension = getAsyncLifecycle(
-  () => import('./stock-items/stock-price-details/stock-item-price-details.component'),
+  () => import('./stock-items/stock-item-price-details/stock-item-price-details.component'),
   options,
 );
 export const orderStockDetailsExtension = getAsyncLifecycle(
-  () => import('./stock-items/stock-price-details/stock-item-stock-details.component'),
+  () => import('./stock-items/stock-item-price-details/stock-item-stock-details.component'),
   options,
 );
 

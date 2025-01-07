@@ -1,7 +1,7 @@
 import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
 import { PageableResult } from '../core/api/types/PageableResult';
-import { InventoryGroupBy, StockItemDTO } from '../core/api/types/stockItem/StockItem';
+import { DrugStockItem, InventoryGroupBy, StockItemDTO } from '../core/api/types/stockItem/StockItem';
 import { StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
 import useSWR from 'swr';
 import { StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
@@ -86,6 +86,24 @@ export function useStockItems(filter: StockItemFilter) {
 export function fetchStockItem(drugUuid: string) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?drugUuid=${drugUuid}&limit=1`;
   return openmrsFetch(apiUrl).then(({ data }) => data);
+}
+
+// get orderItem details
+export function useOrderItemDetails(uuid: string) {
+  const apiUrl = `${restBaseUrl}/drug/${uuid}`;
+
+  const { data, error, isLoading } = useSWR<
+    {
+      data: DrugStockItem;
+    },
+    Error
+  >(apiUrl, openmrsFetch);
+
+  return {
+    item: data?.data || <DrugStockItem>{},
+    isLoading,
+    error,
+  };
 }
 
 // getStockItemTransactions
@@ -186,6 +204,19 @@ export function useStockItem(id: string) {
     isLoading,
     error,
   };
+}
+
+export function getStockItem(id: string) {
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${id}?v=full`;
+  const abortController = new AbortController();
+
+  return openmrsFetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    signal: abortController.signal,
+  });
 }
 
 // deleteStockItems

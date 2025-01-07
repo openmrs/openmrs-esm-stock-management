@@ -174,13 +174,13 @@
       "component": "deletePackagingUnitButton"
     },
     {
-      "name": "order-price-details",
+      "name": "stock-item-price-details",
       "component": "orderPriceDetailsExtension",
       "slot": "order-item-additional-info-slot",
       "order": 0
     },
     {
-      "name": "order-stock-details",
+      "name": "stock-item-stock-details",
       "component": "orderStockDetailsExtension",
       "slot": "order-item-additional-info-slot",
       "order": 1

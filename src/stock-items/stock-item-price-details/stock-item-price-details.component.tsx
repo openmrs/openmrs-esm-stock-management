@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
-import styles from './order-price-details.scss';
+import React, { useEffect, useMemo, useState } from 'react';
+import styles from '../stock-item-price-details/stock-price-details.scss';
 import { SkeletonText, Tooltip } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { Information } from '@carbon/react/icons';
-import { useStockItem } from '../stock-items.resource';
+import { fetchStockItem, getStockItem, useOrderItemDetails, useStockItem } from '../stock-items.resource';
+import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 
 interface OrderPriceDetailsComponentProps {
   orderItemUuid: string;
@@ -11,27 +12,23 @@ interface OrderPriceDetailsComponentProps {
 
 const OrderPriceDetailsComponent: React.FC<OrderPriceDetailsComponentProps> = ({ orderItemUuid }) => {
   const { t } = useTranslation();
-  const { item: priceData, isLoading, error } = useStockItem(orderItemUuid);
 
-  const amount = useMemo(() => {
-    if (!priceData || priceData) {
-      return null;
+  const { item } = useOrderItemDetails(orderItemUuid);
+
+  const [results, setResults] = useState<StockItemDTO[]>([]);
+
+  useEffect(() => {
+    if (item && item.uuid) {
+      fetchStockItem(item.uuid).then((response) => {
+        setResults(response);
+      });
     }
-    return priceData.purchasePrice;
-  }, [priceData]);
-
-  if (isLoading) {
-    return <SkeletonText width="100px" role="progressbar" />;
-  }
-
-  if (!priceData || !amount || error) {
-    return null;
-  }
+  }, [item]);
 
   return (
     <div className={styles.priceDetailsContainer}>
       <span className={styles.priceLabel}>{t('price', 'Price')}:</span>
-      {amount}
+      {results[0]?.purchasePrice}
       <Tooltip
         align="bottom-left"
         className={styles.priceToolTip}
