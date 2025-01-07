@@ -174,6 +174,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
         canCapturePurchasePrice: canCaptureQuantityPrice,
         itemUoM,
         operationType,
+        canEdit,
         stockOperationItem: {
           uuid: itemId,
           id: itemId,
@@ -214,6 +215,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
         canCapturePurchasePrice: canCaptureQuantityPrice,
         itemUoM,
         operationType,
+        canEdit,
         stockOperationItem: stockOperationItem,
         onSave: (item) => {
           setItems((prevItems) => {

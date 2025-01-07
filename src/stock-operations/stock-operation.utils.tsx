@@ -83,7 +83,7 @@ export const launchAddOrEditDialog = (
         }),
     <AddStockOperation
       model={stockOperation}
-      onSave={(stockOperation) => addOrEditStockOperation(t, stockOperation, isEditing, operation)}
+      onSave={(stockOperation) => addOrEditStockOperation(t, stockOperation, isEditing, operation)} // TODO Remove unused
       isEditing={isEditing}
       operation={operation}
       canEdit={isEditing ? (stockOperation?.status === 'NEW' ? true : false) : true}

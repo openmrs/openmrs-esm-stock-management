@@ -47,7 +47,7 @@ export interface InitializeResult {
 export interface AddStockOperationProps {
   isEditing?: boolean;
   model?: StockOperationDTO;
-  onSave?: SaveStockOperation;
+  onSave?: SaveStockOperation; // TODO remove unused
   operation: StockOperationType;
   operations?: StockOperationType[];
   canPrint?: boolean;
