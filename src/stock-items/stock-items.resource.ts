@@ -84,7 +84,7 @@ export function useStockItems(filter: StockItemFilter) {
 
 // fetch filtered stock item
 export function fetchStockItem(drugUuid: string) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?drugUuid=${drugUuid}&limit=1`;
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?drugUuid=${drugUuid}&v=full`;
   return openmrsFetch(apiUrl).then(({ data }) => data);
 }
 
