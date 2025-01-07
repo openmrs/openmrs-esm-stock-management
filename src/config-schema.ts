@@ -5,6 +5,16 @@ export const configSchema = {
     _default: false,
     _description: 'Whether to print item costs on the print out',
   },
+  enablePrintButton: {
+    _type: Type.Boolean,
+    _default: true,
+    _description: 'Enable or disable the print button in the stock management UI',
+  },
+  autoPopulateResponsiblePerson: {
+    type: Type.Boolean,
+    _default: false,
+    _description: 'Auto populate responsible person in stock operations with the currently logged in user',
+  },
   printBalanceOnHand: {
     type: Type.Boolean,
     _default: false,
@@ -55,6 +65,8 @@ export const configSchema = {
 };
 
 export type ConfigObject = {
+  autoPopulateResponsiblePerson: boolean;
+  enablePrintButton: boolean;
   printItemCost: boolean;
   printBalanceOnHand: boolean;
   packagingUnitsUUID: string;

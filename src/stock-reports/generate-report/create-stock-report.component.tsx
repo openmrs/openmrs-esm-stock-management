@@ -94,6 +94,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
   const handleReportNameChange = (name: string) => {
     setSelectedReportName(name);
   };
+
   useEffect(() => {
     let hasResetParameters = false;
     if (selectedReportName) {
@@ -176,7 +177,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.Fullfillment,
           (report.fullFillment ?? ['All']).join(','),
           (report.fullFillment ?? ['All']).join(', '),
-          t('editFullfillmentReport', 'stockmanagement.report.edit.fullfillment'),
+          t('fulfillment', 'Fulfillment'),
           newLine,
         );
       }
@@ -212,14 +213,14 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.InventoryGroupBy,
           report.inventoryGroupBy ?? 'LocationStockItemBatchNo',
           report.inventoryGroupByName?.trim() ?? 'Stock Item Batch Number',
-          t('displayInventoryReport', 'stockmanagement.report.edit.inventorygroupby'),
+          t('inventoryGroupBy', 'Inventory group by'),
           newLine,
         );
       }
       if (displayLocation) {
         parameters += getReportParameter(
           ReportParameter.Location,
-          report.location,
+          report.locationUuid,
           report.location?.trim() ?? '',
           t('location', 'Location'),
           newLine,
@@ -239,7 +240,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.MaxReorderLevelRatio,
           (report.maxReorderLevelRatio ?? 0).toString(),
           (report.maxReorderLevelRatio ?? 0).toString() + '%',
-          t('displayMaxReorderReport', 'stockmanagement.report.edit.maxreorderlevelratio'),
+          t('maxReorderLevelRatio', 'Max reorder level ratio'),
           newLine,
         );
       }
@@ -248,7 +249,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.StockSource,
           report.stockSourceUuid ?? '',
           report.stockSource?.trim() ?? 'All Sources',
-          t('displayStockReport', 'stockmanagement.report.edit.stocksource'),
+          t('stockSource', 'Stock source'),
           newLine,
         );
       }
@@ -257,7 +258,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.StockSourceDestination,
           report.stockSourceDestinationUuid ?? '',
           report.stockSourceDestination?.trim() ?? 'All Destinations',
-          t('displayStockDestinationReport', 'stockmanagement.report.edit.stocksourcedestination'),
+          t('stockSourceDestination', 'Stock source destination'),
           newLine,
         );
       }
@@ -266,7 +267,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.MostLeastMoving,
           report.mostLeastMoving ?? 'MostMoving',
           report.mostLeastMovingName?.trim() ?? 'Most Moving',
-          t('displayMostLeastMovingReport', 'stockmanagement.report.edit.mostleastmoving'),
+          t('mostMoving', 'Most moving'),
           newLine,
         );
       }
@@ -284,7 +285,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           ReportParameter.Date,
           report.date ? JSON.stringify(report.date).replaceAll('"', '') : '',
           formatDisplayDate(report.date) ?? '',
-          t('displayReportDate', 'stockmanagement.report.edit.date'),
+          t('date', 'Date'),
           newLine,
         );
       }
@@ -472,11 +473,15 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
         )}
         {displayLocation && (
           <Select
-            name="location"
+            name="locationUuid"
             className="select-field"
             labelText={t('location', 'Location')}
             id="location"
-            onChange={(e) => setValue('location', e.target.value)}
+            onChange={(e) => {
+              const selectedLocation = stockLocations?.find((loc) => loc.id === e.target.value);
+              setValue('locationUuid', e.target.value);
+              setValue('location', selectedLocation?.name || '');
+            }}
             defaultValue=""
             invalid={errors?.location?.message}
             invalidText={errors?.location?.message}

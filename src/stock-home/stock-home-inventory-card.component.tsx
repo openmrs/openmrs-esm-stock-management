@@ -52,7 +52,8 @@ const StockHomeInventoryCard = () => {
           <div className={styles.cardText}>
             <p>EXPIRING STOCK</p>
             <p>
-              <strong>{item?.drugName}</strong> {item?.dispensingUnitName}
+              <strong>{item?.drugName}</strong> Batch No: {item?.batchNo} Quantity: {item?.quantity}{' '}
+              {item?.dispensingUnitName}
             </p>
           </div>
         </div>

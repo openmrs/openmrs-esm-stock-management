@@ -267,6 +267,14 @@ export function usePatients(filter: ConceptFilterCriteria) {
   };
 }
 
+// get a Patient
+export function usePatient(patientUuid: string) {
+  const customePresentation = 'custom:(uuid,display,identifiers,links)';
+  const url = `${restBaseUrl}/patient/${patientUuid}?v=${customePresentation}`;
+  const { isLoading, error, data } = useSWR<FetchResponse<Patient>>(url, openmrsFetch);
+  return { isLoading, error, patient: data?.data };
+}
+
 type UserRole = {
   results: Array<{
     userUuid: string;

@@ -198,6 +198,14 @@
     {
       "name": "stock-operation-dialog",
       "component": "stockOperationModal"
+    },
+    {
+      "name": "transactions-print-bincard-preview-modal",
+      "component": "transactionBincardPrintPreviewModal"
+    },
+    {
+      "name": "transactions-print-stockcard-preview-modal",
+      "component": "transactionStockcardPrintPreviewModal"
     }
   ],
   "pages": [
