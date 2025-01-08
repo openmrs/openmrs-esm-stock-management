@@ -35,8 +35,8 @@ import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resour
 import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/StockOperationLinkDTO';
 import StockOperationStatus from './stock-operation-status.component';
 import StockOperationRelatedLink from './stock-operation-related-link.component';
-import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 import { CircleDash, Printer } from '@carbon/react/icons';
+import StockOperationStepper from '../stock-operations-forms/stock-operation-stepper/stock-operation-stepper.component';
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();

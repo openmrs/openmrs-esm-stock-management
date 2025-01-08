@@ -7,7 +7,7 @@ import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, to
 import { Button, DatePicker, DatePickerInput, InlineLoading, TextInput } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { operationSchema, StockOperationFormData } from '../validation-schema';
+import { getStockOperationFormSchema, StockOperationFormData } from '../validation-schema';
 import { ArrowRight } from '@carbon/react/icons';
 import PartySelector from '../party-selector/party-selector.component';
 import UsersSelector from '../users-selector/users-selector.component';
@@ -59,7 +59,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
   } = useForm<StockOperationFormData>({
     defaultValues: operationType === 'stockissue' ? issueStockOperation : model,
     mode: 'all',
-    resolver: zodResolver(operationSchema(operationType)),
+    resolver: zodResolver(getStockOperationFormSchema(operationType)),
   });
 
   const [isOtherUser, setIsOtherUser] = useState<boolean | null>();
@@ -92,16 +92,18 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       setIsSaving(false);
     }
   };
+  // TODO Remove repeated code ini the stock operation intializer
   const sourceTags =
     operation?.stockOperationTypeLocationScopes
       ?.filter((p) => operation?.hasSource && p.isSource)
       .map((p) => p.locationTag) ?? [];
-
+  // TODO Remove repeated code ini the stock operation intializer
   const destinationTags =
     operation?.stockOperationTypeLocationScopes
       ?.filter((p) => operation?.hasDestination && p.isDestination)
       .map((p) => p.locationTag) ?? [];
 
+  // TODO Remove repeated code ini the stock operation intializer
   const sourcePartyListFilter = (sourcePartyList: Party) => {
     const isValid =
       (sourcePartyList.locationUuid &&
@@ -112,6 +114,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
     return isValid;
   };
 
+  // TODO Remove repeated code ini the stock operation intializer
   const destinationPartyListFilter = (destinationPartyList: Party) => {
     const isValid =
       (destinationPartyList.locationUuid &&
@@ -121,6 +124,7 @@ const BaseOperationDetails: React.FC<BaseOperationDetailsProps> = ({
       (destinationPartyList.stockSourceUuid && operation?.destinationType === 'Other');
     return isValid;
   };
+
   return (
     <div style={{ margin: '10px' }}>
       <form className={`${styles.formContainer} ${styles.verticalForm}`}>

@@ -38,7 +38,7 @@ export interface InitializeResult {
   sourcePartyList?: Party[];
   destinationPartyList?: Party[];
   stockOperationTypes: StockOperationType[];
-  hasQtyRequested: boolean;
+  hasQtyRequested: boolean; // TODO Remove unused
   batchNos?: { [key: string]: StockBatchDTO[] };
   itemUoM?: { [key: string]: StockItemPackagingUOMDTO[] };
   batchBalance?: { [key: string]: StockItemInventory };

@@ -100,11 +100,11 @@ export async function initializeNewStockOperation(
 
   const opType = operationFromString(currentStockOperationType.operationType);
   return {
-    batchBalance: {},
-    batchNos: {},
-    itemUoM: {},
+    batchBalance: {}, // TODO Remove never initialized
+    batchNos: {}, // TODO Remove never initialized or used
+    itemUoM: {}, // TODO rEMOVE NEVER INITIALIZED
     requisition: '',
-    showQuantityRequested: false,
+    showQuantityRequested: false, // TODO Remove -> never changed
     dto: model,
     stockItems: newItemsToCopy,
     isNegativeQuantityAllowed: StockOperationTypeIsNegativeQtyAllowed(opType),

@@ -9,6 +9,7 @@ import { OperationType, StockOperationType } from '../core/api/types/stockOperat
 import { useLocation } from 'react-router-dom';
 import { extractErrorMessagesFromResponse } from '../constants';
 import { handleMutate } from '../utils';
+import StockOperationForm from './stock-operations-forms/stock-operation-form.component';
 
 export const addOrEditStockOperation = async (
   t: TFunction,
@@ -81,14 +82,15 @@ export const launchAddOrEditDialog = (
       : t('newOperationTitle', 'New: {{operationName}}', {
           operationName: operation?.name,
         }),
-    <AddStockOperation
-      model={stockOperation}
-      onSave={(stockOperation) => addOrEditStockOperation(t, stockOperation, isEditing, operation)} // TODO Remove unused
-      isEditing={isEditing}
-      operation={operation}
-      canEdit={isEditing ? (stockOperation?.status === 'NEW' ? true : false) : true}
-      canPrint={printEnabled}
-    />,
+    // <AddStockOperation
+    //   model={stockOperation}
+    //   onSave={(stockOperation) => addOrEditStockOperation(t, stockOperation, isEditing, operation)} // TODO Remove unused
+    //   isEditing={isEditing}
+    //   operation={operation}
+    //   canEdit={isEditing ? (stockOperation?.status === 'NEW' ? true : false) : true}
+    //   canPrint={printEnabled}
+    // />,
+    <StockOperationForm stockOperationType={operation} stockOperation={stockOperation} />,
   );
 };
 
