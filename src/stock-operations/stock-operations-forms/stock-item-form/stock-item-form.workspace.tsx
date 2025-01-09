@@ -29,10 +29,11 @@ import BatchNoSelector from '../input-components/batch-no-selector.component';
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
   stockOperationItem: BaseStockOperationItemFormData;
+  onSave?: (data: BaseStockOperationItemFormData) => void;
 }
 
 interface Props extends DefaultWorkspaceProps, StockItemFormProps {}
-const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, stockOperationItem }) => {
+const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, stockOperationItem, onSave }) => {
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
@@ -50,11 +51,13 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
   const { t } = useTranslation();
   const { item } = useStockItem(form.getValues('stockItemUuid'));
   const onSubmit = (data: z.infer<typeof formschema>) => {
+    onSave?.(data);
     closeWorkspace();
     // Implementation of adding or updating itsms in items table
   };
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
+      <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
       <Stack gap={4} className={styles.grid}>
         {item?.commonName && <p className={styles.title}>{item?.commonName}</p>}
 
@@ -169,15 +172,13 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
               control={form.control}
               name={'purchasePrice' as any}
               render={({ field, fieldState: { error } }) => (
-                <NumberInput
-                  allowEmpty
-                  disableWheel
+                <TextInput
                   {...field}
-                  label={t('purchasePrice', 'Purchase Price')}
+                  labelText={t('purchasePrice', 'Purchase Price')}
                   invalid={error?.message}
                   invalidText={error?.message}
                   id={`purchaseprice`}
-                  title="Purchase price"
+                  placeholder={t('purchasePrice', 'Purchase Price')}
                 />
               )}
             />

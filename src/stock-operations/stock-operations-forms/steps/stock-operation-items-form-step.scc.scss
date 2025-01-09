@@ -39,7 +39,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: layout.$spacing-03;
+  margin: layout.$spacing-03 0 layout.$spacing-03 0;
 
   h4 {
     @include type.type-style('heading-compact-02');
@@ -54,4 +54,11 @@
       @include brand-03(border-bottom-color);
     }
   }
+}
+
+.btnSet {
+  display: flex;
+  flex-direction: row;
+  gap: layout.$spacing-03;
+  align-items: center;
 }

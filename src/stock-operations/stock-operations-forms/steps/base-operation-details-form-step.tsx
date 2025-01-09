@@ -12,22 +12,25 @@ import {
 } from '../../../constants';
 import { Party } from '../../../core/api/types/Party';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { OperationType, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { StockOperationItemDtoSchema } from '../../validation-schema';
 import useParties from '../hooks/useParties';
 import StockOperationReasonSelector from '../input-components/stock-operation-reason-selector.component';
 import UsersSelector from '../input-components/users-selector.component';
 import styles from '../stock-operation-form.scss';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import { Button } from '@carbon/react';
 
 type BaseOperationDetailsFormStepProps = {
   stockOperation?: StockOperationDTO;
   stockOperationType: StockOperationType;
+  onNext?: () => void;
 };
 
 const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
   stockOperation,
   stockOperationType,
+  onNext,
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
@@ -76,6 +79,16 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
   return (
     <Stack gap={4} className={styles.grid}>
       {/* <pre>{JSON.stringify(form.getValues(), null, 2)}</pre> */}
+      <div className={styles.heading}>
+        <h4>{t('operationDetails', '{{operationType}} Details', { operationType: stockOperationType.name })}</h4>
+        <div className={styles.btnSet}>
+          {typeof onNext === 'function' && (
+            <Button kind="primary" onClick={onNext}>
+              Next
+            </Button>
+          )}
+        </div>
+      </div>
       <Column>
         <Controller
           control={form.control}

@@ -1,4 +1,6 @@
 import {
+  Button,
+  ButtonSet,
   DataTable,
   Table,
   TableBody,
@@ -8,34 +10,35 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
+import { Edit } from '@carbon/react/icons';
 import { isDesktop, launchWorkspace } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { formatForDatePicker } from '../../../constants';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
-import EmptyState from '../../../core/components/empty-state/empty-state.component';
+import StockItemSearch from '../../add-stock-operation/stock-item-search/stock-item-search.component';
+import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import { BaseStockOperationItemFormData, StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import { StockItemFormProps } from '../stock-item-form/stock-item-form.workspace';
-import styles from './stock-operation-items-form-step.scc.scss';
-import { formatForDatePicker } from '../../../constants';
-import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
-import StockAvailability from './stock-availability-cell.component';
 import QuantityUomCell from './quantity-uom-cell.component';
+import StockAvailability from './stock-availability-cell.component';
 import StockOperationItemCell from './stock-operation-item-cell.component';
-import { Button } from '@carbon/react';
-import { Add, Edit } from '@carbon/react/icons';
-import StockItemSearch from '../../add-stock-operation/stock-item-search/stock-item-search.component';
-import { getStockOperationUniqueId } from '../../stock-operation.utils';
+import styles from './stock-operation-items-form-step.scc.scss';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
   stockOperationType: StockOperationType;
+  onNext?: () => void;
+  onPrevious?: () => void;
 };
 const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = ({
   stockOperationType,
   stockOperation,
+  onNext,
+  onPrevious,
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
@@ -104,10 +107,23 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     (stockOperationItem?: BaseStockOperationItemFormData) => {
       launchWorkspace('stock-operation-stock-items-form', {
         workspaceTitle: t('stockItem', 'StockItem'),
-        ...({ stockOperationType, stockOperationItem } as StockItemFormProps),
+        ...({
+          stockOperationType,
+          stockOperationItem,
+          onSave: (data) => {
+            const items = form.getValues('stockOperationItems') ?? [];
+            const index = items.findIndex((i) => i.uuid === data.uuid);
+            if (index === -1) {
+              items.push(data);
+            } else {
+              items[index] = data;
+            }
+            form.setValue('stockOperationItems', items ?? []);
+          },
+        } as StockItemFormProps),
       });
     },
-    [stockOperationType, t],
+    [stockOperationType, t, form],
   );
 
   const tableRows = useMemo(() => {
@@ -150,6 +166,18 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
       <div className={styles.tableContainer}>
         <div className={styles.heading}>
           <h4>{headerTitle}</h4>
+          <div className={styles.btnSet}>
+            {typeof onPrevious === 'function' && (
+              <Button kind="secondary" onClick={onPrevious}>
+                Previous
+              </Button>
+            )}
+            {typeof onNext === 'function' && (
+              <Button kind="primary" onClick={onNext}>
+                Next
+              </Button>
+            )}
+          </div>
         </div>
         <StockItemSearch
           onSelectedItem={(stockItem) =>

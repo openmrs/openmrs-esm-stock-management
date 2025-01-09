@@ -13,6 +13,8 @@ import StockOperationStepper from './stock-operation-stepper/stock-operation-ste
 import { ConfigObject } from '../../config-schema';
 import { today } from '../../constants';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
+import useOperationTypePermisions from './hooks/useOperationTypePermisions';
+import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
 
 /**
  * Props interface for the StockOperationForm component
@@ -31,6 +33,8 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
+  const operationTypePermision = useOperationTypePermisions(stockOperationType);
+
   const formschema = useMemo(() => {
     return getStockOperationFormSchema(operationType);
   }, [operationType]);
@@ -39,17 +43,39 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
       {
         name: stockOperation ? `${stockOperationType?.name} Details` : `${stockOperationType?.name} Details`,
         component: (
-          <BaseOperationDetailsFormStep stockOperation={stockOperation} stockOperationType={stockOperationType} />
+          <BaseOperationDetailsFormStep
+            stockOperation={stockOperation}
+            stockOperationType={stockOperationType}
+            onNext={() => setSelectedIndex(1)}
+          />
         ),
+        disabled: true,
       },
       {
         name: t('stockItems', 'Stock Items'),
         component: (
-          <StockOperationItemsFormStep stockOperation={stockOperation} stockOperationType={stockOperationType} />
+          <StockOperationItemsFormStep
+            stockOperation={stockOperation}
+            stockOperationType={stockOperationType}
+            onNext={() => setSelectedIndex(2)}
+            onPrevious={() => setSelectedIndex(0)}
+          />
         ),
+        disabled: true,
+      },
+      {
+        name: operationTypePermision?.requiresDispatchAcknowledgement ? 'Submit/Dispatch' : 'Submit/Complete',
+        component: (
+          <StockOperationSubmissionFormStep
+            stockOperation={stockOperation}
+            stockOperationType={stockOperationType}
+            onPrevious={() => setSelectedIndex(1)}
+          />
+        ),
+        disabled: true,
       },
     ] as TabItem[];
-  }, [stockOperation, stockOperationType, t]);
+  }, [stockOperation, stockOperationType, t, operationTypePermision]);
   const {
     user: { uuid: defaultLoggedUserUuid },
   } = useSession();
@@ -80,7 +106,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
           title: tab.name,
           component: tab.component,
           disabled: tab.disabled,
-          subTitle: `Subtitle  for ${tab.name}`,
+          // subTitle: `Subtitle  for ${tab.name}`,
           icon: <CircleDash />,
         }))}
         selectedIndex={selectedIndex}

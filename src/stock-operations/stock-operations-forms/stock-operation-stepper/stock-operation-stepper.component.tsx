@@ -1,9 +1,6 @@
+import { Layer } from '@carbon/react';
 import React from 'react';
 import styles from './stepper.scss';
-import { Layer } from '@carbon/react';
-import { Button } from '@carbon/react';
-import { Printer, Sleet } from '@carbon/react/icons';
-import { Tile } from '@carbon/react';
 export type Step = {
   title: string;
   subTitle?: string;
