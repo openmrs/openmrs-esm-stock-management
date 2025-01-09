@@ -1,11 +1,8 @@
-import { Layer } from '@carbon/react';
-import { Add, Report } from '@carbon/react/icons';
+import { Button, Layer, Tile } from '@carbon/react';
+import { Add } from '@carbon/react/icons';
 import React from 'react';
-import styles from './empty-state.scss';
 import { EmptyDataIllustration } from './empty-illustration';
-import { Tile } from '@carbon/react';
-import { Button } from '@carbon/react';
-import { isDesktop, useLayoutType } from '@openmrs/esm-framework';
+import styles from './empty-state.scss';
 
 type Props = {
   headerTitle: string;
@@ -19,8 +16,8 @@ const EmptyState: React.FC<Props> = ({ headerTitle, handleAdd, message }) => {
         <div className={styles.heading}>
           <h4>{headerTitle}</h4>
           {typeof handleAdd === 'function' && (
-            <Button onClick={handleAdd} renderIcon={Add} kind="ghost">
-              Add
+            <Button onClick={handleAdd} renderIcon={Add} kind="primary">
+              Add stock operation item
             </Button>
           )}
         </div>

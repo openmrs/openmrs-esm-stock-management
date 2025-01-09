@@ -24,6 +24,10 @@ import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import StockAvailability from './stock-availability-cell.component';
 import QuantityUomCell from './quantity-uom-cell.component';
 import StockOperationItemCell from './stock-operation-item-cell.component';
+import { Button } from '@carbon/react';
+import { Add, Edit } from '@carbon/react/icons';
+import StockItemSearch from '../../add-stock-operation/stock-item-search/stock-item-search.component';
+import { getStockOperationUniqueId } from '../../stock-operation.utils';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -96,9 +100,20 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     ];
   }, [operationTypePermision, t]);
 
+  const handleLaunchStockItem = useCallback(
+    (stockOperationItem?: BaseStockOperationItemFormData) => {
+      launchWorkspace('stock-operation-stock-items-form', {
+        workspaceTitle: t('stockItem', 'StockItem'),
+        ...({ stockOperationType, stockOperationItem } as StockItemFormProps),
+      });
+    },
+    [stockOperationType, t],
+  );
+
   const tableRows = useMemo(() => {
-    return (observableOperationItems ?? []).map(
-      ({ batchNo, expiration, quantity, purchasePrice, uuid, stockItemUuid, stockItemPackagingUOMUuid }) => ({
+    return (observableOperationItems ?? []).map((item) => {
+      const { batchNo, expiration, quantity, purchasePrice, uuid, stockItemUuid, stockItemPackagingUOMUuid } = item;
+      return {
         id: uuid,
         item: stockItemUuid ? <StockOperationItemCell stockItemUuid={stockItemUuid} /> : '--',
         itemDetails: stockItemUuid ? <StockAvailability stockItemUuid={stockItemUuid} /> : '--',
@@ -111,34 +126,42 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
           '--'
         ),
         purchasePrice: purchasePrice,
-      }),
-    );
-  }, [observableOperationItems]);
+        actions: (
+          <Button
+            type="button"
+            size="sm"
+            className="submitButton clear-padding-margin"
+            iconDescription={'Edit'}
+            kind="ghost"
+            renderIcon={Edit}
+            onClick={() => {
+              handleLaunchStockItem(item);
+            }}
+          />
+        ),
+      };
+    });
+  }, [observableOperationItems, handleLaunchStockItem]);
 
-  const handleLaunchStockItem = useCallback(
-    (item?: BaseStockOperationItemFormData) => {
-      launchWorkspace('stock-operation-stock-items-form', {
-        workspaceTitle: t('stockItem', 'StockItem'),
-        ...({ stockOperationType, item } as StockItemFormProps),
-      });
-    },
-    [stockOperationType, t],
-  );
-
-  if (!observableOperationItems?.length)
-    return (
-      <EmptyState
-        headerTitle={t('stockoperationItems', 'Stock operation items')}
-        message={t('emptyMessage', 'No stock operation items to display for this stock operation')}
-        handleAdd={() => {
-          handleLaunchStockItem();
-        }}
-      />
-    );
+  const headerTitle = t('stockoperationItems', 'Stock operation items');
 
   return (
     <div style={{ margin: '10px' }}>
       <div className={styles.tableContainer}>
+        <div className={styles.heading}>
+          <h4>{headerTitle}</h4>
+        </div>
+        <StockItemSearch
+          onSelectedItem={(stockItem) =>
+            handleLaunchStockItem({
+              uuid: `new-item-${getStockOperationUniqueId()}`,
+              stockItemUuid: stockItem.uuid,
+              hasExpiration: stockItem.hasExpiration,
+              purchasePrice: stockItem.purchasePrice,
+            })
+          }
+        />
+
         <DataTable
           rows={tableRows}
           headers={headers}

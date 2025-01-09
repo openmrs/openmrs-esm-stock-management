@@ -16,33 +16,39 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
-import BatchNoSelector from '../../batch-no-selector/batch-no-selector.component';
 import QtyUomSelector from '../../qty-uom-selector/qty-uom-selector.component';
 import styles from './stock-item-form.scss';
 import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
 import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
+import StockOperationItemCell from '../steps/stock-operation-item-cell.component';
+import { useStockItem } from '../../../stock-items/stock-items.resource';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import BatchNoSelector from '../input-components/batch-no-selector.component';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
-  item: BaseStockOperationItemFormData;
+  stockOperationItem: BaseStockOperationItemFormData;
 }
 
 interface Props extends DefaultWorkspaceProps, StockItemFormProps {}
-const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType }) => {
+const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, stockOperationItem }) => {
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
   const formschema = useMemo(() => {
     return getStockOperationItemFormSchema(operationType);
   }, [operationType]);
+  const operationTypePermision = useOperationTypePermisions(stockOperationType);
+
   const fields = formschema.keyof().options;
   const form = useForm<z.infer<typeof formschema>>({
     resolver: zodResolver(formschema),
-    defaultValues: {},
+    defaultValues: stockOperationItem,
     mode: 'all',
   });
   const { t } = useTranslation();
-
+  const { item } = useStockItem(form.getValues('stockItemUuid'));
   const onSubmit = (data: z.infer<typeof formschema>) => {
     closeWorkspace();
     // Implementation of adding or updating itsms in items table
@@ -50,15 +56,15 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType }) 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
-        {/* <p className={styles.title}>{stockOperationItem?.commonName}</p>
-        {(requiresActualBatchInformation || requiresBatchUuid) &&
-          fields.includes('batchNo' as any) &&
-          (canEdit || (canUpdateBatchInformation && stockOperationItem?.permission?.canUpdateBatchInformation)) && (
+        {item?.commonName && <p className={styles.title}>{item?.commonName}</p>}
+
+        {(operationTypePermision.requiresActualBatchInfo || operationTypePermision.requiresBatchUuid) &&
+          fields.includes('batchNo' as any) && (
             <Column>
               <Controller
                 control={form.control}
                 defaultValue={stockOperationItem?.batchNo}
-                name="batchNo"
+                name={'batchNo' as any}
                 render={({ field, fieldState: { error } }) => (
                   <TextInput
                     {...field}
@@ -73,30 +79,28 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType }) 
             </Column>
           )}
 
-        {requiresBatchUuid && !requiresActualBatchInformation && canEdit && (
-          <BatchNoSelector
-            batchUuid={stockOperationItem?.stockBatchUuid}
-            onBatchNoChanged={(item) => {
-              form.setValue('batchNo', item.batchNo ?? '');
-              // setValue(`stockItems.${index}.batchNo`, item?.batchNo ?? '');
-              form.setValue('expiration', item.expiration);
-              // setValue(`stockItems.${index}.expiration`, item?.expiration);
-            }}
-            title={t('batchNo', 'Batch')}
-            placeholder={'Filter...'}
-            control={form.control}
-            controllerName={'stockBatchUuid'}
-            name={'stockBatchUuid'}
-            stockItemUuid={stockOperationItem.stockItemUuid}
-          />
+        {operationTypePermision.requiresBatchUuid && !operationTypePermision.requiresActualBatchInfo && (
+          <Column>
+            <Controller
+              control={form.control}
+              name={'stockBatchUuid' as any}
+              render={({ field, fieldState: { error } }) => (
+                <BatchNoSelector
+                  intiallvalue={stockOperationItem?.stockBatchUuid}
+                  onValueChange={field.onChange}
+                  stockItemUuid={stockOperationItem.stockItemUuid}
+                  error={error?.message}
+                />
+              )}
+            />
+          </Column>
         )}
-        {(requiresActualBatchInformation || requiresBatchUuid) &&
-          (canEdit || (canUpdateBatchInformation && stockOperationItem?.permission?.canUpdateBatchInformation)) &&
+        {(operationTypePermision.requiresActualBatchInfo || operationTypePermision.requiresBatchUuid) &&
           fields.includes('expiration' as any) && (
             <Column>
               <Controller
                 control={form.control}
-                name="expiration"
+                name={'expiration' as any}
                 render={({ field, fieldState: { error } }) => (
                   <DatePicker
                     id={`expiration`}
@@ -123,57 +127,47 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType }) 
               />
             </Column>
           )}
-        {canEdit && (
+
+        <Column>
+          <Controller
+            control={form.control}
+            name="quantity"
+            render={({ field, fieldState: { error } }) => (
+              <NumberInput
+                allowEmpty
+                className="small-placeholder-text"
+                disableWheel
+                hideSteppers
+                id={`qty`}
+                {...field}
+                label={t('qty', 'Qty')}
+                invalidText={error?.message}
+                invalid={error?.message}
+              />
+            )}
+          />
+        </Column>
+        {/* TODO Improove and optimize */}
+        <Column>
+          <QtyUomSelector
+            stockItemUuid={stockOperationItem?.stockItemUuid}
+            onStockPackageChanged={(selectedItem) => {
+              form.setValue('stockItemPackagingUOMUuid', selectedItem.uuid);
+              // form.setValue('stockItemPackagingUOMName', selectedItem.packagingUomName);
+            }}
+            placeholder={'Filter...'}
+            title={t('quantityUom', 'Qty UoM')}
+            control={form.control}
+            controllerName={'stockItemPackagingUOMUuid'}
+            name={'stockItemPackagingUOMUuid'}
+          />
+        </Column>
+
+        {operationTypePermision?.canCaptureQuantityPrice && fields.includes('purchasePrice' as any) && (
           <Column>
             <Controller
               control={form.control}
-              name="quantity"
-              render={({ field, fieldState: { error } }) => (
-                <NumberInput
-                  allowEmpty
-                  className="small-placeholder-text"
-                  disableWheel
-                  hideSteppers
-                  id={`qty`}
-                  {...field}
-                  label={t('qty', 'Qty')}
-                  invalidText={error?.message}
-                  placeholder={
-                    requiresBatchUuid &&
-                    !requiresActualBatchInformation &&
-                    stockOperationItem?.stockBatchUuid in batchBalance
-                      ? `Bal: ${batchBalance[stockOperationItem?.stockBatchUuid]?.quantity?.toLocaleString() ?? ''} ${
-                          batchBalance[stockOperationItem?.stockBatchUuid]?.quantityUoM ?? ''
-                        }`
-                      : ''
-                  }
-                  invalid={error?.message}
-                />
-              )}
-            />
-          </Column>
-        )}
-        {canEdit && (
-          <Column>
-            <QtyUomSelector
-              stockItemUuid={stockOperationItem?.stockItemUuid}
-              onStockPackageChanged={(selectedItem) => {
-                form.setValue('stockItemPackagingUOMUuid', selectedItem.uuid);
-                form.setValue('stockItemPackagingUOMName', selectedItem.packagingUomName);
-              }}
-              placeholder={'Filter...'}
-              title={t('quantityUom', 'Qty UoM')}
-              control={form.control}
-              controllerName={'stockItemPackagingUOMUuid'}
-              name={'stockItemPackagingUOMUuid'}
-            />
-          </Column>
-        )}
-        {canCapturePurchasePrice && canEdit && (
-          <Column>
-            <Controller
-              control={form.control}
-              name="purchasePrice"
+              name={'purchasePrice' as any}
               render={({ field, fieldState: { error } }) => (
                 <NumberInput
                   allowEmpty
@@ -188,7 +182,7 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType }) 
               )}
             />
           </Column>
-        )} */}
+        )}
       </Stack>
 
       <ButtonSet className={styles.buttonSet}>

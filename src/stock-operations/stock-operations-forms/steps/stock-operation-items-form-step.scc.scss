@@ -1,3 +1,8 @@
+@use '@carbon/colors';
+@use '@carbon/layout';
+@use '@carbon/type';
+@import '~@openmrs/esm-styleguide/src/vars';
+
 .tableContainer {
   :global(.cds--data-table-content) {
     height: calc(100vh - 150px);
@@ -24,5 +29,29 @@
 
   .outOfStock {
     color: #da1e28;
+  }
+}
+
+.heading {
+  text-align: left;
+  text-transform: capitalize;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: layout.$spacing-03;
+
+  h4 {
+    @include type.type-style('heading-compact-02');
+    color: colors.$gray-70;
+
+    &:after {
+      content: '';
+      display: block;
+      width: 2rem;
+      padding-top: 3px;
+      border-bottom: 0.375rem solid;
+      @include brand-03(border-bottom-color);
+    }
   }
 }
