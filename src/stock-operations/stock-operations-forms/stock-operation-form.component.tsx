@@ -12,6 +12,7 @@ import BaseOperationDetailsFormStep from './steps/base-operation-details-form-st
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 import { ConfigObject } from '../../config-schema';
 import { today } from '../../constants';
+import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 
 /**
  * Props interface for the StockOperationForm component
@@ -41,8 +42,14 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
           <BaseOperationDetailsFormStep stockOperation={stockOperation} stockOperationType={stockOperationType} />
         ),
       },
+      {
+        name: t('stockItems', 'Stock Items'),
+        component: (
+          <StockOperationItemsFormStep stockOperation={stockOperation} stockOperationType={stockOperationType} />
+        ),
+      },
     ] as TabItem[];
-  }, [stockOperation, stockOperationType]);
+  }, [stockOperation, stockOperationType, t]);
   const {
     user: { uuid: defaultLoggedUserUuid },
   } = useSession();
@@ -61,6 +68,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
       operationTypeUuid: stockOperation?.operationTypeUuid ?? stockOperationType?.uuid,
       reasonUuid: stockOperation?.reasonUuid ?? '',
       responsiblePersonOther: stockOperation?.responsiblePersonOther ?? '',
+      stockOperationItems: stockOperation?.stockOperationItems ?? [],
     },
     mode: 'all',
     resolver: zodResolver(formschema),

@@ -27,10 +27,9 @@ import { Link, TableCell } from '@carbon/react';
 import { formatForDatePicker, URL_STOCK_ITEM } from '../../constants';
 import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { getStockOperationUniqueId } from '../stock-operation.utils';
-import StockAvailability from './stock-item-form/stock-availability.component';
-import { StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
 import StockItemSearch from './stock-item-search/stock-item-search.component';
 import styles from './stock-items-addition.component.scss';
+import StockAvailability from '../stock-operations-forms/stock-item-form/stock-availability.component';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
@@ -43,7 +42,7 @@ interface StockItemsAdditionProps {
 
 const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
   setup: {
-    hasQtyRequested: showQuantityRequested,
+    hasQtyRequested: showQuantityRequested, // TODO Remove never changed
     requiresBatchUuid,
     requiresActualBatchInfo: requiresActualBatchInformation,
     canCaptureQuantityPrice,
@@ -164,7 +163,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
     const itemId = `new-item-${getStockOperationUniqueId()}`;
     launchWorkspace('stock-operation-stock-items-form', {
       workspaceTitle: t('stockItem', 'StockItem'),
-      ...({
+      ...{
         batchBalance,
         batchNos,
         showQuantityRequested,
@@ -199,13 +198,13 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
             },
           ]);
         },
-      } as StockItemFormProps),
+      },
     });
   };
   const handleUpdateStockItem = (stockOperationItem: StockOperationItemDTO) => {
     launchWorkspace('stock-operation-stock-items-form', {
       workspaceTitle: t('stockItem', 'StockItem'),
-      ...({
+      ...{
         batchBalance,
         batchNos,
         showQuantityRequested,
@@ -232,7 +231,7 @@ const StockItemsAddition: React.FC<StockItemsAdditionProps> = ({
             });
           });
         },
-      } as StockItemFormProps),
+      },
     });
   };
   return (

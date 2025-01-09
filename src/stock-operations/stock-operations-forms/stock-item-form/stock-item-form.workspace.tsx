@@ -1,83 +1,56 @@
-import { DefaultWorkspaceProps } from '@openmrs/esm-framework';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { StockItemFormData, useStockItemValidationSchema } from './stock-item.resource';
+import {
+  Button,
+  ButtonSet,
+  Column,
+  DatePicker,
+  DatePickerInput,
+  Form,
+  NumberInput,
+  Stack,
+  TextInput,
+} from '@carbon/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { stockItemDetailsSchema } from '../../../stock-items/validationSchema';
-import { Form } from '@carbon/react';
-import styles from './stock-item-form.scss';
-import { Stack } from '@carbon/react';
-import { Column } from '@carbon/react';
-import { DatePicker } from '@carbon/react';
-import { ButtonSet } from '@carbon/react';
-import { Button } from '@carbon/react';
+import { DefaultWorkspaceProps } from '@openmrs/esm-framework';
+import React, { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
-import { StockItemInventory } from '../../../core/api/types/stockItem/StockItemInventory';
-import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import { z } from 'zod';
-import { TextInput } from '@carbon/react';
-import BatchNoSelector from '../../batch-no-selector/batch-no-selector.component';
-import { DatePickerInput } from '@carbon/react';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
-import { NumberInput } from '@carbon/react';
+import BatchNoSelector from '../../batch-no-selector/batch-no-selector.component';
 import QtyUomSelector from '../../qty-uom-selector/qty-uom-selector.component';
-import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
+import styles from './stock-item-form.scss';
+import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
+import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 
 export interface StockItemFormProps {
-  showQuantityRequested?: boolean;
-  canEdit?: boolean;
-  requiresActualBatchInformation?: boolean;
-  requiresBatchUuid?: boolean;
-  canUpdateBatchInformation?: boolean;
-  canCapturePurchasePrice?: boolean;
-  batchNos?: {
-    [key: string]: StockBatchDTO[];
-  };
-  itemUoM?: {
-    [key: string]: StockItemPackagingUOMDTO[];
-  };
-  batchBalance?: {
-    [key: string]: StockItemInventory;
-  };
-  stockOperationItem?: StockOperationItemDTO;
-  onSave?: (data: StockItemFormData) => void;
-  operationType?: string;
+  stockOperationType: StockOperationType;
+  item: BaseStockOperationItemFormData;
 }
 
 interface Props extends DefaultWorkspaceProps, StockItemFormProps {}
-const StockItemForm: React.FC<Props> = ({
-  closeWorkspace,
-  batchBalance,
-  canCapturePurchasePrice,
-  canUpdateBatchInformation,
-  requiresActualBatchInformation,
-  requiresBatchUuid,
-  operationType,
-  onSave,
-  stockOperationItem,
-  canEdit,
-}) => {
-  const schema = useStockItemValidationSchema(operationType);
-  const fields = schema.keyof().options;
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      ...stockOperationItem,
-    },
+const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType }) => {
+  const operationType = useMemo(() => {
+    return operationFromString(stockOperationType.operationType);
+  }, [stockOperationType]);
+  const formschema = useMemo(() => {
+    return getStockOperationItemFormSchema(operationType);
+  }, [operationType]);
+  const fields = formschema.keyof().options;
+  const form = useForm<z.infer<typeof formschema>>({
+    resolver: zodResolver(formschema),
+    defaultValues: {},
+    mode: 'all',
   });
   const { t } = useTranslation();
 
-  const onSubmit = (data: StockItemFormData) => {
-    onSave?.(data);
+  const onSubmit = (data: z.infer<typeof formschema>) => {
     closeWorkspace();
     // Implementation of adding or updating itsms in items table
   };
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
-        <p className={styles.title}>{stockOperationItem?.commonName}</p>
+        {/* <p className={styles.title}>{stockOperationItem?.commonName}</p>
         {(requiresActualBatchInformation || requiresBatchUuid) &&
           fields.includes('batchNo' as any) &&
           (canEdit || (canUpdateBatchInformation && stockOperationItem?.permission?.canUpdateBatchInformation)) && (
@@ -215,7 +188,7 @@ const StockItemForm: React.FC<Props> = ({
               )}
             />
           </Column>
-        )}
+        )} */}
       </Stack>
 
       <ButtonSet className={styles.buttonSet}>

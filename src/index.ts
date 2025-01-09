@@ -131,7 +131,7 @@ export const deletePackagingUnitButton = getSyncLifecycle(deletePackagingUnitMod
 export const stockManagementAppMenuItem = getSyncLifecycle(appMenu, options);
 
 export const stockOperationStockItemForm = getAsyncLifecycle(
-  () => import('./stock-operations/add-stock-operation/stock-item-form/stock-item-form.workspace'),
+  () => import('./stock-operations/stock-operations-forms/stock-item-form/stock-item-form.workspace'),
   options,
 );
 export const transactionBincardPrintPreviewModal = getSyncLifecycle(TransactionsBincardPrintPreview, options);

@@ -116,69 +116,6 @@ export const stockOperationSchema = z.object({
   dispatchedDate: z.coerce.date(),
   requisitionStockOperationUuid: z.string(),
 });
-
-export const stockOperationItemDtoSchema = z.object({
-  operationDate: z.coerce.date(),
-  sourceUuid: z.string({ required_error: 'Location Required' }).min(1, {
-    message: 'Location Required',
-  }),
-  destinationUuid: z.string({ required_error: 'Location Required' }).min(1, {
-    message: 'Location Required',
-  }),
-  reasonUuid: z.string({ required_error: 'Reason Required' }).min(1, {
-    message: 'Reason Required',
-  }),
-  responsiblePersonUuid: z
-    .string({
-      required_error: 'Responsible Person Required',
-    })
-    .min(1, {
-      message: 'Responsible Person Required',
-    }),
-  responsiblePersonOther: z.string().nullish(),
-  remarks: z.string().nullish(),
-  operationTypeUuid: z.string().min(1, 'Operation type required').uuid('Invalid operation type'),
-});
-
-export type StockOperationItemDtoSchema = z.infer<typeof stockOperationItemDtoSchema>;
-
-export type StockOperationFormData = z.infer<typeof stockOperationSchema>;
-
-export const getStockOperationFormSchema = (operation: OperationType): z.Schema => {
-  switch (operation) {
-    case OperationType.OPENING_STOCK_OPERATION_TYPE:
-      return stockOperationItemDtoSchema.omit({
-        destinationUuid: true,
-        reasonUuid: true,
-      });
-    case OperationType.STOCK_TAKE_OPERATION_TYPE:
-    case OperationType.ADJUSTMENT_OPERATION_TYPE:
-    case OperationType.DISPOSED_OPERATION_TYPE:
-      return stockOperationItemDtoSchema.omit({ destinationUuid: true });
-    case OperationType.TRANSFER_OUT_OPERATION_TYPE:
-    case OperationType.STOCK_ISSUE_OPERATION_TYPE:
-      return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
-        z.object({
-          // Merged to overid initial one with error message having  location instead of destination
-          destinationUuid: z.string({ required_error: 'Destination Required' }).min(1, {
-            message: 'Destination Required',
-          }),
-        }),
-      );
-    case OperationType.RETURN_OPERATION_TYPE:
-    case OperationType.REQUISITION_OPERATION_TYPE:
-    case OperationType.RECEIPT_OPERATION_TYPE:
-      return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
-        z.object({
-          // Merged to overid initial one with error message having location instead of source
-          sourceUuid: z.string({ required_error: 'Source Required' }).min(1, {
-            message: 'Source Required',
-          }),
-        }),
-      );
-  }
-};
-
 export const baseStockOperationItemSchema = z.object({
   stockItemUuid: z.string().min(1, { message: 'Required' }),
   stockItemName: z.string().min(1).nullish(),
@@ -217,5 +154,73 @@ export const getStockOperationItemFormSchema = (operationType: OperationType) =>
       });
     default:
       baseStockOperationItemSchema;
+  }
+};
+export const stockOperationItemDtoSchema = z.object({
+  operationDate: z.coerce.date(),
+  sourceUuid: z.string({ required_error: 'Location Required' }).min(1, {
+    message: 'Location Required',
+  }),
+  destinationUuid: z.string({ required_error: 'Location Required' }).min(1, {
+    message: 'Location Required',
+  }),
+  reasonUuid: z.string({ required_error: 'Reason Required' }).min(1, {
+    message: 'Reason Required',
+  }),
+  responsiblePersonUuid: z
+    .string({
+      required_error: 'Responsible Person Required',
+    })
+    .min(1, {
+      message: 'Responsible Person Required',
+    }),
+  responsiblePersonOther: z.string().nullish(),
+  remarks: z.string().nullish(),
+  operationTypeUuid: z.string().min(1, 'Operation type required').uuid('Invalid operation type'),
+  stockOperationItems: baseStockOperationItemSchema.array(),
+});
+
+export type StockOperationItemDtoSchema = z.infer<typeof stockOperationItemDtoSchema>;
+
+export type StockOperationFormData = z.infer<typeof stockOperationSchema>;
+
+export const getStockOperationFormSchema = (operation: OperationType): z.Schema => {
+  switch (operation) {
+    case OperationType.OPENING_STOCK_OPERATION_TYPE:
+      return stockOperationItemDtoSchema
+        .omit({
+          destinationUuid: true,
+          reasonUuid: true,
+        })
+        .merge(z.object({ stockOperationItems: getStockOperationItemFormSchema(operation).array() }));
+    case OperationType.STOCK_TAKE_OPERATION_TYPE:
+    case OperationType.ADJUSTMENT_OPERATION_TYPE:
+    case OperationType.DISPOSED_OPERATION_TYPE:
+      return stockOperationItemDtoSchema
+        .omit({ destinationUuid: true })
+        .merge(z.object({ stockOperationItems: getStockOperationItemFormSchema(operation).array() }));
+    case OperationType.TRANSFER_OUT_OPERATION_TYPE:
+    case OperationType.STOCK_ISSUE_OPERATION_TYPE:
+      return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
+        z.object({
+          // Merged to overid initial one with error message having  location instead of destination
+          destinationUuid: z.string({ required_error: 'Destination Required' }).min(1, {
+            message: 'Destination Required',
+          }),
+          stockOperationItems: getStockOperationItemFormSchema(operation).array(),
+        }),
+      );
+    case OperationType.RETURN_OPERATION_TYPE:
+    case OperationType.REQUISITION_OPERATION_TYPE:
+    case OperationType.RECEIPT_OPERATION_TYPE:
+      return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
+        z.object({
+          // Merged to overid initial one with error message having location instead of source
+          sourceUuid: z.string({ required_error: 'Source Required' }).min(1, {
+            message: 'Source Required',
+          }),
+          stockOperationItems: getStockOperationItemFormSchema(operation).array(),
+        }),
+      );
   }
 };
