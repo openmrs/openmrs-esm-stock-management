@@ -65,6 +65,8 @@ const useParties = (stockOperationType: StockOperationType) => {
     sourcePartiesFilter,
     destinationPartiesFilter,
     error,
+    sourceTags,
+    destinationTags,
   };
 };
 

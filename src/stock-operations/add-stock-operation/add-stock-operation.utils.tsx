@@ -127,6 +127,7 @@ export async function initializeNewStockOperation(
     destinationTags,
     shouldLockDestination,
     shouldLockSource,
+
     sourcePartyListFilter: (p) => {
       return (
         (p.locationUuid &&

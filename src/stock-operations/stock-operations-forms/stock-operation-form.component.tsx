@@ -1,6 +1,6 @@
 import { CircleDash } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { parseDate, useSession } from '@openmrs/esm-framework';
+import { parseDate, useConfig, useSession } from '@openmrs/esm-framework';
 import React, { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,8 @@ import { TabItem } from '../../core/components/tabs/types';
 import { getStockOperationFormSchema, StockOperationItemDtoSchema } from '../validation-schema';
 import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
+import { ConfigObject } from '../../config-schema';
+import { today } from '../../constants';
 
 /**
  * Props interface for the StockOperationForm component
@@ -44,14 +46,15 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
   const {
     user: { uuid: defaultLoggedUserUuid },
   } = useSession();
+  const { autoPopulateResponsiblePerson } = useConfig<ConfigObject>();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  // TODO Default values not picking well, find and fix
   const form = useForm<StockOperationItemDtoSchema>({
     // defaultValues: operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE ? issueStockOperation : model,
     defaultValues: {
-      responsiblePersonUuid: stockOperation?.responsiblePersonUuid ?? defaultLoggedUserUuid,
-      operationDate: stockOperation?.operationDate
-        ? parseDate(stockOperation!.operationDate as any)
-        : new Date(Date.now()),
+      responsiblePersonUuid:
+        stockOperation?.responsiblePersonUuid ?? (autoPopulateResponsiblePerson ? defaultLoggedUserUuid : undefined),
+      operationDate: stockOperation?.operationDate ? parseDate(stockOperation!.operationDate as any) : today(),
       remarks: stockOperation?.remarks ?? '',
       sourceUuid: stockOperation?.sourceUuid ?? '',
       destinationUuid: stockOperation?.destinationUuid ?? '',
