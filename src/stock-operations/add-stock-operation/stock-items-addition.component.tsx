@@ -29,7 +29,7 @@ import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { getStockOperationUniqueId } from '../stock-operation.utils';
 import StockItemSearch from './stock-item-search/stock-item-search.component';
 import styles from './stock-items-addition.component.scss';
-import StockAvailability from '../stock-operations-forms/stock-item-form/stock-availability.component';
+import StockAvailability from '../stock-operations-forms/steps/stock-availability-cell.component';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;

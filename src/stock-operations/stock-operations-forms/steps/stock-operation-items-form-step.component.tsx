@@ -19,6 +19,11 @@ import { BaseStockOperationItemFormData, StockOperationItemDtoSchema } from '../
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import { StockItemFormProps } from '../stock-item-form/stock-item-form.workspace';
 import styles from './stock-operation-items-form-step.scc.scss';
+import { formatForDatePicker } from '../../../constants';
+import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
+import StockAvailability from './stock-availability-cell.component';
+import QuantityUomCell from './quantity-uom-cell.component';
+import StockOperationItemCell from './stock-operation-item-cell.component';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -90,29 +95,24 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
       { key: 'actions', header: t('actions', 'Actions') },
     ];
   }, [operationTypePermision, t]);
+
   const tableRows = useMemo(() => {
-    return (observableOperationItems ?? []).map(({ batchNo }) => ({
-      // id: row.uuid,
-      // item:
-      //   row?.stockItemUuid && isStockItem(row?.stockItemUuid) ? (
-      //     <Link target={'_blank'} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
-      //       {row?.stockItemUuid.drugName || 'No stock item name'}
-      //     </Link>
-      //   ) : (
-      //     <Link target={'_blank'} to={URL_STOCK_ITEM(row?.stockItemUuid)}>
-      //       {row?.stockItemName || 'No name available'}
-      //     </Link>
-      //   ),
-      // itemDetails: row?.stockItemUuid ? <StockAvailability stockItemUuid={row.stockItemUuid} /> : '--',
-      // quantityrequested: `${row?.quantityRequested?.toLocaleString() ?? ''} ${
-      //   row?.quantityRequestedPackagingUOMName ?? ''
-      // }`,
-      batch: batchNo ?? '--',
-      // expiry: formatForDatePicker(row.expiration),
-      // quantity: row?.quantity?.toLocaleString(),
-      // quantityuom: row?.stockItemPackagingUOMName ?? '--',
-      // purchasePrice: row.purchasePrice,
-    }));
+    return (observableOperationItems ?? []).map(
+      ({ batchNo, expiration, quantity, purchasePrice, uuid, stockItemUuid, stockItemPackagingUOMUuid }) => ({
+        id: uuid,
+        item: stockItemUuid ? <StockOperationItemCell stockItemUuid={stockItemUuid} /> : '--',
+        itemDetails: stockItemUuid ? <StockAvailability stockItemUuid={stockItemUuid} /> : '--',
+        batch: batchNo ?? '--',
+        expiry: formatForDatePicker(expiration),
+        quantity: quantity?.toLocaleString(),
+        quantityuom: stockItemPackagingUOMUuid ? (
+          <QuantityUomCell stockItemPackagingUOMUuid={stockItemPackagingUOMUuid} stockItemUuid={stockItemUuid} />
+        ) : (
+          '--'
+        ),
+        purchasePrice: purchasePrice,
+      }),
+    );
   }, [observableOperationItems]);
 
   const handleLaunchStockItem = useCallback(

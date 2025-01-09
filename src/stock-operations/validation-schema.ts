@@ -117,6 +117,7 @@ export const stockOperationSchema = z.object({
   requisitionStockOperationUuid: z.string(),
 });
 export const baseStockOperationItemSchema = z.object({
+  uuid: z.string().min(1, 'Required'),
   stockItemUuid: z.string().min(1, { message: 'Required' }),
   stockItemName: z.string().min(1).nullish(),
   stockItemPackagingUOMUuid: z.string().min(1, { message: 'Required' }),
@@ -147,13 +148,14 @@ export const getStockOperationItemFormSchema = (operationType: OperationType) =>
     case OperationType.RETURN_OPERATION_TYPE:
     case OperationType.STOCK_ISSUE_OPERATION_TYPE:
     case OperationType.STOCK_TAKE_OPERATION_TYPE:
+    case OperationType.TRANSFER_OUT_OPERATION_TYPE:
       return baseStockOperationItemSchema.omit({
         batchNo: true,
         expiration: true,
         purchasePrice: true,
       });
     default:
-      baseStockOperationItemSchema;
+      return baseStockOperationItemSchema;
   }
 };
 export const stockOperationItemDtoSchema = z.object({
