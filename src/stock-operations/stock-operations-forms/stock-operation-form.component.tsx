@@ -104,8 +104,12 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
       reasonUuid: stockOperation?.reasonUuid ?? '',
       responsiblePersonOther: stockOperation?.responsiblePersonOther ?? '',
       stockOperationItems:
-        stockOperation?.stockOperationItems?.map((item) => pick(item, stockOperationItemFormSchema.keyof().options)) ??
-        [],
+        stockOperation?.stockOperationItems?.map((item) =>
+          pick(
+            { ...item, expiration: item.expiration ? parseDate(item.expiration as any) : undefined },
+            stockOperationItemFormSchema.keyof().options,
+          ),
+        ) ?? [],
     },
     mode: 'all',
     resolver: zodResolver(formschema),

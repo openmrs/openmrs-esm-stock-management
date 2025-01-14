@@ -151,9 +151,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           )}
         </div>
       </div>
-      <Column>
-        <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
-      </Column>
+
       <Column>
         <RadioButtonGroup
           name="rbgApprovelRequired"

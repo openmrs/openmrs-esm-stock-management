@@ -18,11 +18,11 @@ import { z } from 'zod';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
 import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
-import QtyUomSelector from '../../qty-uom-selector/qty-uom-selector.component';
 import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import styles from './stock-item-form.scss';
+import QtyUomSelector from '../input-components/quantity-uom-selector.component';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
@@ -55,7 +55,6 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
   };
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
-      <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
       <Stack gap={4} className={styles.grid}>
         {item?.commonName && <p className={styles.title}>{item?.commonName}</p>}
 
@@ -148,19 +147,18 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
             )}
           />
         </Column>
-        {/* TODO Improove and optimize */}
         <Column>
-          <QtyUomSelector
-            stockItemUuid={stockOperationItem?.stockItemUuid}
-            onStockPackageChanged={(selectedItem) => {
-              form.setValue('stockItemPackagingUOMUuid', selectedItem.uuid);
-              // form.setValue('stockItemPackagingUOMName', selectedItem.packagingUomName);
-            }}
-            placeholder={'Filter...'}
-            title={t('quantityUom', 'Qty UoM')}
+          <Controller
             control={form.control}
-            controllerName={'stockItemPackagingUOMUuid'}
             name={'stockItemPackagingUOMUuid'}
+            render={({ field, fieldState: { error } }) => (
+              <QtyUomSelector
+                stockItemUuid={stockOperationItem?.stockItemUuid}
+                intiallvalue={field.value}
+                error={error?.message}
+                onValueChange={field.onChange}
+              />
+            )}
           />
         </Column>
 

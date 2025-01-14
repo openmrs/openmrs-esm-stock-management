@@ -12,8 +12,6 @@ interface BatchNoSelectorProps {
   intiallvalue?: string;
   onValueChange?: (value: string) => void;
   error?: string;
-
-  // selectedItem?: string;
 }
 
 const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error, intiallvalue, onValueChange }) => {
@@ -47,20 +45,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
     [filteredBatches, intiallvalue],
   );
 
-  // useEffect(() => {
-  //   if (
-  //     !isLoading &&
-  //     stockItemBatchNos &&
-  //     props.selectedItem &&
-  //     (stockItemBatchNos.length === 0 || filteredBatches.length === 0)
-  //   ) {
-  //     setValidationMessage('No stock batch numbers defined. Do a initial/receipt stock operation first.');
-  //   } else {
-  //     setValidationMessage(null);
-  //   }
-  // }, [isLoading, stockItemBatchNos, props.selectedItem, filteredBatches]);
   if (isLoading) return <SelectSkeleton />;
-  // const errorMessage =
 
   return (
     <ComboBox
