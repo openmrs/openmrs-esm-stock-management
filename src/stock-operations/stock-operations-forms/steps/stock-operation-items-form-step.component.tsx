@@ -111,14 +111,14 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
           stockOperationType,
           stockOperationItem,
           onSave: (data) => {
-            const items = form.getValues('stockOperationItems') ?? [];
+            const items = (form.getValues('stockOperationItems') ?? []) as Array<BaseStockOperationItemFormData>;
             const index = items.findIndex((i) => i.uuid === data.uuid);
             if (index === -1) {
               items.push(data);
             } else {
               items[index] = data;
             }
-            form.setValue('stockOperationItems', items ?? []);
+            form.setValue('stockOperationItems', items as any);
           },
         } as StockItemFormProps),
       });

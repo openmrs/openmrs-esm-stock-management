@@ -27,7 +27,8 @@ const StockOperationReference = (props: StockOperationReferenceProps) => {
     if (!operation) {
       return;
     }
-    launchAddOrEditDialog(t, model, true, operation, types?.results, false);
+    // TODO Refactor
+    // launchAddOrEditDialog(t, model, true, operation, types?.results, false);
   };
   return (
     <a onClick={handleEdit} style={{ cursor: 'pointer' }}>

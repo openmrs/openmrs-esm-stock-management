@@ -26,7 +26,8 @@ const StockOperationRelatedLink = (props: StockOperationRelatedLinkProps) => {
     if (!operation) {
       return;
     }
-    launchAddOrEditDialog(t, model, true, operation, operationTypes, false);
+    // TODO Refactor
+    // launchAddOrEditDialog(t, model, true, operation, operationTypes, false);
   };
   return (
     <span onClick={handleEdit} style={{ cursor: 'pointer', textDecoration: 'underline' }}>

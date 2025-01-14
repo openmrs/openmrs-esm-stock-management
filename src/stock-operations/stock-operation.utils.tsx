@@ -34,25 +34,25 @@ export const addOrEditStockOperation = async (
 
       payload['operationTypeUuid'] = stockIssueOpsTypeUuid;
     }
-    const response: FetchResponse<StockOperationDTO> = await (isEditing ? updateStockOperation : createStockOperation)(
-      payload,
-    );
+    // const response: FetchResponse<StockOperationDTO> = await (isEditing ? updateStockOperation : createStockOperation)(
+    //   payload,
+    // );
 
-    if (response?.data) {
-      handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
-      showSnackbar({
-        isLowContrast: true,
-        title: isEditing
-          ? t('editStockOperation', 'Edit stock operation')
-          : t('addStockOperation', 'Add stock operation'),
-        kind: 'success',
-        subtitle: isEditing
-          ? t('stockOperationEdited', 'Stock operation edited successfully')
-          : t('stockOperationAdded', 'Stock operation added successfully'),
-      });
+    // if (response?.data) {
+    //   handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
+    //   showSnackbar({
+    //     isLowContrast: true,
+    //     title: isEditing
+    //       ? t('editStockOperation', 'Edit stock operation')
+    //       : t('addStockOperation', 'Add stock operation'),
+    //     kind: 'success',
+    //     subtitle: isEditing
+    //       ? t('stockOperationEdited', 'Stock operation edited successfully')
+    //       : t('stockOperationAdded', 'Stock operation added successfully'),
+    //   });
 
-      closeOverlay();
-    }
+    //   closeOverlay();
+    // }
   } catch (error) {
     const errorMessages = extractErrorMessagesFromResponse(error);
     showSnackbar({
@@ -66,21 +66,19 @@ export const addOrEditStockOperation = async (
 
 export const launchAddOrEditDialog = (
   t: TFunction,
-  stockOperation: StockOperationDTO,
-  isEditing: boolean,
-  operation?: StockOperationType,
-  operations?: StockOperationType[],
+  operationType: StockOperationType,
+  stockOperation?: StockOperationDTO,
   canPrint?: boolean,
 ) => {
   const printEnabled = canPrint !== undefined ? canPrint : stockOperation?.status === 'COMPLETED';
 
   launchOverlay(
-    isEditing
+    stockOperation
       ? t('editOperationTitle', 'Edit {{operationType}}', {
           operationType: stockOperation?.operationTypeName,
         })
       : t('newOperationTitle', 'New: {{operationName}}', {
-          operationName: operation?.name,
+          operationName: operationType?.name,
         }),
     // <AddStockOperation
     //   model={stockOperation}
@@ -90,7 +88,7 @@ export const launchAddOrEditDialog = (
     //   canEdit={isEditing ? (stockOperation?.status === 'NEW' ? true : false) : true}
     //   canPrint={printEnabled}
     // />,
-    <StockOperationForm stockOperationType={operation} stockOperation={stockOperation} />,
+    <StockOperationForm stockOperationType={operationType} stockOperation={stockOperation} />,
   );
 };
 
@@ -102,7 +100,7 @@ export function getStockOperationUniqueId() {
   return `${new Date().getTime()}-${Math.random().toString(36).substring(2, 16)}`;
 }
 
-export const showActionDialogButton = async (title: string, requireReason: boolean, operation: StockOperationDTO) => {
+export const showActionDialogButton = (title: string, requireReason: boolean, operation: StockOperationDTO) => {
   const dispose = showModal('stock-operation-dialog', {
     title: title,
     operation: operation,

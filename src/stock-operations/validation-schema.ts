@@ -179,7 +179,7 @@ export const stockOperationItemDtoSchema = z.object({
   responsiblePersonOther: z.string().nullish(),
   remarks: z.string().nullish(),
   operationTypeUuid: z.string().min(1, 'Operation type required').uuid('Invalid operation type'),
-  stockOperationItems: baseStockOperationItemSchema.array(),
+  stockOperationItems: baseStockOperationItemSchema.array().nonempty('You must add atleast one stock item'),
 });
 
 export type StockOperationItemDtoSchema = z.infer<typeof stockOperationItemDtoSchema>;
@@ -194,13 +194,23 @@ export const getStockOperationFormSchema = (operation: OperationType): z.Schema 
           destinationUuid: true,
           reasonUuid: true,
         })
-        .merge(z.object({ stockOperationItems: getStockOperationItemFormSchema(operation).array() }));
+        .merge(
+          z.object({
+            stockOperationItems: getStockOperationItemFormSchema(operation)
+              .array()
+              .nonempty('You must add atleast one stock item'),
+          }),
+        );
     case OperationType.STOCK_TAKE_OPERATION_TYPE:
     case OperationType.ADJUSTMENT_OPERATION_TYPE:
     case OperationType.DISPOSED_OPERATION_TYPE:
-      return stockOperationItemDtoSchema
-        .omit({ destinationUuid: true })
-        .merge(z.object({ stockOperationItems: getStockOperationItemFormSchema(operation).array() }));
+      return stockOperationItemDtoSchema.omit({ destinationUuid: true }).merge(
+        z.object({
+          stockOperationItems: getStockOperationItemFormSchema(operation)
+            .array()
+            .nonempty('You must add atleast one stock item'),
+        }),
+      );
     case OperationType.TRANSFER_OUT_OPERATION_TYPE:
     case OperationType.STOCK_ISSUE_OPERATION_TYPE:
       return stockOperationItemDtoSchema.omit({ reasonUuid: true }).merge(
@@ -209,7 +219,9 @@ export const getStockOperationFormSchema = (operation: OperationType): z.Schema 
           destinationUuid: z.string({ required_error: 'Destination Required' }).min(1, {
             message: 'Destination Required',
           }),
-          stockOperationItems: getStockOperationItemFormSchema(operation).array(),
+          stockOperationItems: getStockOperationItemFormSchema(operation)
+            .array()
+            .nonempty('You must add atleast one stock item'),
         }),
       );
     case OperationType.RETURN_OPERATION_TYPE:
@@ -221,7 +233,9 @@ export const getStockOperationFormSchema = (operation: OperationType): z.Schema 
           sourceUuid: z.string({ required_error: 'Source Required' }).min(1, {
             message: 'Source Required',
           }),
-          stockOperationItems: getStockOperationItemFormSchema(operation).array(),
+          stockOperationItems: getStockOperationItemFormSchema(operation)
+            .array()
+            .nonempty('You must add atleast one stock item'),
         }),
       );
   }

@@ -1,7 +1,7 @@
 import { CircleDash } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { parseDate, useConfig, useSession } from '@openmrs/esm-framework';
-import React, { useMemo, useState } from 'react';
+import { parseDate, showSnackbar, useConfig, useSession } from '@openmrs/esm-framework';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
@@ -15,6 +15,7 @@ import { today } from '../../constants';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import useOperationTypePermisions from './hooks/useOperationTypePermisions';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
+import { otherUser } from '../../core/utils/utils';
 
 /**
  * Props interface for the StockOperationForm component
@@ -86,7 +87,9 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
     // defaultValues: operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE ? issueStockOperation : model,
     defaultValues: {
       responsiblePersonUuid:
-        stockOperation?.responsiblePersonUuid ?? (autoPopulateResponsiblePerson ? defaultLoggedUserUuid : undefined),
+        stockOperation?.responsiblePersonUuid ?? // if person uuid exist, make it default
+        (stockOperation?.responsiblePersonOther ? otherUser.uuid : undefined) ?? // if other resp person exist, default other user uuid
+        (autoPopulateResponsiblePerson ? defaultLoggedUserUuid : undefined), //Else default login user if configured
       operationDate: stockOperation?.operationDate ? parseDate(stockOperation!.operationDate as any) : today(),
       remarks: stockOperation?.remarks ?? '',
       sourceUuid: stockOperation?.sourceUuid ?? '',
@@ -99,6 +102,36 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
     mode: 'all',
     resolver: zodResolver(formschema),
   });
+
+  useEffect(() => {
+    // Show error snackbar
+    Object.entries(form.formState.errors ?? {}).forEach(([key, val]) => {
+      if (['stockOperationItems', 'operationTypeUuid'].includes(key)) {
+        showSnackbar({ kind: 'error', title: key, subtitle: val[key]?.message });
+      }
+    });
+    // Navigate to step where the error is
+    const fieldSteps = [
+      [
+        'responsiblePersonUuid',
+        'operationDate',
+        'remarks',
+        'sourceUuid',
+        'destinationUuid',
+        'reasonUuid',
+        'responsiblePersonOther',
+      ],
+      ['stockOperationItems'],
+    ];
+    for (let step = 0; step < fieldSteps.length; step++) {
+      const hasError = fieldSteps[step].some((field) => field in form.formState.errors);
+      if (hasError) {
+        setSelectedIndex(step);
+        break;
+      }
+    }
+  }, [form.formState.errors]);
+
   return (
     <FormProvider {...form}>
       <StockOperationStepper

@@ -41,6 +41,7 @@ import { handleMutate } from '../utils';
 
 import styles from './stock-operations-table.scss';
 import StockOperationStatus from './add-stock-operation/stock-operation-status.component';
+import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -98,8 +99,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const filterApplied =
     selectedFromDate || selectedToDate || selectedSources.length || selectedStatus.length || selectedOperations.length;
 
-  const [operations, setOperations] = useState<StockOperationType[]>([]);
-
   const handleOnFilterChange = useCallback((selectedItems, filterType) => {
     if (filterType === StockFilters.SOURCES) {
       setSelectedSources(selectedItems);
@@ -125,13 +124,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }
   };
 
-  const handleEditClick = useCallback(
-    (stockOperation, isEditing) => {
-      launchAddOrEditDialog(t, stockOperation, isEditing, operation, operations, false);
-    },
-    [t, operation, operations],
-  );
-
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => {
       const commonNames = stockOperation?.stockOperationItems
@@ -144,15 +136,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         key: `key-${stockOperation?.uuid}`,
         operationTypeName: `${stockOperation?.operationTypeName}`,
         operationNumber: (
-          <EditStockOperationActionMenu
-            model={stockOperation}
-            operations={operations}
-            operationUuid={operation.uuid}
-            operationNumber={''}
-            onEdit={() => handleEditClick(stockOperation, true)}
-            showIcon={false}
-            showprops={true}
-          />
+          <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={false} showprops={true} />
         ),
         stockOperationItems: commonNames,
         status: `${stockOperation?.status}`,
@@ -169,20 +153,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
         } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
         operationDate: formatDisplayDate(stockOperation?.operationDate),
-        actions: (
-          <EditStockOperationActionMenu
-            model={stockOperation}
-            operations={operations}
-            operationUuid={operation.uuid}
-            operationNumber={''}
-            onEdit={() => handleEditClick(stockOperation, true)}
-            showIcon={true}
-            showprops={false}
-          />
-        ),
+        actions: <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={true} showprops={false} />,
       };
     });
-  }, [items, operations, handleEditClick, operation]);
+  }, [items]);
 
   if (isLoading && !filterApplied) {
     return (
@@ -243,14 +217,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
 
-                <StockOperationTypesSelector
-                  onOperationTypeSelected={(operation) => {
-                    launchAddOrEditDialog(t, initialStockOperationValue(), false, operation, operations, false);
-                  }}
-                  onOperationLoaded={(ops) => {
-                    setOperations(ops);
-                  }}
-                />
+                <StockOperationTypesSelector />
               </TableToolbarContent>
             </TableToolbar>
             <Table {...getTableProps()}>

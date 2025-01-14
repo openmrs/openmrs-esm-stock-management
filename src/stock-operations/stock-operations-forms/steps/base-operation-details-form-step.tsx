@@ -1,4 +1,4 @@
-import { Column, ComboBox, DatePicker, DatePickerInput, InlineLoading, Stack, TextArea } from '@carbon/react';
+import { Button, Column, ComboBox, DatePicker, DatePickerInput, InlineLoading, Stack, TextArea } from '@carbon/react';
 import { ErrorState } from '@openmrs/esm-framework';
 import React, { ChangeEvent, FC, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -12,14 +12,13 @@ import {
 } from '../../../constants';
 import { Party } from '../../../core/api/types/Party';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { OperationType, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { StockOperationItemDtoSchema } from '../../validation-schema';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import useParties from '../hooks/useParties';
 import StockOperationReasonSelector from '../input-components/stock-operation-reason-selector.component';
 import UsersSelector from '../input-components/users-selector.component';
 import styles from '../stock-operation-form.scss';
-import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
-import { Button } from '@carbon/react';
 
 type BaseOperationDetailsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -50,7 +49,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     if (!stockOperation) {
       if (stockOperationType?.hasSource) {
         const shouldLockSource = sourceTags.length === 1 && sourceTags[0] === MAIN_STORE_LOCATION_TAG;
-        if (shouldLockSource && sourceParties?.length > 0) {
+        if (shouldLockSource && sourceParties?.length) {
           const party = sourceParties[0];
           form.setValue('sourceUuid', party.uuid);
         }
@@ -58,7 +57,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
 
       if (stockOperationType?.hasDestination) {
         const shouldLockDestination = destinationTags.length === 1 && destinationTags[0] === MAIN_STORE_LOCATION_TAG;
-        if (shouldLockDestination && destinationParties?.length > 0) {
+        if (shouldLockDestination && destinationParties?.length) {
           const party = destinationParties[0];
           form.setValue('destinationUuid', party.uuid);
         }
@@ -78,7 +77,6 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
 
   return (
     <Stack gap={4} className={styles.grid}>
-      {/* <pre>{JSON.stringify(form.getValues(), null, 2)}</pre> */}
       <div className={styles.heading}>
         <h4>{t('operationDetails', '{{operationType}} Details', { operationType: stockOperationType.name })}</h4>
         <div className={styles.btnSet}>
@@ -97,11 +95,11 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
             <DatePicker
               id={`operationDate`}
               datePickerType="single"
-              maxDate={formatForDatePicker(today())}
               locale="en"
               className={styles.datePickerInput}
-              dateFormat={DATE_PICKER_CONTROL_FORMAT}
               {...field}
+              value={field.value}
+              dateFormat={DATE_PICKER_CONTROL_FORMAT}
               onChange={([newDate]) => {
                 field.onChange(newDate);
               }}
@@ -109,7 +107,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
               <DatePickerInput
                 autoComplete="off"
                 id={`operationDate-input`}
-                name="operationDate"
+                name="operationDate-input"
                 placeholder={DATE_PICKER_FORMAT}
                 labelText={t('operationDate', 'Operation Date')}
                 invalid={error?.message}
@@ -120,7 +118,6 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           )}
         />
       </Column>
-
       <Column>
         <Controller
           control={form.control}

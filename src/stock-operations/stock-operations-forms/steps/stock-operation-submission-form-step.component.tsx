@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from '../stock-operation-form.scss';
 import { Stack } from '@carbon/react';
 import { Button } from '@carbon/react';
@@ -13,6 +13,12 @@ import { RadioButtonGroup } from '@carbon/react';
 import { RadioButton } from '@carbon/react';
 import { Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
 import { InlineLoading } from '@carbon/react';
+import { addOrEditStockOperation, showActionDialogButton } from '../../stock-operation.utils';
+import { createStockOperation, updateStockOperation } from '../../stock-operations.resource';
+import { handleMutate } from '../../../utils';
+import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
+import { extractErrorMessagesFromResponse } from '../../../constants';
+import { otherUser } from '../../../core/utils/utils';
 
 type StockOperationSubmissionFormStepProps = {
   onPrevious?: () => void;
@@ -32,6 +38,66 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
     setApprovalRequired(selectedItem);
   };
 
+  const handleSave = useCallback(async () => {
+    let result: StockOperationDTO; // To store the result for returning
+    await form.handleSubmit(async (formData) => {
+      try {
+        const payload = {
+          ...formData,
+          // Remove other uuid if responsible person is set to other
+          responsiblePersonUuid:
+            formData.responsiblePersonUuid === otherUser.uuid ? undefined : formData.responsiblePersonUuid,
+        };
+        const resp = await (stockOperation
+          ? updateStockOperation(stockOperation, payload)
+          : createStockOperation(payload));
+        result = resp.data; // Store the response data
+        handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
+        showSnackbar({
+          isLowContrast: true,
+          title: stockOperation
+            ? t('editStockOperation', 'Edit stock operation')
+            : t('addStockOperation', 'Add stock operation'),
+          kind: 'success',
+          subtitle: stockOperation
+            ? t('stockOperationEdited', 'Stock operation edited successfully')
+            : t('stockOperationAdded', 'Stock operation added successfully'),
+        });
+      } catch (error) {
+        const errorMessages = extractErrorMessagesFromResponse(error);
+        showSnackbar({
+          subtitle: errorMessages.join(', '),
+          title: t('errorSavingForm', 'Error on saving form'),
+          kind: 'error',
+          isLowContrast: true,
+        });
+      }
+    })(); // Call handleSubmit to trigger validation and submission
+    return result; // Return the result after handleSubmit completes
+  }, [form, stockOperation, t]);
+
+  const handleComplete = useCallback(async () => {
+    // delete model?.dateCreated;
+    //   // setIsSaving(true);
+    //   // if (!isEditing) {
+    //   //   delete model.status;
+    //   //   await actions.onSave(model);
+    //   //   setIsSaving(false);
+    //   // }
+    //   // model.status = 'COMPLETED';
+    //   // actions.onComplete(model);
+    //   // setIsSaving(false);
+    const operation = await handleSave();
+    alert(JSON.stringify(operation, null, 2));
+    // showActionDialogButton('Complete', false, props?.model);
+  }, [handleSave]);
+  const handleSubmitForReview = useCallback(async () => {
+    const operation = await handleSave();
+  }, [handleSave]);
+  const handleDispatch = useCallback(async () => {
+    const operation = await handleSave();
+  }, [handleSave]);
+
   return (
     <Stack gap={4} className={styles.grid}>
       <div className={styles.heading}>
@@ -48,6 +114,9 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           )}
         </div>
       </div>
+      <Column>
+        <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
+      </Column>
       <Column>
         <RadioButtonGroup
           name="rbgApprovelRequired"
@@ -68,18 +137,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                 style={{ margin: '4px' }}
                 className="submitButton"
                 kind="primary"
-                onClick={async () => {
-                  // delete model?.dateCreated;
-                  // setIsSaving(true);
-                  // if (!isEditing) {
-                  //   delete model.status;
-                  //   await actions.onSave(model);
-                  //   setIsSaving(false);
-                  // }
-                  // model.status = 'COMPLETED';
-                  // actions.onComplete(model);
-                  // setIsSaving(false);
-                }}
+                onClick={handleComplete}
                 renderIcon={ListChecked}
               >
                 {t('complete', 'Complete')}
@@ -92,16 +150,17 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                 style={{ margin: '4px' }}
                 className="submitButton"
                 kind="primary"
-                onClick={async () => {
-                  // delete model?.dateCreated;
-                  // delete model?.status;
-                  // setIsSaving(true);
-                  // await actions.onSave(model).then(() => {
-                  //   model.status = 'DISPATCHED';
-                  //   actions.onDispatch(model);
-                  //   setIsSaving(false);
-                  // });
-                }}
+                // onClick={async () => {
+                //   // delete model?.dateCreated;
+                //   // delete model?.status;
+                //   // setIsSaving(true);
+                //   // await actions.onSave(model).then(() => {
+                //   //   model.status = 'DISPATCHED';
+                //   //   actions.onDispatch(model);
+                //   //   setIsSaving(false);
+                //   // });
+                // }}
+                onClick={handleDispatch}
                 renderIcon={Departure}
               >
                 {form.formState.isSubmitting ? (
@@ -118,16 +177,17 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                 style={{ margin: '4px' }}
                 className="submitButton"
                 kind="primary"
-                onClick={async () => {
-                  // delete model?.dateCreated;
-                  // delete model?.status;
-                  // setIsSaving(true);
-                  // await actions.onSave(model).then(() => {
-                  //   model.status = 'SUBMITTED';
-                  //   actions.onSubmit(model);
-                  //   setIsSaving(false);
-                  // });
-                }}
+                // onClick={async () => {
+                //   // delete model?.dateCreated;
+                //   // delete model?.status;
+                //   // setIsSaving(true);
+                //   // await actions.onSave(model).then(() => {
+                //   //   model.status = 'SUBMITTED';
+                //   //   actions.onSubmit(model);
+                //   //   setIsSaving(false);
+                //   // });
+                // }}
+                onClick={handleSubmitForReview}
                 renderIcon={SendFilled}
               >
                 {form.formState.isSubmitting ? (
@@ -145,15 +205,16 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           className="submitButton"
           style={{ margin: '4px' }}
           disabled={form.formState.isSubmitting}
-          onClick={async () => {
-            // delete model?.dateCreated;
-            // delete model?.status;
-            // setIsSaving(true);
-            // model.approvalRequired = approvalRequired ? true : false;
-            // await actions.onSave(model);
-            // setIsSaving(false);
-          }}
+          // onClick={async () => {
+          //   // delete model?.dateCreated;
+          //   // delete model?.status;
+          //   // setIsSaving(true);
+          //   // model.approvalRequired = approvalRequired ? true : false;
+          //   // await actions.onSave(model);
+          //   // setIsSaving(false);
+          // }}
           kind="secondary"
+          onClick={handleSave}
           renderIcon={Save}
         >
           {form.formState.isSubmitting ? <InlineLoading /> : t('save', 'Save')}
