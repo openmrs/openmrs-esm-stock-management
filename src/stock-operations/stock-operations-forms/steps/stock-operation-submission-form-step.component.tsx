@@ -1,29 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import styles from '../stock-operation-form.scss';
-import { Stack } from '@carbon/react';
-import { Button } from '@carbon/react';
-import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
-import { useTranslation } from 'react-i18next';
-import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
-import { useFormContext } from 'react-hook-form';
-import {
-  BaseStockOperationItemFormData,
-  getStockOperationItemFormSchema,
-  StockOperationItemDtoSchema,
-} from '../../validation-schema';
-import { Column } from '@carbon/react';
-import { RadioButtonGroup } from '@carbon/react';
-import { RadioButton } from '@carbon/react';
+import { Button, Column, InlineLoading, RadioButton, RadioButtonGroup, Stack } from '@carbon/react';
 import { Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
-import { InlineLoading } from '@carbon/react';
-import { addOrEditStockOperation, showActionDialogButton } from '../../stock-operation.utils';
-import { createStockOperation, deleteStockOperationItem, updateStockOperation } from '../../stock-operations.resource';
-import { handleMutate } from '../../../utils';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
+import React, { useCallback, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { extractErrorMessagesFromResponse } from '../../../constants';
-import { otherUser, pick } from '../../../core/utils/utils';
+import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
+import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { otherUser } from '../../../core/utils/utils';
+import { handleMutate } from '../../../utils';
+import { showActionDialogButton } from '../../stock-operation.utils';
+import { createStockOperation, deleteStockOperationItem, updateStockOperation } from '../../stock-operations.resource';
+import { StockOperationItemDtoSchema } from '../../validation-schema';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import styles from '../stock-operation-form.scss';
 
 type StockOperationSubmissionFormStepProps = {
   onPrevious?: () => void;

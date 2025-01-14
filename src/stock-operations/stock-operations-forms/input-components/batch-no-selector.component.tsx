@@ -1,11 +1,9 @@
-import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
-import { ComboBox, InlineLoading } from '@carbon/react';
+import { ComboBox, SelectSkeleton } from '@carbon/react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
-import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
-import { SelectSkeleton } from '@carbon/react';
+import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
+import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 
 interface BatchNoSelectorProps {
   stockItemUuid: string;

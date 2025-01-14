@@ -3,13 +3,7 @@ import { ErrorState } from '@openmrs/esm-framework';
 import React, { ChangeEvent, FC, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  DATE_PICKER_CONTROL_FORMAT,
-  DATE_PICKER_FORMAT,
-  formatForDatePicker,
-  MAIN_STORE_LOCATION_TAG,
-  today,
-} from '../../../constants';
+import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, MAIN_STORE_LOCATION_TAG } from '../../../constants';
 import { Party } from '../../../core/api/types/Party';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';

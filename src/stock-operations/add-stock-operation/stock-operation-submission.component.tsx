@@ -1,11 +1,11 @@
+import { Button, InlineLoading, RadioButton, RadioButtonGroup, TextInput } from '@carbon/react';
+import { Departure, ListChecked, Save, SendFilled, Undo } from '@carbon/react/icons';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { SaveStockOperation, SaveStockOperationAction } from '../../stock-items/types';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { SaveStockOperation, SaveStockOperationAction } from '../../stock-items/types';
 import { InitializeResult } from './types';
-import { Button, InlineLoading, RadioButton, RadioButtonGroup, TextInput } from '@carbon/react';
-import { Departure, ListChecked, Save, SendFilled, Undo } from '@carbon/react/icons';
 
 interface StockOperationSubmissionProps {
   isEditing?: boolean;

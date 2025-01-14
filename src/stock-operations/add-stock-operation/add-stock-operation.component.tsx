@@ -1,42 +1,41 @@
+import { AccordionSkeleton } from '@carbon/react';
+import { CircleDash } from '@carbon/react/icons';
+import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TabItem } from '../../core/components/tabs/types';
-import VerticalTabs from '../../core/components/tabs/vertical-tabs.component';
-import BaseOperationDetails from './base-operation-details.component';
-import StockItemsAddition from './stock-items-addition.component';
-import StockOperationSubmission from './stock-operation-submission.component';
-import ReceivedItems from './received-items.component';
-import { AddStockOperationProps } from './types';
-import { useInitializeStockOperations } from './add-stock-operation.resource';
-import { AccordionSkeleton } from '@carbon/react';
-import { closeOverlay } from '../../core/components/overlay/hook';
-import { addOrEditStockOperation, showActionDialogButton } from '../stock-operation.utils';
-import StockOperationApprovalButton from '../stock-operations-dialog/stock-operations-approve-button.component';
-import StockOperationRejectButton from '../stock-operations-dialog/stock-operations-reject-button.component';
-import StockOperationReturnButton from '../stock-operations-dialog/stock-operations-return-button.component';
-import StockOperationCancelButton from '../stock-operations-dialog/stock-operations-cancel-button.component';
-import StockOperationPrintButton from '../stock-operations-dialog/stock-operations-print-button.component';
-import StockOperationApproveDispatchButton from '../stock-operations-dialog/stock-operations-approve-dispatch-button.component';
-import StockOperationCompleteDispatchButton from '../stock-operations-dialog/stock-operations-completed-dispatch-button.component';
-import StockOperationIssueStockButton from '../stock-operations-dialog/stock-operations-issue-stock-button.component';
-import { StockOperation } from './stock-operation-context/useStockOperationContext';
-import { showSnackbar } from '@openmrs/esm-framework';
+import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/StockOperationLinkDTO';
 import {
+  operationFromString,
   OperationType,
-  StockOperationTypeIsStockIssue,
   StockOperationType,
   StockOperationTypeCanBeRelatedToRequisition,
-  operationFromString,
+  StockOperationTypeIsStockIssue,
   StockOperationTypeRequiresDispatchAcknowledgement,
 } from '../../core/api/types/stockOperation/StockOperationType';
-import { getStockOperationLinks, operationStatusColor } from '../stock-operations.resource';
-import styles from './add-stock-operation.scss';
+import { closeOverlay } from '../../core/components/overlay/hook';
+import { TabItem } from '../../core/components/tabs/types';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
-import { StockOperationLinkDTO } from '../../core/api/types/stockOperation/StockOperationLinkDTO';
-import StockOperationStatus from './stock-operation-status.component';
-import StockOperationRelatedLink from './stock-operation-related-link.component';
-import { CircleDash, Printer } from '@carbon/react/icons';
+import { addOrEditStockOperation, showActionDialogButton } from '../stock-operation.utils';
+import StockOperationApprovalButton from '../stock-operations-dialog/stock-operations-approve-button.component';
+import StockOperationApproveDispatchButton from '../stock-operations-dialog/stock-operations-approve-dispatch-button.component';
+import StockOperationCancelButton from '../stock-operations-dialog/stock-operations-cancel-button.component';
+import StockOperationCompleteDispatchButton from '../stock-operations-dialog/stock-operations-completed-dispatch-button.component';
+import StockOperationIssueStockButton from '../stock-operations-dialog/stock-operations-issue-stock-button.component';
+import StockOperationPrintButton from '../stock-operations-dialog/stock-operations-print-button.component';
+import StockOperationRejectButton from '../stock-operations-dialog/stock-operations-reject-button.component';
+import StockOperationReturnButton from '../stock-operations-dialog/stock-operations-return-button.component';
 import StockOperationStepper from '../stock-operations-forms/stock-operation-stepper/stock-operation-stepper.component';
+import { getStockOperationLinks, operationStatusColor } from '../stock-operations.resource';
+import { useInitializeStockOperations } from './add-stock-operation.resource';
+import styles from './add-stock-operation.scss';
+import BaseOperationDetails from './base-operation-details.component';
+import ReceivedItems from './received-items.component';
+import StockItemsAddition from './stock-items-addition.component';
+import { StockOperation } from './stock-operation-context/useStockOperationContext';
+import StockOperationRelatedLink from './stock-operation-related-link.component';
+import StockOperationStatus from './stock-operation-status.component';
+import StockOperationSubmission from './stock-operation-submission.component';
+import { AddStockOperationProps } from './types';
 
 const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
   const { t } = useTranslation();

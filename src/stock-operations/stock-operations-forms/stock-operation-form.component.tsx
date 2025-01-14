@@ -4,22 +4,22 @@ import { parseDate, showSnackbar, useConfig, useSession } from '@openmrs/esm-fra
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ConfigObject } from '../../config-schema';
+import { today } from '../../constants';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { operationFromString, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { TabItem } from '../../core/components/tabs/types';
+import { otherUser, pick } from '../../core/utils/utils';
 import {
   getStockOperationFormSchema,
   getStockOperationItemFormSchema,
   StockOperationItemDtoSchema,
 } from '../validation-schema';
-import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
-import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
-import { ConfigObject } from '../../config-schema';
-import { today } from '../../constants';
-import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import useOperationTypePermisions from './hooks/useOperationTypePermisions';
+import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
+import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
-import { otherUser, pick } from '../../core/utils/utils';
+import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 
 /**
  * Props interface for the StockOperationForm component

@@ -21,8 +21,8 @@ import { useStockItem } from '../../../stock-items/stock-items.resource';
 import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
-import styles from './stock-item-form.scss';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
+import styles from './stock-item-form.scss';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
