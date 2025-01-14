@@ -140,7 +140,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
       disabled: !(isEditing || manageStockItems),
     },
     {
-      name: result?.requiresDispatchAcknowledgement ? 'Submit/Dispatch' : 'Submit/Complete',
+      name: result?.requiresDispatchAcknowledgement ? 'Submit/Dispatch' : 'pstockoperSubmit/Complete',
       component: (
         <StockOperationSubmission
           {...props}

@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import { Edit } from '@carbon/react/icons';
+import { Edit, TrashCan } from '@carbon/react/icons';
 import { isDesktop, launchWorkspace } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -126,6 +126,13 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     [stockOperationType, t, form],
   );
 
+  const handleDeleteStockOperationItem = useCallback(
+    (item: BaseStockOperationItemFormData) => {
+      form.setValue('stockOperationItems', observableOperationItems.filter((i) => i.uuid !== item.uuid) as any);
+    },
+    [form, observableOperationItems],
+  );
+
   const tableRows = useMemo(() => {
     return (observableOperationItems ?? []).map((item) => {
       const { batchNo, expiration, quantity, purchasePrice, uuid, stockItemUuid, stockItemPackagingUOMUuid } = item;
@@ -143,21 +150,34 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ),
         purchasePrice: purchasePrice,
         actions: (
-          <Button
-            type="button"
-            size="sm"
-            className="submitButton clear-padding-margin"
-            iconDescription={'Edit'}
-            kind="ghost"
-            renderIcon={Edit}
-            onClick={() => {
-              handleLaunchStockItem(item);
-            }}
-          />
+          <>
+            <Button
+              type="button"
+              size="sm"
+              className="submitButton clear-padding-margin"
+              iconDescription={'Edit'}
+              kind="ghost"
+              renderIcon={Edit}
+              onClick={() => {
+                handleLaunchStockItem(item);
+              }}
+            />
+            <Button
+              type="button"
+              size="sm"
+              className="submitButton clear-padding-margin"
+              iconDescription={'Delete'}
+              kind="ghost"
+              renderIcon={TrashCan}
+              onClick={() => {
+                handleDeleteStockOperationItem(item);
+              }}
+            />
+          </>
         ),
       };
     });
-  }, [observableOperationItems, handleLaunchStockItem]);
+  }, [observableOperationItems, handleLaunchStockItem, handleDeleteStockOperationItem]);
 
   const headerTitle = t('stockoperationItems', 'Stock operation items');
 

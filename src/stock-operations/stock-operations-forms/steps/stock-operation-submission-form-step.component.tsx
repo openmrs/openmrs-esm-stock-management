@@ -1,24 +1,29 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styles from '../stock-operation-form.scss';
 import { Stack } from '@carbon/react';
 import { Button } from '@carbon/react';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { useTranslation } from 'react-i18next';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import { useFormContext } from 'react-hook-form';
-import { StockOperationItemDtoSchema } from '../../validation-schema';
+import {
+  BaseStockOperationItemFormData,
+  getStockOperationItemFormSchema,
+  StockOperationItemDtoSchema,
+} from '../../validation-schema';
 import { Column } from '@carbon/react';
 import { RadioButtonGroup } from '@carbon/react';
 import { RadioButton } from '@carbon/react';
 import { Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
 import { InlineLoading } from '@carbon/react';
 import { addOrEditStockOperation, showActionDialogButton } from '../../stock-operation.utils';
-import { createStockOperation, updateStockOperation } from '../../stock-operations.resource';
+import { createStockOperation, deleteStockOperationItem, updateStockOperation } from '../../stock-operations.resource';
 import { handleMutate } from '../../../utils';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { extractErrorMessagesFromResponse } from '../../../constants';
-import { otherUser } from '../../../core/utils/utils';
+import { otherUser, pick } from '../../../core/utils/utils';
+import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
 
 type StockOperationSubmissionFormStepProps = {
   onPrevious?: () => void;
@@ -42,15 +47,52 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
     let result: StockOperationDTO; // To store the result for returning
     await form.handleSubmit(async (formData) => {
       try {
+        // Get deleted items (items in stock operation bt not i form data)
+        const itemsToDelete = stockOperation.stockOperationItems.reduce<Array<StockOperationItemDTO>>((prev, curr) => {
+          const itemDoNotExistInFormData =
+            formData.stockOperationItems.findIndex((item) => item.uuid === curr.uuid) === -1;
+          if (itemDoNotExistInFormData) {
+            return [...prev, curr];
+          }
+          return prev;
+        }, []);
+        // Delete them from backend asyncrnousely
+        const deleted = await Promise.allSettled(itemsToDelete.map((item) => deleteStockOperationItem(item.uuid)));
+        // Give delete status on completion
+        deleted.forEach((del, index) => {
+          showSnackbar({
+            kind: del.status === 'rejected' ? 'error' : 'success',
+            title:
+              del.status === 'rejected'
+                ? t('stockoperationItemDeleteError', 'Error deleting stock operation item {{item}}', {
+                    item: itemsToDelete[index].commonName,
+                  })
+                : t('success', 'Success'),
+            subtitle:
+              del.status === 'rejected'
+                ? del.reason?.message
+                : t('stockoperationItemDeletSuccess', 'Stock operation item {{item}} deleted succesfully', {
+                    item: itemsToDelete[index].commonName,
+                  }),
+          });
+        });
+        // construct update payload
         const payload = {
           ...formData,
           // Remove other uuid if responsible person is set to other
           responsiblePersonUuid:
             formData.responsiblePersonUuid === otherUser.uuid ? undefined : formData.responsiblePersonUuid,
+          approvalRequired: approvalRequired ? true : false,
+          stockOperationItems: [
+            ...formData.stockOperationItems.map((item) => ({
+              ...item,
+              uuid: item.uuid.startsWith('new-item-') ? undefined : item.uuid, // Remove uuid for newly inserted items to avoid foreign key constraint lookup error
+            })),
+          ],
         };
         const resp = await (stockOperation
-          ? updateStockOperation(stockOperation, payload)
-          : createStockOperation(payload));
+          ? updateStockOperation(stockOperation, payload as any)
+          : createStockOperation(payload as any));
         result = resp.data; // Store the response data
         handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
         showSnackbar({
@@ -71,31 +113,26 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           kind: 'error',
           isLowContrast: true,
         });
+        throw error;
       }
     })(); // Call handleSubmit to trigger validation and submission
     return result; // Return the result after handleSubmit completes
-  }, [form, stockOperation, t]);
+  }, [form, stockOperation, t, approvalRequired]);
 
-  const handleComplete = useCallback(async () => {
-    // delete model?.dateCreated;
-    //   // setIsSaving(true);
-    //   // if (!isEditing) {
-    //   //   delete model.status;
-    //   //   await actions.onSave(model);
-    //   //   setIsSaving(false);
-    //   // }
-    //   // model.status = 'COMPLETED';
-    //   // actions.onComplete(model);
-    //   // setIsSaving(false);
-    const operation = await handleSave();
-    alert(JSON.stringify(operation, null, 2));
-    // showActionDialogButton('Complete', false, props?.model);
+  const handleComplete = useCallback(() => {
+    handleSave().then((operation) => {
+      showActionDialogButton('Complete', false, { ...operation, status: 'COMPLETED' });
+    });
   }, [handleSave]);
-  const handleSubmitForReview = useCallback(async () => {
-    const operation = await handleSave();
+  const handleSubmitForReview = useCallback(() => {
+    handleSave().then((operation) => {
+      showActionDialogButton('Submit', false, { ...operation, status: 'SUBMITTED' });
+    });
   }, [handleSave]);
-  const handleDispatch = useCallback(async () => {
-    const operation = await handleSave();
+  const handleDispatch = useCallback(() => {
+    handleSave().then((operation) => {
+      showActionDialogButton('Dispatch', false, { ...operation, status: 'DISPATCHED' });
+    });
   }, [handleSave]);
 
   return (
@@ -150,16 +187,6 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                 style={{ margin: '4px' }}
                 className="submitButton"
                 kind="primary"
-                // onClick={async () => {
-                //   // delete model?.dateCreated;
-                //   // delete model?.status;
-                //   // setIsSaving(true);
-                //   // await actions.onSave(model).then(() => {
-                //   //   model.status = 'DISPATCHED';
-                //   //   actions.onDispatch(model);
-                //   //   setIsSaving(false);
-                //   // });
-                // }}
                 onClick={handleDispatch}
                 renderIcon={Departure}
               >
@@ -177,16 +204,6 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                 style={{ margin: '4px' }}
                 className="submitButton"
                 kind="primary"
-                // onClick={async () => {
-                //   // delete model?.dateCreated;
-                //   // delete model?.status;
-                //   // setIsSaving(true);
-                //   // await actions.onSave(model).then(() => {
-                //   //   model.status = 'SUBMITTED';
-                //   //   actions.onSubmit(model);
-                //   //   setIsSaving(false);
-                //   // });
-                // }}
                 onClick={handleSubmitForReview}
                 renderIcon={SendFilled}
               >
@@ -205,14 +222,6 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           className="submitButton"
           style={{ margin: '4px' }}
           disabled={form.formState.isSubmitting}
-          // onClick={async () => {
-          //   // delete model?.dateCreated;
-          //   // delete model?.status;
-          //   // setIsSaving(true);
-          //   // model.approvalRequired = approvalRequired ? true : false;
-          //   // await actions.onSave(model);
-          //   // setIsSaving(false);
-          // }}
           kind="secondary"
           onClick={handleSave}
           renderIcon={Save}

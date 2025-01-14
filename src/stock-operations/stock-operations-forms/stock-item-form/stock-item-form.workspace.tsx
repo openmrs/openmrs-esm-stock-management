@@ -16,15 +16,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
-import QtyUomSelector from '../../qty-uom-selector/qty-uom-selector.component';
-import styles from './stock-item-form.scss';
-import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
 import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
-import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
-import StockOperationItemCell from '../steps/stock-operation-item-cell.component';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
+import QtyUomSelector from '../../qty-uom-selector/qty-uom-selector.component';
+import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
+import styles from './stock-item-form.scss';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;

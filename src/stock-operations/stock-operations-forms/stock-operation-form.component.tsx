@@ -7,7 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { operationFromString, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { TabItem } from '../../core/components/tabs/types';
-import { getStockOperationFormSchema, StockOperationItemDtoSchema } from '../validation-schema';
+import {
+  getStockOperationFormSchema,
+  getStockOperationItemFormSchema,
+  StockOperationItemDtoSchema,
+} from '../validation-schema';
 import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 import { ConfigObject } from '../../config-schema';
@@ -15,7 +19,7 @@ import { today } from '../../constants';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import useOperationTypePermisions from './hooks/useOperationTypePermisions';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
-import { otherUser } from '../../core/utils/utils';
+import { otherUser, pick } from '../../core/utils/utils';
 
 /**
  * Props interface for the StockOperationForm component
@@ -35,7 +39,9 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
-
+  const stockOperationItemFormSchema = useMemo(() => {
+    return getStockOperationItemFormSchema(operationType);
+  }, [operationType]);
   const formschema = useMemo(() => {
     return getStockOperationFormSchema(operationType);
   }, [operationType]);
@@ -97,7 +103,9 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
       operationTypeUuid: stockOperation?.operationTypeUuid ?? stockOperationType?.uuid,
       reasonUuid: stockOperation?.reasonUuid ?? '',
       responsiblePersonOther: stockOperation?.responsiblePersonOther ?? '',
-      stockOperationItems: stockOperation?.stockOperationItems ?? [],
+      stockOperationItems:
+        stockOperation?.stockOperationItems?.map((item) => pick(item, stockOperationItemFormSchema.keyof().options)) ??
+        [],
     },
     mode: 'all',
     resolver: zodResolver(formschema),
