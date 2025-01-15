@@ -9,10 +9,9 @@ import { launchAddOrEditDialog } from '../stock-operation.utils';
 
 interface StockOperationIssueStockButtonProps {
   operation: StockOperationDTO;
-  operations: StockOperationType[];
 }
 
-const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonProps> = ({ operation, operations }) => {
+const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
   const type: StockOperationType = {
     uuid: '',

@@ -270,7 +270,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
 
                 {props?.model?.permission?.isRequisitionAndCanIssueStock && (
                   <div style={{ margin: '2px' }}>
-                    <StockOperationIssueStockButton operation={props?.model} operations={operations} />
+                    <StockOperationIssueStockButton operation={props?.model} />
                   </div>
                 )}
                 {(props?.model?.permission?.isRequisitionAndCanIssueStock ||

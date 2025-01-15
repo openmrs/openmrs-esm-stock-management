@@ -14,9 +14,6 @@ type StockOperationItemCellProps = {
 const StockOperationItemCell: React.FC<StockOperationItemCellProps> = ({ stockItemUuid }) => {
   const { isLoading, error, item } = useStockItem(stockItemUuid);
   const { t } = useTranslation();
-  const isStockItem = useCallback((obj: any): obj is StockItemDTO => {
-    return typeof obj === 'object' && obj !== null && 'drugName' in obj;
-  }, []);
 
   useEffect(() => {
     if (error) {
@@ -30,12 +27,7 @@ const StockOperationItemCell: React.FC<StockOperationItemCellProps> = ({ stockIt
 
   if (isLoading) return <InlineLoading status="active" iconDescription="Loading" />;
   if (error) return <>--</>;
-  if (isStockItem(item))
-    return (
-      <Link target={'_blank'} to={URL_STOCK_ITEM(stockItemUuid)}>
-        {item?.drugName || 'No stock item name'}
-      </Link>
-    );
+
   return (
     <Link target={'_blank'} to={URL_STOCK_ITEM(stockItemUuid)}>
       {(item as StockItemDTO)?.commonName || 'No name available'}

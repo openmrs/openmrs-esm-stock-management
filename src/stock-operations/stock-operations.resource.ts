@@ -64,7 +64,7 @@ export function useStockOperation(id: string | null) {
   const apiUrl = id ? `${restBaseUrl}/stockmanagement/stockoperation/${id}` : null;
   const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, apiUrl ? openmrsFetch : null);
   return {
-    items: data?.data || {},
+    items: data?.data,
     isLoading,
     error,
   };

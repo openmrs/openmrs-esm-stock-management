@@ -71,3 +71,21 @@
   gap: layout.$spacing-03;
   align-items: center;
 }
+
+.relatedLink {
+  margin-left: layout.$spacing-02;
+  color: colors.$blue-60;
+}
+
+.statusBody {
+  display: flex;
+  justify-content: space-between;
+  margin: layout.$spacing-02;
+}
+
+.actionBtns {
+  margin: layout.$spacing-03;
+  display: flex;
+  flex-direction: row;
+  gap: layout.$spacing-03;
+}

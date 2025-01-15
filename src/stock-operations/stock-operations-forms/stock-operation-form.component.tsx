@@ -2,7 +2,7 @@ import { CircleDash } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, showSnackbar, useConfig, useSession } from '@openmrs/esm-framework';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FieldError, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ConfigObject } from '../../config-schema';
 import { today } from '../../constants';
@@ -20,6 +20,7 @@ import BaseOperationDetailsFormStep from './steps/base-operation-details-form-st
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
+import StockOperationFormHeader from './stock-operation-form-header.component';
 
 /**
  * Props interface for the StockOperationForm component
@@ -119,7 +120,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
     // Show error snackbar
     Object.entries(form.formState.errors ?? {}).forEach(([key, val]) => {
       if (['stockOperationItems', 'operationTypeUuid'].includes(key)) {
-        showSnackbar({ kind: 'error', title: key, subtitle: val[key]?.message });
+        showSnackbar({ kind: 'error', title: key, subtitle: (val[key] as FieldError)?.message });
       }
     });
     // Navigate to step where the error is
@@ -146,6 +147,9 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
 
   return (
     <FormProvider {...form}>
+      {stockOperation && (
+        <StockOperationFormHeader stockOperationType={stockOperationType} stockOperation={stockOperation} />
+      )}
       <StockOperationStepper
         steps={steps.map((tab, index) => ({
           title: tab.name,
