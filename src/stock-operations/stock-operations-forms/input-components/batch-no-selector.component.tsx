@@ -16,7 +16,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
   const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid);
   const { t } = useTranslation();
 
-  const { items, setStockItemUuid } = useStockItemBatchInformationHook();
+  const { items, setStockItemUuid, isLoading: isLoadingBatchinfo } = useStockItemBatchInformationHook();
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
@@ -43,7 +43,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
     [filteredBatches, intiallvalue],
   );
 
-  if (isLoading) return <SelectSkeleton />;
+  if (isLoading || isLoadingBatchinfo) return <SelectSkeleton role="progressbar" />;
 
   return (
     <ComboBox

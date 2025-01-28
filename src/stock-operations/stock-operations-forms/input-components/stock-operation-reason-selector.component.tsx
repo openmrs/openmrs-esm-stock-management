@@ -16,7 +16,7 @@ const StockOperationReasonSelector = () => {
     items: { answers: reasons },
   } = useConcept(stockAdjustmentReasonUUID);
   const { t } = useTranslation();
-  if (isLoading) return <SelectSkeleton />;
+  if (isLoading) return <SelectSkeleton role="progressbar" />;
 
   if (error)
     return (

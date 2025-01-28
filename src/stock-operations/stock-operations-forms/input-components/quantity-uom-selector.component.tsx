@@ -19,13 +19,13 @@ const QtyUomSelector: React.FC<QtyUomSelectorProps> = ({ stockItemUuid, error, i
     [item?.packagingUnits, intiallvalue],
   );
 
-  if (isLoading) return <SkeletonText />;
+  if (isLoading) return <SkeletonText role="progressbar" />;
 
   if (stockItemError)
     return (
       <InlineNotification
         kind="error"
-        title={t('packagingUomError', 'Error loading Stock item packaging UOM ')}
+        title={t('packagingUomError', 'Error loading Stock item')}
         subtitle={stockItemError?.message}
       />
     );
