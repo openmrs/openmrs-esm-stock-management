@@ -13,6 +13,7 @@ import useParties from '../hooks/useParties';
 import StockOperationReasonSelector from '../input-components/stock-operation-reason-selector.component';
 import UsersSelector from '../input-components/users-selector.component';
 import styles from '../stock-operation-form.scss';
+import { TextInput } from '@carbon/react';
 
 type BaseOperationDetailsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -87,6 +88,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           name="operationDate"
           render={({ field, fieldState: { error } }) => (
             <DatePicker
+              readOnly={field.disabled}
               id={`operationDate`}
               datePickerType="single"
               locale="en"
@@ -112,6 +114,14 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           )}
         />
       </Column>
+      {stockOperation?.operationNumber && (
+        <TextInput
+          id="operationNoLbl"
+          value={stockOperation?.operationNumber}
+          readOnly={true}
+          labelText={t('operationNumber', 'Operation Number')}
+        />
+      )}
       <Column>
         <Controller
           control={form.control}
@@ -123,6 +133,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                   ? t('from', 'From')
                   : t('location', 'Location')
               }
+              readOnly={field.disabled}
               name={'sourceUuid'}
               id={'sourceUuid'}
               size={'xl'}
@@ -153,6 +164,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
             name="destinationUuid"
             render={({ field, fieldState: { error } }) => (
               <ComboBox
+                readOnly={field.disabled}
                 titleText={
                   stockOperationType?.hasSource || stockOperation?.atLocationUuid
                     ? t('to', 'To')
@@ -195,6 +207,8 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           render={({ field, fieldState: { error } }) => (
             <TextArea
               {...field}
+              readOnly={field.disabled}
+              disabled={false}
               maxCount={250}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                 field.onChange(e.target.value);

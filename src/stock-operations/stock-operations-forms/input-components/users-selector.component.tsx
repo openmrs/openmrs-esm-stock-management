@@ -52,6 +52,7 @@ const UsersSelector = () => {
           control={form.control}
           render={({ field, fieldState: { error } }) => (
             <ComboBox
+              readOnly={field.disabled}
               titleText={t('responsiblePerson', 'Responsible Person')}
               name={'responsiblePersonUuid'}
               controllerName={'responsiblePersonUuid'}
@@ -89,6 +90,8 @@ const UsersSelector = () => {
             render={({ field, fieldState: { error } }) => (
               <TextInput
                 {...field}
+                readOnly={field.disabled}
+                disabled={false}
                 id="responsiblePersonOther"
                 name="responsiblePersonOther"
                 controllerName="responsiblePersonOther"

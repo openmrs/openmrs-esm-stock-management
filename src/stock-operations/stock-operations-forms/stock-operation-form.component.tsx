@@ -21,6 +21,7 @@ import StockOperationItemsFormStep from './steps/stock-operation-items-form-step
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 import StockOperationFormHeader from './stock-operation-form-header.component';
+import { getStockOperationLocationByOperationType } from './stock-operations-form-utils';
 
 /**
  * Props interface for the StockOperationForm component
@@ -89,7 +90,6 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
   } = useSession();
   const { autoPopulateResponsiblePerson } = useConfig<ConfigObject>();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // TODO Default values not picking well, find and fix
   const form = useForm<StockOperationItemDtoSchema>({
     // defaultValues: operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE ? issueStockOperation : model,
     defaultValues: {
@@ -99,8 +99,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
         (autoPopulateResponsiblePerson ? defaultLoggedUserUuid : undefined), //Else default login user if configured
       operationDate: stockOperation?.operationDate ? parseDate(stockOperation!.operationDate as any) : today(),
       remarks: stockOperation?.remarks ?? '',
-      sourceUuid: stockOperation?.sourceUuid ?? '',
-      destinationUuid: stockOperation?.destinationUuid ?? '',
+
       operationTypeUuid: stockOperation?.operationTypeUuid ?? stockOperationType?.uuid,
       reasonUuid: stockOperation?.reasonUuid ?? '',
       responsiblePersonOther: stockOperation?.responsiblePersonOther ?? '',
@@ -111,7 +110,10 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
             stockOperationItemFormSchema.keyof().options,
           ),
         ) ?? [],
+      sourceUuid: stockOperation?.sourceUuid ?? '',
+      destinationUuid: stockOperation?.destinationUuid ?? '',
     },
+    disabled: true,
     mode: 'all',
     resolver: zodResolver(formschema),
   });
