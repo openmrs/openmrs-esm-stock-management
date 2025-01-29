@@ -1,16 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { useStockItem } from '../../../stock-items/stock-items.resource';
-import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
-import QtyUomSelector from './quantity-uom-selector.component';
 
-import { ConfigObject } from '../../../config-schema';
-import { Concept } from '../../../core/api/types/concept/Concept';
-import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
-import StockOperationReasonSelector from './stock-operation-reason-selector.component';
 import { useConfig } from '@openmrs/esm-framework';
 import { useFormContext } from 'react-hook-form';
+import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
+import StockOperationReasonSelector from './stock-operation-reason-selector.component';
 
 // Mock the hooks
 jest.mock('@openmrs/esm-framework', () => ({
