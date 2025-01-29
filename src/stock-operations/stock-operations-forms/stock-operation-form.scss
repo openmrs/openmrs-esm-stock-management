@@ -77,6 +77,16 @@
   color: colors.$blue-60;
 }
 
+.textHeading {
+  font-weight: bold;
+}
+
+.statusLabel {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: layout.$spacing-05;
+}
+
 .statusBody {
   display: flex;
   justify-content: space-between;
@@ -88,4 +98,14 @@
   display: flex;
   flex-direction: row;
   gap: layout.$spacing-03;
+  flex-wrap: wrap;
+  height: fit-content;
+}
+
+.operationlinkscontainer {
+  margin: layout.$spacing-05;
+}
+
+.relatedTransactionHeader {
+  color: colors.$green-50;
 }

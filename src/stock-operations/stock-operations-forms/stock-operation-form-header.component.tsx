@@ -1,21 +1,26 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { OperationType, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import useOperationTypePermisions from './hooks/useOperationTypePermisions';
-import useStockOperationLinks from './hooks/useStockOperationLinks';
-import StockOperationRelatedLink from './stock-operation-related-link.component';
-import styles from './stock-operation-form.scss';
-import StockOperationStatus from '../add-stock-operation/stock-operation-status.component';
-import { operationStatusColor } from '../stock-operations.resource';
+import {
+  operationFromString,
+  OperationType,
+  StockOperationType,
+  StockOperationTypeHasPrint,
+} from '../../core/api/types/stockOperation/StockOperationType';
 import StockOperationApprovalButton from '../stock-operations-dialog/stock-operations-approve-button.component';
 import StockOperationApproveDispatchButton from '../stock-operations-dialog/stock-operations-approve-dispatch-button.component';
-import StockOperationRejectButton from '../stock-operations-dialog/stock-operations-reject-button.component';
-import StockOperationReturnButton from '../stock-operations-dialog/stock-operations-return-button.component';
 import StockOperationCancelButton from '../stock-operations-dialog/stock-operations-cancel-button.component';
 import StockOperationCompleteDispatchButton from '../stock-operations-dialog/stock-operations-completed-dispatch-button.component';
 import StockOperationIssueStockButton from '../stock-operations-dialog/stock-operations-issue-stock-button.component';
 import StockOperationPrintButton from '../stock-operations-dialog/stock-operations-print-button.component';
-import { useTranslation } from 'react-i18next';
+import StockOperationRejectButton from '../stock-operations-dialog/stock-operations-reject-button.component';
+import StockOperationReturnButton from '../stock-operations-dialog/stock-operations-return-button.component';
+import { operationStatusColor } from '../stock-operations.resource';
+import useOperationTypePermisions from './hooks/useOperationTypePermisions';
+import useStockOperationLinks from './hooks/useStockOperationLinks';
+import styles from './stock-operation-form.scss';
+import StockOperationRelatedLink from './stock-operation-related-link.component';
+import StockOperationStatusRow from '../stock-operation-status/stock-operation-status-row';
 
 type Props = {
   stockOperation: StockOperationDTO;
@@ -24,8 +29,20 @@ type Props = {
 
 const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOperation }) => {
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
-  //   TODO get stockoperation uuid if is of type requisition
-  const requisitionOperationUuid = useMemo(() => null, []);
+  const operationType = useMemo(() => {
+    return operationFromString(stockOperationType.operationType);
+  }, [stockOperationType]);
+  const requisitionOperationUuid = useMemo(() => {
+    if (
+      stockOperationType?.operationType === OperationType.REQUISITION_OPERATION_TYPE ||
+      stockOperation?.operationType === OperationType.REQUISITION_OPERATION_TYPE ||
+      stockOperationType?.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE ||
+      stockOperation?.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE
+    ) {
+      return stockOperation.uuid;
+    }
+    return null;
+  }, [stockOperationType, stockOperation]);
   const { error, isLoading, operationLinks } = useStockOperationLinks(requisitionOperationUuid);
   const { t } = useTranslation();
   if (isLoading || error) return null;
@@ -33,7 +50,7 @@ const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOp
   return (
     <div>
       <div className={styles.statusBody}>
-        <div style={{ margin: '10px' }}>
+        <div className={styles.operationlinkscontainer}>
           <div className={styles.statusLabel}>
             <span className={styles.textHeading}>{t('status', 'Status ')}:</span>
             <span
@@ -45,88 +62,67 @@ const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOp
               {stockOperation?.status}
             </span>
           </div>
-          <StockOperationStatus model={stockOperation} />
+          <StockOperationStatusRow stockOperation={stockOperation} />
         </div>
 
         {((!stockOperation.permission?.canEdit &&
           (stockOperation.permission?.canApprove || stockOperation.permission?.canReceiveItems)) ||
           stockOperation.permission?.canEdit ||
-          //   TODO fOLLOW UP THE CAN PRINT LOGIC
-          //   canPrint ||
+          StockOperationTypeHasPrint(operationType) ||
+          (stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false) ||
+          //   canPrint || (replaced by StockOperationTypeHasPrint and stockOperation?.permission?.isRequisitionAndCanIssueStock)
           stockOperation.permission?.isRequisitionAndCanIssueStock) && (
           <div className={styles.actionBtns}>
             <>
               {!stockOperation.permission?.canEdit && stockOperation.permission?.canApprove && (
                 <>
                   {!operationTypePermision.requiresDispatchAcknowledgement && (
-                    <div style={{ margin: '2px' }}>
-                      <StockOperationApprovalButton operation={stockOperation} />
-                    </div>
+                    <StockOperationApprovalButton operation={stockOperation} />
                   )}
 
                   {operationTypePermision.requiresDispatchAcknowledgement && (
-                    <div style={{ margin: '2px' }}>
-                      <StockOperationApproveDispatchButton operation={stockOperation} />
-                    </div>
+                    <StockOperationApproveDispatchButton operation={stockOperation} />
                   )}
 
-                  <div style={{ margin: '2px' }}>
-                    <StockOperationRejectButton operation={stockOperation} />
-                  </div>
-                  <div style={{ margin: '2px' }}>
-                    <StockOperationReturnButton operation={stockOperation} />
-                  </div>
-                  <div style={{ margin: '2px' }}>
-                    <StockOperationCancelButton operation={stockOperation} />
-                  </div>
+                  <StockOperationRejectButton operation={stockOperation} />
+                  <StockOperationReturnButton operation={stockOperation} />
+                  <StockOperationCancelButton operation={stockOperation} />
                 </>
               )}
 
               {!stockOperation.permission?.canEdit && stockOperation.permission?.canReceiveItems && (
                 <>
-                  <div style={{ margin: '2px' }}>
-                    <StockOperationCompleteDispatchButton operation={stockOperation} reason={false} />
-                  </div>
-                  <div style={{ margin: '2px' }}>
-                    <StockOperationReturnButton operation={stockOperation} />
-                  </div>
+                  <StockOperationCompleteDispatchButton operation={stockOperation} reason={false} />
+                  <StockOperationReturnButton operation={stockOperation} />
                 </>
               )}
 
-              {stockOperation.permission?.canEdit && (
-                <div style={{ margin: '2px' }}>
-                  <StockOperationCancelButton operation={stockOperation} />
-                </div>
-              )}
-
+              {stockOperation.permission?.canEdit && <StockOperationCancelButton operation={stockOperation} />}
+              {/* TODO Fix this issue, not issuing when clicked */}
               {stockOperation.permission?.isRequisitionAndCanIssueStock && (
-                <div style={{ margin: '2px' }}>
-                  <StockOperationIssueStockButton operation={stockOperation} />
-                </div>
+                <StockOperationIssueStockButton operation={stockOperation} />
               )}
               {(stockOperation.permission?.isRequisitionAndCanIssueStock ||
                 stockOperation.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE ||
                 stockOperation.operationType === OperationType.REQUISITION_OPERATION_TYPE ||
                 stockOperation.operationType === OperationType.RECEIPT_OPERATION_TYPE ||
                 stockOperation.operationType === OperationType.TRANSFER_OUT_OPERATION_TYPE) && (
-                <div style={{ margin: '2px' }}>
-                  <StockOperationPrintButton operation={stockOperation} />
-                </div>
+                <StockOperationPrintButton operation={stockOperation} />
               )}
             </>
           </div>
         )}
       </div>
-      {operationLinks.length > 0 && (
-        <div style={{ margin: '10px' }}>
-          <h6 style={{ color: '#24a148' }}>Related Transactions:</h6>
+      {operationLinks && operationLinks.length > 0 && (
+        <div className={styles.operationlinkscontainer}>
+          <h6 className={styles.relatedTransactionHeader}>Related Transactions:</h6>
           {operationLinks.map(
             (item) =>
               (stockOperation.uuid === item?.parentUuid || stockOperationType?.uuid === item?.parentUuid) && (
-                <>
+                <React.Fragment key={item.uuid}>
                   <span>{item?.childOperationTypeName}</span>
                   <span className={item?.childVoided ? 'voided' : ''}>
-                    <span> </span>
+                    {' '}
                     {item?.childVoided && item?.childOperationNumber}
                     {!item?.childVoided && (
                       <span className={styles.relatedLink}>
@@ -136,20 +132,19 @@ const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOp
                         />
                       </span>
                     )}
-                  </span>
-                  <span> </span>
+                  </span>{' '}
                   <span>[{item?.childStatus}]</span>
-                </>
+                </React.Fragment>
               ),
           )}
           <span> </span>
           {operationLinks.map(
             (item) =>
               (stockOperation.uuid === item?.childUuid || stockOperationType.uuid === item?.childUuid) && (
-                <>
+                <React.Fragment key={item.uuid}>
                   <span>{item?.parentOperationTypeName}</span>
                   <span className={item?.parentVoided ? 'voided' : ''}>
-                    <span> </span>
+                    {' '}
                     {item?.parentVoided && item?.parentOperationNumber}
                     {!item?.parentVoided && (
                       <span className={styles.relatedLink}>
@@ -159,10 +154,9 @@ const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOp
                         />
                       </span>
                     )}
-                  </span>
-                  <span> </span>
+                  </span>{' '}
                   <span>[{item?.parentStatus}]</span>
-                </>
+                </React.Fragment>
               ),
           )}
         </div>

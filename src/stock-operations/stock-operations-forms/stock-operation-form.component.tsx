@@ -83,7 +83,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
         ),
         disabled: true,
       },
-    ] as TabItem[];
+    ] as TabItem[]; // TODO Add dispatch extra tabs
   }, [stockOperation, stockOperationType, t, operationTypePermision]);
   const {
     user: { uuid: defaultLoggedUserUuid },
