@@ -31,53 +31,53 @@ const UsersSelector = () => {
       form.resetField('responsiblePersonOther');
     }
   }, [observableresponsiblePersonUuid, form]);
+
+  if (isLoadingUser && observableresponsiblePersonUuid !== otherUser.uuid && observableresponsiblePersonUuid)
+    return <SelectSkeleton role="progressbar" />;
+
+  if (observableresponsiblePersonUuid && observableresponsiblePersonUuid !== otherUser.uuid && userError)
+    return (
+      <InlineNotification
+        lowContrast
+        title={t('responsiblePersonError', 'Error loading responsible person')}
+        subtitle={userError?.message}
+      />
+    );
+
   return (
-    <>
+    <React.Fragment>
       <Column>
         <Controller
           name={'responsiblePersonUuid'}
           control={form.control}
-          render={({ field, fieldState: { error } }) => {
-            {
-              if (isLoadingUser && field.value !== otherUser.uuid && field.value) return <SelectSkeleton />;
-              if (field.value && field.value !== otherUser.uuid && userError)
-                return (
-                  <InlineNotification
-                    lowContrast
-                    title={t('responsiblePersonError', 'Error loading responsible person')}
-                    subtitle={userError?.message}
-                  />
-                );
-              return (
-                <ComboBox
-                  titleText={t('responsiblePerson', 'Responsible Person')}
-                  name={'responsiblePersonUuid'}
-                  controllerName={'responsiblePersonUuid'}
-                  id={'responsiblePersonUuid'}
-                  size={'xl'}
-                  items={[...(userList || []), otherUser]}
-                  onChange={(data: { selectedItem: User }) => {
-                    field.onChange(data.selectedItem?.uuid);
-                  }}
-                  initialSelectedItem={
-                    field.value
-                      ? field.value === otherUser.uuid
-                        ? otherUser
-                        : data
-                      : observableresponsiblePersonOther && !observableresponsiblePersonUuid
-                      ? otherUser
-                      : ''
-                  }
-                  itemToString={(item) => item?.person?.display || ''}
-                  onInputChange={debouncedSearch}
-                  placeholder={t('filter', 'Filter ...')}
-                  invalid={error?.message}
-                  invalidText={error?.message}
-                  ref={field.ref}
-                />
-              );
-            }
-          }}
+          render={({ field, fieldState: { error } }) => (
+            <ComboBox
+              titleText={t('responsiblePerson', 'Responsible Person')}
+              name={'responsiblePersonUuid'}
+              controllerName={'responsiblePersonUuid'}
+              id={'responsiblePersonUuid'}
+              size={'xl'}
+              items={[...(userList || []), otherUser]}
+              onChange={(data: { selectedItem: User }) => {
+                field.onChange(data.selectedItem?.uuid);
+              }}
+              initialSelectedItem={
+                field.value
+                  ? field.value === otherUser.uuid
+                    ? otherUser
+                    : data
+                  : observableresponsiblePersonOther && !observableresponsiblePersonUuid
+                  ? otherUser
+                  : ''
+              }
+              itemToString={(item) => item?.person?.display || ''}
+              onInputChange={debouncedSearch}
+              placeholder={t('filter', 'Filter ...')}
+              invalid={error?.message}
+              invalidText={error?.message}
+              ref={field.ref}
+            />
+          )}
         />
       </Column>
       {(observableresponsiblePersonUuid === otherUser.uuid ||
@@ -102,7 +102,7 @@ const UsersSelector = () => {
           />
         </Column>
       )}
-    </>
+    </React.Fragment>
     // {isLoading && <InlineLoading status="active" iconDescription="Searching" description="Searching..." />}
   );
 };
