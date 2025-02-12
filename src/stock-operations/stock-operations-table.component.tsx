@@ -309,7 +309,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 </Tile>
               </div>
             ) : null}
-            {filterApplied && isLoading && (
+            {Boolean(filterApplied && isLoading) && (
               <div className={styles.rowLoadingContainer}>
                 <InlineLoading description={t('loading', 'Loading...')} />
               </div>
