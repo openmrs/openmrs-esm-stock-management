@@ -162,11 +162,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(({ model, onSa
         </FormGroup>
 
         {hasExpiration && (
-          <FormGroup
-            className="clear-margin-bottom"
-            legendText={t('expirationNotice', 'Expiration Notice (days)')}
-            title={t('expirationNotice', 'Expiration Notice (days)')}
-          >
+          <FormGroup className="clear-margin-bottom" title={t('expirationNotice', 'Expiration Notice (days)')}>
             <ControlledNumberInput
               id="expiryNotice"
               name="expiryNotice"
