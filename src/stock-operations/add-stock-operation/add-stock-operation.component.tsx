@@ -146,7 +146,7 @@ const AddStockOperation: React.FC<AddStockOperationProps> = (props) => {
           isEditing={isEditing}
           setup={result}
           canEdit={canEdit}
-          locked={false}
+          locked={false} // TODO Unused
           model={isEditing ? props?.model : props?.operation?.name === 'Stock Issue' ? props?.model : result?.dto}
           requiresDispatchAcknowledgement={
             isEditing

@@ -70,7 +70,6 @@ const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOp
           stockOperation.permission?.canEdit ||
           StockOperationTypeHasPrint(operationType) ||
           (stockOperation?.permission?.isRequisitionAndCanIssueStock ?? false) ||
-          //   canPrint || (replaced by StockOperationTypeHasPrint and stockOperation?.permission?.isRequisitionAndCanIssueStock)
           stockOperation.permission?.isRequisitionAndCanIssueStock) && (
           <div className={styles.actionBtns}>
             <>

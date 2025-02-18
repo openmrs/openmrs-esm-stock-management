@@ -1,7 +1,7 @@
 import { Button, Column, InlineLoading, RadioButton, RadioButtonGroup, Stack } from '@carbon/react';
 import { Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { extractErrorMessagesFromResponse } from '../../../constants';
@@ -28,6 +28,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
+  const editable = useMemo(() => !stockOperation || stockOperation.status === 'NEW', [stockOperation]);
   const form = useFormContext<StockOperationItemDtoSchema>();
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(stockOperation?.approvalRequired);
   const handleRadioButtonChange = (selectedItem: boolean) => {
@@ -148,76 +149,80 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           name="rbgApprovelRequired"
           legendText={t('doesThisTransactionRequireApproval', 'Does the transaction require approval ?')}
           onChange={handleRadioButtonChange}
+          readOnly={!editable}
+          valueSelected={approvalRequired === true}
         >
           <RadioButton value={true} id="rbgApprovelRequired-true" labelText={t('yes', 'Yes')} />
           <RadioButton value={false} id="rbgApprovelRequired-false" labelText={t('no', 'No')} />
         </RadioButtonGroup>
       </Column>
-      <Column>
-        {approvalRequired != null && (
-          <>
-            {!operationTypePermision.requiresDispatchAcknowledgement && !approvalRequired && (
-              <Button
-                name="complete"
-                type="button"
-                style={{ margin: '4px' }}
-                className="submitButton"
-                kind="primary"
-                onClick={handleComplete}
-                renderIcon={ListChecked}
-              >
-                {t('complete', 'Complete')}
-              </Button>
-            )}
-            {operationTypePermision.requiresDispatchAcknowledgement && !approvalRequired && (
-              <Button
-                name="dispatch"
-                type="button"
-                style={{ margin: '4px' }}
-                className="submitButton"
-                kind="primary"
-                onClick={handleDispatch}
-                renderIcon={Departure}
-              >
-                {form.formState.isSubmitting ? (
-                  <InlineLoading description={t('dispatching', 'Dispatching')} />
-                ) : (
-                  t('dispatch', 'Dispatch')
-                )}
-              </Button>
-            )}
-            {approvalRequired && (
-              <Button
-                name="submit"
-                type="button"
-                style={{ margin: '4px' }}
-                className="submitButton"
-                kind="primary"
-                onClick={handleSubmitForReview}
-                renderIcon={SendFilled}
-              >
-                {form.formState.isSubmitting ? (
-                  <InlineLoading description={t('submittingForReview', 'Submitting for review')} />
-                ) : (
-                  t('submitForReview', 'Submit For Review')
-                )}
-              </Button>
-            )}
-          </>
-        )}
-        <Button
-          name="save"
-          type="button"
-          className="submitButton"
-          style={{ margin: '4px' }}
-          disabled={form.formState.isSubmitting}
-          kind="secondary"
-          onClick={handleSave}
-          renderIcon={Save}
-        >
-          {form.formState.isSubmitting ? <InlineLoading /> : t('save', 'Save')}
-        </Button>
-      </Column>
+      {editable && (
+        <Column>
+          {approvalRequired != null && (
+            <>
+              {!operationTypePermision.requiresDispatchAcknowledgement && !approvalRequired && (
+                <Button
+                  name="complete"
+                  type="button"
+                  style={{ margin: '4px' }}
+                  className="submitButton"
+                  kind="primary"
+                  onClick={handleComplete}
+                  renderIcon={ListChecked}
+                >
+                  {t('complete', 'Complete')}
+                </Button>
+              )}
+              {operationTypePermision.requiresDispatchAcknowledgement && !approvalRequired && (
+                <Button
+                  name="dispatch"
+                  type="button"
+                  style={{ margin: '4px' }}
+                  className="submitButton"
+                  kind="primary"
+                  onClick={handleDispatch}
+                  renderIcon={Departure}
+                >
+                  {form.formState.isSubmitting ? (
+                    <InlineLoading description={t('dispatching', 'Dispatching')} />
+                  ) : (
+                    t('dispatch', 'Dispatch')
+                  )}
+                </Button>
+              )}
+              {approvalRequired && (
+                <Button
+                  name="submit"
+                  type="button"
+                  style={{ margin: '4px' }}
+                  className="submitButton"
+                  kind="primary"
+                  onClick={handleSubmitForReview}
+                  renderIcon={SendFilled}
+                >
+                  {form.formState.isSubmitting ? (
+                    <InlineLoading description={t('submittingForReview', 'Submitting for review')} />
+                  ) : (
+                    t('submitForReview', 'Submit For Review')
+                  )}
+                </Button>
+              )}
+            </>
+          )}
+          <Button
+            name="save"
+            type="button"
+            className="submitButton"
+            style={{ margin: '4px' }}
+            disabled={form.formState.isSubmitting}
+            kind="secondary"
+            onClick={handleSave}
+            renderIcon={Save}
+          >
+            {form.formState.isSubmitting ? <InlineLoading /> : t('save', 'Save')}
+          </Button>
+        </Column>
+      )}
     </Stack>
   );
 };
