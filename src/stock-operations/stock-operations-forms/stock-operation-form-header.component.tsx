@@ -97,7 +97,6 @@ const StockOperationFormHeader: React.FC<Props> = ({ stockOperationType, stockOp
               )}
 
               {stockOperation.permission?.canEdit && <StockOperationCancelButton operation={stockOperation} />}
-              {/* TODO Fix this issue, not issuing when clicked */}
               {stockOperation.permission?.isRequisitionAndCanIssueStock && (
                 <StockOperationIssueStockButton operation={stockOperation} />
               )}

@@ -48,7 +48,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           }
           return prev;
         }, []);
-        // Delete them from backend asyncrnousely
+        // Delete them from backend asynchronosely
         const deleted = await Promise.allSettled(itemsToDelete.map((item) => deleteStockOperationItem(item.uuid)));
         // Give delete status on completion
         deleted.forEach((del, index) => {

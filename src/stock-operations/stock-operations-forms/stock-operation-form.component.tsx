@@ -7,9 +7,15 @@ import { useTranslation } from 'react-i18next';
 import { ConfigObject } from '../../config-schema';
 import { today } from '../../constants';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { operationFromString, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import {
+  operationFromString,
+  OperationType,
+  StockOperationType,
+  StockOperationTypeIsStockIssue,
+} from '../../core/api/types/stockOperation/StockOperationType';
 import { TabItem } from '../../core/components/tabs/types';
 import { otherUser, pick } from '../../core/utils/utils';
+import ReceivedItems from '../received-items.component';
 import {
   getStockOperationFormSchema,
   getStockOperationItemFormSchema,
@@ -19,9 +25,8 @@ import useOperationTypePermisions from './hooks/useOperationTypePermisions';
 import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
-import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 import StockOperationFormHeader from './stock-operation-form-header.component';
-import { getStockOperationLocationByOperationType } from './stock-operations-form-utils';
+import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 
 /**
  * Props interface for the StockOperationForm component
@@ -83,7 +88,20 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
         ),
         disabled: true,
       },
-    ] as TabItem[]; // TODO Add dispatch extra tabs
+    ].concat(
+      StockOperationTypeIsStockIssue(stockOperation?.operationType as OperationType) ||
+        stockOperation?.permission.canDisplayReceivedItems
+        ? stockOperation.status === 'DISPATCHED' || stockOperation.status === 'COMPLETED'
+          ? [
+              {
+                name: t('receivedItems', 'Received Items'),
+                component: <ReceivedItems model={stockOperation} />,
+                disabled: true,
+              },
+            ]
+          : []
+        : [],
+    ) as TabItem[];
   }, [stockOperation, stockOperationType, t, operationTypePermision]);
   const {
     user: { uuid: defaultLoggedUserUuid },

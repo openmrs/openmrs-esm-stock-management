@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { useStockOperationPages } from './stock-operations-table.resource';
-import { ResourceRepresentation } from '../core/api/api';
 import {
   DataTable,
-  TabPanel,
   DataTableSkeleton,
+  DatePicker,
+  DatePickerInput,
+  InlineLoading,
   Pagination,
   Table,
   TableBody,
@@ -17,31 +16,29 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarContent,
-  TableToolbarSearch,
-  Tile,
-  DatePickerInput,
-  DatePicker,
-  TableToolbarMenu,
   TableToolbarAction,
-  InlineLoading,
+  TableToolbarContent,
+  TableToolbarMenu,
+  TableToolbarSearch,
+  TabPanel,
+  Tile,
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
-import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
-import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
-import { launchAddOrEditDialog } from './stock-operation.utils';
-import { initialStockOperationValue } from '../core/utils/utils';
-import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
-import StockOperationsFilters from './stock-operations-filters.component';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
+import { ResourceRepresentation } from '../core/api/api';
+import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import { handleMutate } from '../utils';
+import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
+import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
+import StockOperationsFilters from './stock-operations-filters.component';
+import { useStockOperationPages } from './stock-operations-table.resource';
 
 import styles from './stock-operations-table.scss';
-import StockOperationStatus from './add-stock-operation/stock-operation-status.component';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import StockOperationStatusRow from './stock-operation-status/stock-operation-status-row';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -256,7 +253,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                       </TableExpandRow>
                       {row.isExpanded ? (
                         <TableExpandedRow colSpan={headers.length + 2}>
-                          <StockOperationStatus model={items[index]} />
+                          <StockOperationStatusRow stockOperation={items[index]} />
                         </TableExpandedRow>
                       ) : (
                         <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />

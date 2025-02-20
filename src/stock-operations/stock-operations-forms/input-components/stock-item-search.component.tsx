@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import { useStockItems } from '../../stock-item-selector/stock-item-selector.resource';
-import styles from './stock-item-search.scss';
+import styles from './input-components-styles.scss';
 
 type StockItemSearchProps = {
   onSelectedItem?: (stockItem: StockItemDTO) => void;

@@ -29,7 +29,7 @@ import { getStockOperationLinks, operationStatusColor } from '../stock-operation
 import { useInitializeStockOperations } from './add-stock-operation.resource';
 import styles from './add-stock-operation.scss';
 import BaseOperationDetails from './base-operation-details.component';
-import ReceivedItems from './received-items.component';
+import ReceivedItems from '../received-items.component';
 import StockItemsAddition from './stock-items-addition.component';
 import { StockOperation } from './stock-operation-context/useStockOperationContext';
 import StockOperationRelatedLink from './stock-operation-related-link.component';

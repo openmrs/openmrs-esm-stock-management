@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { showSnackbar } from '@openmrs/esm-framework';
-import AddStockOperation from './add-stock-operation.component';
-import { useInitializeStockOperations } from './add-stock-operation.resource';
+import AddStockOperation from '../add-stock-operation/add-stock-operation.component';
+import { useInitializeStockOperations } from '../add-stock-operation/add-stock-operation.resource';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import { getStockOperationLinks } from '../stock-operations.resource';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { InitializeResult } from './types';
+import { InitializeResult } from '../add-stock-operation/types';
 import { useStockOperations } from '../stock-operations.resource';
 import { closeOverlay } from '../../core/components/overlay/hook';
 
@@ -120,14 +120,6 @@ const mockProps = {
 
 describe('AddStockOperation', () => {
   beforeEach(() => {
-    (useInitializeStockOperations as jest.Mock).mockReturnValue({
-      isLoading: true,
-      error: null,
-      item: {},
-      result: {
-        uuid: 'some-valid-uuid-value',
-      },
-    });
     const mockStockOperationTypes = { results: [] };
     (useStockOperationTypes as jest.Mock).mockReturnValue(mockStockOperationTypes);
     (getStockOperationLinks as jest.Mock).mockResolvedValue({ data: { results: [] } });

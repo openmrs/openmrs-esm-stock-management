@@ -1,14 +1,11 @@
+import { showModal, showSnackbar } from '@openmrs/esm-framework';
 import React from 'react';
-import { closeOverlay, launchOverlay } from '../core/components/overlay/hook';
-import { FetchResponse, restBaseUrl, showModal, showSnackbar } from '@openmrs/esm-framework';
 import { TFunction } from 'react-i18next';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
-import { createStockOperation, updateStockOperation } from './stock-operations.resource';
-import AddStockOperation from './add-stock-operation/add-stock-operation.component';
-import { OperationType, StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 import { useLocation } from 'react-router-dom';
 import { extractErrorMessagesFromResponse } from '../constants';
-import { handleMutate } from '../utils';
+import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { OperationType, StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { launchOverlay } from '../core/components/overlay/hook';
 import StockOperationForm from './stock-operations-forms/stock-operation-form.component';
 
 export const addOrEditStockOperation = async (
@@ -80,14 +77,6 @@ export const launchAddOrEditDialog = (
       : t('newOperationTitle', 'New: {{operationName}}', {
           operationName: operationType?.name,
         }),
-    // <AddStockOperation
-    //   model={stockOperation}
-    //   onSave={(stockOperation) => addOrEditStockOperation(t, stockOperation, isEditing, operation)} // TODO Remove unused
-    //   isEditing={isEditing}
-    //   operation={operation}
-    //   canEdit={isEditing ? (stockOperation?.status === 'NEW' ? true : false) : true}
-    //   canPrint={printEnabled}
-    // />,
     <StockOperationForm stockOperationType={operationType} stockOperation={stockOperation} />,
   );
 };

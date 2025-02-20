@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { formatForDatePicker } from '../../../constants';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
-import StockItemSearch from '../../add-stock-operation/stock-item-search/stock-item-search.component';
 import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import { BaseStockOperationItemFormData, StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
@@ -26,6 +25,7 @@ import QuantityUomCell from './quantity-uom-cell.component';
 import StockAvailability from './stock-availability-cell.component';
 import StockOperationItemCell from './stock-operation-item-cell.component';
 import styles from './stock-operation-items-form-step.scc.scss';
+import StockItemSearch from '../input-components/stock-item-search.component';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
