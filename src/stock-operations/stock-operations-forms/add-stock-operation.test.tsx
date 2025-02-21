@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
-import { showSnackbar } from '@openmrs/esm-framework';
-import AddStockOperation from '../add-stock-operation/add-stock-operation.component';
-import { useInitializeStockOperations } from '../add-stock-operation/add-stock-operation.resource';
-import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
+import { showSnackbar, useConfig, ErrorState } from '@openmrs/esm-framework';
+import { useStockOperationTypes, useUser } from '../../stock-lookups/stock-lookups.resource';
 import { getStockOperationLinks } from '../stock-operations.resource';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { InitializeResult } from '../add-stock-operation/types';
 import { useStockOperations } from '../stock-operations.resource';
 import { closeOverlay } from '../../core/components/overlay/hook';
+import StockOperationForm from './stock-operation-form.component';
+import useParties from './hooks/useParties';
+import { any } from 'zod';
 
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn().mockReturnValue({ t: (key) => key }),
@@ -28,15 +28,14 @@ jest.mock('@openmrs/esm-framework', () => ({
   showNotification: jest.fn(),
   usePagination: jest.fn(() => ({ currentPage: 1, setPage: jest.fn() })),
   useSession: jest.fn(() => ({ user: { display: 'Test User' } })),
-}));
-
-jest.mock('./add-stock-operation.resource', () => ({
-  useInitializeStockOperations: jest.fn(),
+  useConfig: jest.fn(),
+  ErrorState: jest.fn(({ error }: { error: any }) => <div>{error}</div>),
 }));
 
 jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
   useStockOperationTypes: jest.fn(),
   useUsers: jest.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
+  useUser: jest.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
 }));
 
 jest.mock('../stock-operations.resource', () => ({
@@ -63,122 +62,121 @@ jest.mock('../../stock-items/stock-items.resource', () => ({
   }),
   useStockItem: jest.fn(),
 }));
+jest.mock('./hooks/useParties', () => jest.fn());
 
-const mockOnGoBack = jest.fn();
-const mockOnSave = jest.fn();
-const mockOnComplete = jest.fn();
-const mockOnSubmit = jest.fn();
-const mockOnDispatch = jest.fn();
-
-const mockProps = {
-  stockOperations: { results: [] },
-  uuid: 'some-mock-uuid',
-  isEditing: false,
-  canPrint: false,
-  canEdit: true,
-  locked: false,
-  model: {
-    approvalRequired: null,
-    uuid: 'mock-uuid',
-    operationType: 'mock-operation-type',
-    status: 'COMPLETED',
-    dateCreated: '2023-01-01',
-    creatorFamilyName: 'Doe',
-    creatorGivenName: 'John',
-  } as unknown as StockOperationDTO,
-  operation: {
-    name: 'Stock Issue',
-    description: 'Issuing stock',
-    operationType: 'stockissue',
-    hasSource: true,
-    sourceType: {},
-    hasDestination: true,
-    destinationType: {},
-    hasRecipient: false,
-    recipientRequired: false,
-    availableWhenReserved: false,
-    allowExpiredBatchNumbers: false,
-    stockOperationTypeLocationScopes: [],
-  } as StockOperationType,
-  setup: {
-    isNegativeQuantityAllowed: false,
-    requiresBatchUuid: false,
-    requiresActualBatchInfo: false,
-    isQuantityOptional: false,
-  } as InitializeResult,
-  actions: {
-    onGoBack: mockOnGoBack,
-    onSave: mockOnSave,
-    onComplete: mockOnComplete,
-    onSubmit: mockOnSubmit,
-    onDispatch: mockOnDispatch,
-  },
-  dto: {
-    results: [],
-  },
+const mockStockOperationType = {
+  uuid: '44444444-4444-4444-4444-444444444444',
+  dateCreated: new Date('2022-07-31T00:00:00.000+0300'),
+  dateChanged: null,
+  name: 'Receipt',
+  description: 'Items that are added into the inventory system from an outside provider.',
+  operationType: 'receipt',
+  hasSource: true,
+  sourceType: 'Other',
+  hasDestination: true,
+  destinationType: 'Location',
+  availableWhenReserved: false,
+  allowExpiredBatchNumbers: false,
+  stockOperationTypeLocationScopes: [],
 };
 
-describe('AddStockOperation', () => {
+describe('Receipt Stock Operation step 1 (baseoperation details)', () => {
   beforeEach(() => {
     const mockStockOperationTypes = { results: [] };
     (useStockOperationTypes as jest.Mock).mockReturnValue(mockStockOperationTypes);
     (getStockOperationLinks as jest.Mock).mockResolvedValue({ data: { results: [] } });
     (useStockOperations as jest.Mock).mockReturnValue({ items: { results: [] }, isLoading: false, error: null });
+    (useConfig as jest.Mock).mockReturnValue({ autoPopulateResponsiblePerson: true });
   });
 
-  it('displays error state correctly', async () => {
-    (useInitializeStockOperations as jest.Mock).mockReturnValue({
-      isLoading: false,
-      error: true,
-      result: null,
-    });
-    const { result } = useInitializeStockOperations(mockProps);
-    if (!result) {
-      return null;
-    }
-    render(<AddStockOperation {...mockProps} />);
-    expect(showSnackbar).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'error',
-        title: 'error',
-      }),
-    );
-  });
-
-  it('displays loading state correctly', async () => {
-    (useInitializeStockOperations as jest.Mock).mockReturnValue({
+  it('should render loading state when loading  parties info', async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
       isLoading: true,
       error: null,
-      result: null,
+      sourceTags: [],
+      destinationTags: [],
     });
-    render(<AddStockOperation {...mockProps} />);
-    expect(showSnackbar).not.toHaveBeenCalled();
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
-  it('displays error state and shows snackbar', () => {
-    (useInitializeStockOperations as jest.Mock).mockReturnValue({ isLoading: false, error: true, result: null });
-    render(<AddStockOperation {...mockProps} />);
-    expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({ kind: 'error' }));
-  });
-
-  it('calls external utilities correctly', async () => {
-    (useInitializeStockOperations as jest.Mock).mockReturnValue({
+  it('should render error state when parties loading fails', async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
       isLoading: false,
-      error: true,
-      result: null,
+      error: 'error',
+      sourceTags: [],
+      destinationTags: [],
     });
-
-    render(<AddStockOperation {...mockProps} />);
-    await waitFor(() => {
-      expect(closeOverlay).toHaveBeenCalled();
-    });
-    await waitFor(() => {
-      expect(showSnackbar).toHaveBeenCalledWith(
-        expect.objectContaining({
-          kind: 'error',
-          title: 'error',
-        }),
-      );
-    });
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    expect(screen.getByText('error')).toBeInTheDocument();
   });
+
+  it('should render operation type in title', async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
+      isLoading: false,
+      error: undefined,
+      sourceTags: [],
+      destinationTags: [],
+    });
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    expect(screen.getByText(`${mockStockOperationType.name} details`)).toBeInTheDocument();
+  });
+
+  it("should render combobox with 'from' name and 'chooseAsource' placeholder", async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
+      isLoading: false,
+      error: undefined,
+      sourceTags: [],
+      destinationTags: [],
+    });
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    const sourceInput = screen.getByRole('combobox', {
+      name: (_, element) =>
+        element.getAttribute('placeholder') === 'chooseASource' && element.getAttribute('name') === 'sourceUuid',
+    });
+    expect(sourceInput).toBeInTheDocument();
+    expect(screen.getByLabelText('from')).toBeInTheDocument();
+  });
+  it("should render combobox with 'destinationUuid' name and 'chooseADestination' placeholder", async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
+      isLoading: false,
+      error: undefined,
+      sourceTags: [],
+      destinationTags: [],
+    });
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    expect(
+      screen.getByRole('combobox', {
+        name: (_, element) =>
+          element.getAttribute('placeholder') === 'chooseADestination' &&
+          element.getAttribute('name') === 'destinationUuid',
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('to')).toBeInTheDocument();
+  });
+
+  it('should not render reason input field', async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
+      isLoading: false,
+      error: undefined,
+      sourceTags: [],
+      destinationTags: [],
+    });
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+  });
+
+  // TODO Test for the form initialization for filed like responsible person
 });

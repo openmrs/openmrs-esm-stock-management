@@ -62,7 +62,12 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
 
   if (isPartiesLoading)
     return (
-      <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
+      <InlineLoading
+        status="active"
+        role="progressbar"
+        iconDescription="Loading"
+        description={t('loadingData', 'Loading data...')}
+      />
     );
 
   if (patiesError)
@@ -73,7 +78,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
   return (
     <Stack gap={4} className={styles.grid}>
       <div className={styles.heading}>
-        <h4>{t('operationDetails', '{{operationType}} Details', { operationType: stockOperationType.name })}</h4>
+        <h4>{`${stockOperationType.name} ${t('details', 'Details')}`}</h4>
         <div className={styles.btnSet}>
           {typeof onNext === 'function' && (
             <Button kind="primary" onClick={onNext}>

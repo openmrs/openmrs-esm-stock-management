@@ -40,14 +40,15 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
     await form.handleSubmit(async (formData) => {
       try {
         // Get deleted items (items in stock operation bt not i form data)
-        const itemsToDelete = stockOperation.stockOperationItems.reduce<Array<StockOperationItemDTO>>((prev, curr) => {
-          const itemDoNotExistInFormData =
-            formData.stockOperationItems.findIndex((item) => item.uuid === curr.uuid) === -1;
-          if (itemDoNotExistInFormData) {
-            return [...prev, curr];
-          }
-          return prev;
-        }, []);
+        const itemsToDelete =
+          stockOperation?.stockOperationItems?.reduce<Array<StockOperationItemDTO>>((prev, curr) => {
+            const itemDoNotExistInFormData =
+              formData.stockOperationItems.findIndex((item) => item.uuid === curr.uuid) === -1;
+            if (itemDoNotExistInFormData) {
+              return [...prev, curr];
+            }
+            return prev;
+          }, []) ?? [];
         // Delete them from backend asynchronosely
         const deleted = await Promise.allSettled(itemsToDelete.map((item) => deleteStockOperationItem(item.uuid)));
         // Give delete status on completion

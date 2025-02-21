@@ -27,9 +27,9 @@ import { Link, TableCell } from '@carbon/react';
 import { formatForDatePicker, URL_STOCK_ITEM } from '../../constants';
 import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { getStockOperationUniqueId } from '../stock-operation.utils';
-import StockItemSearch from './stock-item-search/stock-item-search.component';
 import styles from './stock-items-addition.component.scss';
 import StockAvailability from '../stock-operations-forms/steps/stock-availability-cell.component';
+import StockItemSearch from '../stock-operations-forms/input-components/stock-item-search.component';
 
 interface StockItemsAdditionProps {
   isEditing?: boolean;
