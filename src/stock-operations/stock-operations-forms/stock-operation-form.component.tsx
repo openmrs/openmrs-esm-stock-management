@@ -131,7 +131,6 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
       sourceUuid: stockOperation?.sourceUuid ?? '',
       destinationUuid: stockOperation?.destinationUuid ?? '',
     },
-    disabled: true,
     mode: 'all',
     resolver: zodResolver(formschema),
   });
