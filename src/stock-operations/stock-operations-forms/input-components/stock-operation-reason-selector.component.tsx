@@ -35,7 +35,7 @@ const StockOperationReasonSelector = () => {
       render={({ field, fieldState: { error } }) => (
         <ComboBox
           readOnly={field.disabled}
-          labelText={t('reason', 'Reason')}
+          titleText={t('reason', 'Reason')}
           placeholder={t('chooseAReason', 'Choose a reason')}
           name={'reasonUuid'}
           controllerName={'reasonUuid'}
