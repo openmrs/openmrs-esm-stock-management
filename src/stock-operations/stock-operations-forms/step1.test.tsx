@@ -1,16 +1,11 @@
+import { useConfig } from '@openmrs/esm-framework';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
-import { showSnackbar, useConfig, ErrorState } from '@openmrs/esm-framework';
-import { useStockOperationTypes, useUser } from '../../stock-lookups/stock-lookups.resource';
-import { getStockOperationLinks } from '../stock-operations.resource';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import { useStockOperations } from '../stock-operations.resource';
-import { closeOverlay } from '../../core/components/overlay/hook';
-import StockOperationForm from './stock-operation-form.component';
 import useParties from './hooks/useParties';
-import { any } from 'zod';
-
+import StockOperationForm from './stock-operation-form.component';
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn().mockReturnValue({ t: (key) => key }),
 }));
@@ -30,6 +25,7 @@ jest.mock('@openmrs/esm-framework', () => ({
   useSession: jest.fn(() => ({ user: { display: 'Test User' } })),
   useConfig: jest.fn(),
   ErrorState: jest.fn(({ error }: { error: any }) => <div>{error}</div>),
+  launchWorkspace: jest.fn(),
 }));
 
 jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
@@ -48,20 +44,6 @@ jest.mock('../stock-operations.resource', () => ({
   }),
 }));
 
-jest.mock('../../core/components/overlay/hook', () => ({
-  closeOverlay: jest.fn(),
-}));
-
-jest.mock('../../stock-items/stock-items.resource', () => ({
-  useStockItems: jest.fn().mockReturnValue({
-    isLoading: false,
-    error: null,
-    items: {
-      results: [{ uuid: 'mock-uuid', packagingUomName: 'Mock Unit', factor: 1 }],
-    },
-  }),
-  useStockItem: jest.fn(),
-}));
 jest.mock('./hooks/useParties', () => jest.fn());
 
 const mockStockOperationType = {
@@ -84,7 +66,6 @@ describe('Receipt Stock Operation step 1 (baseoperation details)', () => {
   beforeEach(() => {
     const mockStockOperationTypes = { results: [] };
     (useStockOperationTypes as jest.Mock).mockReturnValue(mockStockOperationTypes);
-    (getStockOperationLinks as jest.Mock).mockResolvedValue({ data: { results: [] } });
     (useStockOperations as jest.Mock).mockReturnValue({ items: { results: [] }, isLoading: false, error: null });
     (useConfig as jest.Mock).mockReturnValue({ autoPopulateResponsiblePerson: true });
   });

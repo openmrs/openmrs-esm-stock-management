@@ -81,8 +81,8 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
         <h4>{`${stockOperationType.name} ${t('details', 'Details')}`}</h4>
         <div className={styles.btnSet}>
           {typeof onNext === 'function' && (
-            <Button kind="primary" onClick={onNext}>
-              Next
+            <Button kind="primary" onClick={onNext} role="button">
+              {t('next', 'Next')}
             </Button>
           )}
         </div>

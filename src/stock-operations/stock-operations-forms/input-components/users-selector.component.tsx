@@ -55,7 +55,6 @@ const UsersSelector = () => {
               readOnly={field.disabled}
               titleText={t('responsiblePerson', 'Responsible Person')}
               name={'responsiblePersonUuid'}
-              controllerName={'responsiblePersonUuid'}
               id={'responsiblePersonUuid'}
               size={'xl'}
               items={[...(userList || []), otherUser]}
@@ -94,7 +93,6 @@ const UsersSelector = () => {
                 disabled={false}
                 id="responsiblePersonOther"
                 name="responsiblePersonOther"
-                controllerName="responsiblePersonOther"
                 size={'xl'}
                 labelText={t('responsiblePerson', 'Responsible Person')}
                 placeholder={t('pleaseSpecify', 'Please Specify')}

@@ -1,9 +1,9 @@
-import { UserFilterCriteria } from '../../stock-lookups/stock-lookups.resource';
 import { useEffect, useState } from 'react';
-import { ResourceRepresentation } from '../../core/api/api';
-import { StockItemFilter, useStockItems as useStockItemsData } from '../../stock-items/stock-items.resource';
+import { StockItemFilter, useStockItems as useStockItemsData } from '../../../stock-items/stock-items.resource';
+import { UserFilterCriteria } from '../../../stock-lookups/stock-lookups.resource';
+import { ResourceRepresentation } from '../../../core/api/api';
 
-export function useStockItems(filter?: StockItemFilter) {
+export function useFilterableStockItems(filter?: StockItemFilter) {
   const [conceptFilter, setConceptFilter] = useState<UserFilterCriteria>(
     filter || {
       v: ResourceRepresentation.Default,

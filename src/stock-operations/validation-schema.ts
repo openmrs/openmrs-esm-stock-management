@@ -119,7 +119,6 @@ export const stockOperationSchema = z.object({
 export const baseStockOperationItemSchema = z.object({
   uuid: z.string().min(1, 'Required'),
   stockItemUuid: z.string().min(1, { message: 'Required' }),
-  stockItemName: z.string().min(1).nullish(),
   stockItemPackagingUOMUuid: z.string().min(1, { message: 'Required' }),
   batchNo: z.string().min(1, { message: 'Required' }),
   stockBatchUuid: z.string().optional(),

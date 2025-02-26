@@ -38,7 +38,6 @@ const StockOperationReasonSelector = () => {
           titleText={t('reason', 'Reason')}
           placeholder={t('chooseAReason', 'Choose a reason')}
           name={'reasonUuid'}
-          controllerName={'reasonUuid'}
           id={'reasonUuid'}
           size={'xl'}
           items={reasons}

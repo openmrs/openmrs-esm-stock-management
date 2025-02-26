@@ -90,7 +90,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
       },
     ].concat(
       StockOperationTypeIsStockIssue(stockOperation?.operationType as OperationType) ||
-        stockOperation?.permission.canDisplayReceivedItems
+        stockOperation?.permission?.canDisplayReceivedItems
         ? stockOperation.status === 'DISPATCHED' || stockOperation.status === 'COMPLETED'
           ? [
               {
