@@ -96,6 +96,19 @@ describe('Receipt Stock Operation step 1 (baseoperation details)', () => {
     expect(screen.getByText('error')).toBeInTheDocument();
   });
 
+  it('should have only next btn and not previous btn', async () => {
+    (useParties as jest.Mock).mockReturnValue({
+      destinationParties: [],
+      sourceParties: [],
+      isLoading: false,
+      error: undefined,
+      sourceTags: [],
+      destinationTags: [],
+    });
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /previous/i })).not.toBeInTheDocument();
+  });
   it('should render operation type in title', async () => {
     (useParties as jest.Mock).mockReturnValue({
       destinationParties: [],

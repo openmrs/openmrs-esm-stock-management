@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { showSnackbar, useConfig, ErrorState, launchWorkspace } from '@openmrs/esm-framework';
 import { useStockOperationTypes, useUser } from '../../stock-lookups/stock-lookups.resource';
@@ -18,6 +17,7 @@ import { BaseStockOperationItemFormData, StockOperationItemFormData } from '../v
 import { useStockItemBatchInformationHook } from '../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useFilterableStockItems } from './hooks/useFilterableStockItems';
 import { formatForDatePicker } from '../../constants';
+import React from 'react';
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn().mockReturnValue({ t: (key) => key }),
 }));
@@ -138,7 +138,7 @@ const mockStockOperationType = {
   stockOperationTypeLocationScopes: [],
 };
 
-describe('Receipt Stock Operation step 2 (stock operation items details)', () => {
+describe('Receipt Stock Operation step 3 (stock submision)', () => {
   beforeEach(() => {
     const mockStockOperationTypes = { results: [] };
     (useStockOperationTypes as jest.Mock).mockReturnValue(mockStockOperationTypes);
@@ -154,106 +154,54 @@ describe('Receipt Stock Operation step 2 (stock operation items details)', () =>
     });
   });
 
-  it('should have both previous and next btns', async () => {
+  it('should have previous btn and not next btn', async () => {
     render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+    // MOVE TO STEP3
+    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
 
-    expect(screen.getByRole('button', { name: /Next/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Next/i })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /previous/i })).toBeInTheDocument();
   });
 
-  it('should render stock operation items table with item search component', async () => {
+  it('should render require approval radio button and save button', async () => {
     render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
-    const nextButton = screen.getByRole('button', { name: /Next/i });
-    expect(nextButton).toBeInTheDocument();
-    await userEvent.click(nextButton);
-    expect(screen.getByRole('table')).toBeInTheDocument();
-    expect(
-      screen.getByRole('searchbox', {
-        name(accessibleName, element) {
-          return (
-            element.getAttribute('id') === 'search-stock-operation-item' &&
-            element.getAttribute('placeholder') === 'findItems' &&
-            element.getAttribute('name') === 'search-stock-operation-item'
-          );
-        },
-      }),
-    ).toBeInTheDocument();
-  });
-
-  it('should search stock operation item and render results', async () => {
-    const mocksetSearchString = jest.fn();
-    (useFilterableStockItems as jest.Mock).mockReturnValue({
-      stockItemsList: [{ uuid: 'mock-uuid', commonName: 'mock-common-name' }] as Array<StockItemDTO>,
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
-      isLoading: false,
-      setSearchString: mocksetSearchString,
-    });
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
-    // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
+    // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
-    // -------------------------------
-    const searchInput = screen.getByRole('searchbox', {
-      name: (_, element) => element.getAttribute('id') === 'search-stock-operation-item',
-    });
-    expect(searchInput).toBeInTheDocument();
-    await userEvent.click(searchInput);
-    await userEvent.type(searchInput, 'stock');
-    expect(mocksetSearchString).toHaveBeenCalledWith('stock');
-    expect(screen.getByText('mock-common-name'));
-  });
-
-  it('should properly handle stock operation item selection', async () => {
-    (useFilterableStockItems as jest.Mock).mockReturnValue({
-      stockItemsList: [{ uuid: 'mock-uuid', commonName: 'mock-common-name' }] as Array<StockItemDTO>,
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
-      isLoading: false,
-      setSearchString: jest.fn(),
-    });
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
-    // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
+    // MOVE TO STEP3
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
-    // -------------------------------
-    const searchInput = screen.getByRole('searchbox', {
-      name: (_, element) => element.getAttribute('id') === 'search-stock-operation-item',
-    });
-    await userEvent.click(searchInput);
-    await userEvent.type(searchInput, 'stock');
-    await userEvent.click(screen.getByText('mock-common-name'));
-    expect(launchWorkspace).toHaveBeenCalled();
-  });
 
-  it('should render stock operation items in data table', async () => {
-    (useStockItem as jest.Mock).mockReturnValue({
-      isLoading: false,
-      error: null,
-      item: { commonName: 'mock-stock-item-common name', uuid: 'mock-uuid' } as StockItemDTO,
-    });
-    const mockQuantity = 99999;
-    const mockExpiration = new Date();
-    (useFormContext as jest.Mock).mockReturnValue({
-      watch: jest.fn().mockReturnValue([
-        {
-          quantity: mockQuantity,
-          expiration: mockExpiration,
-        },
-      ] as BaseStockOperationItemFormData),
-      resetField: jest.fn(),
-      formState: {
-        errors: {},
-      },
-      getValues: jest.fn(),
-      setValue: jest.fn(),
-      handleSubmit: jest.fn(),
-    });
+    // Shouls have save button
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('radio', { name: /yes|no/i })).toHaveLength(2);
+  });
+  it('should render submitForReview button when require aprroval radion button is checked yes', async () => {
     render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
-    // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
+    // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
-    // -------------------------------
-    expect(screen.getByText(mockQuantity.toLocaleString())).toBeInTheDocument(); //Find by quentity
-    expect(screen.getByText(formatForDatePicker(mockExpiration))).toBeInTheDocument(); //Find by quentity
+    // MOVE TO STEP3
+    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+
+    const yesRadioButton = screen.getByRole('radio', { name: /yes/i });
+    expect(yesRadioButton).toBeInTheDocument();
+    // Submit for review shouldnt be in doc
+    expect(screen.queryByRole('button', { name: /submitForReview/i })).not.toBeInTheDocument();
+    await userEvent.click(yesRadioButton);
+    // On require aprooval should now show
+    expect(screen.getByRole('button', { name: /submitForReview/i })).toBeInTheDocument();
+  });
+  it('should render complete button when require aprroval radion button is checked no', async () => {
+    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    // MOVE TO STEP 2
+    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+    // MOVE TO STEP3
+    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+
+    const noRadioButton = screen.getByRole('radio', { name: /no/i });
+    expect(noRadioButton).toBeInTheDocument();
+    await userEvent.click(noRadioButton);
+    // On require aprooval should now show complete btn
+    expect(screen.getByRole('button', { name: /complete/i })).toBeInTheDocument();
   });
 });

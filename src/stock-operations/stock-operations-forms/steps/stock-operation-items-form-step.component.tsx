@@ -188,12 +188,12 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
           <div className={styles.btnSet}>
             {typeof onPrevious === 'function' && (
               <Button kind="secondary" onClick={onPrevious}>
-                Previous
+                {t('previous', 'Previous')}
               </Button>
             )}
             {typeof onNext === 'function' && (
               <Button kind="primary" onClick={onNext}>
-                Next
+                {t('next', 'Next')}
               </Button>
             )}
           </div>
