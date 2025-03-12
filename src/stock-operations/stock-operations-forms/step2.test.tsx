@@ -18,6 +18,7 @@ import { BaseStockOperationItemFormData, StockOperationItemFormData } from '../v
 import { useStockItemBatchInformationHook } from '../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useFilterableStockItems } from './hooks/useFilterableStockItems';
 import { formatForDatePicker } from '../../constants';
+import { receiptOperationTypeMock } from '../../../__mocks__';
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn().mockReturnValue({ t: (key) => key }),
 }));
@@ -122,23 +123,7 @@ jest.mock('../../stock-items/add-stock-item/batch-information/batch-information.
   }),
 }));
 
-const mockStockOperationType = {
-  uuid: '44444444-4444-4444-4444-444444444444',
-  dateCreated: new Date('2022-07-31T00:00:00.000+0300'),
-  dateChanged: null,
-  name: 'Receipt',
-  description: 'Items that are added into the inventory system from an outside provider.',
-  operationType: 'receipt',
-  hasSource: true,
-  sourceType: 'Other',
-  hasDestination: true,
-  destinationType: 'Location',
-  availableWhenReserved: false,
-  allowExpiredBatchNumbers: false,
-  stockOperationTypeLocationScopes: [],
-};
-
-describe('Receipt Stock Operation step 2 (stock operation items details)', () => {
+describe('Stock Operation step 2 (stock operation items details)', () => {
   beforeEach(() => {
     const mockStockOperationTypes = { results: [] };
     (useStockOperationTypes as jest.Mock).mockReturnValue(mockStockOperationTypes);
@@ -155,7 +140,7 @@ describe('Receipt Stock Operation step 2 (stock operation items details)', () =>
   });
 
   it('should have both previous and next btns', async () => {
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
 
@@ -164,7 +149,7 @@ describe('Receipt Stock Operation step 2 (stock operation items details)', () =>
   });
 
   it('should render stock operation items table with item search component', async () => {
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
     const nextButton = screen.getByRole('button', { name: /Next/i });
     expect(nextButton).toBeInTheDocument();
     await userEvent.click(nextButton);
@@ -191,7 +176,7 @@ describe('Receipt Stock Operation step 2 (stock operation items details)', () =>
       isLoading: false,
       setSearchString: mocksetSearchString,
     });
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -213,7 +198,7 @@ describe('Receipt Stock Operation step 2 (stock operation items details)', () =>
       isLoading: false,
       setSearchString: jest.fn(),
     });
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -249,7 +234,7 @@ describe('Receipt Stock Operation step 2 (stock operation items details)', () =>
       setValue: jest.fn(),
       handleSubmit: jest.fn(),
     });
-    render(<StockOperationForm stockOperationType={mockStockOperationType as StockOperationType} />);
+    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
