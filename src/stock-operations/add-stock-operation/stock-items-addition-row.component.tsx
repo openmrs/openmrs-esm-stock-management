@@ -242,6 +242,30 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                         />
                       </DatePicker>
                     )}
+                  {requiresBatchUuid && !requiresActualBatchInformation && canEdit && (
+                    <DatePicker
+                      id={`expiration-${row.uuid}`}
+                      datePickerType="single"
+                      minDate={formatForDatePicker(today())}
+                      readOnly={true}
+                      locale="en"
+                      dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                      onChange={([newDate]) => {
+                        setValue(`stockItems.${index}.expiration`, newDate);
+                      }}
+                    >
+                      <DatePickerInput
+                        size="sm"
+                        autoComplete="off"
+                        id={`expiration-input-${row.uuid}`}
+                        name="operationDate"
+                        placeholder={DATE_PICKER_FORMAT}
+                        value={formatForDatePicker(stockItemExpiry)}
+                        defaultValue={formatForDatePicker(stockItemExpiry)}
+                        invalid={!!errors?.stockItems?.[index]?.expiration}
+                      />
+                    </DatePicker>
+                  )}
                   {((!(canUpdateBatchInformation && row?.permission?.canUpdateBatchInformation) && !canEdit) ||
                     requiresBatchUuid) &&
                     formatForDatePicker(row.expiration)}
