@@ -89,20 +89,15 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockBatchDTO) => (s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'}` : '')}
+            itemToString={(s: StockBatchDTO) =>
+              s?.batchNo
+                ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} | Expiry: ${formatForDatePicker(s.expiration)}`
+                : ''
+            }
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
             ref={ref}
-            itemToElement={(item) =>
-              item?.batchNo ? (
-                <div title={`Expiration: ${formatForDatePicker(item.expiration) ?? 'Unknown'}`}>
-                  <span>
-                    {item.batchNo} | Qty: {item.quantity ?? 'Unknown'}
-                  </span>
-                </div>
-              ) : null
-            }
           />
         )}
       />
