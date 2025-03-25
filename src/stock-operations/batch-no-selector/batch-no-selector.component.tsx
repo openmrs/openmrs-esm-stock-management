@@ -5,6 +5,7 @@ import { useStockItemBatchNos } from './batch-no-selector.resource';
 import { StockBatchDTO } from '../../core/api/types/stockItem/StockBatchDTO';
 import { useStockItemBatchInformationHook } from '../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useTranslation } from 'react-i18next';
+import { formatForDatePicker } from '../../constants';
 
 interface BatchNoSelectorProps<T> {
   placeholder?: string;
@@ -88,7 +89,11 @@ const BatchNoSelector = <T,>(props: BatchNoSelectorProps<T>) => {
               onChange(data.selectedItem?.uuid);
             }}
             initialSelectedItem={initialSelectedItem}
-            itemToString={(s: StockBatchDTO) => (s?.batchNo ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'}` : '')}
+            itemToString={(s: StockBatchDTO) =>
+              s?.batchNo
+                ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} | Expiry: ${formatForDatePicker(s.expiration)}`
+                : ''
+            }
             placeholder={props.placeholder}
             invalid={props.invalid}
             invalidText={props.invalidText}
