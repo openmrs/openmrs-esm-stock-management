@@ -5,6 +5,7 @@ import { StockItemInventory } from '../../../core/api/types/stockItem/StockItemI
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 import BatchNoSelector from './batch-no-selector.component';
+import { formatForDatePicker } from '../../../constants';
 
 jest.mock('../hooks/useStockItemBatchNumbers');
 jest.mock('../../../stock-items/add-stock-item/batch-information/batch-information.resource');
@@ -18,14 +19,15 @@ const mockUseStockItemBatchInformationHook = useStockItemBatchInformationHook as
 describe('BatchNoSelector', () => {
   const mockOnValueChange = jest.fn();
   const mockStockItemUuid = 'test-uuid';
-
+  const mockExpiration = new Date();
   beforeEach(() => {
     jest.clearAllMocks();
+
     mockUseStockItemBatchNumbers.mockReturnValue({
       isLoading: false,
       stockItemBatchNos: [
-        { uuid: '1', batchNo: 'BATCH-001', quantity: 10 },
-        { uuid: '2', batchNo: 'BATCH-002', quantity: 20 },
+        { uuid: '1', batchNo: 'BATCH-001', quantity: 10, expiration: mockExpiration },
+        { uuid: '2', batchNo: 'BATCH-002', quantity: 20, expiration: mockExpiration },
       ],
     });
     mockUseStockItemBatchInformationHook.mockReturnValue({
@@ -55,7 +57,7 @@ describe('BatchNoSelector', () => {
     const combobox = screen.getByRole('combobox');
     await userEvent.click(combobox);
     await userEvent.type(combobox, 'BATCH-001');
-    const option = screen.getByText('BATCH-001 | Qty: 10');
+    const option = screen.getByText(`BATCH-001 | Qty: 10 | Expiry: ${formatForDatePicker(mockExpiration)}`);
     await userEvent.click(option);
     expect(mockOnValueChange).toHaveBeenCalledWith('1');
   });
