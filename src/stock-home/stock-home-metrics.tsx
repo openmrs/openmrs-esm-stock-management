@@ -71,8 +71,8 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
           headerLabel={t('highestServiceVolume', 'Out of Stock ')}
           view="items"
           outofstockCount={{
-            itemsbelowmin: ['0'],
-            itemsabovemax: ['0'],
+            itemsbelowmin: [],
+            itemsabovemax: [],
           }}
         />
         <MetricsCard
