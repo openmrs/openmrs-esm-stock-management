@@ -8,12 +8,12 @@ import { formatForDatePicker } from '../../../constants';
 
 interface BatchNoSelectorProps {
   stockItemUuid: string;
-  intiallvalue?: string;
+  initialValue?: string;
   onValueChange?: (value: string) => void;
   error?: string;
 }
 
-const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error, intiallvalue, onValueChange }) => {
+const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error, initialValue, onValueChange }) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid);
   const { t } = useTranslation();
 
@@ -40,8 +40,8 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
     return stockItemBatchesInfo?.filter((s) => s.quantity !== undefined && s.quantity !== 0);
   }, [stockItemBatchesInfo]);
   const initialSelectedItem = useMemo(
-    () => filteredBatches?.find((s) => s.uuid === intiallvalue),
-    [filteredBatches, intiallvalue],
+    () => filteredBatches?.find((s) => s.uuid === initialValue),
+    [filteredBatches, initialValue],
   );
 
   if (isLoading || isLoadingBatchinfo) return <SelectSkeleton role="progressbar" />;
@@ -56,7 +56,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
       onChange={(data: { selectedItem?: StockBatchDTO }) => {
         onValueChange(data.selectedItem?.uuid);
       }}
-      initialSelectedItem={initialSelectedItem}
+      selectedItem={initialSelectedItem}
       itemToString={(s: StockBatchDTO) =>
         s?.batchNo
           ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} | Expiry: ${formatForDatePicker(s.expiration)}`

@@ -14,18 +14,19 @@ import { isDesktop, launchWorkspace } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { formatForDatePicker } from '../../../constants';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import { BaseStockOperationItemFormData, StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import StockItemSearch from '../input-components/stock-item-search.component';
 import { StockItemFormProps } from '../stock-item-form/stock-item-form.workspace';
 import QuantityUomCell from './quantity-uom-cell.component';
 import StockAvailability from './stock-availability-cell.component';
+import StockOperationItemBatchNoCell from './stock-operation-item-batch-no-cell.component';
 import StockOperationItemCell from './stock-operation-item-cell.component';
+import StockoperationItemExpiryCell from './stock-operation-item-expiry-cell.component';
 import styles from './stock-operation-items-form-step.scc.scss';
-import StockItemSearch from '../input-components/stock-item-search.component';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -133,14 +134,38 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
   );
 
   const tableRows = useMemo(() => {
-    return (observableOperationItems ?? []).map((item) => {
-      const { batchNo, expiration, quantity, purchasePrice, uuid, stockItemUuid, stockItemPackagingUOMUuid } = item;
+    return observableOperationItems?.map((item) => {
+      const {
+        batchNo,
+        expiration,
+        quantity,
+        purchasePrice,
+        uuid,
+        stockItemUuid,
+        stockItemPackagingUOMUuid,
+        stockBatchUuid,
+      } = item;
+
       return {
         id: uuid,
         item: stockItemUuid ? <StockOperationItemCell stockItemUuid={stockItemUuid} /> : '--',
         itemDetails: stockItemUuid ? <StockAvailability stockItemUuid={stockItemUuid} /> : '--',
-        batch: batchNo ?? '--',
-        expiry: formatForDatePicker(expiration),
+        batch: (
+          <StockOperationItemBatchNoCell
+            operation={stockOperationType}
+            stockBatchUuid={stockBatchUuid}
+            batchNo={batchNo}
+            stockItemUuid={stockItemUuid}
+          />
+        ),
+        expiry: (
+          <StockoperationItemExpiryCell
+            operation={stockOperationType}
+            stockBatchUuid={stockBatchUuid}
+            expiration={expiration}
+            stockItemUuid={stockItemUuid}
+          />
+        ),
         quantity: quantity?.toLocaleString(),
         quantityuom: stockItemPackagingUOMUuid ? (
           <QuantityUomCell stockItemPackagingUOMUuid={stockItemPackagingUOMUuid} stockItemUuid={stockItemUuid} />
@@ -176,7 +201,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ),
       };
     });
-  }, [observableOperationItems, handleLaunchStockItem, handleDeleteStockOperationItem]);
+  }, [observableOperationItems, handleLaunchStockItem, handleDeleteStockOperationItem, stockOperationType]);
 
   const headerTitle = t('stockoperationItems', 'Stock operation items');
 
@@ -210,7 +235,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         />
 
         <DataTable
-          rows={tableRows}
+          rows={tableRows ?? []}
           headers={headers}
           isSortable={false}
           useZebraStyles={true}

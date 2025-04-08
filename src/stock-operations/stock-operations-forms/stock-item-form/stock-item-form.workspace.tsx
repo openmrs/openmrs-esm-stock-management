@@ -86,7 +86,7 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
               name={'stockBatchUuid' as any}
               render={({ field, fieldState: { error } }) => (
                 <BatchNoSelector
-                  intiallvalue={stockOperationItem?.stockBatchUuid}
+                  initialValue={stockOperationItem?.stockBatchUuid}
                   onValueChange={field.onChange}
                   stockItemUuid={stockOperationItem.stockItemUuid}
                   error={error?.message}

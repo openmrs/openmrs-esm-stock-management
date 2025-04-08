@@ -11,7 +11,7 @@ import StockOperationForm from './stock-operation-form.component';
 import useParties from './hooks/useParties';
 import userEvent from '@testing-library/user-event';
 import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
-import { useStockItem, useStockItems } from '../../stock-items/stock-items.resource';
+import { useStockItem, useStockItems, useStockBatches } from '../../stock-items/stock-items.resource';
 import { initialStockOperationValue } from '../../core/utils/utils';
 import { useForm, useFormContext, Controller, FormProvider } from 'react-hook-form';
 import { BaseStockOperationItemFormData, StockOperationItemFormData } from '../validation-schema';
@@ -66,6 +66,12 @@ jest.mock('../../stock-items/stock-items.resource', () => ({
   useStockItems: jest.fn().mockReturnValue({
     isLoading: false,
     error: null,
+    items: {},
+  }),
+  useStockBatches: jest.fn().mockReturnValue({
+    isLoading: false,
+    error: null,
+
     items: {},
   }),
 }));
