@@ -28,6 +28,7 @@ import BatchNoSelector from '../batch-no-selector/batch-no-selector.component';
 
 import styles from './stock-items-addition-row.scss';
 import { useStockItemBatchInformationHook } from '../../stock-items/add-stock-item/batch-information/batch-information.resource';
+import UniqueBatchNoEntryInput from '../batch-no-selector/unique-batch-no-entry-input.component';
 
 interface StockItemsAdditionRowProps {
   canEdit?: boolean;
@@ -182,15 +183,11 @@ const StockItemsAdditionRow: React.FC<StockItemsAdditionRowProps> = ({
                 <div className={styles.cellContent}>
                   {requiresActualBatchInformation &&
                     (canEdit || (canUpdateBatchInformation && row?.permission?.canUpdateBatchInformation)) && (
-                      <TextInput
-                        size="sm"
-                        maxLength={50}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                          setValue(`stockItems.${index}.batchNo`, e.target.value)
-                        }
+                      <UniqueBatchNoEntryInput
+                        onValueChange={(val) => setValue(`stockItems.${index}.batchNo`, val)}
                         defaultValue={row.batchNo}
-                        invalidText=""
-                        invalid={errors?.stockItems?.[index]?.batchNo}
+                        error={errors?.stockItems?.[index]?.batchNo?.message}
+                        stockItemUuid={row.stockItemUuid}
                       />
                     )}
                   {requiresBatchUuid && !requiresActualBatchInformation && canEdit && (
