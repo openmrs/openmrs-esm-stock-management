@@ -1,6 +1,6 @@
 import { ResourceRepresentation } from '../../../core/api/api';
 import { useEffect, useMemo, useState } from 'react';
-import { type StockItemInventoryFilter, useStockItemTransactions } from '../../stock-items.resource';
+import { StockItemInventoryFilter, useStockItemInventory, useStockItemTransactions } from '../../stock-items.resource';
 
 export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
@@ -37,6 +37,7 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
   }, [searchString, currentPage, currentPageSize, stockItemUuid, partyUuid, locationUuid, stockBatchUuid]);
 
   const { items, isLoading, error } = useStockItemTransactions(stockItemFilter);
+  const { items: inventory } = useStockItemInventory(stockItemFilter);
 
   const tableHeaders = useMemo(
     () => [
@@ -103,6 +104,10 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
         header: 'Batch',
       },
       {
+        key: 'balance',
+        header: 'Balance',
+      },
+      {
         key: 'reference',
         header: 'Reference',
       },
@@ -131,5 +136,6 @@ export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
     setPartyUuid,
     setStockBatchUuid,
     binCardHeaders,
+    inventory: inventory,
   };
 }
