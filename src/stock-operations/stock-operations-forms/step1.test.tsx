@@ -55,6 +55,11 @@ jest.mock('../stock-operations.resource', () => ({
     isLoading: false,
     error: null,
   }),
+  useStockOperation: jest.fn().mockReturnValue({
+    items: undefined,
+    isLoading: false,
+    error: null,
+  }),
 }));
 
 jest.mock('./hooks/useParties', () => jest.fn());

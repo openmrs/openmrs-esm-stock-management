@@ -1,12 +1,12 @@
 import { Button, Column, ComboBox, DatePicker, DatePickerInput, InlineLoading, Stack, TextArea } from '@carbon/react';
 import { ErrorState } from '@openmrs/esm-framework';
-import React, { ChangeEvent, FC, useEffect } from 'react';
+import React, { ChangeEvent, FC, useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, MAIN_STORE_LOCATION_TAG } from '../../../constants';
 import { Party } from '../../../core/api/types/Party';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { OperationType, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import useParties from '../hooks/useParties';
@@ -37,7 +37,10 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     destinationTags,
   } = useParties(stockOperationType);
   const form = useFormContext<StockOperationItemDtoSchema>();
-
+  const isStockIssueOperation = useMemo(
+    () => OperationType.STOCK_ISSUE_OPERATION_TYPE === stockOperationType.operationType,
+    [stockOperationType],
+  );
   // initialize location fields
   useEffect(() => {
     // Prefill default locaton with current location if is a new operation
@@ -134,7 +137,9 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           render={({ field, fieldState: { error } }) => (
             <ComboBox
               titleText={
-                stockOperationType?.hasDestination || stockOperation?.destinationUuid
+                isStockIssueOperation
+                  ? t('destination', 'destination')
+                  : stockOperationType?.hasDestination || stockOperation?.destinationUuid
                   ? t('from', 'From')
                   : t('location', 'Location')
               }
@@ -171,7 +176,9 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
               <ComboBox
                 readOnly={field.disabled}
                 titleText={
-                  stockOperationType?.hasSource || stockOperation?.atLocationUuid
+                  isStockIssueOperation
+                    ? t('source', 'Source')
+                    : stockOperationType?.hasSource || stockOperation?.atLocationUuid
                     ? t('to', 'To')
                     : t('location', 'Location')
                 }

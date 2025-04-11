@@ -3,8 +3,8 @@ import { Button } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { launchAddOrEditDialog } from '../stock-operation.utils';
+import { OperationType, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 import { InlineLoading } from '@carbon/react';
@@ -29,7 +29,14 @@ const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> 
   );
 
   const handleEdit = useCallback(() => {
-    launchAddOrEditDialog(t, activeOperationType, stockOperation, false);
+    const isStockIssueOperation = stockOperation.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
+
+    launchStockoperationAddOrEditDialog(
+      t,
+      activeOperationType,
+      stockOperation,
+      isStockIssueOperation ? stockOperation.uuid : undefined,
+    );
   }, [t, activeOperationType, stockOperation]);
 
   useEffect(() => {

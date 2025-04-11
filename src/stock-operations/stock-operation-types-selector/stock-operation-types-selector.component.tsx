@@ -3,8 +3,8 @@ import { OverflowMenuVertical } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { launchAddOrEditDialog } from '../stock-operation.utils';
+import { OperationType, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 
 const StockOperationTypesSelector = () => {
@@ -13,7 +13,9 @@ const StockOperationTypesSelector = () => {
 
   const handleSelect = useCallback(
     (stockOperationType: StockOperationType) => {
-      launchAddOrEditDialog(t, stockOperationType, undefined, false);
+      const isStockIssueOperation = stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
+
+      launchStockoperationAddOrEditDialog(t, stockOperationType, undefined);
     },
     [t],
   );
@@ -53,6 +55,7 @@ const StockOperationTypesSelector = () => {
       }}
     >
       {operationTypes
+        .filter((type) => type.operationType !== OperationType.STOCK_ISSUE_OPERATION_TYPE)
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((operation) => (
           <OverflowMenuItem

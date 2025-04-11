@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
-import { launchAddOrEditDialog } from '../stock-operation.utils';
+import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
 import { useStockOperation } from '../stock-operations.resource';
+import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
 
 interface StockOperationRelatedLinkProps {
   stockOperationUuid: string;
@@ -26,8 +27,14 @@ const StockOperationRelatedLink: React.FC<StockOperationRelatedLinkProps> = ({
     if (!operationType) {
       return;
     }
-    launchAddOrEditDialog(t, operationType, stockOperation, false);
-  }, [types, stockOperation, t]);
+    const isStockIssueOperation = operationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
+    launchStockoperationAddOrEditDialog(
+      t,
+      operationType,
+      stockOperation,
+      isStockIssueOperation ? stockOperationUuid : undefined,
+    );
+  }, [types, stockOperation, t, stockOperationUuid]);
 
   if (isLoading || error || stockOperationError || isStockOperationLoading) return null;
   return (

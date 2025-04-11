@@ -27,20 +27,27 @@ import StockOperationItemsFormStep from './steps/stock-operation-items-form-step
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
 import StockOperationFormHeader from './stock-operation-form-header.component';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
+import StockIssueFormInitializerWithRelatedRequisitionOperation from './stock-issue-form-initializer-with-related-requisition-operation.component';
 
 /**
  * Props interface for the StockOperationForm component
  * @interface StockOperationFormProps
  * @property {StockOperationType} [stockOperationType] - The stock operation type being created or edited.
  * @property {StockOperationDTO} [stockOperation] - The stock operation data transfer object.
+ * @property {string} [stockRequisitionUuid] - Requisition operation uuid used in stock issue stockOperation type
  * When undefined or null, the form will be in creation mode.
  */
 type StockOperationFormProps = {
   stockOperation?: StockOperationDTO;
   stockOperationType: StockOperationType;
+  stockRequisitionUuid?: string;
 };
 
-const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation, stockOperationType }) => {
+const StockOperationForm: React.FC<StockOperationFormProps> = ({
+  stockOperation,
+  stockOperationType,
+  stockRequisitionUuid,
+}) => {
   const { t } = useTranslation();
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
@@ -168,6 +175,12 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({ stockOperation,
     <FormProvider {...form}>
       {stockOperation && (
         <StockOperationFormHeader stockOperationType={stockOperationType} stockOperation={stockOperation} />
+      )}
+      {stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && (
+        <StockIssueFormInitializerWithRelatedRequisitionOperation
+          stockRequisitionUuid={stockRequisitionUuid as string}
+          stockOperationType={stockOperationType}
+        />
       )}
       <StockOperationStepper
         steps={steps.map((tab, index) => ({

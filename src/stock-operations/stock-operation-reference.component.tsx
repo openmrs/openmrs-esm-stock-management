@@ -2,9 +2,10 @@ import { InlineLoading } from '@carbon/react';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStockOperationTypes } from '../stock-lookups/stock-lookups.resource';
-import { launchAddOrEditDialog } from './stock-operation.utils';
+import { launchStockoperationAddOrEditDialog } from './stock-operation.utils';
 import { useStockOperation } from './stock-operations.resource';
 import { showSnackbar } from '@openmrs/esm-framework';
+import { OperationType } from '../core/api/types/stockOperation/StockOperationType';
 
 interface StockOperationReferenceProps {
   operationUuid: string;
@@ -25,8 +26,15 @@ const StockOperationReference = ({ operationNumber, operationUuid }: StockOperat
     if (!operationType) {
       return;
     }
-    launchAddOrEditDialog(t, operationType, stockOperation, false);
-  }, [stockOperation, t, types.results]);
+    const isStockIssueOperation = operationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
+
+    launchStockoperationAddOrEditDialog(
+      t,
+      operationType,
+      stockOperation,
+      isStockIssueOperation ? operationUuid : undefined,
+    );
+  }, [stockOperation, t, types.results, operationUuid]);
 
   useEffect(() => {
     if (stockOperationError) {

@@ -7,11 +7,11 @@ import { StockOperationType } from '../core/api/types/stockOperation/StockOperat
 import { launchOverlay } from '../core/components/overlay/hook';
 import StockOperationForm from './stock-operations-forms/stock-operation-form.component';
 
-export const launchAddOrEditDialog = (
+export const launchStockoperationAddOrEditDialog = (
   t: TFunction,
   operationType: StockOperationType,
   stockOperation?: StockOperationDTO,
-  canPrint?: boolean,
+  stockRequisitionUuid?: string, // Only suplied on stock issue (when overlay is launched for stock issue)
 ) => {
   launchOverlay(
     stockOperation
@@ -21,7 +21,11 @@ export const launchAddOrEditDialog = (
       : t('newOperationTitle', 'New: {{operationName}}', {
           operationName: operationType?.name,
         }),
-    <StockOperationForm stockOperationType={operationType} stockOperation={stockOperation} />,
+    <StockOperationForm
+      stockOperationType={operationType}
+      stockOperation={stockOperation}
+      stockRequisitionUuid={stockRequisitionUuid}
+    />,
   );
 };
 

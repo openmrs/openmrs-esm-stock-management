@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { extractErrorMessagesFromResponse } from '../../../constants';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
-import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { OperationType, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { otherUser } from '../../../core/utils/utils';
 import { handleMutate } from '../../../utils';
 import { showActionDialogButton } from '../../stock-operation.utils';
@@ -31,6 +31,10 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
   const editable = useMemo(() => !stockOperation || stockOperation.status === 'NEW', [stockOperation]);
   const form = useFormContext<StockOperationItemDtoSchema>();
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(stockOperation?.approvalRequired);
+  const isStockIssueOperation = useMemo(
+    () => OperationType.STOCK_ISSUE_OPERATION_TYPE === stockOperationType.operationType,
+    [stockOperationType],
+  );
   const handleRadioButtonChange = (selectedItem: boolean) => {
     setApprovalRequired(selectedItem);
   };
@@ -79,7 +83,8 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           stockOperationItems: [
             ...formData.stockOperationItems.map((item) => ({
               ...item,
-              uuid: item.uuid.startsWith('new-item-') ? undefined : item.uuid, // Remove uuid for newly inserted items to avoid foreign key constraint lookup error
+              uuid:
+                item.uuid.startsWith('new-item-') || (!stockOperation && isStockIssueOperation) ? undefined : item.uuid, // Remove uuid for newly inserted items and stock issue items derived from requisition to avoid foreign key constraint lookup error
             })),
           ],
         };
@@ -110,7 +115,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
       }
     })(); // Call handleSubmit to trigger validation and submission
     return result; // Return the result after handleSubmit completes
-  }, [form, stockOperation, t, approvalRequired]);
+  }, [form, stockOperation, t, approvalRequired, isStockIssueOperation]);
 
   const handleComplete = useCallback(() => {
     handleSave().then((operation) => {

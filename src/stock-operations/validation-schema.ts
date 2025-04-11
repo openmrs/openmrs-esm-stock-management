@@ -114,7 +114,7 @@ export const stockOperationSchema = z.object({
   dispatchedByGivenName: z.string().nullish(),
   dispatchedByFamilyName: z.string().nullish(),
   dispatchedDate: z.coerce.date(),
-  requisitionStockOperationUuid: z.string(),
+  requisitionStockOperationUuid: z.string().uuid().nullish(),
 });
 export const baseStockOperationItemSchema = z.object({
   uuid: z.string().min(1, 'Required'),
@@ -179,6 +179,7 @@ export const stockOperationItemDtoSchema = z.object({
   remarks: z.string().nullish(),
   operationTypeUuid: z.string().min(1, 'Operation type required').uuid('Invalid operation type'),
   stockOperationItems: baseStockOperationItemSchema.array().nonempty('You must add atleast one stock item'),
+  requisitionStockOperationUuid: z.string().uuid().optional(), // Suplied only for stock issue operation
 });
 
 export type StockOperationItemDtoSchema = z.infer<typeof stockOperationItemDtoSchema>;
