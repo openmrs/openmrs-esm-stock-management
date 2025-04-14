@@ -2,8 +2,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
-import { useStockOperation } from '../stock-operations.resource';
-import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { useStockOperationAndItems } from '../stock-operations.resource';
 
 interface StockOperationRelatedLinkProps {
   stockOperationUuid: string;
@@ -19,7 +18,7 @@ const StockOperationRelatedLink: React.FC<StockOperationRelatedLinkProps> = ({
     error: stockOperationError,
     isLoading: isStockOperationLoading,
     items: stockOperation,
-  } = useStockOperation(stockOperationUuid);
+  } = useStockOperationAndItems(stockOperationUuid);
   const { t } = useTranslation();
 
   const handleEdit = useCallback(() => {
@@ -27,14 +26,13 @@ const StockOperationRelatedLink: React.FC<StockOperationRelatedLinkProps> = ({
     if (!operationType) {
       return;
     }
-    const isStockIssueOperation = operationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
     launchStockoperationAddOrEditDialog(
       t,
       operationType,
       stockOperation,
-      isStockIssueOperation ? stockOperationUuid : undefined,
+      stockOperation?.requisitionStockOperationUuid,
     );
-  }, [types, stockOperation, t, stockOperationUuid]);
+  }, [types, stockOperation, t]);
 
   if (isLoading || error || stockOperationError || isStockOperationLoading) return null;
   return (

@@ -6,6 +6,8 @@ import { InventoryGroupBy } from '../core/api/types/stockItem/StockItem';
 import { StopOperationAction } from '../core/api/types/stockOperation/StockOperationAction';
 import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationItemDtoSchema } from './validation-schema';
+import { StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
+import { StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
 
 export interface StockOperationFilter extends ResourceFilterCriteria {
   status?: string | null | undefined;
@@ -84,7 +86,7 @@ export function useStockOperationAndItems(id: string) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
   const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : {},
+    items: data?.data,
     isLoading,
     error,
   };
@@ -184,7 +186,7 @@ export function updateStockOperationBatchNumbers(item: StockOperationDTO, uuid: 
 export function getStockOperationItemsCost(filter: StockOperationFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
   const abortController = new AbortController();
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<{ results: Array<StockOperationItemCost> }>(apiUrl, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -196,7 +198,7 @@ export function getStockOperationItemsCost(filter: StockOperationFilter) {
 export function getStockItemInventory(filter: StockItemInventoryFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockiteminventory${toQueryParams(filter)}&v=default`;
   const abortController = new AbortController();
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<{ results: Array<StockItemInventory> }>(apiUrl, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

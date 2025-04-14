@@ -55,7 +55,6 @@ const StockOperationTypesSelector = () => {
       }}
     >
       {operationTypes
-        .filter((type) => type.operationType !== OperationType.STOCK_ISSUE_OPERATION_TYPE)
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((operation) => (
           <OverflowMenuItem
