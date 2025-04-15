@@ -23,6 +23,7 @@ import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
 import styles from './stock-item-form.scss';
+import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
@@ -66,13 +67,12 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
                 defaultValue={stockOperationItem?.batchNo}
                 name={'batchNo' as any}
                 render={({ field, fieldState: { error } }) => (
-                  <TextInput
-                    {...field}
-                    maxLength={50}
-                    invalidText={error?.message}
-                    invalid={error?.message}
-                    placeholder={t('batchNumber', 'Batch Number')}
-                    labelText={t('batchNumber', 'Batch Number')}
+                  <UniqueBatchNoEntryInput
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    stockItemUuid={stockOperationItem.stockItemUuid}
+                    error={error?.message}
+                    stockOperationItemUuid={stockOperationItem.uuid}
                   />
                 )}
               />
