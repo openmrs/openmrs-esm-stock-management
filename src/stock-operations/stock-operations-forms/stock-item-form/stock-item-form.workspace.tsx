@@ -51,6 +51,18 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
   });
   const { t } = useTranslation();
   const { item } = useStockItem(form.getValues('stockItemUuid'));
+  const commonName = useMemo(() => {
+    if (!useItemCommonNameAsDisplay) return;
+    const drugName = item?.drugName ? `(Drug name: ${item.drugName})` : undefined;
+    return `${item?.commonName || t('noCommonNameAvailable', 'No common name available') + (drugName ?? '')}`;
+  }, [item, useItemCommonNameAsDisplay, t]);
+
+  const drugName = useMemo(() => {
+    if (useItemCommonNameAsDisplay) return;
+    const commonName = item?.commonName ? `(Common name: ${item.commonName})` : undefined;
+    return `${item?.drugName || t('noDrugNameAvailable', 'No drug name available') + (commonName ?? '')}`;
+  }, [item, useItemCommonNameAsDisplay, t]);
+
   const onSubmit = (data: z.infer<typeof formschema>) => {
     onSave?.(data);
     closeWorkspace();
@@ -59,8 +71,7 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
-        {useItemCommonNameAsDisplay && item?.commonName && <p className={styles.title}>{item?.commonName}</p>}
-        {!useItemCommonNameAsDisplay && item?.drugName && <p className={styles.title}>{item?.drugName}</p>}
+        <p className={styles.title}>{useItemCommonNameAsDisplay ? commonName : drugName}</p>
 
         {(operationTypePermision.requiresActualBatchInfo || operationTypePermision.requiresBatchUuid) &&
           fields.includes('batchNo' as any) && (

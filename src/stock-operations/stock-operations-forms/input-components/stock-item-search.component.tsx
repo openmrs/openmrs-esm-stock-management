@@ -1,6 +1,6 @@
 import { ClickableTile, Search } from '@carbon/react';
 import { useConfig, useDebounce } from '@openmrs/esm-framework';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import { useFilterableStockItems } from '../hooks/useFilterableStockItems';
@@ -17,7 +17,23 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({ onSelectedItem }) => 
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm);
   const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
+  const getDrugName = useCallback(
+    (item: StockItemDTO) => {
+      if (useItemCommonNameAsDisplay) return;
+      const commonName = item?.commonName ? `(Common name: ${item.commonName})` : undefined;
+      return `${item?.drugName || t('noDrugNameAvailable', 'No drug name available') + (commonName ?? '')}`;
+    },
+    [useItemCommonNameAsDisplay, t],
+  );
 
+  const getCommonName = useCallback(
+    (item: StockItemDTO) => {
+      if (!useItemCommonNameAsDisplay) return;
+      const drugName = item?.drugName ? `(Drug name: ${item.drugName})` : undefined;
+      return `${item?.commonName || t('noCommonNameAvailable', 'No common name available') + (drugName ?? '')}`;
+    },
+    [useItemCommonNameAsDisplay, t],
+  );
   useEffect(() => {
     if (debouncedSearchTerm?.length !== 0) {
       setSearchString(debouncedSearchTerm);
@@ -28,6 +44,7 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({ onSelectedItem }) => 
     onSelectedItem?.(stockItem);
     setSearchTerm('');
   };
+
   return (
     <div className={styles.stockItemSearchContainer}>
       <div style={{ display: 'flex' }}>
@@ -44,11 +61,15 @@ const StockItemSearch: React.FC<StockItemSearchProps> = ({ onSelectedItem }) => 
       </div>
       {searchTerm && stockItemsList?.length > 0 && (
         <div className={styles.searchResults}>
-          {stockItemsList?.slice(0, 5).map((stockItem) => (
-            <ClickableTile onClick={() => handleOnSearchResultClick(stockItem)} key={stockItem?.uuid}>
-              {useItemCommonNameAsDisplay ? stockItem?.commonName : stockItem?.drugName}
-            </ClickableTile>
-          ))}
+          {stockItemsList?.slice(0, 5).map((stockItem) => {
+            const commonName = getCommonName(stockItem);
+            const drugName = getDrugName(stockItem);
+            return (
+              <ClickableTile onClick={() => handleOnSearchResultClick(stockItem)} key={stockItem?.uuid}>
+                {useItemCommonNameAsDisplay ? commonName : drugName}
+              </ClickableTile>
+            );
+          })}
         </div>
       )}
     </div>
