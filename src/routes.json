@@ -198,6 +198,23 @@
     {
       "name": "stock-operation-dialog",
       "component": "stockOperationModal"
+    },
+    {
+      "name": "transactions-print-bincard-preview-modal",
+      "component": "transactionBincardPrintPreviewModal"
+    },
+    {
+      "name": "transactions-print-stockcard-preview-modal",
+      "component": "transactionStockcardPrintPreviewModal"
+    }
+  ],
+  "workspaces": [
+    {
+      "name": "stock-operation-stock-items-form",
+      "component": "stockOperationStockItemForm",
+      "title": "Stock Items",
+      "type": "form",
+      "width": "wider"
     }
   ],
   "pages": [

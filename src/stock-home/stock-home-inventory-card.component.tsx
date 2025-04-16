@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
 import { navigate, useLayoutType } from '@openmrs/esm-framework';
@@ -6,6 +6,7 @@ import styles from './stock-home-detail-card.scss';
 import { WarningHex } from '@carbon/react/icons';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
+import ExpiredStockModal from './stock-home-inventory-expiry.component';
 
 const StockHomeInventoryCard = () => {
   const { t } = useTranslation();
@@ -13,6 +14,8 @@ const StockHomeInventoryCard = () => {
 
   const { items: expiryItems, isLoading: inventoryLoading } = useStockInventory();
   const { items: stockItems, isLoading } = useStockInventoryItems();
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   if (isLoading || inventoryLoading) return <></>;
 
@@ -58,7 +61,7 @@ const StockHomeInventoryCard = () => {
           </div>
         </div>
       ))}
-      <Button
+      {/* <Button
         onClick={() => {
           navigate({
             to: `${window.getOpenmrsSpaBase()}stock-management/expired-stock`,
@@ -67,7 +70,14 @@ const StockHomeInventoryCard = () => {
         kind="ghost"
       >
         View All
+      </Button> */}
+
+      <Button onClick={() => setModalOpen(true)} kind="ghost">
+        View All
       </Button>
+
+      {/* Expired Stock Modal */}
+      <ExpiredStockModal open={isModalOpen} onClose={() => setModalOpen(false)} expiredStock={mergedArray} />
     </>
   );
 };

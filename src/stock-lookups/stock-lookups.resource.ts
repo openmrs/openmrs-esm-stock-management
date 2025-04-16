@@ -168,8 +168,8 @@ export function useUsers(filter: UserFilterCriteria) {
 }
 
 // getUser
-export function useUser(id: string) {
-  const apiUrl = `${restBaseUrl}/user/${id}`;
+export function useUser(id: string, v?: string) {
+  const apiUrl = `${restBaseUrl}/user/${id}${toQueryParams({ v: v as any })}`;
   const { data, error, isLoading } = useSWR<
     {
       data: User;
@@ -265,6 +265,14 @@ export function usePatients(filter: ConceptFilterCriteria) {
     isLoading,
     error,
   };
+}
+
+// get a Patient
+export function usePatient(patientUuid: string) {
+  const customePresentation = 'custom:(uuid,display,identifiers,links)';
+  const url = `${restBaseUrl}/patient/${patientUuid}?v=${customePresentation}`;
+  const { isLoading, error, data } = useSWR<FetchResponse<Patient>>(url, openmrsFetch);
+  return { isLoading, error, patient: data?.data };
 }
 
 type UserRole = {

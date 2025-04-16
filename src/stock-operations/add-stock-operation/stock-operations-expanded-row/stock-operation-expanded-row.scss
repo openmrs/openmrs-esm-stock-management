@@ -26,6 +26,6 @@
   display: flex;
   width: 100%;
   border: none;
-  justify-content: space-between;
+  gap: layout.$spacing-05;
   flex: 1;
 }

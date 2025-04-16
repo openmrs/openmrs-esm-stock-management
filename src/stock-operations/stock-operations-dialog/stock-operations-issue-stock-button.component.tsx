@@ -1,47 +1,42 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 
-import { Button } from '@carbon/react';
-import { useTranslation } from 'react-i18next';
+import { Button, InlineLoading } from '@carbon/react';
 import { DeliveryTruck } from '@carbon/react/icons';
+import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { launchAddOrEditDialog } from '../stock-operation.utils';
+import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
+import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
+import { showSnackbar } from '@openmrs/esm-framework';
 
 interface StockOperationIssueStockButtonProps {
   operation: StockOperationDTO;
-  operations: StockOperationType[];
 }
 
-const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonProps> = ({ operation, operations }) => {
+const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
-  const type: StockOperationType = {
-    uuid: '',
-    name: 'Stock Issue',
-    description: '',
-    operationType: 'stockissue',
-    hasSource: false,
-    sourceType: 'Location',
-    hasDestination: false,
-    destinationType: 'Location',
-    hasRecipient: false,
-    recipientRequired: false,
-    availableWhenReserved: false,
-    allowExpiredBatchNumbers: false,
-    stockOperationTypeLocationScopes: [],
-    creator: undefined,
-    dateCreated: undefined,
-    changedBy: undefined,
-    dateChanged: undefined,
-    dateVoided: undefined,
-    voidedBy: undefined,
-    voidReason: '',
-    voided: false,
+  const { error, isLoading, types } = useStockOperationTypes();
+  const stockIssueOperationType = useMemo(
+    () => types?.results?.find((type) => type.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE),
+    [types],
+  );
+
+  const handleButtonClick = () => {
+    launchStockoperationAddOrEditDialog(t, stockIssueOperationType, undefined, operation.uuid);
   };
 
-  const modifiedOperation = addRequisitionStockOperation(operation);
-  const handleButtonClick = () => {
-    launchAddOrEditDialog(t, modifiedOperation, false, type, operations, false);
-  };
+  useEffect(() => {
+    if (error) {
+      showSnackbar({
+        kind: 'error',
+        title: t('stockOperationError', 'Error loading stock operation types'),
+        subtitle: error?.message,
+      });
+    }
+  }, [error, t]);
+
+  if (isLoading)
+    return <InlineLoading description="" iconDescription={t('loadingOperationTypes', 'Loading operation types')} />;
 
   return (
     <Button onClick={handleButtonClick} kind="tertiary" renderIcon={(props) => <DeliveryTruck size={16} {...props} />}>
@@ -49,12 +44,5 @@ const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonPro
     </Button>
   );
 };
-function addRequisitionStockOperation(stockOperation) {
-  const { uuid } = stockOperation;
-  return {
-    ...stockOperation,
-    requisitionStockOperationUuid: uuid,
-  };
-}
 
 export default StockOperationIssueStockButton;

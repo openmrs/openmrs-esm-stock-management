@@ -31,11 +31,9 @@ import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '..
 import { ResourceRepresentation } from '../core/api/api';
 import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
-import { initialStockOperationValue } from '../core/utils/utils';
 import { handleMutate } from '../utils';
 import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
-import { launchAddOrEditDialog } from './stock-operation.utils';
 import StockOperationsFilters from './stock-operations-filters.component';
 import { useStockOperationPages } from './stock-operations-table.resource';
 
@@ -52,32 +50,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
   };
-  const operation: StockOperationType = useMemo(
-    () => ({
-      uuid: '',
-      name: '',
-      description: '',
-      operationType: '',
-      hasSource: false,
-      sourceType: 'Location',
-      hasDestination: false,
-      destinationType: 'Location',
-      hasRecipient: false,
-      recipientRequired: false,
-      availableWhenReserved: false,
-      allowExpiredBatchNumbers: false,
-      stockOperationTypeLocationScopes: [],
-      creator: undefined,
-      dateCreated: undefined,
-      changedBy: undefined,
-      dateChanged: undefined,
-      dateVoided: undefined,
-      voidedBy: undefined,
-      voidReason: '',
-      voided: false,
-    }),
-    [],
-  );
 
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
@@ -98,8 +70,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   const filterApplied =
     selectedFromDate || selectedToDate || selectedSources.length || selectedStatus.length || selectedOperations.length;
-
-  const [operations, setOperations] = useState<StockOperationType[]>([]);
 
   const handleOnFilterChange = useCallback((selectedItems, filterType) => {
     if (filterType === StockFilters.SOURCES) {
@@ -126,13 +96,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }
   };
 
-  const handleEditClick = useCallback(
-    (stockOperation, isEditing) => {
-      launchAddOrEditDialog(t, stockOperation, isEditing, operation, operations, false);
-    },
-    [t, operation, operations],
-  );
-
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => {
       const threshHold = 1;
@@ -149,15 +112,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         key: `key-${stockOperation?.uuid}`,
         operationTypeName: `${stockOperation?.operationTypeName}`,
         operationNumber: (
-          <EditStockOperationActionMenu
-            model={stockOperation}
-            operations={operations}
-            operationUuid={operation.uuid}
-            operationNumber={''}
-            onEdit={() => handleEditClick(stockOperation, true)}
-            showIcon={false}
-            showprops={true}
-          />
+          <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={false} showprops={true} />
         ),
         stockOperationItems: {
           commonNames,
@@ -177,20 +132,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
         } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
         operationDate: formatDisplayDate(stockOperation?.operationDate),
-        actions: (
-          <EditStockOperationActionMenu
-            model={stockOperation}
-            operations={operations}
-            operationUuid={operation.uuid}
-            operationNumber={''}
-            onEdit={() => handleEditClick(stockOperation, true)}
-            showIcon={true}
-            showprops={false}
-          />
-        ),
+        actions: <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={true} showprops={false} />,
       };
     });
-  }, [items, operations, handleEditClick, operation]);
+  }, [items]);
 
   if (isLoading && !filterApplied) {
     return (
@@ -260,14 +205,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                   <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
 
-                <StockOperationTypesSelector
-                  onOperationTypeSelected={(operation) => {
-                    launchAddOrEditDialog(t, initialStockOperationValue(), false, operation, operations, false);
-                  }}
-                  onOperationLoaded={(ops) => {
-                    setOperations(ops);
-                  }}
-                />
+                <StockOperationTypesSelector />
               </TableToolbarContent>
             </TableToolbar>
             <Table {...getTableProps()}>
@@ -315,7 +253,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                         ))}
                       </TableExpandRow>
                       {row.isExpanded ? (
-                        <TableExpandedRow colSpan={headers.length + 2} {...expandedRowProps}>
+                        <TableExpandedRow colSpan={headers.length + 2}>
                           <StockOperationExpandedRow model={items[index]} />
                         </TableExpandedRow>
                       ) : (
@@ -330,13 +268,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>{t('noOperationsToDisplay', 'No Stock Items to display')}</p>
+                    <p className={styles.content}>{t('noOperationsToDisplay', 'No Stock Operations to display')}</p>
                     <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>
               </div>
             ) : null}
-            {filterApplied && isLoading && (
+            {Boolean(filterApplied && isLoading) && (
               <div className={styles.rowLoadingContainer}>
                 <InlineLoading description={t('loading', 'Loading...')} />
               </div>

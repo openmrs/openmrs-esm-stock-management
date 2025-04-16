@@ -5,6 +5,11 @@ export const configSchema = {
     _default: false,
     _description: 'Whether to print item costs on the print out',
   },
+  enablePrintButton: {
+    _type: Type.Boolean,
+    _default: true,
+    _description: 'Enable or disable the print button in the stock management UI',
+  },
   autoPopulateResponsiblePerson: {
     type: Type.Boolean,
     _default: false,
@@ -35,6 +40,11 @@ export const configSchema = {
     _description: 'UUID for the stock dispensing units uuid',
     _default: '162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
   },
+  useItemCommonNameAsDisplay: {
+    _type: Type.Boolean,
+    _description: 'true to use item common name as display and false to use Drug name as display',
+    _default: true,
+  },
   stockItemCategoryUUID: {
     _type: Type.ConceptUuid,
     _description: 'UUID for the stock item category',
@@ -61,6 +71,7 @@ export const configSchema = {
 
 export type ConfigObject = {
   autoPopulateResponsiblePerson: boolean;
+  enablePrintButton: boolean;
   printItemCost: boolean;
   printBalanceOnHand: boolean;
   packagingUnitsUUID: string;
@@ -68,6 +79,7 @@ export type ConfigObject = {
   stockSourceTypeUUID: string;
   dispensingUnitsUUID: string;
   stockItemCategoryUUID: string;
+  useItemCommonNameAsDisplay: boolean;
   logo: {
     src: string;
     alt: string;

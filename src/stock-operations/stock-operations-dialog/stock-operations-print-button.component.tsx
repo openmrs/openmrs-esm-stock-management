@@ -1,50 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@carbon/react';
-import { useTranslation } from 'react-i18next';
 import { Printer } from '@carbon/react/icons';
+import { useTranslation } from 'react-i18next';
+import { StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationItemCost } from '../../core/api/types/stockOperation/StockOperationItemCost';
-import { StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
 
-import { StockItemInventoryFilter } from '../../stock-items/stock-items.resource';
+import { InlineLoading } from '@carbon/react';
+import { showSnackbar } from '@openmrs/esm-framework';
+import { extractErrorMessagesFromResponse } from '../../constants';
 import { ResourceRepresentation } from '../../core/api/api';
-import { BuildStockOperationData } from '../stock-print-reports/StockOperationReport';
+import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { StockItemInventoryFilter } from '../../stock-items/stock-items.resource';
+import {
+  getStockItemInventory,
+  getStockOperation,
+  getStockOperationItemsCost,
+  useStockOperationAndItems,
+} from '../stock-operations.resource';
 import { PrintGoodsReceivedNoteStockOperation } from '../stock-print-reports/GoodsReceivedNote';
-import { PrintTransferOutStockOperation } from '../stock-print-reports/StockTransferDocument';
 import { PrintRequisitionStockOperation } from '../stock-print-reports/RequisitionDocument';
-import { getStockItemInventory, getStockOperation, getStockOperationItemsCost } from '../stock-operations.resource';
+import { BuildStockOperationData } from '../stock-print-reports/StockOperationReport';
+import { PrintTransferOutStockOperation } from '../stock-print-reports/StockTransferDocument';
 
 interface StockOperationCancelButtonProps {
   operation: StockOperationDTO;
 }
 
-const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ operation }) => {
+const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ operation: _operation }) => {
   const { t } = useTranslation();
-
+  const { isLoading, items: operation, error } = useStockOperationAndItems(_operation.uuid);
+  const [loading, setLoading] = useState(false);
   const onPrintStockOperation = async () => {
+    setLoading(true);
     try {
       let parentOperation: StockOperationDTO | null | undefined;
       let itemsCost: StockOperationItemCost[] | null | undefined = null;
       let itemInventory: StockItemInventory[] | null | undefined = null;
 
       if (operation.requisitionStockOperationUuid) {
-        // get stock operation
-        getStockOperation(operation.requisitionStockOperationUuid)
-          .then((payload: any) => {
-            if ((payload as any).error) {
-              return;
-            }
-            parentOperation = payload;
-          })
-          .catch((error: any) => {
-            if ((error as any).error) {
-              return;
-            }
-            return;
-          });
+        // get related requisition stock operation
+        const response = await getStockOperation(operation.requisitionStockOperationUuid);
+        parentOperation = response.data;
         if (!parentOperation) {
-          return null;
+          return;
         }
       }
 
@@ -59,19 +59,8 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ 
           if (operation?.uuid) {
             inventoryFilter.stockOperationUuid = operation.uuid;
           }
-          getStockOperationItemsCost(inventoryFilter)
-            .then((payload: any) => {
-              if ((payload as any).error) {
-                return;
-              }
-              itemsCost = payload?.results;
-            })
-            .catch((error: any) => {
-              if ((error as any).error) {
-                return;
-              }
-              return;
-            });
+          const res = await getStockOperationItemsCost(inventoryFilter);
+          itemsCost = res.data?.results;
         }
       }
       const enableBalance = true;
@@ -88,35 +77,22 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ 
         inventoryFilter.groupBy = 'LocationStockItem';
         inventoryFilter.includeStockItemName = 'true';
 
-        inventoryFilter.date = JSON.stringify(parentOperation?.dateCreated ?? operation?.dateCreated);
-
+        inventoryFilter.date = (parentOperation?.dateCreated ?? operation?.dateCreated) as any;
         // get stock item inventory
-        getStockItemInventory(inventoryFilter)
-          .then((payload: any) => {
-            if ((payload as any).error) {
-              return;
-            }
-            itemInventory = payload?.results;
-          })
-          .catch((error: any) => {
-            if ((error as any).error) {
-              return;
-            }
-            return;
-          });
+        const res = await getStockItemInventory(inventoryFilter);
+        itemInventory = res.data?.results;
       }
-
       const data = await BuildStockOperationData(
         operation,
-        operation.stockOperationItems,
+        operation.stockOperationItems ?? _operation?.stockOperationItems ?? [],
         parentOperation,
         itemsCost,
         itemInventory,
       );
       if (data) {
-        if (operation?.operationType === 'receipt') {
+        if (operation?.operationType === OperationType.RECEIPT_OPERATION_TYPE) {
           await PrintGoodsReceivedNoteStockOperation(data);
-        } else if (operation?.operationType === 'transferout') {
+        } else if (operation?.operationType === OperationType.TRANSFER_OUT_OPERATION_TYPE) {
           await PrintTransferOutStockOperation(data);
         } else {
           await PrintRequisitionStockOperation(data);
@@ -124,14 +100,30 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ 
       } else {
         console.info(data);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.info(e);
+      showSnackbar({
+        kind: 'error',
+        title: t('errorPrintingStockOperation', 'Error printing stock operation'),
+        subtitle: extractErrorMessagesFromResponse(e).join(', '),
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Button onClick={onPrintStockOperation} kind="tertiary" renderIcon={(props) => <Printer size={16} {...props} />}>
-      {t('print', 'Print')}
+    <Button
+      onClick={onPrintStockOperation}
+      kind="tertiary"
+      disabled={isLoading || loading}
+      renderIcon={(props) => <Printer size={16} {...props} />}
+    >
+      {loading || isLoading ? (
+        <InlineLoading description={t('loading', 'Loading') + '...'} iconDescription={t('loading', 'Loading')} />
+      ) : (
+        t('print', 'Print')
+      )}
     </Button>
   );
 };
