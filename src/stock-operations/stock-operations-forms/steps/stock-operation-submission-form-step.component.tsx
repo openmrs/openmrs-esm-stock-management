@@ -20,11 +20,13 @@ type StockOperationSubmissionFormStepProps = {
   onPrevious?: () => void;
   stockOperation?: StockOperationDTO;
   stockOperationType: StockOperationType;
+  onNext?: () => void;
 };
 const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormStepProps> = ({
   onPrevious,
   stockOperationType,
   stockOperation,
+  onNext,
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
@@ -145,6 +147,11 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           {typeof onPrevious === 'function' && (
             <Button kind="secondary" onClick={onPrevious}>
               Previous
+            </Button>
+          )}
+          {typeof onNext === 'function' && (
+            <Button kind="primary" onClick={onNext}>
+              Next
             </Button>
           )}
         </div>

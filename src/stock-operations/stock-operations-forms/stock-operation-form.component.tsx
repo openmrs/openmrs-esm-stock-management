@@ -15,7 +15,7 @@ import {
 } from '../../core/api/types/stockOperation/StockOperationType';
 import { TabItem } from '../../core/components/tabs/types';
 import { otherUser, pick } from '../../core/utils/utils';
-import ReceivedItems from '../received-items.component';
+import ReceivedItems from './steps/received-items.component';
 import {
   getStockOperationFormSchema,
   getStockOperationItemFormSchema,
@@ -59,6 +59,13 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
   const formschema = useMemo(() => {
     return getStockOperationFormSchema(operationType);
   }, [operationType]);
+  const showReceivedItems = useMemo(() => {
+    return (
+      (StockOperationTypeIsStockIssue(stockOperation?.operationType as OperationType) ||
+        stockOperation?.permission?.canDisplayReceivedItems) &&
+      (stockOperation.status === 'DISPATCHED' || stockOperation.status === 'COMPLETED')
+    );
+  }, [stockOperation]);
   const steps: TabItem[] = useMemo(() => {
     return [
       {
@@ -91,25 +98,23 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             stockOperation={stockOperation}
             stockOperationType={stockOperationType}
             onPrevious={() => setSelectedIndex(1)}
+            onNext={showReceivedItems ? () => setSelectedIndex(3) : undefined}
           />
         ),
         disabled: true,
       },
     ].concat(
-      StockOperationTypeIsStockIssue(stockOperation?.operationType as OperationType) ||
-        stockOperation?.permission?.canDisplayReceivedItems
-        ? stockOperation.status === 'DISPATCHED' || stockOperation.status === 'COMPLETED'
-          ? [
-              {
-                name: t('receivedItems', 'Received Items'),
-                component: <ReceivedItems model={stockOperation} />,
-                disabled: true,
-              },
-            ]
-          : []
+      showReceivedItems
+        ? [
+            {
+              name: t('receivedItems', 'Received Items'),
+              component: <ReceivedItems stockOperation={stockOperation} onPrevious={() => setSelectedIndex(2)} />,
+              disabled: true,
+            },
+          ]
         : [],
     ) as TabItem[];
-  }, [stockOperation, stockOperationType, t, operationTypePermision]);
+  }, [stockOperation, stockOperationType, t, operationTypePermision, showReceivedItems]);
   const {
     user: { uuid: defaultLoggedUserUuid },
   } = useSession();

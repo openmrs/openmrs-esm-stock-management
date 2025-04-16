@@ -176,7 +176,9 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   it('should search stock operation item and render results', async () => {
     const mocksetSearchString = jest.fn();
     (useFilterableStockItems as jest.Mock).mockReturnValue({
-      stockItemsList: [{ uuid: 'mock-uuid', commonName: 'mock-common-name' }] as Array<StockItemDTO>,
+      stockItemsList: [
+        { uuid: 'mock-uuid', commonName: 'mock-common-name', drugName: 'mock-common-name' },
+      ] as Array<StockItemDTO>,
       setLimit: jest.fn(),
       setRepresentation: jest.fn(),
       isLoading: false,
@@ -198,7 +200,9 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
 
   it('should properly handle stock operation item selection', async () => {
     (useFilterableStockItems as jest.Mock).mockReturnValue({
-      stockItemsList: [{ uuid: 'mock-uuid', commonName: 'mock-common-name' }] as Array<StockItemDTO>,
+      stockItemsList: [
+        { uuid: 'mock-uuid', commonName: 'mock-common-name', drugName: 'mock-common-name' },
+      ] as Array<StockItemDTO>,
       setLimit: jest.fn(),
       setRepresentation: jest.fn(),
       isLoading: false,

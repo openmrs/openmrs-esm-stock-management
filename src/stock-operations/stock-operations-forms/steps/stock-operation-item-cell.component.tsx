@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
 import { useTranslation } from 'react-i18next';
-import { showSnackbar } from '@openmrs/esm-framework';
+import { showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { InlineLoading } from '@carbon/react';
 import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import { URL_STOCK_ITEM } from '../../../constants';
 import { Link } from 'react-router-dom';
+import { ConfigObject } from '../../../config-schema';
 
 type StockOperationItemCellProps = {
   stockItemUuid: string;
@@ -14,7 +15,18 @@ type StockOperationItemCellProps = {
 const StockOperationItemCell: React.FC<StockOperationItemCellProps> = ({ stockItemUuid }) => {
   const { isLoading, error, item } = useStockItem(stockItemUuid);
   const { t } = useTranslation();
+  const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
+  const commonName = useMemo(() => {
+    if (!useItemCommonNameAsDisplay) return;
+    const drugName = item?.drugName ? `(Drug name: ${item.drugName})` : undefined;
+    return `${item?.commonName || t('noCommonNameAvailable', 'No common name available') + (drugName ?? '')}`;
+  }, [item, useItemCommonNameAsDisplay, t]);
 
+  const drugName = useMemo(() => {
+    if (useItemCommonNameAsDisplay) return;
+    const commonName = item?.commonName ? `(Common name: ${item.commonName})` : undefined;
+    return `${item?.drugName || t('noDrugNameAvailable', 'No drug name available') + (commonName ?? '')}`;
+  }, [item, useItemCommonNameAsDisplay, t]);
   useEffect(() => {
     if (error) {
       showSnackbar({
@@ -30,7 +42,7 @@ const StockOperationItemCell: React.FC<StockOperationItemCellProps> = ({ stockIt
 
   return (
     <Link target={'_blank'} to={URL_STOCK_ITEM(stockItemUuid)}>
-      {(item as StockItemDTO)?.commonName || 'No name available'}
+      {useItemCommonNameAsDisplay ? commonName : drugName}
     </Link>
   );
 };

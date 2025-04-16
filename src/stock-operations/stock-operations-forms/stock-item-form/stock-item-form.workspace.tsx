@@ -10,7 +10,7 @@ import {
   TextInput,
 } from '@carbon/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DefaultWorkspaceProps } from '@openmrs/esm-framework';
+import { DefaultWorkspaceProps, useConfig } from '@openmrs/esm-framework';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,7 @@ import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
 import styles from './stock-item-form.scss';
 import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
+import { ConfigObject } from '../../../config-schema';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
@@ -40,6 +41,7 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
     return getStockOperationItemFormSchema(operationType);
   }, [operationType]);
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
+  const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
 
   const fields = formschema.keyof().options;
   const form = useForm<z.infer<typeof formschema>>({
@@ -49,6 +51,18 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
   });
   const { t } = useTranslation();
   const { item } = useStockItem(form.getValues('stockItemUuid'));
+  const commonName = useMemo(() => {
+    if (!useItemCommonNameAsDisplay) return;
+    const drugName = item?.drugName ? `(Drug name: ${item.drugName})` : undefined;
+    return `${item?.commonName || t('noCommonNameAvailable', 'No common name available') + (drugName ?? '')}`;
+  }, [item, useItemCommonNameAsDisplay, t]);
+
+  const drugName = useMemo(() => {
+    if (useItemCommonNameAsDisplay) return;
+    const commonName = item?.commonName ? `(Common name: ${item.commonName})` : undefined;
+    return `${item?.drugName || t('noDrugNameAvailable', 'No drug name available') + (commonName ?? '')}`;
+  }, [item, useItemCommonNameAsDisplay, t]);
+
   const onSubmit = (data: z.infer<typeof formschema>) => {
     onSave?.(data);
     closeWorkspace();
@@ -57,7 +71,7 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
-        {item?.commonName && <p className={styles.title}>{item?.commonName}</p>}
+        <p className={styles.title}>{useItemCommonNameAsDisplay ? commonName : drugName}</p>
 
         {(operationTypePermision.requiresActualBatchInfo || operationTypePermision.requiresBatchUuid) &&
           fields.includes('batchNo' as any) && (

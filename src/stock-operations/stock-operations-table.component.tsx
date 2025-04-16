@@ -37,8 +37,9 @@ import StockOperationTypesSelector from './stock-operation-types-selector/stock-
 import StockOperationsFilters from './stock-operations-filters.component';
 import { useStockOperationPages } from './stock-operations-table.resource';
 
+import { Link } from '@carbon/react';
+import StockOperationExpandedRow from './add-stock-operation/stock-operations-expanded-row/stock-operation-expanded-row.component';
 import styles from './stock-operations-table.scss';
-import StockOperationStatusRow from './stock-operation-status/stock-operation-status-row';
 
 interface StockOperationsTableProps {
   status?: string;
@@ -49,32 +50,6 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
   };
-  const operation: StockOperationType = useMemo(
-    () => ({
-      uuid: '',
-      name: '',
-      description: '',
-      operationType: '',
-      hasSource: false,
-      sourceType: 'Location',
-      hasDestination: false,
-      destinationType: 'Location',
-      hasRecipient: false,
-      recipientRequired: false,
-      availableWhenReserved: false,
-      allowExpiredBatchNumbers: false,
-      stockOperationTypeLocationScopes: [],
-      creator: undefined,
-      dateCreated: undefined,
-      changedBy: undefined,
-      dateChanged: undefined,
-      dateVoided: undefined,
-      voidedBy: undefined,
-      voidReason: '',
-      voided: false,
-    }),
-    [],
-  );
 
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
@@ -123,9 +98,13 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   const tableRows = useMemo(() => {
     return items?.map((stockOperation, index) => {
-      const commonNames = stockOperation?.stockOperationItems
-        ? stockOperation?.stockOperationItems.map((item) => item.commonName).join(', ')
-        : '';
+      const threshHold = 1;
+      const itemCountGreaterThanThreshhold = (stockOperation?.stockOperationItems?.length ?? 0) > threshHold;
+      const commonNames =
+        stockOperation?.stockOperationItems
+          ?.slice(0, itemCountGreaterThanThreshhold ? threshHold : undefined)
+          .map((item) => item.commonName)
+          .join(', ') ?? '';
 
       return {
         ...stockOperation,
@@ -135,7 +114,10 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         operationNumber: (
           <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={false} showprops={true} />
         ),
-        stockOperationItems: commonNames,
+        stockOperationItems: {
+          commonNames,
+          more: itemCountGreaterThanThreshhold ? stockOperation?.stockOperationItems?.length - threshHold : 0,
+        },
         status: `${stockOperation?.status}`,
         source: `${stockOperation?.sourceName ?? ''}`,
         destination: `${stockOperation?.destinationName ?? ''}`,
@@ -173,7 +155,16 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
         headers={tableHeaders}
         isSortable={true}
         useZebraStyles={true}
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
+        render={({
+          rows,
+          headers,
+          getHeaderProps,
+          getTableProps,
+          getRowProps,
+          onInputChange,
+          getExpandedRowProps,
+          expandRow,
+        }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -241,19 +232,29 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               </TableHead>
               <TableBody>
                 {rows?.map((row: any, index) => {
+                  const props = getRowProps({ row });
+                  const expandedRowProps = getExpandedRowProps({ row });
                   return (
                     <React.Fragment key={row.id}>
-                      <TableExpandRow
-                        className={isDesktop ? styles.desktopRow : styles.tabletRow}
-                        {...getRowProps({ row })}
-                      >
+                      <TableExpandRow className={isDesktop ? styles.desktopRow : styles.tabletRow} {...props}>
                         {row.cells.map((cell) => (
-                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                          <TableCell key={cell.id}>
+                            {cell?.info?.header === 'stockOperationItems' ? (
+                              <span>
+                                <span>{cell.value.commonNames}</span>
+                                {cell.value.more > 0 && (
+                                  <Link onClick={() => expandRow(row.id)}>{`...(${cell.value.more} more)`}</Link>
+                                )}
+                              </span>
+                            ) : (
+                              cell.value
+                            )}
+                          </TableCell>
                         ))}
                       </TableExpandRow>
                       {row.isExpanded ? (
                         <TableExpandedRow colSpan={headers.length + 2}>
-                          <StockOperationStatusRow stockOperation={items[index]} />
+                          <StockOperationExpandedRow model={items[index]} />
                         </TableExpandedRow>
                       ) : (
                         <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
