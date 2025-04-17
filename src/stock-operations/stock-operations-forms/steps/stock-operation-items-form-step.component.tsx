@@ -9,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import { Edit, TrashCan } from '@carbon/react/icons';
-import { isDesktop, launchWorkspace } from '@openmrs/esm-framework';
+import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
+import { launchWorkspace } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -210,18 +210,6 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
       <div className={styles.tableContainer}>
         <div className={styles.heading}>
           <h4>{headerTitle}</h4>
-          <div className={styles.btnSet}>
-            {typeof onPrevious === 'function' && (
-              <Button kind="secondary" onClick={onPrevious}>
-                {t('previous', 'Previous')}
-              </Button>
-            )}
-            {typeof onNext === 'function' && (
-              <Button kind="primary" onClick={onNext}>
-                {t('next', 'Next')}
-              </Button>
-            )}
-          </div>
         </div>
         <StockItemSearch
           onSelectedItem={(stockItem) =>
@@ -233,7 +221,6 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
             })
           }
         />
-
         <DataTable
           rows={tableRows ?? []}
           headers={headers}
@@ -245,13 +232,12 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               <Table {...getTableProps()}>
                 <TableHead>
                   <TableRow>
-                    {headers.map((header: any) => (
+                    {headers.map((header) => (
                       <TableHeader
                         {...getHeaderProps({
                           header,
                           isSortable: false,
                         })}
-                        className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                         style={header?.styles}
                         key={`${header.key}`}
                       >
@@ -272,7 +258,19 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               </Table>
             </TableContainer>
           )}
-        ></DataTable>
+        />
+        <div className={styles.btnSet}>
+          {typeof onNext === 'function' && (
+            <Button kind="primary" onClick={onNext} renderIcon={ArrowRight}>
+              {t('next', 'Next')}
+            </Button>
+          )}
+          {typeof onPrevious === 'function' && (
+            <Button kind="secondary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly>
+              {/* {t('previous', 'Previous')} */}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -148,12 +148,13 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
   });
 
   useEffect(() => {
-    // Show error snackbar
+    // Display fields errors for stock operation items and operation type uuid
     Object.entries(form.formState.errors ?? {}).forEach(([key, val]) => {
       if (['stockOperationItems', 'operationTypeUuid'].includes(key)) {
-        showSnackbar({ kind: 'error', title: key, subtitle: (val[key] as FieldError)?.message });
+        showSnackbar({ kind: 'error', title: key, subtitle: (val as FieldError)?.message });
       }
     });
+
     // Navigate to step where the error is
     const fieldSteps = [
       [

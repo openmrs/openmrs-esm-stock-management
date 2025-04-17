@@ -1,5 +1,5 @@
 import { Button, Column, InlineLoading, RadioButton, RadioButtonGroup, Stack } from '@carbon/react';
-import { Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
+import { ArrowLeft, ArrowRight, Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -143,18 +143,6 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
             ? t('submitAndDispatch', 'Submit/Dispatch')
             : t('submitAndComplete', 'Submit/Complete')}
         </h4>
-        <div className={styles.btnSet}>
-          {typeof onPrevious === 'function' && (
-            <Button kind="secondary" onClick={onPrevious}>
-              Previous
-            </Button>
-          )}
-          {typeof onNext === 'function' && (
-            <Button kind="primary" onClick={onNext}>
-              Next
-            </Button>
-          )}
-        </div>
       </div>
 
       <Column>
@@ -236,6 +224,18 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           </Button>
         </Column>
       )}
+      <div className={styles.btnSet}>
+        {typeof onNext === 'function' && (
+          <Button kind="tertiary" onClick={onNext} renderIcon={ArrowRight}>
+            {t('next', 'Next')}
+          </Button>
+        )}
+        {typeof onPrevious === 'function' && (
+          <Button kind="tertiary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly>
+            {/* {t('previous', 'Previous')} */}
+          </Button>
+        )}
+      </div>
     </Stack>
   );
 };
