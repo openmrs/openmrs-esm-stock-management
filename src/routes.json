@@ -216,13 +216,6 @@
       "type": "form",
       "canMaximize": true,
       "width": "extra-wide"
-    },
-    {
-      "name": "stock-operation-stock-items-form",
-      "component": "stockOperationStockItemForm",
-      "title": "Stock Items",
-      "type": "form",
-      "width": "wider"
     }
   ],
   "pages": [

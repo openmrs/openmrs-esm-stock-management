@@ -10,7 +10,6 @@ import {
   TableRow,
 } from '@carbon/react';
 import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
-import { launchWorkspace } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +19,6 @@ import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import { BaseStockOperationItemFormData, StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import StockItemSearch from '../input-components/stock-item-search.component';
-import { StockItemFormProps } from '../stock-item-form/stock-item-form.workspace';
 import QuantityUomCell from './quantity-uom-cell.component';
 import StockAvailability from './stock-availability-cell.component';
 import StockOperationItemBatchNoCell from './stock-operation-item-batch-no-cell.component';
@@ -33,12 +31,14 @@ type StockOperationItemsFormStepProps = {
   stockOperationType: StockOperationType;
   onNext?: () => void;
   onPrevious?: () => void;
+  onLaunchItemsForm?: (stockOperationItem?: BaseStockOperationItemFormData) => void;
 };
 const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = ({
   stockOperationType,
   stockOperation,
   onNext,
   onPrevious,
+  onLaunchItemsForm,
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
@@ -103,29 +103,6 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     ];
   }, [operationTypePermision, t]);
 
-  const handleLaunchStockItem = useCallback(
-    (stockOperationItem?: BaseStockOperationItemFormData) => {
-      launchWorkspace('stock-operation-stock-items-form', {
-        workspaceTitle: t('stockItem', 'StockItem'),
-        ...({
-          stockOperationType,
-          stockOperationItem,
-          onSave: (data) => {
-            const items = (form.getValues('stockOperationItems') ?? []) as Array<BaseStockOperationItemFormData>;
-            const index = items.findIndex((i) => i.uuid === data.uuid);
-            if (index === -1) {
-              items.push(data);
-            } else {
-              items[index] = data;
-            }
-            form.setValue('stockOperationItems', items as any);
-          },
-        } as StockItemFormProps),
-      });
-    },
-    [stockOperationType, t, form],
-  );
-
   const handleDeleteStockOperationItem = useCallback(
     (item: BaseStockOperationItemFormData) => {
       form.setValue('stockOperationItems', observableOperationItems.filter((i) => i.uuid !== item.uuid) as any);
@@ -183,7 +160,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               kind="ghost"
               renderIcon={Edit}
               onClick={() => {
-                handleLaunchStockItem(item);
+                onLaunchItemsForm?.(item);
               }}
             />
             <Button
@@ -194,14 +171,14 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               kind="ghost"
               renderIcon={TrashCan}
               onClick={() => {
-                handleDeleteStockOperationItem(item);
+                onLaunchItemsForm?.(item);
               }}
             />
           </>
         ),
       };
     });
-  }, [observableOperationItems, handleLaunchStockItem, handleDeleteStockOperationItem, stockOperationType]);
+  }, [observableOperationItems, onLaunchItemsForm, stockOperationType]);
 
   const headerTitle = t('stockoperationItems', 'Stock operation items');
 
@@ -213,7 +190,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         </div>
         <StockItemSearch
           onSelectedItem={(stockItem) =>
-            handleLaunchStockItem({
+            onLaunchItemsForm({
               uuid: `new-item-${getStockOperationUniqueId()}`,
               stockItemUuid: stockItem.uuid,
               hasExpiration: stockItem.hasExpiration,

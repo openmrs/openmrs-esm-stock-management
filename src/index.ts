@@ -1,27 +1,22 @@
 import { defineConfigSchema, getAsyncLifecycle, getSyncLifecycle } from '@openmrs/esm-framework';
 import { configSchema } from './config-schema';
-import appMenu from './stock-app-menu-item/item.component';
-import bulkImportComponent from './stock-items/add-bulk-stock-item/stock-items-bulk-import.component';
-import deleteUserModalComponent from './stock-user-role-scopes/delete-stock-user-scope-modal.component';
-import deleteStockModalComponent from './stock-sources/delete-stock-modal.component';
-import stockOperationDialogComponent from './stock-operations/stock-operations-dialog/stock-operations-dialog.component';
-import stockManagementComponent from './stock-management.component';
-import stockManagementAdminCardLinkComponent from './stock-management-admin-card-link.component';
-import deletePackagingUnitModalButtonComponent from './stock-items/add-stock-item/packaging-units/packaging-units-delete-modal-button.component';
-import deletePackagingUnitComponent from './stock-items/add-stock-item/packaging-units/packaging-units-delete-modal.component';
-import Root from './root.component';
-import StockHomeLandingPage from './stock-home/stock-home-landing-page-component';
 import { createDashboardLink } from './createDashboardLink';
+import Root from './root.component';
 import SideMenu from './side-menu/side-menu.component';
-import StockOperationsComponent from './stock-operations/stock-operations.component';
-import StockItems from './stock-items/stock-items.component';
-import StockUserScopes from './stock-user-role-scopes/stock-user-role-scopes.component';
-import StockSources from './stock-sources/stock-sources.component';
-import StockLocations from './stock-locations/stock-locations.component';
-import StockReports from './stock-reports/report-list/stock-reports.component';
-import StockSettings from './stock-settings/stock-settings.component';
+import appMenu from './stock-app-menu-item/item.component';
+import StockHomeLandingPage from './stock-home/stock-home-landing-page-component';
+import deletePackagingUnitModalButtonComponent from './stock-items/add-stock-item/packaging-units/packaging-units-delete-modal-button.component';
 import TransactionsBincardPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-bincard-preview.modal';
 import TransactionsStockcardPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-stockcard-preview.modal';
+import StockItems from './stock-items/stock-items.component';
+import StockLocations from './stock-locations/stock-locations.component';
+import stockManagementAdminCardLinkComponent from './stock-management-admin-card-link.component';
+import stockManagementComponent from './stock-management.component';
+import StockOperationsComponent from './stock-operations/stock-operations.component';
+import StockReports from './stock-reports/report-list/stock-reports.component';
+import StockSettings from './stock-settings/stock-settings.component';
+import StockSources from './stock-sources/stock-sources.component';
+import StockUserScopes from './stock-user-role-scopes/stock-user-role-scopes.component';
 
 const moduleName = '@openmrs/esm-stock-management-app';
 
@@ -130,10 +125,6 @@ export const deletePackagingUnitButton = getSyncLifecycle(deletePackagingUnitMod
 
 export const stockManagementAppMenuItem = getSyncLifecycle(appMenu, options);
 
-export const stockOperationStockItemForm = getAsyncLifecycle(
-  () => import('./stock-operations/stock-operations-forms/stock-item-form/stock-item-form.workspace'),
-  options,
-);
 export const transactionBincardPrintPreviewModal = getSyncLifecycle(TransactionsBincardPrintPreview, options);
 export const transactionStockcardPrintPreviewModal = getSyncLifecycle(TransactionsStockcardPrintPreview, options);
 export const stockOperationFormWorkspace = getAsyncLifecycle(
