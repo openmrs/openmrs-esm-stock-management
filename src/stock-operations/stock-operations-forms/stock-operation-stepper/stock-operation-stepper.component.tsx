@@ -35,16 +35,12 @@ const StockOperationStepper: React.FC<StockOperationStepperProps> = ({
               key={index}
               onClick={!disabled ? () => onChange?.(index) : undefined}
             >
-              {icon}
-              <div>
-                <p className={styles.title}>{title}</p>
-                <p className={styles.subtTitle}>{subTitle}</p>
-              </div>
+              <p className={styles.title}>{title}</p>
             </li>
           );
         })}
       </ol>
-      <Layer>{steps[selectedIndex].component}</Layer>
+      <Layer className={styles.content}>{steps[selectedIndex].component}</Layer>
     </Layer>
   );
 };

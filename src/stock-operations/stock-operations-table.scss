@@ -1,5 +1,6 @@
 @use '@carbon/layout';
 @use '@carbon/type';
+@use '@carbon/colors';
 @use '~@openmrs/esm-styleguide/src/vars' as *;
 
 .tileContainer {
@@ -75,4 +76,23 @@
   .text {
     margin-right: 4px;
   }
+}
+
+.actionBtns {
+  display: flex;
+  flex-direction: row;
+  gap: layout.$spacing-03;
+  flex-wrap: wrap;
+  height: fit-content;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.relatedLink {
+  margin-left: layout.$spacing-02;
+  color: colors.$blue-60;
+}
+
+.relatedTransactionHeader {
+  color: colors.$green-50;
 }

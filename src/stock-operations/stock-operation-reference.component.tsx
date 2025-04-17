@@ -3,7 +3,7 @@ import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStockOperationTypes } from '../stock-lookups/stock-lookups.resource';
-import { launchStockoperationAddOrEditDialog } from './stock-operation.utils';
+import { launchStockoperationAddOrEditWorkSpace } from './stock-operation.utils';
 import { useStockOperationAndItems } from './stock-operations.resource';
 
 interface StockOperationReferenceProps {
@@ -25,7 +25,7 @@ const StockOperationReference = ({ operationNumber, operationUuid }: StockOperat
     if (!operationType) {
       return;
     }
-    launchStockoperationAddOrEditDialog(
+    launchStockoperationAddOrEditWorkSpace(
       t,
       operationType,
       stockOperation,

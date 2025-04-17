@@ -4,7 +4,7 @@ import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { OperationType, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
+import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 
 const StockOperationTypesSelector = () => {
@@ -15,7 +15,7 @@ const StockOperationTypesSelector = () => {
     (stockOperationType: StockOperationType) => {
       const isStockIssueOperation = stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
 
-      launchStockoperationAddOrEditDialog(t, stockOperationType, undefined);
+      launchStockoperationAddOrEditWorkSpace(t, stockOperationType, undefined);
     },
     [t],
   );

@@ -210,11 +210,12 @@
   ],
   "workspaces": [
     {
-      "name": "stock-operation-stock-items-form",
-      "component": "stockOperationStockItemForm",
-      "title": "Stock Items",
+      "name": "stock-operation-form-workspace",
+      "component": "stockOperationFormWorkspace",
+      "title": "Stock Operation",
       "type": "form",
-      "width": "wider"
+      "canMaximize": true,
+      "width": "extra-wide"
     }
   ],
   "pages": [

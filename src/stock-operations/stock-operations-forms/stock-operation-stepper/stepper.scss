@@ -4,31 +4,29 @@
 
 .layer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: layout.$spacing-05;
-  padding: layout.$spacing-05;
+  padding: layout.$spacing-03;
+  height: 100%;
 }
 
 .stepperContainer {
   display: flex;
   gap: layout.$spacing-03;
-  flex: 1;
-  align-items: center;
-  width: 100%;
+  align-items: baseline;
+  flex-direction: column;
+  width: 200px;
+  background-color: colors.$gray-10;
 }
 
 .stepperItem {
-  flex: 1;
-  height: 100%;
-  display: flex;
   gap: layout.$spacing-03;
-  align-items: center;
   padding: layout.$spacing-03;
-  border-top: layout.$spacing-01 solid colors.$gray-30;
+  border-left: layout.$spacing-02 solid colors.$gray-30;
 }
 
 .stepperItemActive {
-  border-top: layout.$spacing-02 solid var(--brand-03);
+  border-left: layout.$spacing-02 solid var(--brand-03);
 }
 
 .subtTitle {
@@ -38,4 +36,9 @@
 
 .title {
   @include type.type-style('heading-02');
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
 }
