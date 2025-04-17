@@ -60,6 +60,11 @@ jest.mock('../stock-operations.resource', () => ({
     isLoading: false,
     error: null,
   }),
+  useStockOperationAndItems: jest.fn().mockReturnValue({
+    items: undefined,
+    isLoading: false,
+    error: null,
+  }),
 }));
 
 jest.mock('../../core/components/overlay/hook', () => ({
@@ -160,7 +165,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
 
     expect(screen.queryByRole('button', { name: /Next/i })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /previous/i })).toBeInTheDocument();
+    expect(screen.getByTestId('previous-btn')).toBeInTheDocument();
   });
 
   it('should render require approval radio button and save button', async () => {
@@ -224,7 +229,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(noRadioButton).toBeInTheDocument();
     await userEvent.click(noRadioButton);
     // On require aprooval should now show complete btn
-    expect(screen.getByRole('button', { name: /complete/i })).toBeInTheDocument();
+    expect(screen.getByTestId('complete-button')).toBeInTheDocument();
   });
   it('should render dispatch btn for stock return operation and dont require aproval', async () => {
     render(
@@ -245,7 +250,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(noRadioButton).toBeInTheDocument();
     await userEvent.click(noRadioButton);
     // On require aprooval should now show complete btn
-    expect(screen.getByRole('button', { name: /dispatch/i })).toBeInTheDocument();
+    expect(screen.getByTestId('dipatch-button')).toBeInTheDocument();
   });
   it('should render dispatch btn for stock issue operation and dont require aproval', async () => {
     render(
@@ -266,6 +271,6 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(noRadioButton).toBeInTheDocument();
     await userEvent.click(noRadioButton);
     // On require aprooval should now show complete btn
-    expect(screen.getByRole('button', { name: /dispatch/i })).toBeInTheDocument();
+    expect(screen.getByTestId('dipatch-button')).toBeInTheDocument();
   });
 });

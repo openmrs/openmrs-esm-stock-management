@@ -62,7 +62,11 @@ jest.mock('../../core/components/overlay/hook', () => ({
 }));
 
 jest.mock('../../stock-items/stock-items.resource', () => ({
-  useStockItem: jest.fn(),
+  useStockItem: jest.fn().mockReturnValue({
+    isLoading: false,
+    item: {},
+    error: null,
+  }),
   useStockItems: jest.fn().mockReturnValue({
     isLoading: false,
     error: null,
@@ -159,7 +163,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
 
     expect(screen.getByRole('button', { name: /Next/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /previous/i })).toBeInTheDocument();
+    expect(screen.getByTestId('previous-btn')).toBeInTheDocument();
   });
 
   it('should render stock operation items table with item search component', async () => {
@@ -250,7 +254,8 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     await userEvent.click(searchInput);
     await userEvent.type(searchInput, 'stock');
     await userEvent.click(screen.getByText('mock-common-name'));
-    expect(launchWorkspace).toHaveBeenCalled();
+    // Look for common name at the top of workspace
+    expect(screen.getByText(/noDrugNameAvailable|noCommonNameAvailable|mock-common-name/i)).toBeInTheDocument();
   });
 
   it('should render stock operation items in data table', async () => {

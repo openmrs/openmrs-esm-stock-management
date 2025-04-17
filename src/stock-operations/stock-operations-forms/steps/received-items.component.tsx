@@ -98,7 +98,7 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ stockOperation, onPreviou
         </DataTable>
         <div className={styles.btnSet}>
           {typeof onPrevious === 'function' && (
-            <Button kind="secondary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly>
+            <Button kind="secondary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly data-testid="previous-btn">
               {/* {t('previous', 'Previous')} */}
             </Button>
           )}

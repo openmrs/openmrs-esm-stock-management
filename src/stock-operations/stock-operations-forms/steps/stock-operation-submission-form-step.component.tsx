@@ -167,6 +167,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
               {!operationTypePermision.requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="complete"
+                  data-testid="complete-button"
                   type="button"
                   style={{ margin: '4px' }}
                   className="submitButton"
@@ -182,6 +183,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                   name="dispatch"
                   type="button"
                   style={{ margin: '4px' }}
+                  data-testid="dipatch-button"
                   className="submitButton"
                   kind="primary"
                   onClick={handleDispatch}
@@ -234,7 +236,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           </Button>
         )}
         {typeof onPrevious === 'function' && (
-          <Button kind="tertiary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly>
+          <Button kind="tertiary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly data-testid="previous-btn">
             {/* {t('previous', 'Previous')} */}
           </Button>
         )}
