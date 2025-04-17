@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
-import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
+import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import { useStockOperationAndItems } from '../stock-operations.resource';
 
 interface StockOperationRelatedLinkProps {
@@ -26,7 +26,7 @@ const StockOperationRelatedLink: React.FC<StockOperationRelatedLinkProps> = ({
     if (!operationType) {
       return;
     }
-    launchStockoperationAddOrEditDialog(
+    launchStockoperationAddOrEditWorkSpace(
       t,
       operationType,
       stockOperation,

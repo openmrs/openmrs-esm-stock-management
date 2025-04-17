@@ -136,7 +136,10 @@ export const stockOperationStockItemForm = getAsyncLifecycle(
 );
 export const transactionBincardPrintPreviewModal = getSyncLifecycle(TransactionsBincardPrintPreview, options);
 export const transactionStockcardPrintPreviewModal = getSyncLifecycle(TransactionsStockcardPrintPreview, options);
-
+export const stockOperationFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-operations/stock-operations-forms/stock-operation-form.component'),
+  options,
+);
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }

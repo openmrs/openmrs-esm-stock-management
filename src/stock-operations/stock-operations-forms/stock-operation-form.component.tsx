@@ -77,7 +77,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             onNext={() => setSelectedIndex(1)}
           />
         ),
-        disabled: true,
+        disabled: false,
       },
       {
         name: t('stockItems', 'Stock Items'),
@@ -89,7 +89,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             onPrevious={() => setSelectedIndex(0)}
           />
         ),
-        disabled: true,
+        disabled: false,
       },
       {
         name: operationTypePermision?.requiresDispatchAcknowledgement ? 'Submit/Dispatch' : 'Submit/Complete',
@@ -101,7 +101,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             onNext={showReceivedItems ? () => setSelectedIndex(3) : undefined}
           />
         ),
-        disabled: true,
+        disabled: false,
       },
     ].concat(
       showReceivedItems
@@ -109,7 +109,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             {
               name: t('receivedItems', 'Received Items'),
               component: <ReceivedItems stockOperation={stockOperation} onPrevious={() => setSelectedIndex(2)} />,
-              disabled: true,
+              disabled: false,
             },
           ]
         : [],
@@ -178,7 +178,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
 
   return (
     <FormProvider {...form}>
-      {stockOperation && (
+      {/* {stockOperation && (
         <StockOperationFormHeader stockOperationType={stockOperationType} stockOperation={stockOperation} />
       )}
       {stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && (
@@ -186,7 +186,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
           stockRequisitionUuid={stockRequisitionUuid as string}
           stockOperationType={stockOperationType}
         />
-      )}
+      )} */}
       <StockOperationStepper
         steps={steps.map((tab, index) => ({
           title: tab.name,

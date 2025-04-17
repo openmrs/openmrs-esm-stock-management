@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
-import { launchStockoperationAddOrEditDialog } from '../stock-operation.utils';
+import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import { showSnackbar } from '@openmrs/esm-framework';
 
 interface StockOperationIssueStockButtonProps {
@@ -22,7 +22,7 @@ const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonPro
   );
 
   const handleButtonClick = () => {
-    launchStockoperationAddOrEditDialog(t, stockIssueOperationType, undefined, operation.uuid);
+    launchStockoperationAddOrEditWorkSpace(t, stockIssueOperationType, undefined, operation.uuid);
   };
 
   useEffect(() => {
