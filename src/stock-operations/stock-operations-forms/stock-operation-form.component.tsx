@@ -15,7 +15,6 @@ import {
 } from '../../core/api/types/stockOperation/StockOperationType';
 import { TabItem } from '../../core/components/tabs/types';
 import { otherUser, pick } from '../../core/utils/utils';
-import ReceivedItems from './steps/received-items.component';
 import {
   BaseStockOperationItemFormData,
   getStockOperationFormSchema,
@@ -24,12 +23,12 @@ import {
 } from '../validation-schema';
 import useOperationTypePermisions from './hooks/useOperationTypePermisions';
 import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
+import ReceivedItems from './steps/received-items.component';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
-import StockOperationFormHeader from './stock-operation-form-header.component';
-import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 import StockIssueFormInitializerWithRelatedRequisitionOperation from './stock-issue-form-initializer-with-related-requisition-operation.component';
 import StockItemForm, { StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
+import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 
 /**
  * Props interface for the StockOperationForm component
@@ -222,15 +221,12 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
 
   return (
     <FormProvider {...form}>
-      {/* {stockOperation && (
-        <StockOperationFormHeader stockOperationType={stockOperationType} stockOperation={stockOperation} />
-      )}
       {stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && (
         <StockIssueFormInitializerWithRelatedRequisitionOperation
           stockRequisitionUuid={stockRequisitionUuid as string}
           stockOperationType={stockOperationType}
         />
-      )} */}
+      )}
       {renderItemForm ? (
         <StockItemForm {...itemsFormProps} />
       ) : (

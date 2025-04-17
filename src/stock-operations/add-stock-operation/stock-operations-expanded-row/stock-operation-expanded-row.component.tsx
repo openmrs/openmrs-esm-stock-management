@@ -1,9 +1,12 @@
-import { Layer, Row } from '@carbon/react';
-import React from 'react';
+import { InlineLoading, Layer, Row } from '@carbon/react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import styles from './stock-operation-expanded-row.scss';
+import { useStockOperationTypes } from '../../../stock-lookups/stock-lookups.resource';
+import StockoperationActions from '../../stock-operation-actions.component';
+import StockOperationLinks from '../../stock-operation-links.component';
 import StockItemsTable from './stock-items-table';
+import styles from './stock-operation-expanded-row.scss';
 import StockOpertationStatus from './stock-operations-status';
 
 interface StockOperationExpandedRowProps {
@@ -12,6 +15,10 @@ interface StockOperationExpandedRowProps {
 
 const StockOperationExpandedRow: React.FC<StockOperationExpandedRowProps> = (props) => {
   const { t } = useTranslation();
+  const { types, isLoading, error } = useStockOperationTypes();
+  const currentOperationType = useMemo(() => {
+    return types?.results?.find(({ uuid }) => props.model.operationTypeUuid === uuid);
+  }, [props.model.operationTypeUuid, types?.results]);
   return (
     <>
       <Layer className={styles.statusContainer}>
@@ -77,7 +84,29 @@ const StockOperationExpandedRow: React.FC<StockOperationExpandedRowProps> = (pro
           )}
         </Row>
         <Row className={styles.statusContainerRow}>
+          {isLoading && (
+            <InlineLoading
+              description={t('loading StockoperationLinks', 'Loading stock operation links') + '...'}
+              iconDescription={t('loading StockoperationLinks', 'Loading stock operation links')}
+            />
+          )}
+          {currentOperationType && (
+            <StockOperationLinks stockOperationType={currentOperationType} stockOperation={props.model} />
+          )}
+        </Row>
+        <Row className={styles.statusContainerRow}>
           <StockItemsTable items={props.model.stockOperationItems} />
+        </Row>
+        <Row className={styles.statusContainerRow}>
+          {isLoading && (
+            <InlineLoading
+              description={t('loadingOperationActions', 'Loading stock operation actions') + '...'}
+              iconDescription={t('loadingOperationActions', 'Loading stock operation actions')}
+            />
+          )}
+          {currentOperationType && (
+            <StockoperationActions stockOperationType={currentOperationType} stockOperation={props.model} />
+          )}
         </Row>
       </Layer>
     </>

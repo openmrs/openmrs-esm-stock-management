@@ -145,7 +145,15 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should have previous btn and not next btn', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // MOVE TO STEP3
@@ -156,7 +164,15 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should render require approval radio button and save button', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // MOVE TO STEP3
@@ -167,7 +183,15 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(screen.getAllByRole('radio', { name: /yes|no/i })).toHaveLength(2);
   });
   it('should render submitForReview button when require aprroval radion button is checked yes', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // MOVE TO STEP3
@@ -182,7 +206,15 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(screen.getByRole('button', { name: /submitForReview/i })).toBeInTheDocument();
   });
   it('should render complete button when require aprroval radion button is checked no', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // MOVE TO STEP3
@@ -195,7 +227,15 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(screen.getByRole('button', { name: /complete/i })).toBeInTheDocument();
   });
   it('should render dispatch btn for stock return operation and dont require aproval', async () => {
-    render(<StockOperationForm stockOperationType={returnOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={returnOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // MOVE TO STEP3
@@ -208,7 +248,15 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     expect(screen.getByRole('button', { name: /dispatch/i })).toBeInTheDocument();
   });
   it('should render dispatch btn for stock issue operation and dont require aproval', async () => {
-    render(<StockOperationForm stockOperationType={stockIssueOperationtypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={stockIssueOperationtypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // MOVE TO STEP3

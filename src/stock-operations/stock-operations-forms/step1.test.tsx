@@ -81,7 +81,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
@@ -94,7 +102,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByText('error')).toBeInTheDocument();
   });
 
@@ -107,7 +123,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /previous/i })).not.toBeInTheDocument();
   });
@@ -120,7 +144,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByText(`${receiptOperationTypeMock.name} details`)).toBeInTheDocument();
   });
 
@@ -133,7 +165,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     const sourceInput = screen.getByRole('combobox', {
       name: (_, element) =>
         element.getAttribute('placeholder') === 'chooseASource' && element.getAttribute('name') === 'sourceUuid',
@@ -150,7 +190,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByLabelText('to')).toBeInTheDocument();
   });
 
@@ -163,7 +211,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(
       screen.getByRole('combobox', {
         name: (_, element) =>
@@ -182,7 +238,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={disposalOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={disposalOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(
       screen.getByRole('combobox', {
         name: (_, element) =>
@@ -201,7 +265,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
   });
   it('should render reason input field for adjustment operation', async () => {
@@ -213,7 +285,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={adjustmentOpeationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={adjustmentOpeationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByLabelText(/.*reason.*/i)).toBeInTheDocument();
   });
   it('should not render reason input field for opening stock operation', async () => {
@@ -225,7 +305,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={openingStockOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={openingStockOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
   });
   it('should not render reason input field for requisition operation', async () => {
@@ -237,7 +325,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={requisitionOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={requisitionOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
   });
   it('should not render reason input field for return operation', async () => {
@@ -249,7 +345,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={returnOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={returnOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
   });
   it('should not render reason input field for issue operation', async () => {
@@ -261,7 +365,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={stockIssueOperationtypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={stockIssueOperationtypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
   });
   it('should not render reason input field for tranfer out operation', async () => {
@@ -273,7 +385,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={tranferOutOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={tranferOutOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
   });
   it('should render reason input field for disposal operation', async () => {
@@ -285,7 +405,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={disposalOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={disposalOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByLabelText(/.*reason.*/i)).toBeInTheDocument();
   });
   it('should render reason input field for stock take operation', async () => {
@@ -297,7 +425,15 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
     });
-    render(<StockOperationForm stockOperationType={stockTakeOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={stockTakeOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByLabelText(/.*reason.*/i)).toBeInTheDocument();
   });
 });

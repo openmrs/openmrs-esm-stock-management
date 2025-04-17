@@ -75,11 +75,6 @@
   margin-top: layout.$spacing-03;
 }
 
-.relatedLink {
-  margin-left: layout.$spacing-02;
-  color: colors.$blue-60;
-}
-
 .textHeading {
   font-weight: bold;
 }
@@ -93,22 +88,5 @@
 .statusBody {
   display: flex;
   justify-content: space-between;
-  margin: layout.$spacing-02;
-}
-
-.actionBtns {
-  margin: layout.$spacing-03;
-  display: flex;
-  flex-direction: row;
-  gap: layout.$spacing-03;
-  flex-wrap: wrap;
-  height: fit-content;
-}
-
-.operationlinkscontainer {
-  margin: layout.$spacing-05;
-}
-
-.relatedTransactionHeader {
-  color: colors.$green-50;
+  align-items: center;
 }

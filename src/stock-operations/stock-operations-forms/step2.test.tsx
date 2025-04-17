@@ -146,7 +146,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   });
 
   it('should have both previous and next btns', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
 
@@ -155,7 +163,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   });
 
   it('should render stock operation items table with item search component', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     const nextButton = screen.getByRole('button', { name: /Next/i });
     expect(nextButton).toBeInTheDocument();
     await userEvent.click(nextButton);
@@ -184,7 +200,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       isLoading: false,
       setSearchString: mocksetSearchString,
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -208,7 +232,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       isLoading: false,
       setSearchString: jest.fn(),
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -244,7 +276,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       setValue: jest.fn(),
       handleSubmit: jest.fn(),
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
