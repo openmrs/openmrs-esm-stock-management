@@ -42,24 +42,11 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     () => OperationType.STOCK_ISSUE_OPERATION_TYPE === stockOperationType.operationType,
     [stockOperationType],
   );
-  // const { isValid: isStepValid } = useFormState({
-  //   control: form.control,
-  //   name: [
-  //     'destinationUuid',
-  //     'operationDate',
-  //     'destinationUuid',
-  //     'reasonUuid',
-  //     'remarks',
-  //     'responsiblePersonOther',
-  //     'responsiblePersonUuid',
-  //     'sourceUuid',
-  //   ],
-  // });
 
   // initialize location fields
   useEffect(() => {
     // Prefill default locaton with current location if is a new operation
-    if (!stockOperation) {
+    if (!stockOperation && stockOperationType.operationType !== OperationType.STOCK_ISSUE_OPERATION_TYPE) {
       if (stockOperationType?.hasSource) {
         const shouldLockSource = sourceTags.length === 1 && sourceTags[0] === MAIN_STORE_LOCATION_TAG;
         if (shouldLockSource && sourceParties?.length) {
@@ -244,13 +231,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       </Column>
       <div className={styles.btnSet}>
         {typeof onNext === 'function' && (
-          <Button
-            kind="primary"
-            onClick={onNext}
-            role="button"
-            renderIcon={ArrowRight}
-            // disabled={!isStepValid}
-          >
+          <Button kind="primary" onClick={onNext} role="button" renderIcon={ArrowRight}>
             {t('next', 'Next')}
           </Button>
         )}

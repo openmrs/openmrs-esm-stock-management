@@ -73,7 +73,6 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
   } = useSession();
   const { autoPopulateResponsiblePerson } = useConfig<ConfigObject>();
   const form = useForm<StockOperationItemDtoSchema>({
-    // defaultValues: operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE ? issueStockOperation : model,
     defaultValues: {
       responsiblePersonUuid:
         stockOperation?.responsiblePersonUuid ?? // if person uuid exist, make it default

@@ -14,6 +14,7 @@ import {
   Button,
 } from '@carbon/react';
 import styles from './stock-operation-items-form-step.scc.scss';
+import { ArrowLeft } from '@carbon/react/icons';
 
 const formatDate = (date: Date | string | null) => {
   if (!date) return ' ';
@@ -68,13 +69,6 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ stockOperation, onPreviou
       <div className={styles.tableContainer}>
         <div className={styles.heading}>
           <h4>{headerTitle}</h4>
-          <div className={styles.btnSet}>
-            {typeof onPrevious === 'function' && (
-              <Button kind="secondary" onClick={onPrevious}>
-                {t('previous', 'Previous')}
-              </Button>
-            )}
-          </div>
         </div>
         <DataTable rows={rows} headers={headers}>
           {({ rows, headers, getHeaderProps, getTableProps, getRowProps }) => (
@@ -102,6 +96,13 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ stockOperation, onPreviou
             </TableContainer>
           )}
         </DataTable>
+        <div className={styles.btnSet}>
+          {typeof onPrevious === 'function' && (
+            <Button kind="secondary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly>
+              {/* {t('previous', 'Previous')} */}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
