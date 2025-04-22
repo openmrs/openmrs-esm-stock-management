@@ -1,32 +1,27 @@
-import { showModal } from '@openmrs/esm-framework';
-import React from 'react';
+import { launchWorkspace, showModal } from '@openmrs/esm-framework';
 import { TFunction } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
-import { launchOverlay } from '../core/components/overlay/hook';
-import StockOperationForm from './stock-operations-forms/stock-operation-form.component';
 
-export const launchStockoperationAddOrEditDialog = (
+export const launchStockoperationAddOrEditWorkSpace = (
   t: TFunction,
   operationType: StockOperationType,
   stockOperation?: StockOperationDTO,
   stockRequisitionUuid?: string, // Only suplied on stock issue (when overlay is launched for stock issue)
 ) => {
-  launchOverlay(
-    stockOperation
+  launchWorkspace('stock-operation-form-workspace', {
+    workspaceTitle: stockOperation
       ? t('editOperationTitle', 'Edit {{operationType}}', {
           operationType: stockOperation?.operationTypeName,
         })
       : t('newOperationTitle', 'New: {{operationName}}', {
           operationName: operationType?.name,
         }),
-    <StockOperationForm
-      stockOperationType={operationType}
-      stockOperation={stockOperation}
-      stockRequisitionUuid={stockRequisitionUuid}
-    />,
-  );
+    stockOperationType: operationType,
+    stockOperation: stockOperation,
+    stockRequisitionUuid: stockRequisitionUuid,
+  });
 };
 
 export const useUrlQueryParams = () => {

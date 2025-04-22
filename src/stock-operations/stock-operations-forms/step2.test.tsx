@@ -62,7 +62,11 @@ jest.mock('../../core/components/overlay/hook', () => ({
 }));
 
 jest.mock('../../stock-items/stock-items.resource', () => ({
-  useStockItem: jest.fn(),
+  useStockItem: jest.fn().mockReturnValue({
+    isLoading: false,
+    item: {},
+    error: null,
+  }),
   useStockItems: jest.fn().mockReturnValue({
     isLoading: false,
     error: null,
@@ -146,16 +150,32 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   });
 
   it('should have both previous and next btns', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
 
     expect(screen.getByRole('button', { name: /Next/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /previous/i })).toBeInTheDocument();
+    expect(screen.getByTestId('previous-btn')).toBeInTheDocument();
   });
 
   it('should render stock operation items table with item search component', async () => {
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     const nextButton = screen.getByRole('button', { name: /Next/i });
     expect(nextButton).toBeInTheDocument();
     await userEvent.click(nextButton);
@@ -184,7 +204,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       isLoading: false,
       setSearchString: mocksetSearchString,
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -208,7 +236,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       isLoading: false,
       setSearchString: jest.fn(),
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -218,7 +254,8 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     await userEvent.click(searchInput);
     await userEvent.type(searchInput, 'stock');
     await userEvent.click(screen.getByText('mock-common-name'));
-    expect(launchWorkspace).toHaveBeenCalled();
+    // Look for common name at the top of workspace
+    expect(screen.getByText(/noDrugNameAvailable|noCommonNameAvailable|mock-common-name/i)).toBeInTheDocument();
   });
 
   it('should render stock operation items in data table', async () => {
@@ -244,7 +281,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       setValue: jest.fn(),
       handleSubmit: jest.fn(),
     });
-    render(<StockOperationForm stockOperationType={receiptOperationTypeMock as any} />);
+    render(
+      <StockOperationForm
+        stockOperationType={receiptOperationTypeMock as any}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await userEvent.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------

@@ -1,5 +1,5 @@
 import { Button, Column, InlineLoading, RadioButton, RadioButtonGroup, Stack } from '@carbon/react';
-import { Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
+import { ArrowLeft, ArrowRight, Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -21,12 +21,14 @@ type StockOperationSubmissionFormStepProps = {
   stockOperation?: StockOperationDTO;
   stockOperationType: StockOperationType;
   onNext?: () => void;
+  dismissWorkspace?: () => void;
 };
 const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormStepProps> = ({
   onPrevious,
   stockOperationType,
   stockOperation,
   onNext,
+  dismissWorkspace,
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
@@ -95,6 +97,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           : createStockOperation(payload as any));
         result = resp.data; // Store the response data
         handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
+        dismissWorkspace?.();
         showSnackbar({
           isLowContrast: true,
           title: stockOperation
@@ -117,7 +120,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
       }
     })(); // Call handleSubmit to trigger validation and submission
     return result; // Return the result after handleSubmit completes
-  }, [form, stockOperation, t, approvalRequired, isStockIssueOperation]);
+  }, [form, stockOperation, t, approvalRequired, isStockIssueOperation, dismissWorkspace]);
 
   const handleComplete = useCallback(() => {
     handleSave().then((operation) => {
@@ -143,18 +146,6 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
             ? t('submitAndDispatch', 'Submit/Dispatch')
             : t('submitAndComplete', 'Submit/Complete')}
         </h4>
-        <div className={styles.btnSet}>
-          {typeof onPrevious === 'function' && (
-            <Button kind="secondary" onClick={onPrevious}>
-              Previous
-            </Button>
-          )}
-          {typeof onNext === 'function' && (
-            <Button kind="primary" onClick={onNext}>
-              Next
-            </Button>
-          )}
-        </div>
       </div>
 
       <Column>
@@ -163,7 +154,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           legendText={t('doesThisTransactionRequireApproval', 'Does the transaction require approval ?')}
           onChange={handleRadioButtonChange}
           readOnly={!editable}
-          valueSelected={approvalRequired === true}
+          valueSelected={approvalRequired === true ? true : approvalRequired === false ? false : null}
         >
           <RadioButton value={true} id="rbgApprovelRequired-true" labelText={t('yes', 'Yes')} />
           <RadioButton value={false} id="rbgApprovelRequired-false" labelText={t('no', 'No')} />
@@ -176,6 +167,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
               {!operationTypePermision.requiresDispatchAcknowledgement && !approvalRequired && (
                 <Button
                   name="complete"
+                  data-testid="complete-button"
                   type="button"
                   style={{ margin: '4px' }}
                   className="submitButton"
@@ -191,6 +183,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
                   name="dispatch"
                   type="button"
                   style={{ margin: '4px' }}
+                  data-testid="dipatch-button"
                   className="submitButton"
                   kind="primary"
                   onClick={handleDispatch}
@@ -236,6 +229,18 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           </Button>
         </Column>
       )}
+      <div className={styles.btnSet}>
+        {typeof onNext === 'function' && (
+          <Button kind="tertiary" onClick={onNext} renderIcon={ArrowRight}>
+            {t('next', 'Next')}
+          </Button>
+        )}
+        {typeof onPrevious === 'function' && (
+          <Button kind="tertiary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly data-testid="previous-btn">
+            {/* {t('previous', 'Previous')} */}
+          </Button>
+        )}
+      </div>
     </Stack>
   );
 };

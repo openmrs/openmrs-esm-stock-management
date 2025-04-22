@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useStockItem } from '../../../stock-items/stock-items.resource';
-import { useTranslation } from 'react-i18next';
-import { showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { InlineLoading } from '@carbon/react';
-import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
-import { URL_STOCK_ITEM } from '../../../constants';
-import { Link } from 'react-router-dom';
+import { ConfigurableLink, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import React, { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ConfigObject } from '../../../config-schema';
+import { URL_STOCK_ITEM } from '../../../constants';
+import { useStockItem } from '../../../stock-items/stock-items.resource';
 
 type StockOperationItemCellProps = {
   stockItemUuid: string;
@@ -16,6 +14,7 @@ const StockOperationItemCell: React.FC<StockOperationItemCellProps> = ({ stockIt
   const { isLoading, error, item } = useStockItem(stockItemUuid);
   const { t } = useTranslation();
   const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
+
   const commonName = useMemo(() => {
     if (!useItemCommonNameAsDisplay) return;
     const drugName = item?.drugName ? `(Drug name: ${item.drugName})` : undefined;
@@ -41,9 +40,9 @@ const StockOperationItemCell: React.FC<StockOperationItemCellProps> = ({ stockIt
   if (error) return <>--</>;
 
   return (
-    <Link target={'_blank'} to={URL_STOCK_ITEM(stockItemUuid)}>
+    <ConfigurableLink target={'_blank'} to={window.spaBase + URL_STOCK_ITEM(stockItemUuid)}>
       {useItemCommonNameAsDisplay ? commonName : drugName}
-    </Link>
+    </ConfigurableLink>
   );
 };
 

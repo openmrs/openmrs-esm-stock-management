@@ -1,7 +1,7 @@
 import { Button, Column, ComboBox, DatePicker, DatePickerInput, InlineLoading, Stack, TextArea } from '@carbon/react';
 import { ErrorState } from '@openmrs/esm-framework';
 import React, { ChangeEvent, FC, useEffect, useMemo } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useFormState } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, MAIN_STORE_LOCATION_TAG } from '../../../constants';
 import { Party } from '../../../core/api/types/Party';
@@ -14,6 +14,7 @@ import StockOperationReasonSelector from '../input-components/stock-operation-re
 import UsersSelector from '../input-components/users-selector.component';
 import styles from '../stock-operation-form.scss';
 import { TextInput } from '@carbon/react';
+import { ArrowRight } from '@carbon/react/icons';
 
 type BaseOperationDetailsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -41,10 +42,11 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     () => OperationType.STOCK_ISSUE_OPERATION_TYPE === stockOperationType.operationType,
     [stockOperationType],
   );
+
   // initialize location fields
   useEffect(() => {
     // Prefill default locaton with current location if is a new operation
-    if (!stockOperation) {
+    if (!stockOperation && stockOperationType.operationType !== OperationType.STOCK_ISSUE_OPERATION_TYPE) {
       if (stockOperationType?.hasSource) {
         const shouldLockSource = sourceTags.length === 1 && sourceTags[0] === MAIN_STORE_LOCATION_TAG;
         if (shouldLockSource && sourceParties?.length) {
@@ -82,13 +84,6 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     <Stack gap={4} className={styles.grid}>
       <div className={styles.heading}>
         <h4>{`${stockOperationType.name} ${t('details', 'Details')}`}</h4>
-        <div className={styles.btnSet}>
-          {typeof onNext === 'function' && (
-            <Button kind="primary" onClick={onNext} role="button">
-              {t('next', 'Next')}
-            </Button>
-          )}
-        </div>
       </div>
       <Column>
         <Controller
@@ -234,6 +229,13 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           )}
         />
       </Column>
+      <div className={styles.btnSet}>
+        {typeof onNext === 'function' && (
+          <Button kind="primary" onClick={onNext} role="button" renderIcon={ArrowRight}>
+            {t('next', 'Next')}
+          </Button>
+        )}
+      </div>
     </Stack>
   );
 };

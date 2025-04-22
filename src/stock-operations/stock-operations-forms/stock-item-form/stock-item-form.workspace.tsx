@@ -30,10 +30,10 @@ export interface StockItemFormProps {
   stockOperationType: StockOperationType;
   stockOperationItem: BaseStockOperationItemFormData;
   onSave?: (data: BaseStockOperationItemFormData) => void;
+  onBack?: () => void;
 }
 
-interface Props extends DefaultWorkspaceProps, StockItemFormProps {}
-const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, stockOperationItem, onSave }) => {
+const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stockOperationItem, onSave, onBack }) => {
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
@@ -65,8 +65,6 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
 
   const onSubmit = (data: z.infer<typeof formschema>) => {
     onSave?.(data);
-    closeWorkspace();
-    // Implementation of adding or updating itsms in items table
   };
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
@@ -197,7 +195,7 @@ const StockItemForm: React.FC<Props> = ({ closeWorkspace, stockOperationType, st
       </Stack>
 
       <ButtonSet className={styles.buttonSet}>
-        <Button className={styles.button} kind="secondary" onClick={closeWorkspace}>
+        <Button className={styles.button} kind="secondary" onClick={onBack}>
           {t('discard', 'Discard')}
         </Button>
         <Button className={styles.button} kind="primary" type="submit" disabled={form.formState.isSubmitting}>
