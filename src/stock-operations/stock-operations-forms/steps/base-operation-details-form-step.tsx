@@ -111,7 +111,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                 labelText={t('operationDate', 'Operation Date')}
                 invalid={error?.message}
                 invalidText={error?.message}
-                size="xl"
+                size="lg"
               />
             </DatePicker>
           )}
@@ -141,7 +141,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
               readOnly={field.disabled}
               name={'sourceUuid'}
               id={'sourceUuid'}
-              size={'xl'}
+              size="lg"
               items={sourceParties}
               onChange={(data: { selectedItem: Party }) => {
                 field.onChange(data.selectedItem?.uuid);
@@ -179,7 +179,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                 }
                 name={'destinationUuid'}
                 id={'destinationUuid'}
-                size={'xl'}
+                size="lg"
                 items={destinationParties}
                 onChange={(data: { selectedItem: Party }) => {
                   field.onChange(data.selectedItem?.uuid);

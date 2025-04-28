@@ -39,7 +39,7 @@ const StockOperationReasonSelector = () => {
           placeholder={t('chooseAReason', 'Choose a reason')}
           name={'reasonUuid'}
           id={'reasonUuid'}
-          size={'xl'}
+          size="lg"
           items={reasons}
           initialSelectedItem={reasons?.find((p) => p.uuid === field.value)}
           selectedItem={reasons.find((p) => p.uuid === field.value)}

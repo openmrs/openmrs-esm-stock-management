@@ -184,8 +184,9 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         element.getAttribute('placeholder') === 'chooseASource' && element.getAttribute('name') === 'sourceUuid',
     });
     expect(sourceInput).toBeInTheDocument();
-    expect(screen.getByLabelText('from')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /from/i })).toBeInTheDocument();
   });
+
   it("should render combobox with 'to' name and defaulted to 'main store' location in receipt operation", async () => {
     (useParties as jest.Mock).mockReturnValue({
       destinationParties: [],
@@ -204,7 +205,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.getByLabelText('to')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /to/i })).toBeInTheDocument();
   });
 
   it("should render combobox with 'destinationUuid' name and 'chooseADestination' placeholder", async () => {
@@ -232,7 +233,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
           element.getAttribute('name') === 'destinationUuid',
       }),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText('to')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /to/i })).toBeInTheDocument();
   });
   it("should render combobox with 'sourceUuid' name and 'chooseALocation' placeholder for disposal opertaion", async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -258,7 +259,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
           element.getAttribute('placeholder') === 'chooseALocation' && element.getAttribute('name') === 'sourceUuid',
       }),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText('location')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /location/i })).toBeInTheDocument();
   });
 
   it('should not render reason input field for receipt operation', async () => {
@@ -279,7 +280,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
   it('should render reason input field for adjustment operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -299,7 +300,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.getByLabelText(/.*reason.*/i)).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
   });
   it('should not render reason input field for opening stock operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -319,7 +320,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
   it('should not render reason input field for requisition operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -339,7 +340,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
   it('should not render reason input field for return operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -359,7 +360,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
   it('should not render reason input field for issue operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -379,7 +380,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
   it('should not render reason input field for tranfer out operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -399,7 +400,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.queryByLabelText(/.*reason.*/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
   it('should render reason input field for disposal operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -419,7 +420,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.getByLabelText(/.*reason.*/i)).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
   });
   it('should render reason input field for stock take operation', async () => {
     (useParties as jest.Mock).mockReturnValue({
@@ -439,6 +440,6 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.getByLabelText(/.*reason.*/i)).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
   });
 });

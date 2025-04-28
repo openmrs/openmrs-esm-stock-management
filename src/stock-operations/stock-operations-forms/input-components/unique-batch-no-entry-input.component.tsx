@@ -34,22 +34,24 @@ const UniqueBatchNoEntryInput: React.FC<UniqueBatchNoEntryInputProps> = ({
 
   useEffect(() => {
     if (batchNoAlreadyUsed) {
-      setError('Batch number already used');
+      setError(t('batchNumberAlreadyUsed', 'Batch number already used'));
     } else {
       setError(undefined);
       onValueChange?.(value);
     }
-  }, [value, onValueChange, batchNoAlreadyUsed, setError]);
+  }, [value, onValueChange, batchNoAlreadyUsed, setError, t]);
 
-  if (isLoading) return <TextInputSkeleton />;
-
+  if (isLoading) {
+    return <TextInputSkeleton />;
+  }
   return (
     <TextInput
+      id="batchNumber"
       maxLength={50}
       onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
       value={value}
       invalidText={_error ?? error}
-      invalid={_error ?? error}
+      invalid={Boolean(_error) || Boolean(error)}
       placeholder={t('batchNumber', 'Batch Number')}
       labelText={t('batchNumber', 'Batch Number')}
     />

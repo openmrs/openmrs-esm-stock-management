@@ -236,9 +236,14 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           </Button>
         )}
         {typeof onPrevious === 'function' && (
-          <Button kind="tertiary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly data-testid="previous-btn">
-            {/* {t('previous', 'Previous')} */}
-          </Button>
+          <Button
+            kind="tertiary"
+            onClick={onPrevious}
+            renderIcon={ArrowLeft}
+            hasIconOnly
+            data-testid="previous-btn"
+            iconDescription={t('previous', 'Previous')}
+          />
         )}
       </div>
     </Stack>
