@@ -145,7 +145,9 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
                 <TableHead>
                   <TableRow>
                     {headers.map((header) => (
-                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                      <TableHeader {...getHeaderProps({ header })} key={header.key}>
+                        {header.header}
+                      </TableHeader>
                     ))}
                   </TableRow>
                 </TableHead>

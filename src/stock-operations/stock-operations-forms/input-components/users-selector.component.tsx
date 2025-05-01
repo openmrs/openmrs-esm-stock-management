@@ -56,7 +56,7 @@ const UsersSelector = () => {
               titleText={t('responsiblePerson', 'Responsible Person')}
               name={'responsiblePersonUuid'}
               id={'responsiblePersonUuid'}
-              size={'xl'}
+              size="lg"
               items={[...(userList || []), otherUser]}
               onChange={(data: { selectedItem: User }) => {
                 field.onChange(data.selectedItem?.uuid);
@@ -93,7 +93,7 @@ const UsersSelector = () => {
                 disabled={false}
                 id="responsiblePersonOther"
                 name="responsiblePersonOther"
-                size={'xl'}
+                size="lg"
                 labelText={t('responsiblePerson', 'Responsible Person')}
                 placeholder={t('pleaseSpecify', 'Please Specify')}
                 invalid={error?.message}

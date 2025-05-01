@@ -216,7 +216,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
                           isSortable: false,
                         })}
                         style={header?.styles}
-                        key={`${header.key}`}
+                        key={header.key}
                       >
                         {header.header?.content ?? header?.header}
                       </TableHeader>
@@ -225,7 +225,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
-                    <TableRow {...getRowProps({ row })}>
+                    <TableRow {...getRowProps({ row })} key={row.id}>
                       {row.cells.map((cell) => (
                         <TableCell key={cell.id}>{cell.value}</TableCell>
                       ))}
@@ -243,9 +243,14 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
             </Button>
           )}
           {typeof onPrevious === 'function' && (
-            <Button kind="secondary" onClick={onPrevious} renderIcon={ArrowLeft} hasIconOnly data-testid="previous-btn">
-              {/* {t('previous', 'Previous')} */}
-            </Button>
+            <Button
+              kind="secondary"
+              onClick={onPrevious}
+              renderIcon={ArrowLeft}
+              hasIconOnly
+              data-testid="previous-btn"
+              iconDescription={t('previous', 'Previous')}
+            />
           )}
         </div>
       </div>

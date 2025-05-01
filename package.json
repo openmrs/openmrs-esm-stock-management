@@ -42,9 +42,9 @@
     "url": "https://github.com/openmrs/openmrs-esm-stock-management-app/issues"
   },
   "dependencies": {
-    "@carbon/react": "^1.33.1",
+    "@carbon/react": "^1.76.0",
     "@hookform/resolvers": "^3.3.0",
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.52.0",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "lodash-es": "^4.17.21",
@@ -55,7 +55,7 @@
     "zod": "^3.22.2"
   },
   "peerDependencies": {
-    "@openmrs/esm-framework": "5.x",
+    "@openmrs/esm-framework": "6.x",
     "dayjs": "1.x",
     "react": "18.x",
     "react-i18next": "11.x",

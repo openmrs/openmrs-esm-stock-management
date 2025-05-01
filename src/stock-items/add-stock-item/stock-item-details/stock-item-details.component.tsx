@@ -80,10 +80,10 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(({ model, onSa
             legendText=""
             invalid={!!errors.isDrug}
             invalidText={errors.isDrug && errors?.isDrug?.message}
-            onChange={(selection: boolean) => {
-              const selectedOption = radioOptions.find((option) => option.value === selection);
+            onChange={(selectedValue: string) => {
+              const selectedOption = radioOptions.find((option) => String(option.value) === selectedValue);
               const selectedLabel = selectedOption ? selectedOption.label : '';
-              setIsDrug(selection);
+              setIsDrug(selectedValue === 'true');
               setSelectedItemType(selectedLabel);
             }}
             options={radioOptions} // Pass radioOptions directly
@@ -154,8 +154,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(({ model, onSa
             legendText=""
             invalid={!!errors.hasExpiration}
             invalidText={errors.hasExpiration && errors?.hasExpiration?.message}
-            onChange={(selection: boolean) => {
-              setHasExpiration(selection);
+            onChange={(selectedValue: string) => {
+              setHasExpiration(selectedValue === 'true');
             }}
             options={expirationOptions} // Pass expirationOptions directly
           />
