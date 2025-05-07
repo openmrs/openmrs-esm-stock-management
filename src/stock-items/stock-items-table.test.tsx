@@ -137,3 +137,4 @@ describe('StockItemsTableComponent', () => {
     );
   });
 });
+

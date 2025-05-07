@@ -103,24 +103,6 @@
       "component": "stockSources"
     },
     {
-      "name": "locations-db-link",
-      "slot": "stock-page-dashboard-slot",
-      "component": "stockLocationsLink",
-      "meta": {
-        "name": "locations",
-        "slot": "locations-dashboard-slot",
-        "title": "Locations"
-      },
-      "order": 4,
-      "online": true,
-      "offline": true
-    },
-    {
-      "name": "stock-locations-db",
-      "slot": "locations-dashboard-slot",
-      "component": "stockLocations"
-    },
-    {
       "name": "reports-db-link",
       "slot": "stock-page-dashboard-slot",
       "component": "stockReportsLink",
@@ -227,6 +209,38 @@
       "name": "stock-item-form-workspace",
       "component": "stockItemFormWorkspace",
       "title": "Stock Items",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name" : "stock-sources-form-workspace",
+      "component": "stockSourcesFormWorkspace",
+      "title": "Stock Sources",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name" : "stock-location-form-workspace",
+      "component": "stockLocationsFormWorkspace",
+      "title": "Stock Locations",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name" : "stock-userrole-scopes-form-workspace",
+      "component": "stockUserScopesFormWorkspace",
+      "title": "User Role Scopes",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name" : "stock-reports-form-workspace",
+      "component": "stockReportsFormWorkspace",
+      "title": "Reports",
       "type": "form",
       "canMaximize": true,
       "width": "extra-wide"

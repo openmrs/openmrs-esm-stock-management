@@ -4,17 +4,17 @@ import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
-import { restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import { DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
 import { closeOverlay } from '../../core/components/overlay/hook';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
 
-interface AddStockSourceProps {
+type AddStockSourceProps = DefaultWorkspaceProps & {
   model?: StockSource;
-}
+};
 
-const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
+const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWorkspace }) => {
   const { t } = useTranslation();
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
@@ -57,7 +57,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
 
             handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
 
-            closeOverlay();
+            closeWorkspace();
           },
           (error) => {
             showSnackbar({
@@ -66,11 +66,12 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               isLowContrast: true,
               subtitle: error?.message,
             });
+            closeWorkspace();
           },
         )
         .catch();
     },
-    [formModel, model, t],
+    [formModel, model, t, closeWorkspace],
   );
   return (
     <div>
@@ -116,7 +117,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
           </section>
         </ModalBody>
         <ModalFooter>
-          <Button kind="secondary" onClick={closeOverlay}>
+          <Button kind="secondary" onClick={closeWorkspace}>
             {t('cancel', 'Cancel')}
           </Button>
           <Button type="submit">{t('save', 'Save')}</Button>

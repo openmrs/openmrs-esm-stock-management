@@ -1,15 +1,16 @@
 import { Button } from '@carbon/react';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { launchOverlay } from '../core/components/overlay/hook';
-import StockSourcesAddOrUpdate from './add-stock-sources/add-stock-sources.component';
+import { launchWorkspace } from '@openmrs/esm-framework';
 
 const AddStockSourceActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchOverlay('Add Stock Source', <StockSourcesAddOrUpdate />);
-  }, []);
+    launchWorkspace('stock-sources-form-workspace', {
+      workspaceTitle: t('addNewStockSource', 'Add New Source'),
+    });
+  }, [t]);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">

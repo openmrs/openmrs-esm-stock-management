@@ -14,7 +14,7 @@ import {
   Select,
   SelectItem,
 } from '@carbon/react';
-import React, { type ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './add-stock-user-role-scope.scss';
 import {
   useRoles,
@@ -24,13 +24,12 @@ import {
   useUsers,
 } from '../../stock-lookups/stock-lookups.resource';
 import { ResourceRepresentation } from '../../core/api/api';
-import { closeOverlay } from '../../core/components/overlay/hook';
 import { useTranslation } from 'react-i18next';
-import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
-import { restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
-import { type UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
-import { type UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
+import { DefaultWorkspaceProps, restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
+import { UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
+import { UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
@@ -42,19 +41,19 @@ import {
   formatForDatePicker,
   today,
 } from '../../constants';
-import { type User } from '../../core/api/types/identity/User';
-import { type Role } from '../../core/api/types/identity/Role';
-import { type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { User } from '../../core/api/types/identity/User';
+import { Role } from '../../core/api/types/identity/Role';
+import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { handleMutate } from '../../utils';
 
 const MinDate: Date = today();
 
-interface AddStockUserRoleScopeProps {
+type AddStockUserRoleScopeProps = DefaultWorkspaceProps & {
   model?: UserRoleScope;
   editMode?: boolean;
-}
+};
 
-const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode }) => {
+const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode, closeWorkspace }) => {
   const { t } = useTranslation();
   const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
@@ -220,7 +219,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           kind: 'success',
           subtitle: t('successfullysaved', 'You have successfully saved user role scope'),
         });
-        closeOverlay();
+        closeWorkspace();
       },
       (err) => {
         showSnackbar({
@@ -230,7 +229,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           subtitle: err?.message,
         });
 
-        closeOverlay();
+        closeWorkspace();
       },
     );
   };
@@ -421,7 +420,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           </section>
         </ModalBody>
         <ModalFooter>
-          <Button kind="secondary" onClick={closeOverlay}>
+          <Button kind="secondary" onClick={closeWorkspace}>
             {t('cancel', 'Cancel')}
           </Button>
           <Button type="submit" onClick={addStockUserRole}>
