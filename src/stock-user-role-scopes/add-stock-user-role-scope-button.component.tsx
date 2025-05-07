@@ -7,7 +7,7 @@ const AddStockUserRoleScopeActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchWorkspace('stock-userrole-scopes-form-workspace', {
+    launchWorkspace('stock-user-role-scopes-form-workspace', {
       workspaceTitle: t('addNewUserRoleScope', 'Add New User Role Scope'),
     });
   }, [t]);
