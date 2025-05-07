@@ -230,7 +230,7 @@
       "width": "extra-wide"
     },
     {
-      "name" : "stock-userrole-scopes-form-workspace",
+      "name" : "stock-user-role-scopes-form-workspace",
       "component": "stockUserScopesFormWorkspace",
       "title": "User Role Scopes",
       "type": "form",

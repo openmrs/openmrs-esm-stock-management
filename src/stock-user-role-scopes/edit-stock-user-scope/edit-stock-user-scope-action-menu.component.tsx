@@ -14,7 +14,7 @@ const EditStockUserRoleActionsMenu: React.FC<EditStockUserRoleActionsMenuProps> 
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchWorkspace('stock-userrole-scopes-form-workspace', {
+    launchWorkspace('stock-user-role-scopes-form-workspace', {
       workspaceTitle: t('editUserScope', 'Edit UserScope'),
       model: data,
     });
