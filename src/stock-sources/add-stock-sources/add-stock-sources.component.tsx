@@ -6,7 +6,6 @@ import { type StockSource } from '../../core/api/types/stockOperation/StockSourc
 import { createOrUpdateStockSource } from '../stock-sources.resource';
 import { DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
-import { closeOverlay } from '../../core/components/overlay/hook';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
 
