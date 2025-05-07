@@ -3,9 +3,8 @@ import { Edit } from '@carbon/react/icons';
 
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { launchOverlay } from '../../core/components/overlay/hook';
-import AddStockUserRoleScope from '../add-stock-user-scope/add-stock-user-role-scope.component';
-import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { launchWorkspace } from '@openmrs/esm-framework';
 
 interface EditStockUserRoleActionsMenuProps {
   data: UserRoleScope;
@@ -15,8 +14,11 @@ const EditStockUserRoleActionsMenu: React.FC<EditStockUserRoleActionsMenuProps> 
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchOverlay('Edit Stock User Role', <AddStockUserRoleScope model={data} editMode={true} />);
-  }, [data]);
+    launchWorkspace('stock-userrole-scopes-form-workspace', {
+      workspaceTitle: t('editUserScope', 'Edit UserScope'),
+      model: data,
+    });
+  }, [data, t]);
 
   return (
     <Button

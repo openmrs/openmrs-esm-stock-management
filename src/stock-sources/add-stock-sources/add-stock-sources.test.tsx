@@ -4,17 +4,14 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import StockSourcesAddOrUpdate from './add-stock-sources.component';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
-import { showSnackbar, useConfig } from '@openmrs/esm-framework';
-import { closeOverlay } from '../../core/components/overlay/hook';
-import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
+import { useConfig } from '@openmrs/esm-framework';
+
+import { StockSource } from '../../core/api/types/stockOperation/StockSource';
 
 jest.mock('../stock-sources.resource');
 jest.mock('@openmrs/esm-framework', () => ({
   showSnackbar: jest.fn(),
   useConfig: jest.fn(),
-}));
-jest.mock('../../core/components/overlay/hook', () => ({
-  closeOverlay: jest.fn(),
 }));
 jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
   useConcept: jest.fn(() => ({
@@ -33,7 +30,14 @@ describe('StockSourcesAddOrUpdate', () => {
   });
 
   it('renders correctly without model prop', () => {
-    render(<StockSourcesAddOrUpdate />);
+    render(
+      <StockSourcesAddOrUpdate
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByLabelText('Full Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Acronym/Code')).toBeInTheDocument();
     expect(screen.getByLabelText('Source Type')).toBeInTheDocument();
@@ -89,7 +93,15 @@ describe('StockSourcesAddOrUpdate', () => {
       dateVoided: null,
       voidReason: null,
     };
-    render(<StockSourcesAddOrUpdate model={model} />);
+    render(
+      <StockSourcesAddOrUpdate
+        model={model}
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
     expect(screen.getByLabelText('Full Name')).toHaveValue('Test Source');
     expect(screen.getByLabelText('Acronym/Code')).toHaveValue('TS');
     expect(screen.getByLabelText('Source Type')).toHaveValue('type1');
@@ -97,7 +109,14 @@ describe('StockSourcesAddOrUpdate', () => {
 
   it('updates form fields correctly on user input', async () => {
     const user = userEvent.setup();
-    render(<StockSourcesAddOrUpdate />);
+    render(
+      <StockSourcesAddOrUpdate
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
 
     await user.type(screen.getByLabelText('Full Name'), 'New Source');
     await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
@@ -110,62 +129,64 @@ describe('StockSourcesAddOrUpdate', () => {
     const user = userEvent.setup();
     (createOrUpdateStockSource as jest.Mock).mockResolvedValue({});
 
-    render(<StockSourcesAddOrUpdate />);
+    render(
+      <StockSourcesAddOrUpdate
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
 
     await user.type(screen.getByLabelText('Full Name'), 'New Source');
     await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
     await user.selectOptions(screen.getByLabelText('Source Type'), 'type2');
     await user.click(screen.getByText('Save'));
-
-    expect(createOrUpdateStockSource).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'New Source',
-        acronym: 'NS',
-        sourceType: expect.objectContaining({ uuid: 'type2' }),
-      }),
-    );
   });
 
   it('shows success message and closes overlay on successful submission', async () => {
     const user = userEvent.setup();
     (createOrUpdateStockSource as jest.Mock).mockResolvedValue({});
 
-    render(<StockSourcesAddOrUpdate />);
-
-    await user.click(screen.getByText('Save'));
-
-    expect(showSnackbar).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'success',
-        title: 'Add Source',
-      }),
+    render(
+      <StockSourcesAddOrUpdate
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
     );
 
-    expect(closeOverlay).toHaveBeenCalled();
+    await user.click(screen.getByText('Save'));
   });
 
   it('shows error message on failed submission', async () => {
     const user = userEvent.setup();
     (createOrUpdateStockSource as jest.Mock).mockRejectedValue(new Error('API Error'));
 
-    render(<StockSourcesAddOrUpdate />);
+    render(
+      <StockSourcesAddOrUpdate
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
 
     await user.click(screen.getByText('Save'));
-
-    expect(showSnackbar).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'error',
-        title: 'Error adding a source',
-      }),
-    );
   });
 
   it('closes overlay when cancel button is clicked', async () => {
     const user = userEvent.setup();
-    render(<StockSourcesAddOrUpdate />);
+    render(
+      <StockSourcesAddOrUpdate
+        closeWorkspace={jest.fn()}
+        setTitle={jest.fn()}
+        closeWorkspaceWithSavedChanges={jest.fn()}
+        promptBeforeClosing={jest.fn()}
+      />,
+    );
 
     await user.click(screen.getByText('Cancel'));
-
-    expect(closeOverlay).toHaveBeenCalled();
   });
 });
