@@ -1,6 +1,6 @@
-import { FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
+import { type FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import useSWR from 'swr';
-import { StockOperationLinkDTO } from '../../../core/api/types/stockOperation/StockOperationLinkDTO';
+import { type StockOperationLinkDTO } from '../../../core/api/types/stockOperation/StockOperationLinkDTO';
 
 const useStockOperationLinks = (stockOperationUuid?: string) => {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationlink?v=default&q=${stockOperationUuid}`;

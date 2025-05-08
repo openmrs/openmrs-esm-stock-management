@@ -1,11 +1,11 @@
 import React from 'react';
 import { TextInputSkeleton, ComboBox } from '@carbon/react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
-import { StockSource } from '../../../core/api/types/stockOperation/StockSource';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
+import { type StockSource } from '../../../core/api/types/stockOperation/StockSource';
 import { ResourceRepresentation } from '../../../core/api/api';
 import { useStockSources } from '../../../stock-sources/stock-sources.resource';
-import { Concept } from '../../../core/api/types/concept/Concept';
-import { StockItemReferenceDTO } from '../../../core/api/types/stockItem/StockItemReference';
+import { type Concept } from '../../../core/api/types/concept/Concept';
+import { type StockItemReferenceDTO } from '../../../core/api/types/stockItem/StockItemReference';
 
 interface StockSourceSelectorProps<T> {
   row?: StockItemReferenceDTO;

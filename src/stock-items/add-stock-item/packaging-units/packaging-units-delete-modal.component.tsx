@@ -4,7 +4,7 @@ import { Button, ModalHeader, ModalBody, ModalFooter, TextArea } from '@carbon/r
 import { deleteStockItemPackagingUnit } from '../../stock-items.resource';
 import { useStockItemPackageUnitsHook } from './packaging-units.resource';
 import { useTranslation } from 'react-i18next';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 
 import styles from '../packaging-units/packaging-units.scss';
 

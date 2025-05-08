@@ -1,6 +1,6 @@
 import {
   operationFromString,
-  StockOperationType,
+  type StockOperationType,
   StockOperationTypeCanCapturePurchasePrice,
   StockOperationTypeHasPrint,
   StockOperationTypeIsNegativeQtyAllowed,

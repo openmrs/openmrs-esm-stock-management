@@ -3,7 +3,7 @@ import { Edit } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 import { useStockOperationAndItems } from '../stock-operations.resource';

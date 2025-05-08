@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { launchAddOrEditDialog } from '../stock-item.utils';
 
 interface EditStockItemActionsMenuProps {

@@ -1,6 +1,6 @@
-import { OpenmrsObject } from './OpenmrsObject';
-import { Auditable } from './Auditable';
-import { Retireable } from './Retireable';
+import { type OpenmrsObject } from './OpenmrsObject';
+import { type Auditable } from './Auditable';
+import { type Retireable } from './Retireable';
 
 export interface OpenmrsMetadata extends OpenmrsObject, Auditable, Retireable {
   name: string;

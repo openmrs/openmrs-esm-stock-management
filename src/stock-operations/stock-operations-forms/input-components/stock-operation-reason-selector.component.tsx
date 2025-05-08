@@ -3,8 +3,8 @@ import { useConfig } from '@openmrs/esm-framework';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ConfigObject } from '../../../config-schema';
-import { Concept } from '../../../core/api/types/concept/Concept';
+import { type ConfigObject } from '../../../config-schema';
+import { type Concept } from '../../../core/api/types/concept/Concept';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 
 const StockOperationReasonSelector = () => {

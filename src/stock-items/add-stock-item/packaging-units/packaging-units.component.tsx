@@ -19,8 +19,8 @@ import ControlledNumberInput from '../../../core/components/carbon/controlled-nu
 import { Save } from '@carbon/react/icons';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PackageUnitFormData, packageUnitSchema } from './validationSchema';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { type PackageUnitFormData, packageUnitSchema } from './validationSchema';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { createStockItemPackagingUnit, updateStockItemPackagingUnit } from '../../stock-items.resource';
 import DeleteModalButton from './packaging-units-delete-modal-button.component';
 import { handleMutate } from '../../../utils';

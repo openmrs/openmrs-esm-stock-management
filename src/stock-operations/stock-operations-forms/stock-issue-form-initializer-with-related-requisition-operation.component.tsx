@@ -2,9 +2,9 @@ import { parseDate, showSnackbar } from '@openmrs/esm-framework';
 import React, { useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { OperationType, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { OperationType, type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { useStockOperationAndItems } from '../stock-operations.resource';
-import { getStockOperationItemFormSchema, StockOperationItemDtoSchema } from '../validation-schema';
+import { getStockOperationItemFormSchema, type StockOperationItemDtoSchema } from '../validation-schema';
 import { pick } from '../../core/utils/utils';
 import { Loading } from '@carbon/react';
 

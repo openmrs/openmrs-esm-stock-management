@@ -1,8 +1,8 @@
 import { ModalHeader, ModalBody, ModalFooter, Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { type ChangeEvent, useCallback, useState } from 'react';
 import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
-import { StockSource } from '../../core/api/types/stockOperation/StockSource';
+import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
 import { restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';

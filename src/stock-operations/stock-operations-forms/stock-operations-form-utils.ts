@@ -1,4 +1,4 @@
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
 
 export function mapIssueStockLocations(stockOperation) {

@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { launchOverlay } from '../../core/components/overlay/hook';
 import AddStockUserRoleScope from '../add-stock-user-scope/add-stock-user-role-scope.component';
-import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 
 interface EditStockUserRoleActionsMenuProps {
   data: UserRoleScope;

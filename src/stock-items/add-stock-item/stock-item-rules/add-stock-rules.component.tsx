@@ -11,16 +11,16 @@ import {
   Checkbox,
   CheckboxGroup,
 } from '@carbon/react';
-import React, { ChangeEvent, useCallback, useState, useEffect } from 'react';
+import React, { type ChangeEvent, useCallback, useState, useEffect } from 'react';
 import styles from './add-stock-rules.scss';
 import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
 import { createOrUpdateStockRule } from './stock-rules.resource';
-import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { showSnackbar } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
 import { closeOverlay } from '../../../core/components/overlay/hook';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
+import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 
 interface AddStockRuleProps {
   model?: StockRule;

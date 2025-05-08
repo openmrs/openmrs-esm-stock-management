@@ -1,6 +1,6 @@
 import { openmrsFetch, restBaseUrl, usePagination } from '@openmrs/esm-framework';
 import useSWR from 'swr';
-import { ReportType } from './ReportType';
+import { type ReportType } from './ReportType';
 import { useState } from 'react';
 
 export function useReportTypes() {

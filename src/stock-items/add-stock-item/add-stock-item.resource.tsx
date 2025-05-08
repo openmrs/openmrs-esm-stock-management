@@ -1,4 +1,4 @@
-import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 
 export const initialValues: StockItemDTO = {
   uuid: undefined,

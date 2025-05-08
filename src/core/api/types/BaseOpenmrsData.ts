@@ -1,4 +1,4 @@
-import { BaseOpenmrsObject } from './BaseOpenmrsObject';
-import { OpenmrsData } from './OpenmrsData';
+import { type BaseOpenmrsObject } from './BaseOpenmrsObject';
+import { type OpenmrsData } from './OpenmrsData';
 
 export interface BaseOpenmrsData extends BaseOpenmrsObject, OpenmrsData {}

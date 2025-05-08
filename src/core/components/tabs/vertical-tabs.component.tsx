@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabItem } from './types';
+import { type TabItem } from './types';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
 import styles from './vertical-tabs.scss';
 

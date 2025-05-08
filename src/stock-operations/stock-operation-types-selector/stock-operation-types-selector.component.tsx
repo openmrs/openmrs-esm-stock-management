@@ -3,7 +3,7 @@ import { OverflowMenuVertical } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { OperationType, StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { OperationType, type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 

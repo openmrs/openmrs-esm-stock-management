@@ -13,7 +13,7 @@ import {
 import { formatDate, parseDate, usePagination } from '@openmrs/esm-framework';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
+import { type StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
 import styles from './stock-items-table.scss';
 
 type Props = {

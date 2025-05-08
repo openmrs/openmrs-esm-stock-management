@@ -1,9 +1,9 @@
 import React from 'react';
 import { closeOverlay, launchOverlay } from '../core/components/overlay/hook';
-import { StockItemDTO } from '../core/api/types/stockItem/StockItem';
+import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
 import { type TFunction } from 'react-i18next';
 import AddEditStockItem from './add-stock-item/add-stock-item.component';
-import { FetchResponse, showSnackbar } from '@openmrs/esm-framework';
+import { type FetchResponse, showSnackbar } from '@openmrs/esm-framework';
 import { createStockItem, updateStockItem } from './stock-items.resource';
 
 export const addOrEditStockItem = async (t: TFunction, stockItem: StockItemDTO, isEditing = false) => {

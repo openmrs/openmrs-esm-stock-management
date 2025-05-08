@@ -21,7 +21,7 @@ import {
 } from '@carbon/react';
 import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
 import styles from '../../stock-items-table.scss';
-import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import AddStockRuleActionButton from './add-stock-rule-button.component';
 import { isDesktop } from '@openmrs/esm-framework';
 import StockRulesFilter from './stock-rules-filter.component';

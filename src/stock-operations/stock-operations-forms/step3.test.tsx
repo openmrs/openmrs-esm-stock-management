@@ -1,10 +1,9 @@
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { showSnackbar, useConfig, ErrorState, launchWorkspace } from '@openmrs/esm-framework';
 import { useStockOperationTypes, useUser } from '../../stock-lookups/stock-lookups.resource';
-import { getStockOperationLinks, useStockOperation } from '../stock-operations.resource';
+import { getStockOperationLinks, useStockOperation, useStockOperations } from '../stock-operations.resource';
 import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { useStockOperations } from '../stock-operations.resource';
 import { closeOverlay } from '../../core/components/overlay/hook';
 import StockOperationForm from './stock-operation-form.component';
 import useParties from './hooks/useParties';

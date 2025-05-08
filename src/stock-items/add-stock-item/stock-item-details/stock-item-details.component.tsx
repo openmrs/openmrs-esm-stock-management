@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Save } from '@carbon/react/icons';
 
 import { Button, FormGroup, InlineLoading } from '@carbon/react';
-import { StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
+import { type StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import DrugSelector from '../drug-selector/drug-selector.component';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { stockItemDetailsSchema, StockItemFormData } from '../../validationSchema';
+import { stockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
 import ControlledRadioButtonGroup from '../../../core/components/carbon/controlled-radio-button-group/controlled-radio-button-group.component';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
 import ControlledTextInput from '../../../core/components/carbon/controlled-text-input/controlled-text-input.component';
@@ -15,7 +15,7 @@ import DispensingUnitSelector from '../dispensing-unit-selector/dispensing-unit-
 import PreferredVendorSelector from '../preferred-vendor-selector/preferred-vendor-selector.component';
 import StockItemCategorySelector from '../stock-item-category-selector/stock-item-category-selector.component';
 import StockItemUnitsEdit from '../stock-item-units-edit/stock-item-units-edit.component';
-import { SaveStockItem } from '../../types';
+import { type SaveStockItem } from '../../types';
 import ConceptsSelector from '../concepts-selector/concepts-selector.component';
 import styles from '../../add-stock-item/add-stock-item.scss';
 import { closeOverlay } from '../../../core/components/overlay/hook';

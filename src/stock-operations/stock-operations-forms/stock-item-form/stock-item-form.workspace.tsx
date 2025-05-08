@@ -14,17 +14,20 @@ import { DefaultWorkspaceProps, useConfig } from '@openmrs/esm-framework';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
-import { operationFromString, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import {
+  operationFromString,
+  type StockOperationType,
+} from '../../../core/api/types/stockOperation/StockOperationType';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
-import { BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
+import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
 import styles from './stock-item-form.scss';
 import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
-import { ConfigObject } from '../../../config-schema';
+import { type ConfigObject } from '../../../config-schema';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
