@@ -239,7 +239,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   }
   return (
     <div>
-      <Form>
+      <Form className={styles.form}>
         <section className={styles.section}>
           <div>
             {users?.results?.length > 0 && (
@@ -415,11 +415,11 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
               })}
           </CheckboxGroup>
         </section>
-        <ButtonSet className={styles.buttonSet}>
-          <Button kind="secondary" onClick={closeWorkspace}>
+        <ButtonSet>
+          <Button className={styles.button} kind="secondary" onClick={closeWorkspace}>
             {t('cancel', 'Cancel')}
           </Button>
-          <Button type="submit" onClick={addStockUserRole}>
+          <Button className={styles.button} type="submit" onClick={addStockUserRole}>
             {t('save', 'Save')}
           </Button>
         </ButtonSet>
