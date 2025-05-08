@@ -1,4 +1,5 @@
 @use '@carbon/styles/scss/spacing';
+@use '@carbon/layout';
 @use '@carbon/styles/scss/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
@@ -39,14 +40,17 @@
   width: 100%;
 }
 
-.buttonSet {
-  width: 100%;
-  padding-top: spacing.$spacing-05;
+.form {
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  bottom: 0;
-  position: absolute;
-  & > button {
-    max-width: 50% !important;
-    width: 50%;
-  }
+  height: 100%;
+}
+
+.button {
+  height: layout.$spacing-10;
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
 }
