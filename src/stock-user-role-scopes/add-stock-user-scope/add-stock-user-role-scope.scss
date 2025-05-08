@@ -38,3 +38,15 @@
 .checkbox {
   width: 100%;
 }
+
+.buttonSet {
+  width: 100%;
+  padding-top: spacing.$spacing-05;
+  justify-content: space-between;
+  bottom: 0;
+  position: absolute;
+  & > button {
+    max-width: 50% !important;
+    width: 50%;
+  }
+}
