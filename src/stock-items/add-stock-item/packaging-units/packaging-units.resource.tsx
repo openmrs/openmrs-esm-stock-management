@@ -24,7 +24,7 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
   const { items, isLoading, error, mutate } = useStockItemPackagingUOMs(stockItemFilter);
 
   return {
-    items: items.results,
+    items: items.results ?? [],
     totalCount: items.totalCount,
     isLoading,
     error,

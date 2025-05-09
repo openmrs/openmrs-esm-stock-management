@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import StockItemsTableComponent from './stock-items-table.component';
 import { useStockItemsPages } from './stock-items-table.resource';
 import { handleMutate } from '../utils';
-import { launchAddOrEditDialog } from './stock-item.utils';
+import { launchAddOrStockItemWorkspace } from './stock-item.utils';
 
 jest.mock('./stock-items-table.resource', () => ({
   useStockItemsPages: jest.fn(),
@@ -15,7 +15,7 @@ jest.mock('../utils', () => ({
 }));
 
 jest.mock('./stock-item.utils', () => ({
-  launchAddOrEditDialog: jest.fn(),
+  launchAddOrStockItemWorkspace: jest.fn(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -27,16 +27,18 @@ jest.mock('react-i18next', () => ({
 describe('StockItemsTableComponent', () => {
   const mockUseStockItemsPages = {
     isLoading: false,
-    items: Array(25).fill(null).map((_, index) => ({
-      uuid: `item-${index}`,
-      commonName: `Test Item ${index}`,
-      drugUuid: index % 2 === 0 ? `drug-${index}` : null,
-      conceptName: `Concept ${index}`,
-      dispensingUnitName: `Unit ${index}`,
-      defaultStockOperationsUoMName: `UoM ${index}`,
-      reorderLevel: index * 10,
-      reorderLevelUoMName: 'Units',
-    })),
+    items: Array(25)
+      .fill(null)
+      .map((_, index) => ({
+        uuid: `item-${index}`,
+        commonName: `Test Item ${index}`,
+        drugUuid: index % 2 === 0 ? `drug-${index}` : null,
+        conceptName: `Concept ${index}`,
+        dispensingUnitName: `Unit ${index}`,
+        defaultStockOperationsUoMName: `UoM ${index}`,
+        reorderLevel: index * 10,
+        reorderLevelUoMName: 'Units',
+      })),
     totalCount: 25,
     currentPageSize: 10,
     setPageSize: jest.fn(),
@@ -57,13 +59,13 @@ describe('StockItemsTableComponent', () => {
     render(<StockItemsTableComponent />);
     expect(screen.getByText('panelDescription')).toBeInTheDocument();
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
-    
+
     const user = userEvent.setup();
     const menuButton = screen.getByTestId('stock-items-menu');
     await user.click(menuButton);
-  
+
     await screen.findByText('Refresh');
-    
+
     expect(screen.getByText('type')).toBeInTheDocument();
     expect(screen.getByText('genericName')).toBeInTheDocument();
     expect(screen.getByText('commonName')).toBeInTheDocument();
@@ -87,9 +89,12 @@ describe('StockItemsTableComponent', () => {
     const user = userEvent.setup();
     const searchInput = screen.getByRole('searchbox');
     await user.type(searchInput, 'test search');
-    await waitFor(() => {
-      expect(mockUseStockItemsPages.setSearchString).toHaveBeenCalledWith('test search');
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(mockUseStockItemsPages.setSearchString).toHaveBeenCalledWith('test search');
+      },
+      { timeout: 2000 },
+    );
   });
 
   it('updates pagination when page or page size changes', async () => {
@@ -106,12 +111,12 @@ describe('StockItemsTableComponent', () => {
 
   it('triggers handleRefresh when refresh button is clicked', async () => {
     render(<StockItemsTableComponent />);
-    
+
     const user = userEvent.setup();
     const menuButton = screen.getByTestId('stock-items-menu');
     expect(menuButton).toBeInTheDocument();
     await user.click(menuButton);
-  
+
     const refreshButton = await screen.findByText('Refresh');
     expect(refreshButton).toBeInTheDocument();
     await user.click(refreshButton);
@@ -125,10 +130,10 @@ describe('StockItemsTableComponent', () => {
     const user = userEvent.setup();
     const editButtons = screen.getAllByLabelText('Edit Stock Item');
     await user.click(editButtons[0]);
-    expect(launchAddOrEditDialog).toHaveBeenCalledWith(
+
+    expect(launchAddOrStockItemWorkspace).toHaveBeenCalledWith(
       expect.any(Function),
       expect.objectContaining({ uuid: 'item-0' }),
-      true
     );
   });
 });

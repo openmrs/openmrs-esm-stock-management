@@ -131,6 +131,14 @@ export const stockOperationFormWorkspace = getAsyncLifecycle(
   () => import('./stock-operations/stock-operations-forms/stock-operation-form.component'),
   options,
 );
+export const stockItemFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-items/add-stock-item/add-stock-item.component'),
+  options,
+);
+export const stockItemRulesFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-items/add-stock-item/stock-item-rules/add-stock-rules.component'),
+  options,
+);
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }
