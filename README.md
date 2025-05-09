@@ -1,3 +1,5 @@
-# OpenMRS Stock Management ESM
+# OpenMRS ESM Stock Management App
 
-A frontend ESM for stock management built on OpenMRS 3.x. This frontend module uses the [Community backend module](https://github.com/METS-Programme/openmrs-module-ugandaemr-stock-management).
+![OpenMRS CI](https://github.com/openmrs/openmrs-esm-stock-management/actions/workflows/node.js.yml/badge.svg)
+
+An O3 frontend module for managing stock. It uses the [stock management backend module](https://github.com/openmrs/openmrs-module-stockmanagement).

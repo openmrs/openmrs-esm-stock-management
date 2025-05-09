@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import useSWR from 'swr';
-import { FetchResponse, openmrsFetch, restBaseUrl, usePagination } from '@openmrs/esm-framework';
+import { type FetchResponse, openmrsFetch, restBaseUrl, usePagination } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
-import { StockOperationFilter } from '../stock-operations/stock-operations.resource';
+import { type StockOperationFilter } from '../stock-operations/stock-operations.resource';
 import { useStockTagLocations } from '../stock-lookups/stock-lookups.resource';
 
 export function useStockLocationPages(filter: StockOperationFilter) {

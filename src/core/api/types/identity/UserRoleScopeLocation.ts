@@ -1,4 +1,4 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData';
+import { type BaseOpenmrsData } from '../BaseOpenmrsData';
 
 export interface UserRoleScopeLocation extends BaseOpenmrsData {
   locationUuid: string;

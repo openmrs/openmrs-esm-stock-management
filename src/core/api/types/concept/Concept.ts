@@ -1,7 +1,7 @@
-import { BaseOpenmrsObject } from '../BaseOpenmrsObject';
-import { Auditable } from '../Auditable';
-import { Retireable } from '../Retireable';
-import { ConceptName } from './ConceptName';
+import { type BaseOpenmrsObject } from '../BaseOpenmrsObject';
+import { type Auditable } from '../Auditable';
+import { type Retireable } from '../Retireable';
+import { type ConceptName } from './ConceptName';
 
 export interface Concept extends BaseOpenmrsObject, Auditable, Retireable {
   conceptId: number;

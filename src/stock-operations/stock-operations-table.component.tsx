@@ -22,6 +22,7 @@ import {
   TableToolbarSearch,
   TabPanel,
   Tile,
+  Link,
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
@@ -37,7 +38,6 @@ import StockOperationTypesSelector from './stock-operation-types-selector/stock-
 import StockOperationsFilters from './stock-operations-filters.component';
 import { useStockOperationPages } from './stock-operations-table.resource';
 
-import { Link } from '@carbon/react';
 import StockOperationExpandedRow from './add-stock-operation/stock-operations-expanded-row/stock-operation-expanded-row.component';
 import styles from './stock-operations-table.scss';
 

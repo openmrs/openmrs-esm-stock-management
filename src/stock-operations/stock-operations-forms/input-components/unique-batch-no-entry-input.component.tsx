@@ -1,6 +1,5 @@
-import { TextInput } from '@carbon/react';
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { TextInputSkeleton } from '@carbon/react';
+import { TextInput, TextInputSkeleton } from '@carbon/react';
+import React, { type ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 import { useTranslation } from 'react-i18next';
 

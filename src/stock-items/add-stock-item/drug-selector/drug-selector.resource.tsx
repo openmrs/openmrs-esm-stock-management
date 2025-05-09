@@ -1,5 +1,5 @@
 import { ResourceRepresentation } from '../../../core/api/api';
-import { DrugFilterCriteria, useDrugs } from '../../../stock-lookups/stock-lookups.resource';
+import { type DrugFilterCriteria, useDrugs } from '../../../stock-lookups/stock-lookups.resource';
 
 export function useDrugsHook(searchTerm?: string, filter?: DrugFilterCriteria) {
   const defaultFilters: DrugFilterCriteria = {

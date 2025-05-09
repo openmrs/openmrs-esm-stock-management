@@ -1,5 +1,5 @@
 import React from 'react';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import styles from './stock-operation-status.scss';
 import StockOpertationStatus from './stock-operation-status';
 import { useTranslation } from 'react-i18next';

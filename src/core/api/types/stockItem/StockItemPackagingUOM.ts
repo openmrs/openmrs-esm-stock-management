@@ -1,6 +1,6 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData';
-import { Concept } from '../concept/Concept';
-import { StockItem } from './StockItem';
+import { type BaseOpenmrsData } from '../BaseOpenmrsData';
+import { type Concept } from '../concept/Concept';
+import { type StockItem } from './StockItem';
 
 export interface StockItemPackagingUOM extends BaseOpenmrsData {
   factor: number;

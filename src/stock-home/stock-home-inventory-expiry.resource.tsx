@@ -1,7 +1,7 @@
 import { ResourceRepresentation } from '../core/api/api';
 import { useEffect, useMemo, useState } from 'react';
 import {
-  StockBatchFilter,
+  type StockBatchFilter,
   StockItemInventoryFilter,
   useStockBatches,
   useStockItemInventory,

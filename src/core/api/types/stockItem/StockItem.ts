@@ -1,9 +1,9 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData';
-import { Concept } from '../concept/Concept';
-import { Drug } from '../concept/Drug';
-import { RecordPermission } from '../RecordPermission';
-import { StockBatch } from './StockBatch';
-import { StockItemPackagingUOM, StockItemPackagingUOMDTO } from './StockItemPackagingUOM';
+import { type BaseOpenmrsData } from '../BaseOpenmrsData';
+import { type Concept } from '../concept/Concept';
+import { type Drug } from '../concept/Drug';
+import { type RecordPermission } from '../RecordPermission';
+import { type StockBatch } from './StockBatch';
+import { type StockItemPackagingUOM, type StockItemPackagingUOMDTO } from './StockItemPackagingUOM';
 
 export interface StockItem extends BaseOpenmrsData {
   concept: Concept;

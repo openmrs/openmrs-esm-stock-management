@@ -1,7 +1,7 @@
 import { useStockSources } from './stock-sources.resource';
 import { useMemo, useState } from 'react';
 import { usePagination } from '@openmrs/esm-framework';
-import { StockOperationFilter } from '../stock-operations/stock-operations.resource';
+import { type StockOperationFilter } from '../stock-operations/stock-operations.resource';
 
 export default function useStockSourcesPage(filter: StockOperationFilter) {
   const { items, isLoading, error } = useStockSources(filter);

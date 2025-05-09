@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showSnackbar } from '@openmrs/esm-framework';
 import { saveLocation } from './stock-locations-table.resource';
-import { locationData, LocationMutator } from '../stock-items/types';
+import { type locationData, type LocationMutator } from '../stock-items/types';
 import LocationAdministrationForm from './location-admin-form.component';
 import { extractErrorMessagesFromResponse } from '../constants';
 

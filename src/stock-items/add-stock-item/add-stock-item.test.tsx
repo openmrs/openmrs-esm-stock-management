@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AddEditStockItem from './add-stock-item.component';
-import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 
 // Mock components
 jest.mock('react-i18next', () => ({

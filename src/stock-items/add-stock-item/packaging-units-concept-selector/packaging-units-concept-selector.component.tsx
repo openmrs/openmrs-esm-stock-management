@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
-import { Concept } from '../../../core/api/types/concept/Concept';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import React, { type ReactNode } from 'react';
+import { type Concept } from '../../../core/api/types/concept/Concept';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { useConfig } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../../../config-schema';
 
