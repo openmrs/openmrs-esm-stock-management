@@ -1,20 +1,19 @@
-import { ModalHeader, ModalBody, ModalFooter, Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
+import { Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
 import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
-import { restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
-import { closeOverlay } from '../../core/components/overlay/hook';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
 
-interface AddStockSourceProps {
+type AddStockSourceProps = DefaultWorkspaceProps & {
   model?: StockSource;
-}
+};
 
-const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
+const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWorkspace }) => {
   const { t } = useTranslation();
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
@@ -57,7 +56,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
 
             handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
 
-            closeOverlay();
+            closeWorkspace();
           },
           (error) => {
             showSnackbar({
@@ -66,17 +65,17 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               isLowContrast: true,
               subtitle: error?.message,
             });
+            closeWorkspace();
           },
         )
         .catch();
     },
-    [formModel, model, t],
+    [formModel, model, t, closeWorkspace],
   );
   return (
     <div>
       <Form onSubmit={onFormSubmit}>
-        <ModalHeader />
-        <ModalBody>
+        <div className={styles.sourceContainer}>
           <section className={styles.section}>
             <TextInput
               id="fullname"
@@ -109,18 +108,20 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model }) => {
               onChange={onSourceTypeChange}
             >
               <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
-              {items?.answers?.map((sourceType) => {
-                return <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />;
-              })}
+              {items?.answers?.map((sourceType) => (
+                <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
+              ))}
             </Select>
           </section>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary" onClick={closeOverlay}>
-            {t('cancel', 'Cancel')}
-          </Button>
-          <Button type="submit">{t('save', 'Save')}</Button>
-        </ModalFooter>
+          <div className={styles.formFooter}>
+            <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+              {t('cancel', 'Cancel')}
+            </Button>
+            <Button type="submit" className={styles.button}>
+              {t('save', 'Save')}
+            </Button>
+          </div>
+        </div>
       </Form>
     </div>
   );

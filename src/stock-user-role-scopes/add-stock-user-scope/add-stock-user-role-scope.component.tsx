@@ -3,9 +3,6 @@ import {
   Checkbox,
   CheckboxGroup,
   Form,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
   InlineLoading,
   Toggle,
   DatePickerInput,
@@ -24,11 +21,10 @@ import {
   useUsers,
 } from '../../stock-lookups/stock-lookups.resource';
 import { ResourceRepresentation } from '../../core/api/api';
-import { closeOverlay } from '../../core/components/overlay/hook';
 import { useTranslation } from 'react-i18next';
 import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
-import { restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
+import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
 import { type UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
 import { type UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import {
@@ -49,12 +45,12 @@ import { handleMutate } from '../../utils';
 
 const MinDate: Date = today();
 
-interface AddStockUserRoleScopeProps {
+type AddStockUserRoleScopeProps = DefaultWorkspaceProps & {
   model?: UserRoleScope;
   editMode?: boolean;
-}
+};
 
-const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode }) => {
+const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode, closeWorkspace }) => {
   const { t } = useTranslation();
   const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
@@ -220,7 +216,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           kind: 'success',
           subtitle: t('successfullysaved', 'You have successfully saved user role scope'),
         });
-        closeOverlay();
+        closeWorkspace();
       },
       (err) => {
         showSnackbar({
@@ -230,7 +226,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           subtitle: err?.message,
         });
 
-        closeOverlay();
+        closeWorkspace();
       },
     );
   };
@@ -242,8 +238,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   return (
     <div>
       <Form>
-        <ModalHeader />
-        <ModalBody>
+        <div className={styles.userScopeContainer}>
           <section className={styles.section}>
             <div>
               {users?.results?.length > 0 && (
@@ -419,15 +414,15 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
                 })}
             </CheckboxGroup>
           </section>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary" onClick={closeOverlay}>
-            {t('cancel', 'Cancel')}
-          </Button>
-          <Button type="submit" onClick={addStockUserRole}>
-            {t('save', 'Save')}
-          </Button>
-        </ModalFooter>
+          <div className={styles.button}>
+            <Button kind="secondary" onClick={closeWorkspace}>
+              {t('cancel', 'Cancel')}
+            </Button>
+            <Button type="submit" onClick={addStockUserRole}>
+              {t('save', 'Save')}
+            </Button>
+          </div>
+        </div>
       </Form>
     </div>
   );
