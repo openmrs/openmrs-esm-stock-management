@@ -15,3 +15,14 @@
 .modalBody {
   padding-bottom: layout.$spacing-05;
 }
+.sourceContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding: 1rem;
+  height: 100%;
+}
+
+.button {
+  padding: 1rem;
+}
