@@ -1,15 +1,14 @@
 import { Button } from '@carbon/react';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { launchOverlay } from '../core/components/overlay/hook';
-import AddStockUserRoleScope from './add-stock-user-scope/add-stock-user-role-scope.component';
+import { launchWorkspace } from '@openmrs/esm-framework';
 
 const AddStockUserRoleScopeActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchOverlay(t('addStockUserRoleScope', 'Add Stock User Role Scope'), <AddStockUserRoleScope />);
-  }, [t]);
+    launchWorkspace('add-stock-user-role-scope');
+  }, []);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">

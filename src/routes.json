@@ -216,6 +216,14 @@
       "type": "form",
       "canMaximize": true,
       "width": "extra-wide"
+    },
+    {
+      "name": "add-stock-user-role-scope",
+      "component": "addStockUserRoleScope",
+      "title": "Add Stock User Role Scope",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
     }
   ],
   "pages": [

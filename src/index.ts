@@ -131,6 +131,10 @@ export const stockOperationFormWorkspace = getAsyncLifecycle(
   () => import('./stock-operations/stock-operations-forms/stock-operation-form.component'),
   options,
 );
+export const addStockUserRoleScope = getAsyncLifecycle(
+  () => import('./stock-user-role-scopes/add-stock-user-scope/add-stock-user-role-scope.component'),
+  options,
+);
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }
