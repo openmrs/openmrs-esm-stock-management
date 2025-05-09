@@ -29,6 +29,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     setStockItemUuid,
     setLocationUuid,
     binCardHeaders,
+    inventory,
   } = useStockItemsTransactions(stockItemFilter);
 
   useEffect(() => {
@@ -38,82 +39,87 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
   const { control } = useForm({});
 
   const tableRows = useMemo(() => {
-    return items?.map((stockItemTransaction) => ({
-      ...stockItemTransaction,
-      id: stockItemTransaction?.uuid,
-      key: `key-${stockItemTransaction?.uuid}`,
-      uuid: `${stockItemTransaction?.uuid}`,
-      date: formatDisplayDate(stockItemTransaction?.dateCreated),
-      location:
-        stockItemTransaction.operationSourcePartyName && stockItemTransaction.operationDestinationPartyName ? (
-          stockItemTransaction.operationSourcePartyName === stockItemTransaction?.partyName ? (
-            stockItemTransaction.quantity > 0 ? (
-              <>
-                <span className="transaction-location">{stockItemTransaction.operationSourcePartyName}</span>
-                <ArrowLeft size={16} /> {stockItemTransaction.operationDestinationPartyName}
-              </>
+    return items?.map((stockItemTransaction) => {
+      const balance = inventory?.total ?? '';
+
+      return {
+        ...stockItemTransaction,
+        id: stockItemTransaction?.uuid,
+        key: `key-${stockItemTransaction?.uuid}`,
+        uuid: `${stockItemTransaction?.uuid}`,
+        date: formatDisplayDate(stockItemTransaction?.dateCreated),
+        location:
+          stockItemTransaction.operationSourcePartyName && stockItemTransaction.operationDestinationPartyName ? (
+            stockItemTransaction.operationSourcePartyName === stockItemTransaction?.partyName ? (
+              stockItemTransaction.quantity > 0 ? (
+                <>
+                  <span className="transaction-location">{stockItemTransaction.operationSourcePartyName}</span>
+                  <ArrowLeft size={16} /> {stockItemTransaction.operationDestinationPartyName}
+                </>
+              ) : (
+                <>
+                  <span className="transaction-location">{stockItemTransaction.operationSourcePartyName}</span>
+                  <ArrowLeft size={16} /> {stockItemTransaction.operationDestinationPartyName}
+                </>
+              )
+            ) : stockItemTransaction.operationDestinationPartyName === stockItemTransaction?.partyName ? (
+              stockItemTransaction.quantity > 0 ? (
+                <>
+                  <span className="transaction-location">{stockItemTransaction.operationDestinationPartyName}</span>
+                  <ArrowLeft size={16} /> {stockItemTransaction.operationSourcePartyName}
+                </>
+              ) : (
+                <>
+                  <span className="transaction-location">{stockItemTransaction.operationDestinationPartyName}</span>
+                  <ArrowLeft size={16} /> {stockItemTransaction.operationSourcePartyName}
+                </>
+              )
             ) : (
-              <>
-                <span className="transaction-location">{stockItemTransaction.operationSourcePartyName}</span>
-                <ArrowLeft size={16} /> {stockItemTransaction.operationDestinationPartyName}
-              </>
-            )
-          ) : stockItemTransaction.operationDestinationPartyName === stockItemTransaction?.partyName ? (
-            stockItemTransaction.quantity > 0 ? (
-              <>
-                <span className="transaction-location">{stockItemTransaction.operationDestinationPartyName}</span>
-                <ArrowLeft size={16} /> {stockItemTransaction.operationSourcePartyName}
-              </>
-            ) : (
-              <>
-                <span className="transaction-location">{stockItemTransaction.operationDestinationPartyName}</span>
-                <ArrowLeft size={16} /> {stockItemTransaction.operationSourcePartyName}
-              </>
+              stockItemTransaction?.partyName
             )
           ) : (
             stockItemTransaction?.partyName
-          )
-        ) : (
-          stockItemTransaction?.partyName
-        ),
-      transaction: stockItemTransaction?.isPatientTransaction
-        ? 'Patient Dispense'
-        : stockItemTransaction.stockOperationTypeName,
-      quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''}`,
-      batch: stockItemTransaction.stockBatchNo
-        ? `${stockItemTransaction.stockBatchNo}${
-            stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
-          }`
-        : '',
-      reference: (
-        <StockOperationReference
-          operationUuid={stockItemTransaction?.stockOperationUuid}
-          operationNumber={stockItemTransaction?.stockOperationNumber}
-        />
-      ),
-      status: stockItemTransaction?.stockOperationStatus ?? '',
-      in:
-        stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${
-              stockItemTransaction.packagingUomFactor
+          ),
+        transaction: stockItemTransaction?.isPatientTransaction
+          ? 'Patient Dispense'
+          : stockItemTransaction.stockOperationTypeName,
+        quantity: `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''}`,
+        batch: stockItemTransaction.stockBatchNo
+          ? `${stockItemTransaction.stockBatchNo}${
+              stockItemTransaction.expiration ? ` (${formatDisplayDate(stockItemTransaction.expiration)})` : ''
             }`
           : '',
-      out:
-        stockItemTransaction?.quantity < 0
-          ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
-              stockItemTransaction?.packagingUomName ?? ''
-            } of ${stockItemTransaction.packagingUomFactor}`
-          : '',
-      totalin:
-        stockItemTransaction?.quantity >= 0
-          ? `${stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
-          : '',
-      totalout:
-        stockItemTransaction?.quantity < 0
-          ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
-          : '',
-    }));
-  }, [items]);
+        reference: (
+          <StockOperationReference
+            operationUuid={stockItemTransaction?.stockOperationUuid}
+            operationNumber={stockItemTransaction?.stockOperationNumber}
+          />
+        ),
+        status: stockItemTransaction?.stockOperationStatus ?? '',
+        in:
+          stockItemTransaction?.quantity >= 0
+            ? `${stockItemTransaction?.quantity?.toLocaleString()} ${stockItemTransaction?.packagingUomName ?? ''} of ${
+                stockItemTransaction.packagingUomFactor
+              }`
+            : '',
+        out:
+          stockItemTransaction?.quantity < 0
+            ? `${(-1 * stockItemTransaction?.quantity)?.toLocaleString()} ${
+                stockItemTransaction?.packagingUomName ?? ''
+              } of ${stockItemTransaction.packagingUomFactor}`
+            : '',
+        totalin:
+          stockItemTransaction?.quantity >= 0
+            ? `${stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
+            : '',
+        totalout:
+          stockItemTransaction?.quantity < 0
+            ? `${-1 * stockItemTransaction?.quantity * Number(stockItemTransaction.packagingUomFactor)}`
+            : '',
+        balance: `${balance} ${stockItemTransaction?.packagingUomName ?? ''}`,
+      };
+    });
+  }, [items, inventory]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -123,7 +129,12 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
     <DataList
       children={() => (
         <>
-          <TransactionsPrintAction columns={binCardHeaders} data={tableRows} itemUuid={stockItemUuid} />
+          <TransactionsPrintAction
+            columns={binCardHeaders}
+            data={tableRows}
+            itemUuid={stockItemUuid}
+            filter={stockItemFilter}
+          />
           <TransactionsLocationsFilter
             onLocationIdChange={(q) => {
               setLocationUuid(q);
