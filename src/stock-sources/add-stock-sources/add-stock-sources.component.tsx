@@ -1,4 +1,4 @@
-import { ModalHeader, ModalBody, ModalFooter, Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
+import { Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
 import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
