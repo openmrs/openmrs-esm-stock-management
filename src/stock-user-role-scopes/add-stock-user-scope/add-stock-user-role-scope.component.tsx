@@ -1,18 +1,21 @@
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
+  ButtonSet,
   Checkbox,
   CheckboxGroup,
-  Form,
-  InlineLoading,
-  Toggle,
-  DatePickerInput,
-  DatePicker,
   ComboBox,
+  DatePicker,
+  DatePickerInput,
+  Form,
+  FormGroup,
+  InlineLoading,
   Select,
   SelectItem,
-  ButtonSet,
+  Stack,
+  Toggle,
 } from '@carbon/react';
-import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './add-stock-user-role-scope.scss';
 import {
   useRoles,
@@ -21,13 +24,6 @@ import {
   useUser,
   useUsers,
 } from '../../stock-lookups/stock-lookups.resource';
-import { ResourceRepresentation } from '../../core/api/api';
-import { useTranslation } from 'react-i18next';
-import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
-import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
-import { restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
-import { UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
-import { UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
@@ -39,10 +35,16 @@ import {
   formatForDatePicker,
   today,
 } from '../../constants';
-import { User } from '../../core/api/types/identity/User';
+import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
+import { handleMutate } from '../../utils';
+import { ResourceRepresentation } from '../../core/api/api';
+import { restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
 import { Role } from '../../core/api/types/identity/Role';
 import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { handleMutate } from '../../utils';
+import { User } from '../../core/api/types/identity/User';
+import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
+import { UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
 
 const MinDate: Date = today();
 
@@ -56,10 +58,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   const { t } = useTranslation();
   const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
-
   const [roles, setRoles] = useState<Role[]>([]);
-
   const loggedInUserUuid = currentUser?.user?.uuid;
+  const [selectedUserUuid, setSelectedUserUuid] = useState<string | null>(null);
+  const { data: user } = useUser(selectedUserUuid);
 
   // operation types
   const {
@@ -71,9 +73,6 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   const { items: users, isLoading: loadingUsers } = useUsers({
     v: ResourceRepresentation.Default,
   });
-
-  const [selectedUserUuid, setSelectedUserUuid] = useState<string | null>(null);
-  const { data: user } = useUser(selectedUserUuid);
 
   // get roles
   const { isLoading: loadingRoles } = useRoles({
@@ -232,199 +231,156 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
       },
     );
   };
+
   if (isLoading || loadingRoles || loadingUsers) {
     return (
       <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
     );
   }
+
   return (
-    <div>
-      <Form className={styles.form}>
-        <section className={styles.section}>
-          <div>
-            {users?.results?.length > 0 && (
-              <>
-                <span className={styles.subTitle}>{t('user', 'User')}</span>
+    <Form className={styles.container}>
+      <Stack className={styles.form} gap={5}>
+        <div>
+          {users?.results?.length > 0 && (
+            <>
+              <FormGroup legendText="">
                 <ComboBox
                   id="userName"
-                  size="md"
-                  labelText={t('user', 'User')}
+                  initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
+                  itemToString={(item) => item?.person?.display || item?.display || ''}
                   items={filteredItems.length ? filteredItems : usersResults}
                   onChange={onUserChanged}
-                  shouldFilterItem={() => true}
-                  itemToString={(item) => `${item?.person?.display ?? item?.display ?? ''}`}
                   onInputChange={handleSearchQueryChange}
-                  placeholder="Filter..."
-                  initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
+                  placeholder={t('chooseAUser', 'Choose a user')}
+                  titleText={t('user', 'User')}
                 />
-              </>
-            )}
-          </div>
-        </section>
-        <section className={styles.section}>
-          <div>
-            <Select
-              name="role"
-              className="select-field"
-              labelText={t('role', 'Role')}
-              id="select-role"
-              value={formModel.role ?? 'placeholder-item'}
-              onChange={onRoleChange}
-            >
-              <SelectItem disabled hidden value="placeholder-item" text={t('chooseARole', 'Choose a role')} />
+              </FormGroup>
+            </>
+          )}
+        </div>
+        <Select labelText={t('role', 'Role')} name="role" onChange={onRoleChange} value={formModel.role}>
+          <SelectItem text={t('chooseARole', 'Choose a role')} value={''} />
+          {editMode ? (
+            <SelectItem key={formModel?.role} value={formModel?.role} text={formModel?.role} />
+          ) : (
+            (user?.roles ?? roles)?.map((role) => (
+              <SelectItem key={role.display} value={role.display} text={role.display} />
+            ))
+          )}
+        </Select>
+        <CheckboxGroup className={styles.checkboxGrid}>
+          <Checkbox
+            checked={formModel?.enabled}
+            id="chk-userEnabled"
+            labelText={t('enabled', 'Enabled?')}
+            onChange={onEnabledChanged}
+            value={model?.enabled}
+          />
+          <Checkbox
+            checked={formModel?.permanent}
+            id="chk-userPermanent"
+            labelText={t('permanent', 'Permanent?')}
+            name="isPermanent"
+            onChange={onPermanentChanged}
+            value={model?.permanent}
+          />
+          {!formModel?.permanent && (
+            <>
+              <DatePicker
+                dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                datePickerType="range"
+                light
+                locale="en"
+                minDate={formatForDatePicker(MinDate)}
+                onChange={onActiveDatesChange}
+              >
+                <DatePickerInput
+                  name="activeFrom"
+                  placeholder={DATE_PICKER_FORMAT}
+                  labelText={t('activeFrom', 'Active from')}
+                  value={formatForDatePicker(formModel?.activeFrom)}
+                />
+                <DatePickerInput
+                  name="activeTo"
+                  placeholder={DATE_PICKER_FORMAT}
+                  labelText={t('activeTo', 'Active to')}
+                  value={formatForDatePicker(formModel?.activeTo)}
+                />
+              </DatePicker>
+            </>
+          )}
+        </CheckboxGroup>
+        <FormGroup legendText={t('stockOperations', 'Stock operations')}>
+          <span className={styles.subTitle}>
+            {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
+          </span>
+        </FormGroup>
+        <CheckboxGroup className={styles.checkboxGrid}>
+          {stockOperations?.length > 0 &&
+            stockOperations.map((type) => (
+              <Checkbox
+                checked={isOperationChecked(type)}
+                className={styles.checkbox}
+                id={type.uuid}
+                labelText={type.name}
+                onChange={(event) => onStockOperationTypeChanged(event)}
+                value={type.uuid}
+              />
+            ))}
+        </CheckboxGroup>
+        <FormGroup legendText={t('locations', 'Locations')}>
+          <span className={styles.subTitle}>
+            {t('toggleMessage', 'Use the toggle to apply this scope to the locations under the selected location.')}
+          </span>
+        </FormGroup>
+        <CheckboxGroup className={styles.checkboxGrid}>
+          {stockLocations?.length > 0 &&
+            stockLocations.map((type) => {
+              const checkedLocation = findCheckedLocation(type);
 
-              {editMode ? (
-                <SelectItem key={formModel?.role} value={formModel?.role} text={formModel?.role} />
-              ) : (
-                (user?.roles ?? roles)?.map((role) => {
-                  return <SelectItem key={role.display} value={role.display} text={role.display} />;
-                })
-              )}
-            </Select>
-          </div>
-        </section>
-        <section className={styles.section}>
-          <CheckboxGroup className={styles.checkboxGrid}>
-            <Checkbox
-              onChange={onEnabledChanged}
-              checked={formModel?.enabled}
-              labelText={t('enabled', 'Enabled ?')}
-              value={model?.enabled}
-              id="chk-userEnabled"
-            />
-            <Checkbox
-              onChange={onPermanentChanged}
-              name="isPermanent"
-              checked={formModel?.permanent}
-              value={model?.permanent}
-              labelText={t('permanent', 'Permanent ?')}
-              id="chk-userPermanent"
-            />
+              const getToggledValue = (locationUuid) => {
+                const location = checkedLocation?.locationUuid === locationUuid ? checkedLocation : null;
+                return location?.enableDescendants === true;
+              };
 
-            {!formModel?.permanent && (
-              <>
-                <DatePicker
-                  datePickerType="range"
-                  light
-                  minDate={formatForDatePicker(MinDate)}
-                  locale="en"
-                  dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                  onChange={onActiveDatesChange}
-                >
-                  <DatePickerInput
-                    id="date-picker-input-id-start"
-                    name="activeFrom"
-                    placeholder={DATE_PICKER_FORMAT}
-                    labelText={t('activeFrom', 'Active From')}
-                    value={formatForDatePicker(formModel?.activeFrom)}
+              return (
+                <div className={styles.flexRow}>
+                  <Checkbox
+                    checked={checkedLocation != null}
+                    className={styles.checkbox}
+                    id={`chk-loc-child-${type.id}`}
+                    key={`chk-loc-child-key-${type.id}`}
+                    labelText={type.name}
+                    name="location"
+                    onChange={(event) => onLocationCheckBoxChanged(event)}
+                    value={type.id}
                   />
-                  <DatePickerInput
-                    id="date-picker-input-id-finish"
-                    name="activeTo"
-                    placeholder={DATE_PICKER_FORMAT}
-                    labelText={t('activeTo', 'Active To')}
-                    value={formatForDatePicker(formModel?.activeTo)}
-                  />
-                </DatePicker>
-              </>
-            )}
-          </CheckboxGroup>
-        </section>
-        <br />
-        <section className={styles.section}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className={styles.sectionTitle}> {t('stockOperation', 'Stock Operations')}</span>
-            <div className={styles.hr} />
-            <span className={styles.subTitle}>
-              {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
-            </span>
-          </div>
-        </section>
-        <section className={styles.section}>
-          <CheckboxGroup className={styles.checkboxGrid}>
-            {stockOperations?.length > 0 &&
-              stockOperations.map((type) => {
-                return (
-                  <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Checkbox
-                      value={type.uuid}
-                      checked={isOperationChecked(type)}
-                      className={styles.checkbox}
-                      onChange={(event) => onStockOperationTypeChanged(event)}
-                      labelText={type.name}
-                      id={type.uuid}
-                    />
-                  </div>
-                );
-              })}
-          </CheckboxGroup>
-        </section>
-        <br />
-        <section className={styles.section}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className={styles.sectionTitle}> {t('locations', 'Locations')}</span>
-            <div className={styles.hr} />
-            <span className={styles.subTitle}>
-              {t('toggleMessage', 'Use the toggle to apply this scope to the locations under the selected location.')}
-            </span>
-          </div>
-        </section>
-        <section className={styles.section}>
-          <CheckboxGroup className={styles.checkboxGrid}>
-            {stockLocations?.length > 0 &&
-              stockLocations.map((type) => {
-                const checkedLocation = findCheckedLocation(type);
-
-                const getToggledValue = (locationUuid) => {
-                  const location = checkedLocation?.locationUuid === locationUuid ? checkedLocation : null;
-                  return location?.enableDescendants === true;
-                };
-
-                return (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      margin: '4px',
-                      padding: '5px',
-                    }}
-                  >
-                    <Checkbox
-                      name="location"
-                      key={`chk-loc-child-key-${type.id}`}
-                      id={`chk-loc-child-${type.id}`}
+                  {checkedLocation && (
+                    <Toggle
+                      className={styles.toggle}
+                      hideLabel
+                      id={`tg-loc-child-${type.id}`}
+                      key={`tg-loc-child-key-${type.id}`}
+                      onToggleClick={getToggledValue(type.id)}
+                      size={'sm'}
                       value={type.id}
-                      onChange={(event) => onLocationCheckBoxChanged(event)}
-                      className={styles.checkbox}
-                      labelText={type.name}
-                      checked={checkedLocation != null}
                     />
-                    {checkedLocation && (
-                      <Toggle
-                        value={type.id}
-                        hideLabel
-                        className={styles.toggle}
-                        size={'sm'}
-                        onToggleClick={getToggledValue(type.id)}
-                        key={`tg-loc-child-key-${type.id}`}
-                        id={`tg-loc-child-${type.id}`}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-          </CheckboxGroup>
-        </section>
-        <ButtonSet>
-          <Button className={styles.button} kind="secondary" onClick={closeWorkspace}>
-            {t('cancel', 'Cancel')}
-          </Button>
-          <Button className={styles.button} type="submit" onClick={addStockUserRole}>
-            {t('save', 'Save')}
-          </Button>
-        </ButtonSet>
-      </Form>
-    </div>
+                  )}
+                </div>
+              );
+            })}
+        </CheckboxGroup>
+      </Stack>
+      <ButtonSet>
+        <Button className={styles.button} kind="secondary" onClick={closeWorkspace}>
+          {t('cancel', 'Cancel')}
+        </Button>
+        <Button className={styles.button} type="submit" onClick={addStockUserRole}>
+          {t('save', 'Save')}
+        </Button>
+      </ButtonSet>
+    </Form>
   );
 };
 

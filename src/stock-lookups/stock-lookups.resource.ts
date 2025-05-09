@@ -175,7 +175,8 @@ export function useUser(id: string, v?: string) {
       data: User;
     },
     Error
-  >(apiUrl, openmrsFetch);
+  >(id ? apiUrl : null, openmrsFetch);
+
   return {
     data: data?.data || <User>{},
     isLoading,
