@@ -16,14 +16,14 @@ import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
 import { handleMutate } from '../../../utils';
 import { createStockItemPackagingUnit, updateStockItemPackagingUnit } from '../../stock-items.resource';
 import PackagingUnitsConceptSelector from '../packaging-units-concept-selector/packaging-units-concept-selector.component';
 import DeleteModalButton from './packaging-units-delete-modal-button.component';
 import { useStockItemPackageUnitsHook } from './packaging-units.resource';
-import { PackageUnitFormData, packageUnitSchema } from './validationSchema';
+import { type PackageUnitFormData, packageUnitSchema } from './validationSchema';
 
 import styles from './packaging-units.scss';
 

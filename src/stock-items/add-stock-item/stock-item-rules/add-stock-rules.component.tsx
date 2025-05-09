@@ -9,13 +9,13 @@ import {
   SelectItem,
   TextInput,
 } from '@carbon/react';
-import { DefaultWorkspaceProps, showSnackbar } from '@openmrs/esm-framework';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { type DefaultWorkspaceProps, showSnackbar } from '@openmrs/esm-framework';
+import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
-import { StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
+import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 import styles from './add-stock-rules.scss';
 import { createOrUpdateStockRule } from './stock-rules.resource';
 

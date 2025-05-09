@@ -1,17 +1,17 @@
 import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import useSWR from 'swr';
-import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
-import { PageableResult } from '../core/api/types/PageableResult';
-import { StockBatchDTO } from '../core/api/types/stockItem/StockBatchDTO';
-import { InventoryGroupBy, StockItemDTO } from '../core/api/types/stockItem/StockItem';
-import { StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
-import { StockItemPackagingUOMDTO } from '../core/api/types/stockItem/StockItemPackagingUOM';
-import { StockItemReference, StockItemReferenceDTO } from '../core/api/types/stockItem/StockItemReference';
-import { StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
-import { StockRule } from '../core/api/types/stockItem/StockRule';
-import { StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
+import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type PageableResult } from '../core/api/types/PageableResult';
+import { type StockBatchDTO } from '../core/api/types/stockItem/StockBatchDTO';
+import { type InventoryGroupBy, type StockItemDTO } from '../core/api/types/stockItem/StockItem';
+import { type StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
+import { type StockItemPackagingUOMDTO } from '../core/api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemReference, type StockItemReferenceDTO } from '../core/api/types/stockItem/StockItemReference';
+import { type StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
+import { type StockRule } from '../core/api/types/stockItem/StockRule';
+import { type StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
 import { z } from 'zod';
-import { stockItemDetailsSchema, StockItemFormData } from './validationSchema';
+import { stockItemDetailsSchema, type StockItemFormData } from './validationSchema';
 
 export interface StockItemFilter extends ResourceFilterCriteria {
   isDrug?: string | null | undefined;

@@ -1,8 +1,8 @@
-import { DefaultWorkspaceProps } from '@openmrs/esm-framework';
+import { type DefaultWorkspaceProps } from '@openmrs/esm-framework';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
-import { TabItem } from '../../core/components/tabs/types';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { type TabItem } from '../../core/components/tabs/types';
 import StockOperationStepper from '../../stock-operations/stock-operations-forms/stock-operation-stepper/stock-operation-stepper.component';
 import BatchInformation from './batch-information/batch-information.component';
 import PackagingUnits from './packaging-units/packaging-units.component';

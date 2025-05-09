@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 
 import { launchWorkspace } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
-import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 
 interface EditStockRulesActionMenuProps {
   data?: StockRule;
