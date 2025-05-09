@@ -1,7 +1,3 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { showSnackbar, restBaseUrl } from '@openmrs/esm-framework';
-import { useTranslation } from 'react-i18next';
-import { useStockItemPackageUnitsHook } from './packaging-units.resource';
 import {
   Button,
   DataTable,
@@ -14,19 +10,22 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import PackagingUnitsConceptSelector from '../packaging-units-concept-selector/packaging-units-concept-selector.component';
-import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
 import { Save } from '@carbon/react/icons';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PackageUnitFormData, packageUnitSchema } from './validationSchema';
+import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
-import { createStockItemPackagingUnit, updateStockItemPackagingUnit } from '../../stock-items.resource';
-import DeleteModalButton from './packaging-units-delete-modal-button.component';
+import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
 import { handleMutate } from '../../../utils';
+import { createStockItemPackagingUnit, updateStockItemPackagingUnit } from '../../stock-items.resource';
+import PackagingUnitsConceptSelector from '../packaging-units-concept-selector/packaging-units-concept-selector.component';
+import DeleteModalButton from './packaging-units-delete-modal-button.component';
+import { useStockItemPackageUnitsHook } from './packaging-units.resource';
+import { PackageUnitFormData, packageUnitSchema } from './validationSchema';
 
 import styles from './packaging-units.scss';
-import { closeOverlay } from '../../../core/components/overlay/hook';
 
 interface PackagingUnitsProps {
   isEditing?: boolean;

@@ -216,6 +216,20 @@
       "type": "form",
       "canMaximize": true,
       "width": "extra-wide"
+    },
+    {
+      "name": "stock-item-rules-form-workspace",
+      "component": "stockItemRulesFormWorkspace",
+      "title": "Stock Item Rules",
+      "type": "form"
+    },
+    {
+      "name": "stock-item-form-workspace",
+      "component": "stockItemFormWorkspace",
+      "title": "Stock Items",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
     }
   ],
   "pages": [

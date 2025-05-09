@@ -35,6 +35,7 @@ const StockOperationStepper: React.FC<StockOperationStepperProps> = ({
               className={`${styles.stepperItem} ${active ? styles.stepperItemActive : ''}`}
               key={index}
               onClick={!disabled ? () => onChange?.(index) : undefined}
+              aria-disabled={disabled}
             >
               <p className={styles.title}>{title}</p>
             </li>
