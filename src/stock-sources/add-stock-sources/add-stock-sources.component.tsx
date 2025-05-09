@@ -4,7 +4,7 @@ import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
-import { DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
@@ -75,8 +75,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   return (
     <div>
       <Form onSubmit={onFormSubmit}>
-        <ModalHeader />
-        <ModalBody>
+        <div className={styles.sourceContainer}>
           <section className={styles.section}>
             <TextInput
               id="fullname"
@@ -109,18 +108,20 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
               onChange={onSourceTypeChange}
             >
               <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
-              {items?.answers?.map((sourceType) => {
-                return <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />;
-              })}
+              {items?.answers?.map((sourceType) => (
+                <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
+              ))}
             </Select>
           </section>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary" onClick={closeWorkspace}>
-            {t('cancel', 'Cancel')}
-          </Button>
-          <Button type="submit">{t('save', 'Save')}</Button>
-        </ModalFooter>
+          <div className={styles.formFooter}>
+            <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+              {t('cancel', 'Cancel')}
+            </Button>
+            <Button type="submit" className={styles.button}>
+              {t('save', 'Save')}
+            </Button>
+          </div>
+        </div>
       </Form>
     </div>
   );

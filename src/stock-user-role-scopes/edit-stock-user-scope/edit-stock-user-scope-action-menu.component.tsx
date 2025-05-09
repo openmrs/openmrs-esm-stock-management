@@ -3,7 +3,7 @@ import { Edit } from '@carbon/react/icons';
 
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 import { launchWorkspace } from '@openmrs/esm-framework';
 
 interface EditStockUserRoleActionsMenuProps {
@@ -15,7 +15,7 @@ const EditStockUserRoleActionsMenu: React.FC<EditStockUserRoleActionsMenuProps> 
 
   const handleClick = useCallback(() => {
     launchWorkspace('stock-user-role-scopes-form-workspace', {
-      workspaceTitle: t('editUserScope', 'Edit UserScope'),
+      workspaceTitle: t('editUserScope', 'Edit User Scope'),
       model: data,
     });
   }, [data, t]);

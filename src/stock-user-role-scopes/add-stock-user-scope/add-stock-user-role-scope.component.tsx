@@ -14,7 +14,7 @@ import {
   Select,
   SelectItem,
 } from '@carbon/react';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { type ChangeEvent, useEffect, useState } from 'react';
 import styles from './add-stock-user-role-scope.scss';
 import {
   useRoles,
@@ -25,11 +25,11 @@ import {
 } from '../../stock-lookups/stock-lookups.resource';
 import { ResourceRepresentation } from '../../core/api/api';
 import { useTranslation } from 'react-i18next';
-import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
-import { DefaultWorkspaceProps, restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
-import { UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
-import { UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
+import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
+import { type UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
+import { type UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
@@ -41,9 +41,9 @@ import {
   formatForDatePicker,
   today,
 } from '../../constants';
-import { User } from '../../core/api/types/identity/User';
-import { Role } from '../../core/api/types/identity/Role';
-import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
+import { type User } from '../../core/api/types/identity/User';
+import { type Role } from '../../core/api/types/identity/Role';
+import { type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { handleMutate } from '../../utils';
 
 const MinDate: Date = today();
@@ -241,8 +241,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   return (
     <div>
       <Form>
-        <ModalHeader />
-        <ModalBody>
+        <div className={styles.userScopeContainer}>
           <section className={styles.section}>
             <div>
               {users?.results?.length > 0 && (
@@ -418,15 +417,15 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
                 })}
             </CheckboxGroup>
           </section>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary" onClick={closeWorkspace}>
-            {t('cancel', 'Cancel')}
-          </Button>
-          <Button type="submit" onClick={addStockUserRole}>
-            {t('save', 'Save')}
-          </Button>
-        </ModalFooter>
+          <div className={styles.button}>
+            <Button kind="secondary" onClick={closeWorkspace}>
+              {t('cancel', 'Cancel')}
+            </Button>
+            <Button type="submit" onClick={addStockUserRole}>
+              {t('save', 'Save')}
+            </Button>
+          </div>
+        </div>
       </Form>
     </div>
   );
