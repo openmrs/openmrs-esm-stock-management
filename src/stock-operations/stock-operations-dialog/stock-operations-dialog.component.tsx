@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { Button, Form, ModalBody, ModalFooter, ModalHeader, TextArea, InlineLoading } from '@carbon/react';
 import styles from './stock-operations-dialog.scss';
-import { StopOperationAction, StopOperationActionType } from '../../core/api/types/stockOperation/StockOperationAction';
+import {
+  type StopOperationAction,
+  type StopOperationActionType,
+} from '../../core/api/types/stockOperation/StockOperationAction';
 import { executeStockOperationAction } from '../stock-operations.resource';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { closeOverlay } from '../../core/components/overlay/hook';

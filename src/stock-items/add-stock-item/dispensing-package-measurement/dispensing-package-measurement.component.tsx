@@ -1,6 +1,6 @@
-import React, { ReactNode, useMemo, useState } from 'react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import React, { type ReactNode, useMemo, useState } from 'react';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { ComboBox, SelectSkeleton } from '@carbon/react';
 
 interface DispensingPackageMeasurementProps<T> {

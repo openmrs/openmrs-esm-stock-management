@@ -1,13 +1,13 @@
-import { FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
+import { type FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import useSWR from 'swr';
-import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
-import { PageableResult } from '../core/api/types/PageableResult';
-import { InventoryGroupBy } from '../core/api/types/stockItem/StockItem';
-import { StopOperationAction } from '../core/api/types/stockOperation/StockOperationAction';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationItemDtoSchema } from './validation-schema';
-import { StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
-import { StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
+import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type PageableResult } from '../core/api/types/PageableResult';
+import { type InventoryGroupBy } from '../core/api/types/stockItem/StockItem';
+import { type StopOperationAction } from '../core/api/types/stockOperation/StockOperationAction';
+import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationItemDtoSchema } from './validation-schema';
+import { type StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
+import { type StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
 
 export interface StockOperationFilter extends ResourceFilterCriteria {
   status?: string | null | undefined;

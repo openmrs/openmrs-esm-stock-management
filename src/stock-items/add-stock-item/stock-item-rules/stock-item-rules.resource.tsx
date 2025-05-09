@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StockRuleFilter, useStockRules } from '../../stock-items.resource';
+import { type StockRuleFilter, useStockRules } from '../../stock-items.resource';
 import { usePagination } from '@openmrs/esm-framework';
 
 export function useStockItemRules(filter: StockRuleFilter) {

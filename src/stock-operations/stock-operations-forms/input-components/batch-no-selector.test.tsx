@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { StockItemInventory } from '../../../core/api/types/stockItem/StockItemInventory';
+import { type StockItemInventory } from '../../../core/api/types/stockItem/StockItemInventory';
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 import BatchNoSelector from './batch-no-selector.component';

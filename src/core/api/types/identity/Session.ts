@@ -1,6 +1,6 @@
-import { SessionLocation } from '@openmrs/esm-framework';
-import { PrivilegeScope } from './PriviledgeScope';
-import { User } from './User';
+import { type SessionLocation } from '@openmrs/esm-framework';
+import { type PrivilegeScope } from './PriviledgeScope';
+import { type User } from './User';
 
 export interface GetSessionResponse {
   sessionId: string;

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
-import { OperationType, StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { OperationType, type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 import useStockOperationLinks from './stock-operations-forms/hooks/useStockOperationLinks';
 import styles from './stock-operations-table.scss';
 import StockOperationRelatedLink from './stock-operations-forms/stock-operation-related-link.component';

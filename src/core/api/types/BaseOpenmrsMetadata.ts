@@ -1,4 +1,4 @@
-import { BaseOpenmrsObject } from './BaseOpenmrsObject';
-import { OpenmrsMetadata } from './OpenmrsMetadata';
+import { type BaseOpenmrsObject } from './BaseOpenmrsObject';
+import { type OpenmrsMetadata } from './OpenmrsMetadata';
 
 export interface BaseOpenmrsMetadata extends BaseOpenmrsObject, OpenmrsMetadata {}

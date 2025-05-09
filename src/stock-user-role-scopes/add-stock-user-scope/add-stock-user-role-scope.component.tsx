@@ -46,6 +46,7 @@ import { UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 import { UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import { UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
 
+
 const MinDate: Date = today();
 
 interface AddStockUserRoleScopeProps {

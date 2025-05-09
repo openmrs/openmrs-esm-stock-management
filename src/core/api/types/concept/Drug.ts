@@ -1,5 +1,5 @@
-import { BaseOpenmrsMetadata } from '../BaseOpenmrsMetadata';
-import { Concept } from './Concept';
+import { type BaseOpenmrsMetadata } from '../BaseOpenmrsMetadata';
+import { type Concept } from './Concept';
 
 export interface Drug extends BaseOpenmrsMetadata {
   drugId: number;

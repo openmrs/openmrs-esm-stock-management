@@ -1,14 +1,12 @@
-import { ComboBox, InlineNotification, SelectSkeleton } from '@carbon/react';
+import { ComboBox, InlineNotification, SelectSkeleton, Column, TextInput } from '@carbon/react';
 import React, { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { User } from '../../../core/api/types/identity/User';
+import { type User } from '../../../core/api/types/identity/User';
 import { useDebounce } from '../../../core/hooks/debounce-hook';
 import { otherUser } from '../../../core/utils/utils';
 import { useUser } from '../../../stock-lookups/stock-lookups.resource';
 import useSearchUser from '../hooks/useSearchUser';
-import { Column } from '@carbon/react';
-import { TextInput } from '@carbon/react';
 
 const UsersSelector = () => {
   const { isLoading, userList, setSearchString } = useSearchUser();

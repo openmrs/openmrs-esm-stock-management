@@ -1,9 +1,9 @@
-import { FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
+import { type FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import React, { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
-import { Party } from '../../../core/api/types/Party';
+import { type Party } from '../../../core/api/types/Party';
 import { LocationTypeLocation, LocationTypeOther } from '../../../core/api/types/stockOperation/LocationType';
-import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 
 const useParties = (stockOperationType: StockOperationType) => {
   const apiUrl = `${restBaseUrl}/stockmanagement/party?v=default`;

@@ -1,4 +1,4 @@
-import { StockOperationStatus } from '../stockOperation/StockOperationStatus';
+import { type StockOperationStatus } from '../stockOperation/StockOperationStatus';
 
 export interface StockItemTransactionDTO {
   uuid: string;

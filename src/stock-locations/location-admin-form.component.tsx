@@ -15,7 +15,7 @@ import {
   FilterableMultiSelect,
 } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { locationData } from '../stock-items/types';
+import { type locationData } from '../stock-items/types';
 import styles from './stock-locations-table.scss';
 import { useLocationTags } from './stock-locations-table.resource';
 

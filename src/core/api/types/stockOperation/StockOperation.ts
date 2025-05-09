@@ -1,11 +1,11 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData';
-import { Patient } from '../identity/Patient';
-import { OpenMRSLocation } from '../Location';
-import { User } from '../identity/User';
-import { StockOperationItem } from './StockOperationItem';
-import { StockOperationStatus } from './StockOperationStatus';
-import { StockOperationType } from './StockOperationType';
-import { Concept } from '../concept/Concept';
+import { type BaseOpenmrsData } from '../BaseOpenmrsData';
+import { type Patient } from '../identity/Patient';
+import { type OpenMRSLocation } from '../Location';
+import { type User } from '../identity/User';
+import { type StockOperationItem } from './StockOperationItem';
+import { type StockOperationStatus } from './StockOperationStatus';
+import { type StockOperationType } from './StockOperationType';
+import { type Concept } from '../concept/Concept';
 
 export interface StockOperation extends BaseOpenmrsData {
   cancelReason: string;

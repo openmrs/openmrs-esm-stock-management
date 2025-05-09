@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
-import { Concept } from '../../../core/api/types/concept/Concept';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import React, { type ReactNode } from 'react';
+import { type Concept } from '../../../core/api/types/concept/Concept';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
 import { useStockSources } from '../../../stock-sources/stock-sources.resource';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { StockSource } from '../../../core/api/types/stockOperation/StockSource';
+import { type StockSource } from '../../../core/api/types/stockOperation/StockSource';
 
 interface PreferredVendorSelectorProps<T> {
   preferredVendorUuid?: string;

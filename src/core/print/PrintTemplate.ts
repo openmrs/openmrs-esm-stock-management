@@ -1,6 +1,6 @@
 import { PrintCss } from './PrintStyles';
 import { PRINT_LOGO } from '../../constants';
-import { GetPrintLogo, PrintLogoData } from '../utils/imageUtils';
+import { GetPrintLogo, type PrintLogoData } from '../utils/imageUtils';
 import { getConfig } from '@openmrs/esm-framework';
 
 export const GetPrintTemplate = (

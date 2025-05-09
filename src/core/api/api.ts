@@ -1,4 +1,4 @@
-import { PagingCriteria } from './types/PageableResult';
+import { type PagingCriteria } from './types/PageableResult';
 
 export enum ResourceRepresentation {
   Default = 'default',

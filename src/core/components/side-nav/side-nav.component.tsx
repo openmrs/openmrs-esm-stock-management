@@ -1,5 +1,5 @@
 import React from 'react';
-import { SideNavItem } from './types';
+import { type SideNavItem } from './types';
 import { SideNav, SideNavItems, SideNavLink } from '@carbon/react';
 import styles from './side-nav.scss';
 import { navigate } from '@openmrs/esm-framework';

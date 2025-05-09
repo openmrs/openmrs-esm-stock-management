@@ -1,25 +1,25 @@
 import { CircleDash } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DefaultWorkspaceProps, parseDate, showSnackbar, useConfig, useSession } from '@openmrs/esm-framework';
+import { type DefaultWorkspaceProps, parseDate, showSnackbar, useConfig, useSession } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FieldError, FormProvider, useForm } from 'react-hook-form';
+import { type FieldError, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ConfigObject } from '../../config-schema';
+import { type ConfigObject } from '../../config-schema';
 import { today } from '../../constants';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import {
   operationFromString,
   OperationType,
-  StockOperationType,
+  type StockOperationType,
   StockOperationTypeIsStockIssue,
 } from '../../core/api/types/stockOperation/StockOperationType';
-import { TabItem } from '../../core/components/tabs/types';
+import { type TabItem } from '../../core/components/tabs/types';
 import { otherUser, pick } from '../../core/utils/utils';
 import {
-  BaseStockOperationItemFormData,
+  type BaseStockOperationItemFormData,
   getStockOperationFormSchema,
   getStockOperationItemFormSchema,
-  StockOperationItemDtoSchema,
+  type StockOperationItemDtoSchema,
 } from '../validation-schema';
 import useOperationTypePermisions from './hooks/useOperationTypePermisions';
 import BaseOperationDetailsFormStep from './steps/base-operation-details-form-step';
@@ -27,7 +27,7 @@ import ReceivedItems from './steps/received-items.component';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
 import StockIssueFormInitializerWithRelatedRequisitionOperation from './stock-issue-form-initializer-with-related-requisition-operation.component';
-import StockItemForm, { StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
+import StockItemForm, { type StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
 
 /**

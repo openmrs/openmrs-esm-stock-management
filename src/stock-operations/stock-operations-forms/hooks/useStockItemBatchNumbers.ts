@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { StockBatchFilter, useStockBatches } from '../../../stock-items/stock-items.resource';
+import { type StockBatchFilter, useStockBatches } from '../../../stock-items/stock-items.resource';
 
 export function useStockItemBatchNumbers(stockItemUuid: string) {
   const [conceptFilter, setConceptFilter] = useState<StockBatchFilter>({
