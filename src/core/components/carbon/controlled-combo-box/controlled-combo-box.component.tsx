@@ -1,5 +1,5 @@
 import React from 'react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { ComboBox } from '@carbon/react';
 
 interface ControlledComboBoxProps<T> {

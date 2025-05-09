@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
 import {
   operationFromString,
   OperationType,
-  StockOperationType,
+  type StockOperationType,
   StockOperationTypeHasPrint,
 } from '../core/api/types/stockOperation/StockOperationType';
 import StockOperationApprovalButton from './stock-operations-dialog/stock-operations-approve-button.component';

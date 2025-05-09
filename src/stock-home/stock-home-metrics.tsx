@@ -6,7 +6,7 @@ import styles from './stock-home.scss';
 import MetricsCard from '../core/components/card/metrics-card-component';
 import useStockList from './useStockList';
 
-import { StockOperationFilter } from '../stock-operations/stock-operations.resource';
+import { type StockOperationFilter } from '../stock-operations/stock-operations.resource';
 import { useDisposalList } from './useDisposalList';
 import { ResourceRepresentation } from '../core/api/api';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';

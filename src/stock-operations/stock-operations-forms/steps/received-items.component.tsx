@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import {
   DataTable,
   Table,

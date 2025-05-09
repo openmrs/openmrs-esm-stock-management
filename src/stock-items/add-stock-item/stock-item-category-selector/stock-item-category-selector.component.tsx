@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
-import { Concept } from '../../../core/api/types/concept/Concept';
+import React, { type ReactNode } from 'react';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
+import { type Concept } from '../../../core/api/types/concept/Concept';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 import { type ConfigObject } from '../../../config-schema';

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import StockItemDetails from './stock-item-details/stock-item-details.component';
 import StockItemRules from './stock-item-rules/stock-item-rules.component';
-import { TabItem } from '../../core/components/tabs/types';
+import { type TabItem } from '../../core/components/tabs/types';
 import PackagingUnits from './packaging-units/packaging-units.component';
 import Transactions from './transactions/transactions.component';
 import BatchInformation from './batch-information/batch-information.component';
 import StockQuantities from './quantities/quantities.component';
 import VerticalTabs from '../../core/components/tabs/vertical-tabs.component';
-import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
-import { SaveStockItem } from '../types';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { type SaveStockItem } from '../types';
 import StockReferences from './stock-item-references/stock-item-references.component';
 
 interface AddStockItemProps {

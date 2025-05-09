@@ -7,7 +7,7 @@ import styles from '../../stock-items-table.scss';
 import { useStockItemBatchInformationHook } from './batch-information.resource';
 import BatchInformationLocationsFilter from './batch-information-locations/batch-information-locations-filter.component';
 import { useForm } from 'react-hook-form';
-import { StockItemInventoryFilter } from '../../stock-items.resource';
+import { type StockItemInventoryFilter } from '../../stock-items.resource';
 
 interface BatchInformationProps {
   onSubmit?: () => void;

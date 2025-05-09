@@ -1,5 +1,5 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData';
-import { LocationType } from './LocationType';
+import { type BaseOpenmrsData } from '../BaseOpenmrsData';
+import { type LocationType } from './LocationType';
 
 export interface StockOperationType extends BaseOpenmrsData {
   name: string;

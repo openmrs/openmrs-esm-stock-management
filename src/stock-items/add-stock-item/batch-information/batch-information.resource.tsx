@@ -1,6 +1,6 @@
 import { ResourceRepresentation } from '../../../core/api/api';
 import { useEffect, useMemo, useState } from 'react';
-import { StockItemInventoryFilter, useStockItemInventory } from '../../stock-items.resource';
+import { type StockItemInventoryFilter, useStockItemInventory } from '../../stock-items.resource';
 
 export function useStockItemBatchInformationHook(filter?: StockItemInventoryFilter) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({

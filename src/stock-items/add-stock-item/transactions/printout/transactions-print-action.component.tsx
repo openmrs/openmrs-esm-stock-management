@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Stack, ComboButton, MenuItem } from '@carbon/react';
 import { Printer } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
@@ -6,8 +6,7 @@ import { useStockItem } from '../../../stock-items.resource';
 import { showModal, useConfig } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../../../../config-schema';
 import styles from './printable-transaction.scss';
-import { useEffect, useMemo, useState } from 'react';
-import { StockItemInventoryFilter, useStockItemTransactions } from '../../../stock-items.resource';
+import { type StockItemInventoryFilter, useStockItemTransactions } from '../../../stock-items.resource';
 import { ResourceRepresentation } from '../../../../core/api/api';
 
 type Props = {

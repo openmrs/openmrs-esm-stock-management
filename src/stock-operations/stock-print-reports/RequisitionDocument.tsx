@@ -6,7 +6,7 @@ import {
   STOCK_OPERATION_PRINT_DISABLE_COSTS,
 } from '../../constants';
 import { printDocument } from '../../core/print/printUtils';
-import { StockOperationPrintData } from './StockOperationReport';
+import { type StockOperationPrintData } from './StockOperationReport';
 
 export const FormatRequisitionDocument = async (data: StockOperationPrintData): Promise<string> => {
   const emptyRowCount: number = Math.max(0, 28 - (data?.items?.length ?? 0));

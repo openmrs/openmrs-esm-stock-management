@@ -1,6 +1,6 @@
-import { BaseOpenmrsData } from '../BaseOpenmrsData';
-import { StockSource } from '../stockOperation/StockSource';
-import { StockItem } from './StockItem';
+import { type BaseOpenmrsData } from '../BaseOpenmrsData';
+import { type StockSource } from '../stockOperation/StockSource';
+import { type StockItem } from './StockItem';
 
 export interface StockItemReference extends BaseOpenmrsData {
   referenceCode: string;

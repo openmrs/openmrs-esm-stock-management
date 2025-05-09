@@ -1,7 +1,7 @@
 import { ComboBox, SelectSkeleton } from '@carbon/react';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
+import { type StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 import { formatForDatePicker } from '../../../constants';

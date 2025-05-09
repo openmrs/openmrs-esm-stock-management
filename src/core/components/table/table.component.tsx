@@ -20,7 +20,7 @@ import {
 } from '@carbon/react';
 import { DocumentDownload } from '@carbon/react/icons';
 import { isDesktop, useLayoutType, usePagination } from '@openmrs/esm-framework';
-import { DataTableRenderProps } from './types';
+import { type DataTableRenderProps } from './types';
 import styles from './table.scss';
 
 type FilterProps = {

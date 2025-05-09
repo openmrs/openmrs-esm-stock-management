@@ -1,5 +1,5 @@
-import { RecordPermission } from '../RecordPermission';
-import { StockItemPackagingUOMDTO } from '../stockItem/StockItemPackagingUOM';
+import { type RecordPermission } from '../RecordPermission';
+import { type StockItemPackagingUOMDTO } from '../stockItem/StockItemPackagingUOM';
 
 export interface StockOperationItemDTO {
   itemIndex?: number;

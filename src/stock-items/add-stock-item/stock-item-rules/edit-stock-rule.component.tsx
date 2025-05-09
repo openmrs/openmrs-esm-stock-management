@@ -5,7 +5,7 @@ import { Edit } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { launchOverlay } from '../../../core/components/overlay/hook';
 import StockRulesAddOrUpdate from './add-stock-rules.component';
-import { StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 
 interface EditStockRulesActionMenuProps {
   data?: StockRule;

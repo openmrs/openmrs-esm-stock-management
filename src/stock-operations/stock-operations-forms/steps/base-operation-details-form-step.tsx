@@ -1,19 +1,28 @@
-import { Button, Column, ComboBox, DatePicker, DatePickerInput, InlineLoading, Stack, TextArea } from '@carbon/react';
+import {
+  Button,
+  Column,
+  ComboBox,
+  DatePicker,
+  DatePickerInput,
+  InlineLoading,
+  Stack,
+  TextArea,
+  TextInput,
+} from '@carbon/react';
 import { ErrorState } from '@openmrs/esm-framework';
-import React, { ChangeEvent, FC, useEffect, useMemo } from 'react';
+import React, { type ChangeEvent, type FC, useEffect, useMemo } from 'react';
 import { Controller, useFormContext, useFormState } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, MAIN_STORE_LOCATION_TAG } from '../../../constants';
-import { Party } from '../../../core/api/types/Party';
-import { StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { OperationType, StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
-import { StockOperationItemDtoSchema } from '../../validation-schema';
+import { type Party } from '../../../core/api/types/Party';
+import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
+import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { type StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import useParties from '../hooks/useParties';
 import StockOperationReasonSelector from '../input-components/stock-operation-reason-selector.component';
 import UsersSelector from '../input-components/users-selector.component';
 import styles from '../stock-operation-form.scss';
-import { TextInput } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
 
 type BaseOperationDetailsFormStepProps = {

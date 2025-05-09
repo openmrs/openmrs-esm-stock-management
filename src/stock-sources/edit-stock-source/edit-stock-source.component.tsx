@@ -5,7 +5,7 @@ import { Edit } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { launchOverlay } from '../../core/components/overlay/hook';
 import StockSourcesAddOrUpdate from '../add-stock-sources/add-stock-sources.component';
-import { StockSource } from '../../core/api/types/stockOperation/StockSource';
+import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 
 interface EditStockSourcesActionMenuProps {
   data?: StockSource;

@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 
-import { Button } from '@carbon/react';
+import { Button, InlineLoading } from '@carbon/react';
 import { Printer } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
-import { StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationItemCost } from '../../core/api/types/stockOperation/StockOperationItemCost';
+import { type StockItemInventory } from '../../core/api/types/stockItem/StockItemInventory';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationItemCost } from '../../core/api/types/stockOperation/StockOperationItemCost';
 
-import { InlineLoading } from '@carbon/react';
 import { showSnackbar } from '@openmrs/esm-framework';
 import { extractErrorMessagesFromResponse } from '../../constants';
 import { ResourceRepresentation } from '../../core/api/api';
 import { OperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { StockItemInventoryFilter } from '../../stock-items/stock-items.resource';
+import { type StockItemInventoryFilter } from '../../stock-items/stock-items.resource';
 import {
   getStockItemInventory,
   getStockOperation,

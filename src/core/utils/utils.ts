@@ -1,4 +1,4 @@
-import { User } from '../api/types/identity/User';
+import { type User } from '../api/types/identity/User';
 
 export const initialStockOperationValue = () => {
   return {

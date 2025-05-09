@@ -1,8 +1,8 @@
 import { launchWorkspace, showModal } from '@openmrs/esm-framework';
-import { TFunction } from 'react-i18next';
+import { type TFunction } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 
 export const launchStockoperationAddOrEditWorkSpace = (
   t: TFunction,

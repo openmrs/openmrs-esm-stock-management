@@ -2,7 +2,7 @@ import { InlineLoading } from '@carbon/react';
 import { ConfigurableLink, showSnackbar, useConfig } from '@openmrs/esm-framework';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ConfigObject } from '../../../config-schema';
+import { type ConfigObject } from '../../../config-schema';
 import { URL_STOCK_ITEM } from '../../../constants';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
 

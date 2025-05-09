@@ -2,7 +2,7 @@ import { InlineLoading } from '@carbon/react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatForDatePicker } from '../../../constants';
-import { StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 

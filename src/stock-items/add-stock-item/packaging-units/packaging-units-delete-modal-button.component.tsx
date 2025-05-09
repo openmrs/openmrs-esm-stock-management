@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Button } from '@carbon/react';
 import { TrashCan } from '@carbon/react/icons';
 import { showModal } from '@openmrs/esm-framework';
-import { StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 
 interface DeleteModalButtonProps {
   row?: StockItemPackagingUOMDTO;
