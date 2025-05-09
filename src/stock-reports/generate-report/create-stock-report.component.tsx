@@ -19,10 +19,16 @@ import { useReportTypes } from '../stock-reports.resource';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../constants';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StockReportSchema, reportSchema } from '../report-validation-schema';
+import { type StockReportSchema, reportSchema } from '../report-validation-schema';
 import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
-import { ConfigObject, DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
-import { Concept } from '../../core/api/types/concept/Concept';
+import {
+  type ConfigObject,
+  type DefaultWorkspaceProps,
+  restBaseUrl,
+  showSnackbar,
+  useConfig,
+} from '@openmrs/esm-framework';
+import { type Concept } from '../../core/api/types/concept/Concept';
 import { createBatchJob } from '../../stock-batch/stock-batch.resource';
 import {
   ReportParameter,
