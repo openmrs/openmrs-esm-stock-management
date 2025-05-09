@@ -3,7 +3,7 @@ import { Button } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 
 import { useTranslation } from 'react-i18next';
-import { StockSource } from '../../core/api/types/stockOperation/StockSource';
+import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { launchWorkspace } from '@openmrs/esm-framework';
 
 interface EditStockSourcesActionMenuProps {

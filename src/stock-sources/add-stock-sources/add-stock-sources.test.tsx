@@ -6,7 +6,7 @@ import StockSourcesAddOrUpdate from './add-stock-sources.component';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
 import { useConfig } from '@openmrs/esm-framework';
 
-import { StockSource } from '../../core/api/types/stockOperation/StockSource';
+import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 
 jest.mock('../stock-sources.resource');
 jest.mock('@openmrs/esm-framework', () => ({
