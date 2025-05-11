@@ -15,14 +15,23 @@
 .modalBody {
   padding-bottom: layout.$spacing-05;
 }
-.sourceContainer {
+.formContainer {
   display: flex;
   flex-direction: column;
-  row-gap: 1rem;
-  padding: 1rem;
+  justify-content: space-between;
+  width: 100%;
   height: 100%;
 }
 
 .button {
-  padding: 1rem;
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
+}
+
+.buttonSet {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

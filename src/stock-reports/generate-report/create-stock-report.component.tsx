@@ -12,7 +12,7 @@ import {
   Form,
   Checkbox,
   NumberInput,
-} from '@carbon/react';
+ ButtonSet } from '@carbon/react';
 import styles from './create-stock-report.scss';
 import { useTranslation } from 'react-i18next';
 import { useReportTypes } from '../stock-reports.resource';
@@ -40,6 +40,7 @@ import {
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
 import { BatchJobTypeReport } from '../../core/api/types/BatchJob';
 import { handleMutate } from '../../utils';
+import { Save } from '@carbon/react/icons';
 
 type CreateReportProps = DefaultWorkspaceProps & {
   model?: ReportModel;
@@ -366,8 +367,8 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <div className={styles.reportContainer}>
+    <div className={styles.formContainer}>
+      <div>
         <>
           <span>{t('reportName', 'Report')}</span>
           <Controller
@@ -639,13 +640,16 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           />
         )}
       </div>
-      <div className={styles.reportButton}>
-        <Button kind="secondary" onClick={closeWorkspace}>
+
+      <ButtonSet className={styles.buttonSet}>
+        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
           {t('cancel', 'Cancel')}
         </Button>
-        <Button type="submit">{t('continue', 'Continue')}</Button>
-      </div>
-    </Form>
+        <Button type="submit" className={styles.button} onClick={() => handleSubmit(onSubmit, onError)}>
+          {t('continue', 'Continue')}
+        </Button>
+      </ButtonSet>
+    </div>
   );
 };
 

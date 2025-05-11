@@ -1,4 +1,4 @@
-import { Button, Form, Select, TextInput, SelectItem } from '@carbon/react';
+import { Button, Form, Select, TextInput, SelectItem , ButtonSet } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
 import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
@@ -8,6 +8,7 @@ import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from
 import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
+import { Save } from '@carbon/react/icons';
 
 type AddStockSourceProps = DefaultWorkspaceProps & {
   model?: StockSource;
@@ -73,56 +74,55 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
     [formModel, model, t, closeWorkspace],
   );
   return (
-    <div>
-      <Form onSubmit={onFormSubmit}>
-        <div className={styles.sourceContainer}>
-          <section className={styles.section}>
-            <TextInput
-              id="fullname"
-              type="text"
-              labelText={t('fullName', 'Full Name')}
-              size="md"
-              onChange={onNameChanged}
-              value={model?.name}
-              placeholder="e.g National Medical Stores"
-            />
-          </section>
-          <section className={styles.section}>
-            <TextInput
-              id="acronym"
-              type="text"
-              size="md"
-              placeholder="e.g NMS"
-              onChange={onAcronymChanged}
-              value={model?.acronym}
-              labelText={t('acronym', 'Acronym/Code')}
-            />
-          </section>
-          <section className={styles.section}>
-            <Select
-              name="sourceType"
-              className="select-field"
-              labelText={t('sourceType', 'Source Type')}
-              id="sourceType"
-              value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
-              onChange={onSourceTypeChange}
-            >
-              <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
-              {items?.answers?.map((sourceType) => (
-                <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
-              ))}
-            </Select>
-          </section>
-          <div className={styles.formFooter}>
-            <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-              {t('cancel', 'Cancel')}
-            </Button>
-            <Button type="submit" className={styles.button}>
-              {t('save', 'Save')}
-            </Button>
-          </div>
-        </div>
-      </Form>
+    <div className={styles.formContainer}>
+      <div>
+        <section className={styles.section}>
+          <TextInput
+            id="fullname"
+            type="text"
+            labelText={t('fullName', 'Full Name')}
+            size="md"
+            onChange={onNameChanged}
+            value={model?.name}
+            placeholder="e.g National Medical Stores"
+          />
+        </section>
+        <section className={styles.section}>
+          <TextInput
+            id="acronym"
+            type="text"
+            size="md"
+            placeholder="e.g NMS"
+            onChange={onAcronymChanged}
+            value={model?.acronym}
+            labelText={t('acronym', 'Acronym/Code')}
+          />
+        </section>
+        <section className={styles.section}>
+          <Select
+            name="sourceType"
+            className="select-field"
+            labelText={t('sourceType', 'Source Type')}
+            id="sourceType"
+            value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
+            onChange={onSourceTypeChange}
+          >
+            <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
+            {items?.answers?.map((sourceType) => (
+              <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
+            ))}
+          </Select>
+        </section>
+      </div>
+
+      <ButtonSet className={styles.buttonSet}>
+        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+          {t('cancel', 'Cancel')}
+        </Button>
+        <Button type="submit" className={styles.button} onClick={() => onFormSubmit} kind="primary" renderIcon={Save}>
+          {t('save', 'Save')}
+        </Button>
+      </ButtonSet>
     </div>
   );
 };

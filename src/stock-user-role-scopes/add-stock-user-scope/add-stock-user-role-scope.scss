@@ -39,21 +39,23 @@
   width: 100%;
 }
 
-.userScopeContainer {
+.formContainer {
   display: flex;
   flex-direction: column;
-  row-gap: 1rem;
-  padding: 1rem;
+  justify-content: space-between;
+  width: 100%;
   height: 100%;
 }
 
-.formFooter {
+.button {
   display: flex;
-  gap: 1rem; /* Space between buttons */
-  margin-top: 1rem;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
 }
 
-.button {
-  flex: 1; /* Each button takes equal and full width */
-  padding: 1rem;
+.buttonSet {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

@@ -2,17 +2,13 @@
 @use '@carbon/styles/scss/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
-.reportContainer {
-  min-height: 15rem;
+.formContainer {
   display: flex;
   flex-direction: column;
-  row-gap: 1rem;
-  padding: 1rem;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 }
-.reportButton {
-  padding: 1rem;
-}
-
 .sectionTitle {
   @include type.type-style('heading-compact-02');
   color: $text-02;
@@ -26,4 +22,17 @@
 
 .modalBody {
   padding-bottom: spacing.$spacing-05;
+}
+
+.button {
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
+}
+
+.buttonSet {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
