@@ -10,7 +10,8 @@ import {
   ComboBox,
   Select,
   SelectItem,
- ButtonSet } from '@carbon/react';
+  ButtonSet,
+} from '@carbon/react';
 import React, { type ChangeEvent, useEffect, useState } from 'react';
 import styles from './add-stock-user-role-scope.scss';
 import {

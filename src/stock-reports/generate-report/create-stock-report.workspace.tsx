@@ -12,7 +12,8 @@ import {
   Form,
   Checkbox,
   NumberInput,
- ButtonSet } from '@carbon/react';
+  ButtonSet,
+} from '@carbon/react';
 import styles from './create-stock-report.scss';
 import { useTranslation } from 'react-i18next';
 import { useReportTypes } from '../stock-reports.resource';

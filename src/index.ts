@@ -141,7 +141,7 @@ export const stockItemRulesFormWorkspace = getAsyncLifecycle(
 );
 
 export const stockSourcesFormWorkspace = getAsyncLifecycle(
-  () => import('./stock-sources/add-stock-sources/add-stock-sources.component'),
+  () => import('./stock-sources/add-stock-sources/add-stock-sources.workspace'),
   options,
 );
 
@@ -156,7 +156,7 @@ export const stockReportsFormWorkspace = getAsyncLifecycle(
 );
 
 export const stockUserScopesFormWorkspace = getAsyncLifecycle(
-  () => import('./stock-user-role-scopes/add-stock-user-scope/add-stock-user-role-scope.component'),
+  () => import('./stock-user-role-scopes/add-stock-user-scope/add-stock-user-role-scope.workspace'),
   options,
 );
 
