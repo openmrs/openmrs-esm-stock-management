@@ -3,9 +3,14 @@ export interface RadioOption {
   value: boolean;
 }
 
+export enum StockItemType {
+  PHARMACEUTICALS = 'Pharmaceuticals',
+  NONE_PHARMACEUTICALS = 'Non Pharmaceuticals',
+}
+
 export const radioOptions: RadioOption[] = [
-  { label: 'Pharmaceuticals', value: true },
-  { label: 'Non Pharmaceuticals', value: false },
+  { label: StockItemType.PHARMACEUTICALS, value: true },
+  { label: StockItemType.NONE_PHARMACEUTICALS, value: false },
 ];
 
 export const expirationOptions: RadioOption[] = [

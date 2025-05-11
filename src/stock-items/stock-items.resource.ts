@@ -10,6 +10,8 @@ import { type StockItemReference, type StockItemReferenceDTO } from '../core/api
 import { type StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
 import { type StockRule } from '../core/api/types/stockItem/StockRule';
 import { type StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
+import { z } from 'zod';
+import { stockItemDetailsSchema, type StockItemFormData } from './validationSchema';
 
 export interface StockItemFilter extends ResourceFilterCriteria {
   isDrug?: string | null | undefined;
@@ -227,11 +229,11 @@ export function deleteStockItemPackagingUnit(id: string) {
 }
 
 // createStockItem
-export function createStockItem(item: StockItemDTO) {
+export function createStockItem(item: StockItemFormData) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitem`;
   const abortController = new AbortController();
   delete item.isDrug;
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<StockItemDTO>(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -242,12 +244,12 @@ export function createStockItem(item: StockItemDTO) {
 }
 
 // updateStockItem
-export function updateStockItem(item: StockItemDTO) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${item.uuid}`;
+export function updateStockItem(stockItemUuid: string, item: StockItemFormData) {
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${stockItemUuid}`;
   const abortController = new AbortController();
   delete item.isDrug;
   delete item.dateCreated;
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<StockItemDTO>(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
