@@ -354,9 +354,6 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
       }
     }
   };
-  const onError = (error: any) => {
-    console.error(error);
-  };
   const getReportParameter = (
     name: string,
     value: string,
@@ -646,7 +643,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
           {t('cancel', 'Cancel')}
         </Button>
-        <Button type="submit" className={styles.button} onClick={() => handleSubmit(onSubmit, onError)}>
+        <Button type="submit" className={styles.button} onClick={() => handleSubmit(onSubmit)}>
           {t('continue', 'Continue')}
         </Button>
       </ButtonSet>

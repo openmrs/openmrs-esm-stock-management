@@ -151,7 +151,7 @@ export const stockLocationsFormWorkspace = getAsyncLifecycle(
 );
 
 export const stockReportsFormWorkspace = getAsyncLifecycle(
-  () => import('./stock-reports/generate-report/create-stock-report.component'),
+  () => import('./stock-reports/generate-report/create-stock-report.workspace'),
   options,
 );
 
