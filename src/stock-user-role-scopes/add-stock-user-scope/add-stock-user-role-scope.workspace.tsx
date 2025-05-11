@@ -239,7 +239,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   }
   return (
     <div className={styles.formContainer}>
-      <div>
+      <div style={{ padding: '1rem' }}>
         <section className={styles.section}>
           <div>
             {users?.results?.length > 0 && (

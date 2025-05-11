@@ -171,7 +171,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
     return <InlineLoading status="active" iconDescription="Loading" description="Loading data..." />;
   }
 
-  const onSubmit = async (report: StockReportSchema) => {
+  const handleSave = async (report: StockReportSchema) => {
     const reportSystemName = (reportTypes as any).find(
       (reportType) => reportType.name === report.reportName,
     )?.systemName;
@@ -366,7 +366,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
 
   return (
     <div className={styles.formContainer}>
-      <div>
+      <div style={{ padding: '1rem' }}>
         <>
           <span>{t('reportName', 'Report')}</span>
           <Controller
@@ -643,7 +643,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
           {t('cancel', 'Cancel')}
         </Button>
-        <Button type="submit" className={styles.button} onClick={() => handleSubmit(onSubmit)}>
+        <Button type="submit" className={styles.button} onClick={handleSave}>
           {t('continue', 'Continue')}
         </Button>
       </ButtonSet>

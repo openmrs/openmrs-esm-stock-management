@@ -38,7 +38,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
     setFormModel({ ...formModel, sourceType: selectedSourceType });
   };
 
-  const onFormSubmit = useCallback(
+  const handleSave = useCallback(
     (event) => {
       event.preventDefault();
       if (model) {
@@ -75,7 +75,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   );
   return (
     <div className={styles.formContainer}>
-      <div>
+      <div style={{ padding: '1rem' }}>
         <section className={styles.section}>
           <TextInput
             id="fullname"
@@ -119,7 +119,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
           {t('cancel', 'Cancel')}
         </Button>
-        <Button type="submit" className={styles.button} onClick={() => onFormSubmit} kind="primary" renderIcon={Save}>
+        <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>
           {t('save', 'Save')}
         </Button>
       </ButtonSet>
