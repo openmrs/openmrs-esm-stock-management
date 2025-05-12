@@ -28,6 +28,7 @@ import {
   restBaseUrl,
   showSnackbar,
   useConfig,
+  getCoreTranslation,
 } from '@openmrs/esm-framework';
 import { type Concept } from '../../core/api/types/concept/Concept';
 import { createBatchJob } from '../../stock-batch/stock-batch.resource';
@@ -366,7 +367,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
 
   return (
     <div className={styles.formContainer}>
-      <div style={{ padding: '1rem' }}>
+      <div className={styles.body}>
         <>
           <span>{t('reportName', 'Report')}</span>
           <Controller
@@ -641,10 +642,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
 
       <ButtonSet className={styles.buttonSet}>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {t('cancel', 'Cancel')}
+          {getCoreTranslation('cancel', 'Cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={handleSave}>
-          {t('continue', 'Continue')}
+          {getCoreTranslation('save', 'Save')}
         </Button>
       </ButtonSet>
     </div>

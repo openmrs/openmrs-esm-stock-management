@@ -15,7 +15,7 @@ const EditStockUserRoleActionsMenu: React.FC<EditStockUserRoleActionsMenuProps> 
 
   const handleClick = useCallback(() => {
     launchWorkspace('stock-user-role-scopes-form-workspace', {
-      workspaceTitle: t('editUserScope', 'Edit User Scope'),
+      workspaceTitle: t('editUserScope', 'Edit user scope role'),
       model: data,
     });
   }, [data, t]);
@@ -24,7 +24,7 @@ const EditStockUserRoleActionsMenu: React.FC<EditStockUserRoleActionsMenuProps> 
     <Button
       kind="ghost"
       onClick={handleClick}
-      iconDescription={t('editUserScope', 'Edit UserScope')}
+      iconDescription={t('editUserScope', 'Edit user scope role')}
       renderIcon={(props) => <Edit size={16} {...props} />}
     />
   );

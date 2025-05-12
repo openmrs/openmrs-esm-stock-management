@@ -25,7 +25,13 @@ import { ResourceRepresentation } from '../../core/api/api';
 import { useTranslation } from 'react-i18next';
 import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 import { createOrUpdateUserRoleScope } from '../stock-user-role-scopes.resource';
-import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useSession } from '@openmrs/esm-framework';
+import {
+  type DefaultWorkspaceProps,
+  restBaseUrl,
+  showSnackbar,
+  useSession,
+  getCoreTranslation,
+} from '@openmrs/esm-framework';
 import { type UserRoleScopeOperationType } from '../../core/api/types/identity/UserRoleScopeOperationType';
 import { type UserRoleScopeLocation } from '../../core/api/types/identity/UserRoleScopeLocation';
 import {
@@ -419,10 +425,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
 
       <ButtonSet className={styles.buttonSet}>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {t('cancel', 'Cancel')}
+          {getCoreTranslation('cancel', 'Cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={addStockUserRole} renderIcon={Save}>
-          {t('save', 'Save')}
+          {getCoreTranslation('save', 'Save')}
         </Button>
       </ButtonSet>
     </div>

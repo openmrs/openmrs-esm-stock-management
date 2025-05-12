@@ -14,7 +14,7 @@ const EditStockSourceActionsMenu: React.FC<EditStockSourcesActionMenuProps> = ({
   const { t } = useTranslation();
   const handleClick = useCallback(() => {
     launchWorkspace('stock-sources-form-workspace', {
-      workspaceTitle: t('editStockSource', 'Edit Stock Source'),
+      workspaceTitle: t('editStockSource', 'Edit stock source'),
       model: data,
     });
   }, [data, t]);
@@ -24,7 +24,7 @@ const EditStockSourceActionsMenu: React.FC<EditStockSourcesActionMenuProps> = ({
       kind="ghost"
       size="md"
       onClick={() => handleClick()}
-      iconDescription={t('editStockItem', 'Edit Stock Item')}
+      iconDescription={t('editStockSource', 'Edit stock source')}
       renderIcon={(props) => <Edit size={16} {...props} />}
     />
   );

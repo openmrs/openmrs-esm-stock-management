@@ -8,13 +8,13 @@ const AddStockSourceActionButton: React.FC = () => {
 
   const handleClick = useCallback(() => {
     launchWorkspace('stock-sources-form-workspace', {
-      workspaceTitle: t('addNewStockSource', 'Add New Source'),
+      workspaceTitle: t('addNewStockSource', 'Add new source'),
     });
   }, [t]);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">
-      {t('addNewStockSource', 'Add New Source')}
+      {t('addNewStockSource', 'Add new source')}
     </Button>
   );
 };

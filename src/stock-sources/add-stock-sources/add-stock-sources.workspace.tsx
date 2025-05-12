@@ -4,7 +4,13 @@ import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
-import { type DefaultWorkspaceProps, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import {
+  type DefaultWorkspaceProps,
+  restBaseUrl,
+  showSnackbar,
+  useConfig,
+  getCoreTranslation,
+} from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
@@ -75,7 +81,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   );
   return (
     <div className={styles.formContainer}>
-      <div style={{ padding: '1rem' }}>
+      <div className={styles.body}>
         <section className={styles.section}>
           <TextInput
             id="fullname"
@@ -117,10 +123,10 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
 
       <ButtonSet className={styles.buttonSet}>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {t('cancel', 'Cancel')}
+          {getCoreTranslation('cancel', 'Cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>
-          {t('save', 'Save')}
+          {getCoreTranslation('save', 'Save')}
         </Button>
       </ButtonSet>
     </div>
