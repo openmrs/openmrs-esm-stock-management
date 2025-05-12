@@ -13,7 +13,7 @@ import { ResourceRepresentation } from '../core/api/api';
 import DataList from '../core/components/table/table.component';
 import { useTranslation } from 'react-i18next';
 import { mutate } from 'swr';
-import NewLocationForm from './add-locations-form.component';
+import NewLocationForm from './add-locations-form.workspace';
 import { Add } from '@carbon/react/icons';
 import { handleMutate } from '../utils';
 import { restBaseUrl } from '@openmrs/esm-framework';

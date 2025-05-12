@@ -146,7 +146,7 @@ export const stockSourcesFormWorkspace = getAsyncLifecycle(
 );
 
 export const stockLocationsFormWorkspace = getAsyncLifecycle(
-  () => import('./stock-locations/add-locations-form.component'),
+  () => import('./stock-locations/add-locations-form.workspace'),
   options,
 );
 
