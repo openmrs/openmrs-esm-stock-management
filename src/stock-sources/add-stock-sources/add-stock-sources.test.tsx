@@ -12,7 +12,15 @@ jest.mock('../stock-sources.resource');
 jest.mock('@openmrs/esm-framework', () => ({
   showSnackbar: jest.fn(),
   useConfig: jest.fn(),
+  getCoreTranslation: jest.fn((key, defaultValue) => {
+    const translations: Record<string, string> = {
+      cancel: 'Cancel',
+      save: 'Save',
+    };
+    return translations[key] ?? defaultValue;
+  }),
 }));
+
 jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
   useConcept: jest.fn(() => ({
     items: {
