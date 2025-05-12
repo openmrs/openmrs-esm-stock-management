@@ -12,17 +12,24 @@ import {
   Form,
   Checkbox,
   NumberInput,
+  ButtonSet,
 } from '@carbon/react';
 import styles from './create-stock-report.scss';
 import { useTranslation } from 'react-i18next';
-import { closeOverlay } from '../../core/components/overlay/hook';
 import { useReportTypes } from '../stock-reports.resource';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../constants';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type StockReportSchema, reportSchema } from '../report-validation-schema';
 import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
-import { type ConfigObject, restBaseUrl, showSnackbar, useConfig } from '@openmrs/esm-framework';
+import {
+  type ConfigObject,
+  type DefaultWorkspaceProps,
+  restBaseUrl,
+  showSnackbar,
+  useConfig,
+  getCoreTranslation,
+} from '@openmrs/esm-framework';
 import { type Concept } from '../../core/api/types/concept/Concept';
 import { createBatchJob } from '../../stock-batch/stock-batch.resource';
 import {
@@ -35,9 +42,11 @@ import {
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
 import { BatchJobTypeReport } from '../../core/api/types/BatchJob';
 import { handleMutate } from '../../utils';
-interface CreateReportProps {
+import { Save } from '@carbon/react/icons';
+
+type CreateReportProps = DefaultWorkspaceProps & {
   model?: ReportModel;
-}
+};
 
 export interface ReportModel {
   reportSystemName?: string;
@@ -67,7 +76,7 @@ export interface ReportModel {
   mostLeastMovingName?: string;
   fullFillment?: string[];
 }
-const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
+const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) => {
   const { t } = useTranslation();
   const { stockItemCategoryUUID } = useConfig<ConfigObject>();
 
@@ -163,7 +172,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
     return <InlineLoading status="active" iconDescription="Loading" description="Loading data..." />;
   }
 
-  const onSubmit = async (report: StockReportSchema) => {
+  const handleSave = async (report: StockReportSchema) => {
     const reportSystemName = (reportTypes as any).find(
       (reportType) => reportType.name === report.reportName,
     )?.systemName;
@@ -314,7 +323,6 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
       };
       await createBatchJob(newItem)
         .then((response) => {
-          closeOverlay();
           if (response.status === 201) {
             showSnackbar({
               title: t('batchJob', 'Batch Job'),
@@ -322,12 +330,14 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
               kind: 'success',
             });
             handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
+            closeWorkspace();
           } else {
             showSnackbar({
               title: t('BatchJobErrorTitle', 'Batch job'),
               subtitle: t('batchJobErrorMessage', 'Error creating batch job'),
               kind: 'error',
             });
+            closeWorkspace();
           }
         })
         .catch(() => {
@@ -336,6 +346,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
             subtitle: t('batchJobErrorMessage', 'Error creating batch job'),
             kind: 'error',
           });
+          closeWorkspace();
         });
       hideSplash = false;
     } finally {
@@ -343,9 +354,6 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
         // setShowSplash(false);
       }
     }
-  };
-  const onError = (error: any) => {
-    console.error(error);
   };
   const getReportParameter = (
     name: string,
@@ -358,8 +366,8 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <div className={styles.reportContainer}>
+    <div className={styles.formContainer}>
+      <div className={styles.body}>
         <>
           <span>{t('reportName', 'Report')}</span>
           <Controller
@@ -631,13 +639,16 @@ const CreateReport: React.FC<CreateReportProps> = ({ model }) => {
           />
         )}
       </div>
-      <div className={styles.reportButton}>
-        <Button kind="secondary" onClick={closeOverlay}>
-          {t('cancel', 'Cancel')}
+
+      <ButtonSet className={styles.buttonSet}>
+        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+          {getCoreTranslation('cancel', 'Cancel')}
         </Button>
-        <Button type="submit">{t('continue', 'Continue')}</Button>
-      </div>
-    </Form>
+        <Button type="submit" className={styles.button} onClick={handleSave}>
+          {getCoreTranslation('save', 'Save')}
+        </Button>
+      </ButtonSet>
+    </div>
   );
 };
 

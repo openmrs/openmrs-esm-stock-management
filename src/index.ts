@@ -139,6 +139,27 @@ export const stockItemRulesFormWorkspace = getAsyncLifecycle(
   () => import('./stock-items/add-stock-item/stock-item-rules/add-stock-rules.component'),
   options,
 );
+
+export const stockSourcesFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-sources/add-stock-sources/add-stock-sources.workspace'),
+  options,
+);
+
+export const stockLocationsFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-locations/add-locations-form.workspace'),
+  options,
+);
+
+export const stockReportsFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-reports/generate-report/create-stock-report.workspace'),
+  options,
+);
+
+export const stockUserScopesFormWorkspace = getAsyncLifecycle(
+  () => import('./stock-user-role-scopes/add-stock-user-scope/add-stock-user-role-scope.workspace'),
+  options,
+);
+
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }

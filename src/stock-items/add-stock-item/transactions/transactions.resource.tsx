@@ -1,6 +1,10 @@
 import { ResourceRepresentation } from '../../../core/api/api';
 import { useEffect, useMemo, useState } from 'react';
-import { StockItemInventoryFilter, useStockItemInventory, useStockItemTransactions } from '../../stock-items.resource';
+import {
+  type StockItemInventoryFilter,
+  useStockItemInventory,
+  useStockItemTransactions,
+} from '../../stock-items.resource';
 
 export function useStockItemsTransactions(filter?: StockItemInventoryFilter) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
