@@ -1,5 +1,6 @@
 @use '@carbon/styles/scss/spacing';
 @use '@carbon/styles/scss/type';
+@use '@carbon/layout';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
 .section {
@@ -25,6 +26,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust the values as needed */
   gap: 16px; /* Adjust the gap between checkboxes */
+  align-items: center;
 }
 
 .hr {
@@ -39,12 +41,15 @@
   width: 100%;
 }
 
-.formContainer {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
   height: 100%;
+}
+
+.form {
+  margin: layout.$spacing-05;
 }
 
 .button {
@@ -58,4 +63,26 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.button {
+  height: layout.$spacing-10;
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
+}
+
+.tablet {
+  padding: layout.$spacing-06 layout.$spacing-05;
+  background-color: white;
+}
+
+.desktop {
+  padding: 0;
+}
+
+.flexRow {
+  display: flex;
+  align-items: center;
 }
