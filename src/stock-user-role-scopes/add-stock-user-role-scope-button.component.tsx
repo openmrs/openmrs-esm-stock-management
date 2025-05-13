@@ -1,5 +1,5 @@
-import { Button } from '@carbon/react';
 import React, { useCallback } from 'react';
+import { Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { launchWorkspace } from '@openmrs/esm-framework';
 
@@ -13,7 +13,7 @@ const AddStockUserRoleScopeActionButton: React.FC = () => {
   }, [t]);
 
   return (
-    <Button onClick={handleClick} size="md" kind="primary">
+    <Button kind="primary" onClick={handleClick} size="md">
       {t('addNewUserRoleScope', 'Add new user role scope')}
     </Button>
   );
