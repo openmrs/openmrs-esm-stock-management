@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
-import { navigate, useLayoutType } from '@openmrs/esm-framework';
-import styles from './stock-home-detail-card.scss';
 import { WarningHex } from '@carbon/react/icons';
+import { showModal } from '@openmrs/esm-framework';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
-import ExpiredStockModal from './stock-home-inventory-expiry.component';
+import styles from './stock-home-detail-card.scss';
 
 const StockHomeInventoryCard = () => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === 'tablet';
-
   const { items: expiryItems, isLoading: inventoryLoading } = useStockInventory();
   const { items: stockItems, isLoading } = useStockInventoryItems();
 
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  if (isLoading || inventoryLoading) return <></>;
+  if (isLoading || inventoryLoading) {
+    return null;
+  }
 
   if (stockItems?.length === 0) {
-    return (
-      <>
-        <p className={styles.content}>{t('inventoryAlertNull', 'No inventory alerts to display')}</p>
-      </>
-    );
+    return <p>{t('noInventoryAlerts', 'No inventory alerts to display')}</p>;
   }
 
   const currentDate = new Date();
@@ -44,6 +37,13 @@ const StockHomeInventoryCard = () => {
     })
     .slice(0, 5);
 
+  const launchExpiredStockModal = () => {
+    const dispose = showModal('expired-stock-modal', {
+      closeModal: () => dispose(),
+      expiredStock: mergedArray,
+    });
+  };
+
   return (
     <>
       {filteredData.map((item, index) => (
@@ -53,10 +53,10 @@ const StockHomeInventoryCard = () => {
             <WarningHex size={40} color={'#DA1E28'} />
           </div>
           <div className={styles.cardText}>
-            <p>EXPIRING STOCK</p>
+            <p>{t('expiringStock', 'Expiring stock')}</p>
             <p>
-              <strong>{item?.drugName}</strong> Batch No: {item?.batchNo} Quantity: {item?.quantity}{' '}
-              {item?.dispensingUnitName}
+              <strong>{item?.drugName}</strong> {t('batchNo', 'Batch No:')} {item?.batchNo} {t('quantity', 'Quantity:')}{' '}
+              {item?.quantity} {item?.dispensingUnitName}
             </p>
           </div>
         </div>
@@ -69,15 +69,12 @@ const StockHomeInventoryCard = () => {
         }}
         kind="ghost"
       >
-        View All
+        {t('viewAll', 'View All')}
       </Button> */}
 
-      <Button onClick={() => setModalOpen(true)} kind="ghost">
-        View All
+      <Button kind="ghost" onClick={launchExpiredStockModal} size="sm">
+        {t('viewAll', 'View All')}
       </Button>
-
-      {/* Expired Stock Modal */}
-      <ExpiredStockModal open={isModalOpen} onClose={() => setModalOpen(false)} expiredStock={mergedArray} />
     </>
   );
 };

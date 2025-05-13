@@ -174,8 +174,16 @@
       "component": "deletePackagingUnitModal"
     },
     {
+      "name": "expired-stock-modal",
+      "component": "expiredStockModal"
+    },
+    {
       "name": "import-bulk-stock-items",
       "component": "importBulkStockItemsModal"
+    },
+    {
+      "name": "receiving-stock-modal",
+      "component": "receivingStockModal"
     },
     {
       "name": "stock-operation-dialog",
@@ -214,7 +222,7 @@
       "width": "extra-wide"
     },
     {
-      "name" : "stock-sources-form-workspace",
+      "name": "stock-sources-form-workspace",
       "component": "stockSourcesFormWorkspace",
       "title": "Stock Sources",
       "type": "form",
@@ -222,7 +230,7 @@
       "width": "extra-wide"
     },
     {
-      "name" : "stock-location-form-workspace",
+      "name": "stock-location-form-workspace",
       "component": "stockLocationsFormWorkspace",
       "title": "Stock Locations",
       "type": "form",
@@ -230,7 +238,7 @@
       "width": "extra-wide"
     },
     {
-      "name" : "stock-user-role-scopes-form-workspace",
+      "name": "stock-user-role-scopes-form-workspace",
       "component": "stockUserScopesFormWorkspace",
       "title": "User Role Scopes",
       "type": "form",
@@ -238,7 +246,7 @@
       "width": "extra-wide"
     },
     {
-      "name" : "stock-reports-form-workspace",
+      "name": "stock-reports-form-workspace",
       "component": "stockReportsFormWorkspace",
       "title": "Reports",
       "type": "form",

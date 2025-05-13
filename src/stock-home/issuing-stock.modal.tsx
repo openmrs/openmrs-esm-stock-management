@@ -1,7 +1,25 @@
 import React from 'react';
-import { Modal, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableContainer } from '@carbon/react';
+import {
+  ModalBody,
+  ModalHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 
-const IssuingStockModal = ({ open, onClose, issuingStock }) => {
+interface IssuingStockModalProps {
+  issuingStock: any[];
+  closeModal: () => void;
+}
+
+const IssuingStockModal = ({ issuingStock, closeModal }: IssuingStockModalProps) => {
+  const { t } = useTranslation();
+
   const headers = [
     { key: 'status', header: 'Status' },
     { key: 'sourceName', header: 'Source' },
@@ -12,15 +30,9 @@ const IssuingStockModal = ({ open, onClose, issuingStock }) => {
   ];
 
   return (
-    <Modal
-      open={open}
-      onRequestClose={onClose}
-      modalHeading="Issued Stock"
-      primaryButtonText="Close"
-      onSecondarySubmit={onClose}
-      size="lg"
-    >
-      <div>
+    <>
+      <ModalHeader closeModal={closeModal} title={t('issuedStock', 'Issued stock')} />
+      <ModalBody>
         {issuingStock && issuingStock.length > 0 ? (
           <TableContainer>
             <Table>
@@ -46,10 +58,10 @@ const IssuingStockModal = ({ open, onClose, issuingStock }) => {
             </Table>
           </TableContainer>
         ) : (
-          <p>No issued stock data available.</p>
+          <p>{t('noIssuedStockDataAvailable', 'No issued stock data available.')}</p>
         )}
-      </div>
-    </Modal>
+      </ModalBody>
+    </>
   );
 };
 
