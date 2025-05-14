@@ -1,6 +1,6 @@
 @use '@carbon/layout';
 @use '@carbon/styles/scss/type';
-@use '~@openmrs/esm-styleguide/src/vars' as *;
+@use '@openmrs/esm-styleguide/src/vars' as *;
 
 .headerBtnContainer {
   background-color: $ui-background;
@@ -74,6 +74,8 @@
 .filterContainer {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: layout.$spacing-05;
 }
 
 .dateAlign {
@@ -82,17 +84,12 @@
 }
 
 .filtersAlign {
-  padding-bottom: layout.$spacing-03;
+  margin-bottom: layout.$spacing-03;
+  min-width: auto;
+  width: auto;
 
   :global(.cds--list-box__menu) {
     min-width: 15rem;
     z-index: 1;
   }
-}
-
-.filterContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: layout.$spacing-05;
 }

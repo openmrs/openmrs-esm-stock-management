@@ -1,9 +1,11 @@
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   DataTable,
   DataTableSkeleton,
   DatePicker,
   DatePickerInput,
   InlineLoading,
+  Link,
   Pagination,
   Table,
   TableBody,
@@ -22,22 +24,18 @@ import {
   TableToolbarSearch,
   TabPanel,
   Tile,
-  Link,
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
-import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
-import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
-import { ResourceRepresentation } from '../core/api/api';
-import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import { handleMutate } from '../utils';
+import { ResourceRepresentation } from '../core/api/api';
+import { useStockOperationPages } from './stock-operations-table.resource';
 import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
 import StockOperationTypesSelector from './stock-operation-types-selector/stock-operation-types-selector.component';
 import StockOperationsFilters from './stock-operations-filters.component';
-import { useStockOperationPages } from './stock-operations-table.resource';
-
 import StockOperationExpandedRow from './add-stock-operation/stock-operations-expanded-row/stock-operation-expanded-row.component';
 import styles from './stock-operations-table.scss';
 
@@ -47,6 +45,7 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
   };
@@ -96,46 +95,48 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
     }
   };
 
-  const tableRows = useMemo(() => {
-    return items?.map((stockOperation, index) => {
-      const threshHold = 1;
-      const itemCountGreaterThanThreshhold = (stockOperation?.stockOperationItems?.length ?? 0) > threshHold;
-      const commonNames =
-        stockOperation?.stockOperationItems
-          ?.slice(0, itemCountGreaterThanThreshhold ? threshHold : undefined)
-          .map((item) => item.commonName)
-          .join(', ') ?? '';
+  const tableRows = useMemo(
+    () =>
+      items?.map((stockOperation, index) => {
+        const threshHold = 1;
+        const itemCountGreaterThanThreshhold = (stockOperation?.stockOperationItems?.length ?? 0) > threshHold;
+        const commonNames =
+          stockOperation?.stockOperationItems
+            ?.slice(0, itemCountGreaterThanThreshhold ? threshHold : undefined)
+            .map((item) => item.commonName)
+            .join(', ') ?? '';
 
-      return {
-        ...stockOperation,
-        id: stockOperation?.uuid,
-        key: `key-${stockOperation?.uuid}`,
-        operationTypeName: `${stockOperation?.operationTypeName}`,
-        operationNumber: (
-          <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={false} showprops={true} />
-        ),
-        stockOperationItems: {
-          commonNames,
-          more: itemCountGreaterThanThreshhold ? stockOperation?.stockOperationItems?.length - threshHold : 0,
-        },
-        status: `${stockOperation?.status}`,
-        source: `${stockOperation?.sourceName ?? ''}`,
-        destination: `${stockOperation?.destinationName ?? ''}`,
-        location: (
-          <>
-            {stockOperation?.sourceName ?? ''}
-            {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
-            {stockOperation?.destinationName ?? ''}
-          </>
-        ),
-        responsiblePerson: `${
-          stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
-        } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
-        operationDate: formatDisplayDate(stockOperation?.operationDate),
-        actions: <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={true} showprops={false} />,
-      };
-    });
-  }, [items]);
+        return {
+          ...stockOperation,
+          id: stockOperation?.uuid,
+          key: `key-${stockOperation?.uuid}`,
+          operationTypeName: `${stockOperation?.operationTypeName}`,
+          operationNumber: (
+            <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={false} showprops={true} />
+          ),
+          stockOperationItems: {
+            commonNames,
+            more: itemCountGreaterThanThreshhold ? stockOperation?.stockOperationItems?.length - threshHold : 0,
+          },
+          status: `${stockOperation?.status}`,
+          source: `${stockOperation?.sourceName ?? ''}`,
+          destination: `${stockOperation?.destinationName ?? ''}`,
+          location: (
+            <>
+              {stockOperation?.sourceName ?? ''}
+              {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
+              {stockOperation?.destinationName ?? ''}
+            </>
+          ),
+          responsiblePerson: `${
+            stockOperation?.responsiblePersonFamilyName ?? stockOperation?.responsiblePersonOther ?? ''
+          } ${stockOperation?.responsiblePersonGivenName ?? ''}`,
+          operationDate: formatDisplayDate(stockOperation?.operationDate),
+          actions: <EditStockOperationActionMenu stockOperation={stockOperation} showIcon={true} showprops={false} />,
+        };
+      }),
+    [items],
+  );
 
   if (isLoading && !filterApplied) {
     return (
@@ -144,26 +145,22 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   }
 
   return (
-    <div className={styles.tableOverride}>
+    <div>
       <TabPanel>{t('stockOperationTrackMovement', 'Stock operations to track movement of stock.')}</TabPanel>
-      <div id="table-tool-bar">
-        <div></div>
-        <div className="right-filters"></div>
-      </div>
       <DataTable
-        rows={tableRows}
         headers={tableHeaders}
-        isSortable={true}
-        useZebraStyles={true}
+        isSortable
+        rows={tableRows}
+        useZebraStyles
         render={({
-          rows,
-          headers,
-          getHeaderProps,
-          getTableProps,
-          getRowProps,
-          onInputChange,
-          getExpandedRowProps,
           expandRow,
+          getExpandedRowProps,
+          getHeaderProps,
+          getRowProps,
+          getTableProps,
+          headers,
+          onInputChange,
+          rows,
         }) => (
           <TableContainer>
             <TableToolbar
@@ -175,34 +172,30 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             >
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch
-                  className={styles.patientListSearch}
                   expanded
+                  labelText={t('searchStockOperations', 'Search stock operations')}
                   onChange={onInputChange}
-                  placeholder="Filter Table"
-                  size="sm"
+                  placeholder={t('searchStockOperations', 'Search stock operations')}
                 />
-                <div className={styles.filterContainer}>
+                <div className={styles.container}>
                   <DatePicker
-                    className={styles.dateAlign}
+                    className={styles.datePicker}
                     datePickerType="range"
                     dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                    onChange={([startDate, endDate]) => handleDateFilterChange([startDate, endDate])}
                     value={[selectedFromDate, selectedToDate]}
-                    onChange={([startDate, endDate]) => {
-                      handleDateFilterChange([startDate, endDate]);
-                    }}
                   >
-                    <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
-                    <DatePickerInput placeholder={DATE_PICKER_FORMAT} />
+                    <DatePickerInput labelText={t('startDate', 'Start date')} placeholder={DATE_PICKER_FORMAT} />
+                    <DatePickerInput labelText={t('endDate', 'End date')} placeholder={DATE_PICKER_FORMAT} />
                   </DatePicker>
-
                   <StockOperationsFilters filterName={StockFilters.SOURCES} onFilterChange={handleOnFilterChange} />
-
                   <StockOperationsFilters filterName={StockFilters.STATUS} onFilterChange={handleOnFilterChange} />
-
                   <StockOperationsFilters filterName={StockFilters.OPERATION} onFilterChange={handleOnFilterChange} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
+                  <TableToolbarAction className={styles.toolbarMenuAction} onClick={handleRefresh}>
+                    {t('refresh', 'Refresh')}
+                  </TableToolbarAction>
                 </TableToolbarMenu>
 
                 <StockOperationTypesSelector />

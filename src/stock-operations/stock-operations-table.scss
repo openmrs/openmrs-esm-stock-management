@@ -1,7 +1,7 @@
+@use '@carbon/colors';
 @use '@carbon/layout';
 @use '@carbon/type';
-@use '@carbon/colors';
-@use '~@openmrs/esm-styleguide/src/vars' as *;
+@use '@openmrs/esm-styleguide/src/vars' as *;
 
 .tileContainer {
   background-color: $ui-02;
@@ -34,23 +34,20 @@
 .toolbarContent {
   display: flex;
   align-items: center;
+  height: layout.$spacing-09;
+  margin-top: layout.$spacing-05;
 }
 
-.filterContainer {
+.container {
   display: flex;
   align-items: center;
-}
-
-.dateAlign {
-  padding-top: layout.$spacing-03;
-  height: 100%;
+  justify-content: space-between;
 }
 
 .filterContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: layout.$spacing-05;
 }
 
 .rowLoadingContainer {
@@ -95,4 +92,16 @@
 
 .relatedTransactionHeader {
   color: colors.$green-50;
+}
+
+.toolbarMenuAction {
+  max-width: none;
+}
+
+.dataTableSkeleton {
+  margin-top: layout.$spacing-09;
+}
+
+.datePicker {
+  margin-bottom: layout.$spacing-05;
 }
