@@ -240,7 +240,23 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       </Column>
       <div className={styles.btnSet}>
         {typeof onNext === 'function' && (
-          <Button kind="primary" onClick={onNext} role="button" renderIcon={ArrowRight}>
+          <Button
+            kind="primary"
+            onClick={async () => {
+              const valid = await form.trigger([
+                'responsiblePersonUuid',
+                'operationDate',
+                'remarks',
+                'sourceUuid',
+                'destinationUuid',
+                'reasonUuid',
+                'responsiblePersonOther',
+              ]);
+              if (valid) onNext();
+            }}
+            role="button"
+            renderIcon={ArrowRight}
+          >
             {t('next', 'Next')}
           </Button>
         )}

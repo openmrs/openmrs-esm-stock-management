@@ -10,11 +10,12 @@ import {
   TextInput,
 } from '@carbon/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DefaultWorkspaceProps, useConfig } from '@openmrs/esm-framework';
+import { useConfig } from '@openmrs/esm-framework';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type z } from 'zod';
+import { type ConfigObject } from '../../../config-schema';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
 import {
   operationFromString,
@@ -25,9 +26,8 @@ import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } 
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
-import styles from './stock-item-form.scss';
 import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
-import { type ConfigObject } from '../../../config-schema';
+import styles from './stock-item-form.scss';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;

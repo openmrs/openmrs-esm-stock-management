@@ -25,6 +25,7 @@ import StockOperationItemBatchNoCell from './stock-operation-item-batch-no-cell.
 import StockOperationItemCell from './stock-operation-item-cell.component';
 import StockoperationItemExpiryCell from './stock-operation-item-expiry-cell.component';
 import styles from './stock-operation-items-form-step.scc.scss';
+import { showSnackbar } from '@openmrs/esm-framework';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -238,7 +239,22 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         />
         <div className={styles.btnSet}>
           {typeof onNext === 'function' && (
-            <Button kind="primary" onClick={onNext} renderIcon={ArrowRight}>
+            <Button
+              kind="primary"
+              onClick={async () => {
+                const valid = await form.trigger(['stockOperationItems']);
+                if (valid) {
+                  onNext();
+                } else {
+                  showSnackbar({
+                    kind: 'error',
+                    title: 'Validation error',
+                    subtitle: 'You must select atleast one item',
+                  });
+                }
+              }}
+              renderIcon={ArrowRight}
+            >
               {t('next', 'Next')}
             </Button>
           )}
