@@ -1,12 +1,13 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Tile } from '@carbon/react';
-import { ArrowRight } from '@carbon/react/icons';
-import styles from './metrics-card.scss';
-import { ConfigurableLink } from '@openmrs/esm-framework';
-import isEmpty from 'lodash-es/isEmpty';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { useTranslation } from 'react-i18next';
+import { ArrowRight } from '@carbon/react/icons';
+import { isEmpty } from 'lodash-es';
+import { Tile } from '@carbon/react';
+import { ConfigurableLink } from '@openmrs/esm-framework';
+import styles from './metrics-card.scss';
+
 dayjs.extend(isSameOrBefore);
 
 interface MetricsCardProps {
@@ -16,8 +17,8 @@ interface MetricsCardProps {
   children?: React.ReactNode;
   view: string;
   count?: { expiry6months: Array<any> };
-  outofstockCount?: { itemsbelowmin: Array<any>; itemsabovemax: Array<any> };
-  disposedCount?: { expired: Array<any>; poorquality: Array<any> };
+  outOfStockCount?: { itemsBelowMin: Array<any>; itemsAboveMax: Array<any> };
+  disposedCount?: { expired: Array<any>; poorQuality: Array<any> };
 }
 const MetricsCard: React.FC<MetricsCardProps> = ({
   label,
@@ -26,7 +27,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
   children,
   view,
   count,
-  outofstockCount,
+  outOfStockCount,
   disposedCount,
 }) => {
   const { t } = useTranslation();
@@ -40,8 +41,8 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         </div>
         {view && (
           <ConfigurableLink className={styles.link} to={`\${openmrsSpaBase}/stock-management/orders`}>
-            <span style={{ fontSize: '0.825rem', marginRight: '0.325rem' }}>{t('view', 'View')}</span>{' '}
-            <ArrowRight size={16} className={styles.viewListBtn} />
+            <span>{t('view', 'View')}</span>
+            <ArrowRight size={16} />
           </ConfigurableLink>
         )}
       </div>
@@ -52,24 +53,26 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         </div>
         {!isEmpty(count) && (
           <div className={styles.countGrid}>
-            <span style={{ color: '#DA1E28' }}>{t('in6Months', 'In 6 months')}</span>
-            <p style={{ color: '#DA1E28' }}>{count.expiry6months?.length}</p>
+            <span />
+            <span className={styles.in6MonthsLabel}>{t('in6Months', 'In 6 months')}</span>
+            <p />
+            <p className={styles.in6MonthsValue}>{count.expiry6months?.length}</p>
           </div>
         )}
-        {!isEmpty(outofstockCount) && (
+        {!isEmpty(outOfStockCount) && (
           <div className={styles.countGrid}>
-            <span style={{ color: '#DA1E28' }}>{t('itemsBelowMin', 'Items Below Min')}</span>
-            <span style={{ color: '#319227' }}>{t('itemsAboveMax', 'Items Above Max')}</span>
-            <p style={{ color: '#DA1E28' }}>{outofstockCount.itemsbelowmin?.length}</p>
-            <p style={{ color: '#319227' }}>{outofstockCount.itemsabovemax?.length}</p>
+            <span className={styles.belowMinLabel}>{t('itemsBelowMin', 'Items Below Min')}</span>
+            <span className={styles.aboveMaxLabel}>{t('itemsAboveMax', 'Items Above Max')}</span>
+            <p className={styles.belowMinValue}>{outOfStockCount.itemsBelowMin?.length}</p>
+            <p className={styles.aboveMaxValue}>{outOfStockCount.itemsAboveMax?.length}</p>
           </div>
         )}
         {!isEmpty(disposedCount) && (
           <div className={styles.countGrid}>
-            <span style={{ color: '#DA1E28' }}>{t('expired', 'Expired')}</span>
-            <span style={{ color: '#FABA5F' }}>{t('poorquality', 'Poor Quality')}</span>
-            <p style={{ color: '#DA1E28' }}>{disposedCount.expired?.length}</p>
-            <p style={{ color: '#FABA5F' }}>{disposedCount.poorquality?.length}</p>
+            <span className={styles.expiredLabel}>{t('expired', 'Expired')}</span>
+            <span className={styles.poorQualityLabel}>{t('poorQuality', 'Poor Quality')}</span>
+            <p className={styles.expiredValue}>{disposedCount.expired?.length}</p>
+            <p className={styles.poorQualityValue}>{disposedCount.poorQuality?.length}</p>
           </div>
         )}
       </div>

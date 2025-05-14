@@ -1,7 +1,25 @@
 import React from 'react';
-import { Modal, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableContainer } from '@carbon/react';
+import {
+  ModalBody,
+  ModalHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 
-const ExpiredStockModal = ({ open, onClose, expiredStock }) => {
+interface ExpiredStockModalProps {
+  closeModal: () => void;
+  expiredStock: any[];
+}
+
+const ExpiredStockModal = ({ closeModal, expiredStock }: ExpiredStockModalProps) => {
+  const { t } = useTranslation();
+
   const headers = [
     { key: 'drugName', header: 'Drug Name' },
     { key: 'batchNo', header: 'Batch No' },
@@ -21,15 +39,9 @@ const ExpiredStockModal = ({ open, onClose, expiredStock }) => {
   };
 
   return (
-    <Modal
-      open={open}
-      onRequestClose={onClose}
-      modalHeading="Expired Stock"
-      primaryButtonText="Close"
-      onSecondarySubmit={onClose}
-      size="lg"
-    >
-      <div>
+    <>
+      <ModalHeader closeModal={closeModal} title={t('expiredStock', 'Expired stock')} />
+      <ModalBody>
         {expiredStock.length > 0 ? (
           <TableContainer>
             <Table>
@@ -54,10 +66,10 @@ const ExpiredStockModal = ({ open, onClose, expiredStock }) => {
             </Table>
           </TableContainer>
         ) : (
-          <p>No expired stock data available.</p>
+          <p>{t('noExpiredStockDataAvailable', 'No expired stock data available.')}</p>
         )}
-      </div>
-    </Modal>
+      </ModalBody>
+    </>
   );
 };
 

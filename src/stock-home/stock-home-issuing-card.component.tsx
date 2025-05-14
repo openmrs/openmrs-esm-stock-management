@@ -1,32 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
-import { navigate, useLayoutType } from '@openmrs/esm-framework';
-import styles from './stock-home-detail-card.scss';
 import { ResourceRepresentation } from '../core/api/api';
-import { DocumentImport } from '@carbon/react/icons';
+import { DocumentImport, View } from '@carbon/react/icons';
+import { showModal } from '@openmrs/esm-framework';
 import { useStockIssuing } from './stock-home-issuing.resource';
-import IssuingStockModal from './stock-home-issuing-modal.component';
+import styles from './stock-home-detail-card.scss';
 
 const StockHomeIssuingCard = () => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === 'tablet';
 
   const { items, isLoading } = useStockIssuing({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
 
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  if (isLoading) return <></>;
+  if (isLoading) {
+    return null;
+  }
 
   if (items?.length === 0) {
-    return (
-      <>
-        <p className={styles.content}>{t('issuingNull', 'No issued to display')}</p>
-      </>
-    );
+    return <p className={styles.content}>{t('noIssuedStock', 'No issued stock to display')}</p>;
   }
 
   const itemsToDisplay = items?.map((item, index) => {
@@ -49,6 +43,13 @@ const StockHomeIssuingCard = () => {
 
   const flattenedItemsToDisplay = itemsToDisplay?.flat().slice(0, 10);
 
+  const launchIssuingStockModal = () => {
+    const dispose = showModal('issuing-stock-modal', {
+      closeModal: () => dispose(),
+      issuingStock: items,
+    });
+  };
+
   return (
     <>
       {flattenedItemsToDisplay?.map((item, index) => (
@@ -67,21 +68,9 @@ const StockHomeIssuingCard = () => {
           </div>
         </div>
       ))}
-      {/* <Button
-        onClick={() => {
-          navigate({
-            to: `${window.getOpenmrsSpaBase()}stock-management/requisitions`,
-          });
-        }}
-        kind="ghost"
-      >
-        View All
-      </Button> */}
-      <Button onClick={() => setModalOpen(true)} kind="ghost">
-        View All
+      <Button kind="ghost" onClick={launchIssuingStockModal} size="sm">
+        {t('viewAll', 'View All')}
       </Button>
-
-      <IssuingStockModal open={isModalOpen} onClose={() => setModalOpen(false)} issuingStock={items} />
     </>
   );
 };
