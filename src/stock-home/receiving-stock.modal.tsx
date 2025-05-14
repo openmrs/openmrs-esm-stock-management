@@ -1,26 +1,33 @@
 import React from 'react';
-import { Modal, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableContainer } from '@carbon/react';
+import {
+  ModalBody,
+  ModalHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 
-const ReceivingStockModal = ({ open, onClose, receivingStock }) => {
+const ReceivingStockModal = ({ closeModal, receivingStock }) => {
+  const { t } = useTranslation();
+
   const headers = [
-    { key: 'status', header: 'Status' },
-    { key: 'sourceName', header: 'Source' },
-    { key: 'destinationName', header: 'Destination' },
-    { key: 'stockItemName', header: 'Stock Item' },
-    { key: 'stockItemPackagingUOMName', header: 'Unit' },
-    { key: 'quantity', header: 'Quantity' },
+    { key: 'status', header: t('status', 'Status') },
+    { key: 'sourceName', header: t('source', 'Source') },
+    { key: 'destinationName', header: t('destination', 'Destination') },
+    { key: 'stockItemName', header: t('stockItem', 'Stock Item') },
+    { key: 'stockItemPackagingUOMName', header: t('unit', 'Unit') },
+    { key: 'quantity', header: t('quantity', 'Quantity') },
   ];
 
   return (
-    <Modal
-      open={open}
-      onRequestClose={onClose}
-      modalHeading="Received Stock"
-      primaryButtonText="Close"
-      onSecondarySubmit={onClose}
-      size="lg"
-    >
-      <div>
+    <>
+      <ModalHeader closeModal={closeModal} title={t('receivedStock', 'Received stock')} />
+      <ModalBody>
         {receivingStock && receivingStock.length > 0 ? (
           <TableContainer>
             <Table>
@@ -48,10 +55,10 @@ const ReceivingStockModal = ({ open, onClose, receivingStock }) => {
             </Table>
           </TableContainer>
         ) : (
-          <p>No received stock data available.</p>
+          <p>{t('noReceivedStockDataAvailable', 'No received stock data available.')}</p>
         )}
-      </div>
-    </Modal>
+      </ModalBody>
+    </>
   );
 };
 
