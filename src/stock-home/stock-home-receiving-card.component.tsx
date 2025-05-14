@@ -50,16 +50,6 @@ const StockHomeReceivingCard = () => {
           </div>
         )),
       )}
-      {/* <Button
-        onClick={() => {
-          navigate({
-            to: `${window.getOpenmrsSpaBase()}stock-management/orders`,
-          });
-        }}
-        kind="ghost"
-      >
-        {t('receivedView', 'View All')}
-      </Button> */}
       <Button kind="ghost" onClick={launchReceivingStockModal} size="sm">
         {t('viewAll', 'View All')}
       </Button>

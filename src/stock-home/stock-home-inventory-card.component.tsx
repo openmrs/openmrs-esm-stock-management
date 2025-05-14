@@ -61,17 +61,6 @@ const StockHomeInventoryCard = () => {
           </div>
         </div>
       ))}
-      {/* <Button
-        onClick={() => {
-          navigate({
-            to: `${window.getOpenmrsSpaBase()}stock-management/expired-stock`,
-          });
-        }}
-        kind="ghost"
-      >
-        {t('viewAll', 'View All')}
-      </Button> */}
-
       <Button kind="ghost" onClick={launchExpiredStockModal} size="sm">
         {t('viewAll', 'View All')}
       </Button>

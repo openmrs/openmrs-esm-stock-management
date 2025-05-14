@@ -68,16 +68,6 @@ const StockHomeIssuingCard = () => {
           </div>
         </div>
       ))}
-      {/* <Button
-        onClick={() => {
-          navigate({
-            to: `${window.getOpenmrsSpaBase()}stock-management/requisitions`,
-          });
-        }}
-        kind="ghost"
-      >
-        {t('viewAll', 'View All')}
-      </Button> */}
       <Button kind="ghost" onClick={launchIssuingStockModal} size="sm">
         {t('viewAll', 'View All')}
       </Button>
