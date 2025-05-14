@@ -1,24 +1,16 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import { showModal, showSnackbar } from '@openmrs/esm-framework';
+import { type FetchResponse, showModal, showSnackbar } from '@openmrs/esm-framework';
 import { deleteStockSource } from '../stock-sources.resource';
-import StockSourcesDeleteActionMenu from './stock-sources-delete.component';
-import DeleteConfirmation from '../../stock-user-role-scopes/delete-stock-user-scope-modal.component';
 import { handleMutate } from '../../utils';
+import DeleteConfirmation from '../../stock-user-role-scopes/delete-stock-user-scope-modal.component';
+import StockSourcesDeleteActionMenu from './stock-sources-delete.component';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key) => key,
-  }),
-}));
-
-jest.mock('@openmrs/esm-framework', () => ({
-  showModal: jest.fn(),
-  showSnackbar: jest.fn(),
-  restBaseUrl: 'http://localhost:8080',
-}));
+const mockDeleteStockSource = jest.mocked(deleteStockSource);
+const mockHandleMutate = jest.mocked(handleMutate);
+const mockShowModal = jest.mocked(showModal);
+const mockShowSnackbar = jest.mocked(showSnackbar);
 
 jest.mock('../stock-sources.resource', () => ({
   deleteStockSource: jest.fn(),
@@ -34,7 +26,8 @@ describe('StockSourcesDeleteActionMenu', () => {
 
   it('renders the delete button correctly', () => {
     render(<StockSourcesDeleteActionMenu uuid={uuid} />);
-    const button = screen.getByRole('button', { name: 'deleteSource' });
+
+    const button = screen.getByRole('button', { name: /delete source/i });
     expect(button).toBeInTheDocument();
   });
 
@@ -42,9 +35,10 @@ describe('StockSourcesDeleteActionMenu', () => {
     const user = userEvent.setup();
     render(<StockSourcesDeleteActionMenu uuid={uuid} />);
 
-    const button = screen.getByRole('button', { name: 'deleteSource' });
+    const button = screen.getByRole('button', { name: /delete source/i });
     await user.click(button);
-    expect(showModal).toHaveBeenCalledWith(
+
+    expect(mockShowModal).toHaveBeenCalledWith(
       'delete-stock-modal',
       expect.objectContaining({
         close: expect.any(Function),
@@ -61,9 +55,9 @@ describe('StockSourcesDeleteActionMenu', () => {
 
     render(<DeleteConfirmation close={mockClose} onConfirmation={mockOnConfirmation} />);
 
-    expect(screen.getByText(/deleteStockUserScope/i)).toBeInTheDocument();
+    expect(screen.getByText(/delete stock user scope/i)).toBeInTheDocument();
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /danger delete/i });
     await user.click(deleteButton);
 
     expect(mockOnConfirmation).toHaveBeenCalledTimes(1);
@@ -85,7 +79,7 @@ describe('StockSourcesDeleteActionMenu', () => {
       />,
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /danger delete/i });
     await user.click(deleteButton);
 
     expect(mockOnConfirmation).toHaveBeenCalledTimes(1);
@@ -94,7 +88,7 @@ describe('StockSourcesDeleteActionMenu', () => {
 
   it('calls handleMutate with the correct URL on successful deletion', async () => {
     const user = userEvent.setup();
-    (deleteStockSource as jest.Mock).mockResolvedValueOnce({});
+    mockDeleteStockSource.mockResolvedValueOnce({} as FetchResponse<any>);
 
     const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
@@ -109,18 +103,17 @@ describe('StockSourcesDeleteActionMenu', () => {
       />,
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /danger delete/i });
     await user.click(deleteButton);
 
-    expect(deleteStockSource).toHaveBeenCalledWith([uuid]);
-    expect(handleMutate).toHaveBeenCalledWith('/openmrs/ws/rest/v1/stocksource');
+    expect(mockDeleteStockSource).toHaveBeenCalledWith([uuid]);
+    expect(mockHandleMutate).toHaveBeenCalledWith('/openmrs/ws/rest/v1/stocksource');
   });
 
   it('calls showSnackbar with the correct parameters on deletion error', async () => {
     const user = userEvent.setup();
-    (deleteStockSource as jest.Mock).mockRejectedValueOnce(new Error('Deletion failed'));
+    mockDeleteStockSource.mockRejectedValueOnce(new Error('Deletion failed'));
 
-    const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
 
     render(
@@ -139,11 +132,11 @@ describe('StockSourcesDeleteActionMenu', () => {
       />,
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /danger delete/i });
     await user.click(deleteButton);
 
-    expect(deleteStockSource).toHaveBeenCalledWith([uuid]);
-    expect(showSnackbar).toHaveBeenCalledWith({
+    expect(mockDeleteStockSource).toHaveBeenCalledWith([uuid]);
+    expect(mockShowSnackbar).toHaveBeenCalledWith({
       title: 'stockSourceDeleteError',
       kind: 'error',
     });
@@ -151,9 +144,8 @@ describe('StockSourcesDeleteActionMenu', () => {
 
   it('handles the error state correctly when the delete action fails', async () => {
     const user = userEvent.setup();
-    (deleteStockSource as jest.Mock).mockRejectedValueOnce(new Error('Deletion failed'));
+    mockDeleteStockSource.mockRejectedValueOnce(new Error('Deletion failed'));
 
-    const mockOnConfirmation = jest.fn();
     const mockClose = jest.fn();
 
     render(
@@ -172,12 +164,11 @@ describe('StockSourcesDeleteActionMenu', () => {
       />,
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /danger delete/i });
     await user.click(deleteButton);
 
-    expect(deleteStockSource).toHaveBeenCalledWith([uuid]);
-
-    expect(showSnackbar).toHaveBeenCalledWith({
+    expect(mockDeleteStockSource).toHaveBeenCalledWith([uuid]);
+    expect(mockShowSnackbar).toHaveBeenCalledWith({
       title: 'stockSourceDeleteError',
       kind: 'error',
     });

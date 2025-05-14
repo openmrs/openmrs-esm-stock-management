@@ -1,6 +1,6 @@
-@use '@carbon/styles/scss/colors';
+@use '@carbon/colors';
 @use '@carbon/layout';
-@use '@carbon/styles/scss/type';
+@use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
 .container {
@@ -216,4 +216,8 @@
   color: $interactive-01;
   margin-top: 0.5rem;
   cursor: pointer;
+}
+
+.toolbarMenuAction {
+  max-width: none;
 }

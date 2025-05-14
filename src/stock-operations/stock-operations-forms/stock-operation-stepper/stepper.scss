@@ -5,8 +5,7 @@
 .layer {
   display: flex;
   flex-direction: row;
-  gap: layout.$spacing-05;
-  padding: layout.$spacing-03;
+  padding: 0 layout.$spacing-03 0;
   height: 100%;
 }
 
@@ -40,5 +39,4 @@
 
 .content {
   flex: 1;
-  overflow: auto;
 }

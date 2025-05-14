@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ModalHeader, ModalBody, ModalFooter } from '@carbon/react';
+import { getCoreTranslation } from '@openmrs/esm-framework';
 import styles from './delete-stock-user-scope-modal.scss';
 
 interface DeleteConfirmationProps {
@@ -26,7 +27,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ close, onConfir
       </ModalBody>
       <ModalFooter>
         <Button size="lg" kind="secondary" onClick={handleCancel}>
-          {t('cancel', 'Cancel')}
+          {getCoreTranslation('cancel')}
         </Button>
         <Button autoFocus kind="danger" onClick={handleDelete} size="lg">
           {t('delete', 'Delete')}
