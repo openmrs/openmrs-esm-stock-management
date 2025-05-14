@@ -1,13 +1,17 @@
 @use '@carbon/styles/scss/spacing';
 @use '@carbon/styles/scss/type';
+@use '@carbon/layout';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
-.formContainer {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
   height: 100%;
+}
+
+.form {
+  margin: layout.$spacing-05;
 }
 
 .button {
@@ -25,4 +29,9 @@
 
 .body {
   padding: 1rem;
+}
+
+.flexRow {
+  display: flex;
+  align-items: center;
 }

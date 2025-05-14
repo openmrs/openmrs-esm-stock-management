@@ -1,4 +1,4 @@
-import { Button, Form, Select, TextInput, SelectItem, ButtonSet } from '@carbon/react';
+import { Button, Form, Select, TextInput, SelectItem, ButtonSet, FormGroup, Stack } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
 import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
@@ -80,9 +80,9 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
     [formModel, model, t, closeWorkspace],
   );
   return (
-    <div className={styles.formContainer}>
-      <div className={styles.body}>
-        <section className={styles.section}>
+    <Form className={styles.container}>
+      <Stack className={styles.form} gap={5}>
+        <FormGroup legendText={''}>
           <TextInput
             id="fullname"
             type="text"
@@ -92,8 +92,8 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
             value={model?.name}
             placeholder="e.g National Medical Stores"
           />
-        </section>
-        <section className={styles.section}>
+        </FormGroup>
+        <FormGroup legendText={''}>
           <TextInput
             id="acronym"
             type="text"
@@ -103,25 +103,23 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
             value={model?.acronym}
             labelText={t('acronym', 'Acronym/Code')}
           />
-        </section>
-        <section className={styles.section}>
-          <Select
-            name="sourceType"
-            className="select-field"
-            labelText={t('sourceType', 'Source Type')}
-            id="sourceType"
-            value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
-            onChange={onSourceTypeChange}
-          >
-            <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
-            {items?.answers?.map((sourceType) => (
-              <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
-            ))}
-          </Select>
-        </section>
-      </div>
+        </FormGroup>
+        <Select
+          name="sourceType"
+          className="select-field"
+          labelText={t('sourceType', 'Source Type')}
+          id="sourceType"
+          value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
+          onChange={onSourceTypeChange}
+        >
+          <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
+          {items?.answers?.map((sourceType) => (
+            <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
+          ))}
+        </Select>
+      </Stack>
 
-      <ButtonSet className={styles.buttonSet}>
+      <ButtonSet>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
           {getCoreTranslation('cancel', 'Cancel')}
         </Button>
@@ -129,7 +127,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
           {getCoreTranslation('save', 'Save')}
         </Button>
       </ButtonSet>
-    </div>
+    </Form>
   );
 };
 
