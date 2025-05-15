@@ -1,48 +1,48 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
-  InlineLoading,
+  ButtonSet,
+  Checkbox,
   ComboBox,
-  DatePickerInput,
   DatePicker,
+  DatePickerInput,
+  InlineLoading,
+  NumberInput,
+  RadioButton,
+  RadioButtonGroup,
   Select,
   SelectItem,
-  RadioButtonGroup,
-  RadioButton,
-  Form,
-  Checkbox,
-  NumberInput,
-  ButtonSet,
 } from '@carbon/react';
-import styles from './create-stock-report.scss';
-import { useTranslation } from 'react-i18next';
-import { useReportTypes } from '../stock-reports.resource';
-import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../constants';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { type StockReportSchema, reportSchema } from '../report-validation-schema';
-import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
 import {
   type ConfigObject,
   type DefaultWorkspaceProps,
+  getCoreTranslation,
   restBaseUrl,
   showSnackbar,
   useConfig,
-  getCoreTranslation,
+  useLayoutType,
 } from '@openmrs/esm-framework';
-import { type Concept } from '../../core/api/types/concept/Concept';
-import { createBatchJob } from '../../stock-batch/stock-batch.resource';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  ReportParameter,
   getParamDefaultLimit,
   getReportEndDateLabel,
   getReportLimitLabel,
   getReportStartDateLabel,
+  ReportParameter,
 } from '../ReportType';
-import { formatDisplayDate } from '../../core/utils/datetimeUtils';
+import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../constants';
 import { BatchJobTypeReport } from '../../core/api/types/BatchJob';
+import { createBatchJob } from '../../stock-batch/stock-batch.resource';
+import { formatDisplayDate } from '../../core/utils/datetimeUtils';
 import { handleMutate } from '../../utils';
-import { Save } from '@carbon/react/icons';
+import { type Concept } from '../../core/api/types/concept/Concept';
+import { type StockReportSchema, reportSchema } from '../report-validation-schema';
+import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
+import { useReportTypes } from '../stock-reports.resource';
+import styles from './create-stock-report.scss';
 
 type CreateReportProps = DefaultWorkspaceProps & {
   model?: ReportModel;
@@ -76,9 +76,11 @@ export interface ReportModel {
   mostLeastMovingName?: string;
   fullFillment?: string[];
 }
+
 const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) => {
   const { t } = useTranslation();
   const { stockItemCategoryUUID } = useConfig<ConfigObject>();
+  const isTablet = useLayoutType() === 'tablet';
 
   const { reportTypes, isLoading } = useReportTypes();
   const { stockLocations } = useStockTagLocations();
@@ -640,12 +642,17 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
         )}
       </div>
 
-      <ButtonSet className={styles.buttonSet}>
+      <ButtonSet
+        className={classNames(styles.buttonSet, {
+          [styles.tablet]: isTablet,
+          [styles.desktop]: !isTablet,
+        })}
+      >
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {getCoreTranslation('cancel', 'Cancel')}
+          {getCoreTranslation('cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={handleSave}>
-          {getCoreTranslation('save', 'Save')}
+          {getCoreTranslation('save')}
         </Button>
       </ButtonSet>
     </div>

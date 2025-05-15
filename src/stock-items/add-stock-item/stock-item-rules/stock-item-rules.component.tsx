@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { ResourceRepresentation } from '../../../core/api/api';
-import { useStockItemRules } from './stock-item-rules.resource';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   DataTable,
+  DataTableSkeleton,
   Pagination,
   Table,
   TableBody,
@@ -12,22 +12,22 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarContent,
-  Tile,
   TableToolbarAction,
+  TableToolbarContent,
   TableToolbarMenu,
-  DataTableSkeleton,
   TableToolbarSearch,
+  Tile,
 } from '@carbon/react';
-import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
-import styles from '../../stock-items-table.scss';
-import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
-import AddStockRuleActionButton from './add-stock-rule-button.component';
 import { isDesktop } from '@openmrs/esm-framework';
-import StockRulesFilter from './stock-rules-filter.component';
-import { useTranslation } from 'react-i18next';
-import StockRulesDeleteActionMenu from './stock-rules-delete.component';
+import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
+import { ResourceRepresentation } from '../../../core/api/api';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { useStockItemRules } from './stock-item-rules.resource';
+import AddStockRuleActionButton from './add-stock-rule-button.component';
 import EditStockRuleActionsMenu from './edit-stock-rule.component';
+import StockRulesDeleteActionMenu from './stock-rules-delete.component';
+import StockRulesFilter from './stock-rules-filter.component';
+import styles from '../../stock-items-table.scss';
 
 interface StockItemRulesProps {
   onSubmit?: () => void;
@@ -76,10 +76,6 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, c
 
   return (
     <div className={styles.tableOverride}>
-      <div id="table-tool-bar">
-        <div></div>
-        <div className="right-filters"></div>
-      </div>
       <DataTable
         rows={tableRows}
         headers={tableHeaders}
@@ -105,7 +101,9 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, c
                   <StockRulesFilter stockItemUuid={stockItemUuid} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={''}>Refresh</TableToolbarAction>
+                  <TableToolbarAction className={styles.toolbarMenuAction} onClick={''}>
+                    {t('refresh', 'Refresh')}
+                  </TableToolbarAction>
                 </TableToolbarMenu>
                 <AddStockRuleActionButton stockItemUuid={stockItemUuid} />
               </TableToolbarContent>

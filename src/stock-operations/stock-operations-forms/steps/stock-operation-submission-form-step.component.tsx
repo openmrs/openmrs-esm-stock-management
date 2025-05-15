@@ -1,20 +1,20 @@
+import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Column, InlineLoading, RadioButton, RadioButtonGroup, Stack } from '@carbon/react';
 import { ArrowLeft, ArrowRight, Departure, ListChecked, Save, SendFilled } from '@carbon/react/icons';
-import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
-import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
+import { createStockOperation, deleteStockOperationItem, updateStockOperation } from '../../stock-operations.resource';
 import { extractErrorMessagesFromResponse } from '../../../constants';
-import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { type StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
+import { handleMutate } from '../../../utils';
 import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { otherUser } from '../../../core/utils/utils';
-import { handleMutate } from '../../../utils';
 import { showActionDialogButton } from '../../stock-operation.utils';
-import { createStockOperation, deleteStockOperationItem, updateStockOperation } from '../../stock-operations.resource';
+import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
 import { type StockOperationItemDtoSchema } from '../../validation-schema';
-import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import styles from '../stock-operation-form.scss';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 
 type StockOperationSubmissionFormStepProps = {
   onPrevious?: () => void;
@@ -23,6 +23,7 @@ type StockOperationSubmissionFormStepProps = {
   onNext?: () => void;
   dismissWorkspace?: () => void;
 };
+
 const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormStepProps> = ({
   onPrevious,
   stockOperationType,
@@ -152,12 +153,12 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
         <RadioButtonGroup
           name="rbgApprovelRequired"
           legendText={t('doesThisTransactionRequireApproval', 'Does the transaction require approval ?')}
-          onChange={handleRadioButtonChange}
+          onChange={(value) => handleRadioButtonChange(value === 'true')}
           readOnly={!editable}
-          valueSelected={approvalRequired === true ? true : approvalRequired === false ? false : null}
+          valueSelected={approvalRequired === true ? 'true' : approvalRequired === false ? 'false' : null}
         >
-          <RadioButton value={true} id="rbgApprovelRequired-true" labelText={t('yes', 'Yes')} />
-          <RadioButton value={false} id="rbgApprovelRequired-false" labelText={t('no', 'No')} />
+          <RadioButton value="true" id="rbgApprovelRequired-true" labelText={t('yes', 'Yes')} />
+          <RadioButton value="false" id="rbgApprovelRequired-false" labelText={t('no', 'No')} />
         </RadioButtonGroup>
       </Column>
       {editable && (
