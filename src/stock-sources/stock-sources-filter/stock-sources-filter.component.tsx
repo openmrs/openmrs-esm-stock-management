@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dropdown, DropdownSkeleton } from '@carbon/react';
 import { showSnackbar, useConfig } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../../config-schema';
@@ -8,6 +9,7 @@ import styles from './stock-sources-filter.scss';
 const StockSourcesFilter: React.FC<{
   onFilterChange: (selectedSourceType: string) => void;
 }> = ({ onFilterChange }) => {
+  const { t } = useTranslation();
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
   const { items, isLoading, error } = useConcept(stockSourceTypeUUID);
