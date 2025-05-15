@@ -93,7 +93,7 @@ describe('StockItemsTableComponent', () => {
       () => {
         expect(mockUseStockItemsPages.setSearchString).toHaveBeenCalledWith('test search');
       },
-      { timeout: 5000 },
+      { timeout: 2000 },
     );
   });
 
