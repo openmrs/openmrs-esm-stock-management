@@ -131,7 +131,9 @@
   "expiringStock": "Expiring stock",
   "expiry": "Expiry",
   "expiryNoticeDays": "Expiration Notice (days)",
-  "filter": "Filter ...",
+  "filter": {
+    "": "Filter..."
+  },
   "filterByLocation": "Filter by Location",
   "findItems": "Find your items",
   "formCreated": "Add Location",

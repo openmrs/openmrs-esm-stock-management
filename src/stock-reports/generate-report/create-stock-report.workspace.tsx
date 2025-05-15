@@ -374,7 +374,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
     <Form className={styles.container}>
       <Stack className={styles.form} gap={5}>
         <>
-          <FormGroup legendText={t('reportName', 'Report')}>
+          <FormGroup legendText={t('reportName', 'Report name')}>
             <Controller
               control={control}
               name="reportName"
@@ -384,7 +384,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
                   labelText={t('reportName', 'Report name')}
                   items={reportTypes}
                   itemToString={(item) => `${item?.name ?? item?.name ?? ''}`}
-                  placeholder={t('filter...', 'Filter...')}
+                  placeholder={t('filter', 'Filter...')}
                   onChange={({ selectedItem }) => {
                     onChange(selectedItem.name);
                     handleReportNameChange(selectedItem.name);
@@ -411,7 +411,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
                       onChange(selectedItem.uuid);
                     }}
                     itemToString={(item) => (item && item?.display ? `${item?.display}` : '')}
-                    placeholder={t('filter...', 'Filter...')}
+                    placeholder={t('filter', 'Filter...')}
                   />
                 )}
               />
