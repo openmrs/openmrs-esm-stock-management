@@ -1,9 +1,8 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
+  Button,
+  TabPanel,
   DataTable,
   DataTableSkeleton,
-  IconButton,
   Pagination,
   Table,
   TableBatchActions,
@@ -14,25 +13,27 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarAction,
   TableToolbarContent,
-  TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
+  Tooltip,
+  TableToolbarAction,
+  TableToolbarMenu,
 } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
-import { handleMutate } from '../utils';
-import { launchAddOrEditStockItemWorkspace } from './stock-item.utils';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ResourceRepresentation } from '../core/api/api';
-import { useDebounce } from '../core/hooks/debounce-hook';
-import { useStockItemsPages } from './stock-items-table.resource';
 import AddStockItemActionButton from './add-stock-item/add-stock-action-button.component';
+import FilterStockItems from './components/filter-stock-items/filter-stock-items.component';
+import { launchAddOrStockItemWorkspace } from './stock-item.utils';
+import { useStockItemsPages } from './stock-items-table.resource';
+import styles from './stock-items-table.scss';
 import AddStockItemsBulktImportActionButton from './add-bulk-stock-item/add-stock-items-bulk-import-action-button.component';
 import EditStockItemActionsMenu from './edit-stock-item/edit-stock-item-action-menu.component';
-import FilterStockItems from './components/filter-stock-items/filter-stock-items.component';
-import styles from './stock-items-table.scss';
+import { useDebounce } from '../core/hooks/debounce-hook';
+import { handleMutate } from '../utils';
 
 interface StockItemsTableProps {
   from?: string;
@@ -47,17 +48,17 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   };
 
   const {
-    currentPage,
-    currentPageSize,
-    isDrug,
     isLoading,
     items,
-    pageSizes,
-    setCurrentPage,
-    setDrug,
-    setPageSize,
-    setSearchString,
     totalCount,
+    currentPageSize,
+    setPageSize,
+    pageSizes,
+    currentPage,
+    setCurrentPage,
+    isDrug,
+    setDrug,
+    setSearchString,
   } = useStockItemsPages(ResourceRepresentation.Full);
 
   const handleSearch = (query: string) => {
@@ -111,8 +112,8 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       },
       {
         id: 7,
-        header: t('actions', 'Actions'),
         key: 'actions',
+        header: 'Actions',
       },
     ],
     [t],
@@ -137,17 +138,18 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
           ? `${stockItem?.reorderLevel?.toLocaleString()} ${stockItem?.reorderLevelUoMName}`
           : '',
       actions: (
-        <IconButton
-          kind="ghost"
-          label={t('editStockItem', 'Edit stock item')}
-          size="md"
-          onClick={() => {
-            stockItem.isDrug = !!stockItem.drugUuid;
-            launchAddOrEditStockItemWorkspace(t, stockItem);
-          }}
-        >
-          <Edit size={16} />
-        </IconButton>
+        <Tooltip align="bottom" label="Edit Stock Item">
+          <Button
+            kind="ghost"
+            size="md"
+            onClick={() => {
+              stockItem.isDrug = !!stockItem.drugUuid;
+              launchAddOrStockItemWorkspace(t, stockItem);
+            }}
+            iconDescription={t('editStockItem', 'Edit Stock Item')}
+            renderIcon={(props) => <Edit size={16} {...props} />}
+          ></Button>
+        </Tooltip>
       ),
     }));
   }, [items, t]);
@@ -159,6 +161,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   return (
     <>
       <TabPanel>{t('panelDescription', 'Drugs and other stock items managed by the system.')}</TabPanel>
+
       <DataTable
         rows={tableRows}
         headers={tableHeaders}
@@ -173,25 +176,19 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                 backgroundColor: 'color',
               }}
             >
-              <TableBatchActions {...getBatchActionProps()} />
+              <TableBatchActions {...getBatchActionProps()}></TableBatchActions>
               <TableToolbarContent
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                 }}
               >
-                <TableToolbarSearch
-                  onChange={(e) => handleSearch(e.target.value)}
-                  persistent
-                  placeholder={t('searchStockItems', 'Search stock items')}
-                  value={searchInput}
-                />
+                <TableToolbarSearch persistent value={searchInput} onChange={(e) => handleSearch(e.target.value)} />
+
                 <FilterStockItems filterType={isDrug} changeFilterType={setDrug} />
                 <AddStockItemsBulktImportActionButton />
                 <TableToolbarMenu data-testid="stock-items-menu">
-                  <TableToolbarAction className={styles.toolbarAction} onClick={handleRefresh}>
-                    {t('refresh', 'Refresh')}
-                  </TableToolbarAction>
+                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
                 <AddStockItemActionButton />
               </TableToolbarContent>
@@ -215,7 +212,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                         </TableHeader>
                       ),
                   )}
-                  <TableHeader />
+                  <TableHeader></TableHeader>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -223,8 +220,8 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                   return (
                     <React.Fragment key={row.id}>
                       <TableRow
-                        {...getRowProps({ row })}
                         className={isDesktop ? styles.desktopRow : styles.tabletRow}
+                        {...getRowProps({ row })}
                         key={row.id}
                       >
                         {row.cells.map(
@@ -241,7 +238,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>{t('noStockItemsToDisplay', 'No stock items to display')}</p>
+                    <p className={styles.content}>{t('noItemsToDisplay', 'No Stock Items to display')}</p>
                     <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>
@@ -250,16 +247,17 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
           </TableContainer>
         )}
       ></DataTable>
+
       <Pagination
-        className={styles.paginationOverride}
-        onChange={({ page, pageSize }) => {
-          setCurrentPage(page);
-          setPageSize(pageSize);
-        }}
         page={currentPage}
         pageSize={currentPageSize}
         pageSizes={pageSizes}
         totalItems={totalCount}
+        onChange={({ page, pageSize }) => {
+          setCurrentPage(page);
+          setPageSize(pageSize);
+        }}
+        className={styles.paginationOverride}
       />
     </>
   );

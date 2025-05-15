@@ -1,11 +1,9 @@
 import React, { useRef } from 'react';
+import TransactionsBincardPrintout from './transactions-bincard-printout.component';
 import { ModalBody, ModalHeader, ModalFooter, Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
-import { getCoreTranslation } from '@openmrs/esm-framework';
-import TransactionsBincardPrintout from './transactions-bincard-printout.component';
-
-type TransactionsBincardPrintPreviewModalProps = {
+type Props = {
   onClose?: () => void;
   title?: string;
   columns: any;
@@ -13,13 +11,7 @@ type TransactionsBincardPrintPreviewModalProps = {
   binOrStockCard: number;
 };
 
-const TransactionsBincardPrintPreviewModal: React.FC<TransactionsBincardPrintPreviewModalProps> = ({
-  onClose,
-  title,
-  columns,
-  data,
-  binOrStockCard,
-}) => {
+const TransactionsBincardPrintPreview: React.FC<Props> = ({ onClose, title, columns, data, binOrStockCard }) => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,14 +28,14 @@ const TransactionsBincardPrintPreviewModal: React.FC<TransactionsBincardPrintPre
       </ModalBody>
       <ModalFooter>
         <Button kind="secondary" onClick={onClose}>
-          {getCoreTranslation('cancel')}
+          {t('cancel', 'Cancel')}
         </Button>
         <Button type="button" onClick={handlePrint}>
-          {getCoreTranslation('print')}
+          {t('print', 'Print')}
         </Button>
       </ModalFooter>
     </>
   );
 };
 
-export default TransactionsBincardPrintPreviewModal;
+export default TransactionsBincardPrintPreview;

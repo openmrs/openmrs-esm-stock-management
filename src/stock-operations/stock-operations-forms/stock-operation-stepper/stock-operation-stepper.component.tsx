@@ -1,5 +1,5 @@
-import React from 'react';
 import { Layer } from '@carbon/react';
+import React from 'react';
 import styles from './stepper.scss';
 
 export type Step = {
@@ -17,7 +17,6 @@ type StockOperationStepperProps = {
   selectedIndex?: number;
   onChange?: (index: number) => void;
 };
-
 const StockOperationStepper: React.FC<StockOperationStepperProps> = ({
   steps,
   hasContainer,

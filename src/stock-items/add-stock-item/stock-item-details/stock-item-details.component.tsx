@@ -1,27 +1,26 @@
-import React, { forwardRef, useMemo } from 'react';
-import classNames from 'classnames';
-import { Button, ButtonSet, FormGroup, InlineLoading, Stack } from '@carbon/react';
+import { Button, ButtonSet, FormGroup, InlineLoading } from '@carbon/react';
 import { Save } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
+import React, { forwardRef, useMemo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { getCoreTranslation, restBaseUrl, showSnackbar, useLayoutType } from '@openmrs/esm-framework';
-import { createStockItem, updateStockItem } from '../../stock-items.resource';
-import { expirationOptions, radioOptions, StockItemType } from './stock-item-details.resource';
-import { handleMutate } from '../../../utils';
-import { launchAddOrEditStockItemWorkspace } from '../../stock-item.utils';
-import { stockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
 import { type StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
-import ConceptsSelector from '../concepts-selector/concepts-selector.component';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
 import ControlledRadioButtonGroup from '../../../core/components/carbon/controlled-radio-button-group/controlled-radio-button-group.component';
 import ControlledTextInput from '../../../core/components/carbon/controlled-text-input/controlled-text-input.component';
+import { handleMutate } from '../../../utils';
+import styles from '../../add-stock-item/add-stock-item.scss';
+import { launchAddOrStockItemWorkspace } from '../../stock-item.utils';
+import { createStockItem, updateStockItem } from '../../stock-items.resource';
+import { stockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
+import ConceptsSelector from '../concepts-selector/concepts-selector.component';
 import DispensingUnitSelector from '../dispensing-unit-selector/dispensing-unit-selector.component';
 import DrugSelector from '../drug-selector/drug-selector.component';
 import PreferredVendorSelector from '../preferred-vendor-selector/preferred-vendor-selector.component';
 import StockItemCategorySelector from '../stock-item-category-selector/stock-item-category-selector.component';
 import StockItemUnitsEdit from '../stock-item-units-edit/stock-item-units-edit.component';
-import styles from '../../add-stock-item/add-stock-item.scss';
+import { expirationOptions, radioOptions, StockItemType } from './stock-item-details.resource';
 
 interface StockItemDetailsProps {
   stockItem?: StockItemDTO;
@@ -32,8 +31,6 @@ interface StockItemDetailsProps {
 const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
   ({ stockItem, handleTabChange, onCloseWorkspace }) => {
     const { t } = useTranslation();
-    const isTablet = useLayoutType() === 'tablet';
-
     const { handleSubmit, control, formState, watch } = useForm<StockItemFormData>({
       defaultValues: stockItem ?? {},
       mode: 'all',
@@ -60,7 +57,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             // launch edit dialog
             const item = response.data;
             item.isDrug = !!item.drugUuid;
-            launchAddOrEditStockItemWorkspace(t, item);
+            launchAddOrStockItemWorkspace(t, item);
           }
         }
 
@@ -87,7 +84,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
 
     return (
       <form className={styles.formContainer}>
-        <Stack className={styles.stack} gap={5}>
+        <div>
           {!stockItem && (
             <FormGroup
               className="clear-margin-bottom"
@@ -230,25 +227,20 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           {observableIsDrug && stockItem && (
             <StockItemUnitsEdit control={control} formState={formState} stockItemUuid={stockItem?.uuid} />
           )}
-        </Stack>
-        <ButtonSet
-          className={classNames(styles.buttonSet, {
-            [styles.tablet]: isTablet,
-            [styles.desktop]: !isTablet,
-          })}
-        >
+        </div>
+        <ButtonSet className={styles.buttonSet}>
           <Button kind="secondary" onClick={onCloseWorkspace} className={styles.button}>
-            {getCoreTranslation('cancel')}
+            {t('cancel', 'Cancel')}
           </Button>
           <Button
-            className={styles.button}
-            kind="primary"
             name="save"
-            onClick={handleSubmit(handleSave)}
-            renderIcon={Save}
             type="button"
+            className={styles.button}
+            onClick={handleSubmit(handleSave)}
+            kind="primary"
+            renderIcon={Save}
           >
-            {formState.isSubmitting ? <InlineLoading /> : getCoreTranslation('save')}
+            {formState.isSubmitting ? <InlineLoading /> : t('save', 'Save')}
           </Button>
         </ButtonSet>
       </form>

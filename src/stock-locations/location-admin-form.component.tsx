@@ -5,20 +5,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   ComposedModal,
-  FilterableMultiSelect,
   FormGroup,
-  InlineNotification,
   ModalBody,
   ModalFooter,
   ModalHeader,
   Stack,
   TextInput,
+  InlineNotification,
+  FilterableMultiSelect,
 } from '@carbon/react';
-import { getCoreTranslation } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
 import { type locationData } from '../stock-items/types';
-import { useLocationTags } from './stock-locations-table.resource';
 import styles from './stock-locations-table.scss';
+import { useLocationTags } from './stock-locations-table.resource';
 
 const LocationAdministrationSchema = z.object({
   name: z.string().max(255),
@@ -147,7 +146,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
         </ModalBody>
         <ModalFooter>
           <Button onClick={() => onModalChange(false)} kind="secondary">
-            {getCoreTranslation('cancel')}
+            {t('cancel', 'Cancel')}
           </Button>
           <Button disabled={!isDirty} type="submit">
             <span>{t('save', 'Save')}</span>

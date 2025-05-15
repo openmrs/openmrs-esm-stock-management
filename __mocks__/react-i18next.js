@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const React = require('react');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const reactI18next = require('react-i18next');
 
 const hasChildren = (node) => node && (node.children || (node.props && node.props.children));
@@ -18,8 +20,8 @@ const renderNodes = (reactNodes) => {
       return child;
     }
     if (hasChildren(child)) {
-      const view = renderNodes(getChildren(child));
-      return React.cloneElement(child, { ...child.props, key: i }, view);
+      const inner = renderNodes(getChildren(child));
+      return React.cloneElement(child, { ...child.props, key: i }, inner);
     }
     if (typeof child === 'object' && !isElement) {
       return Object.keys(child).reduce((str, childKey) => `${str}${child[childKey]}`, '');
@@ -31,11 +33,9 @@ const renderNodes = (reactNodes) => {
 
 const useMock = [(key) => key, {}];
 useMock.t = (key, defaultValue, options = {}) => {
-  let translatedString = defaultValue || key;
-  Object.entries(options).forEach(([k, v]) => {
-    if (key !== 'interpolation') {
-      translatedString = translatedString.replace(new RegExp(`{{${k}}}`, 'g'), v);
-    }
+  let translatedString = defaultValue;
+  Object.keys(options).forEach((key) => {
+    translatedString = defaultValue.replace(`{{${key}}}`, `${options[key]}`);
   });
 
   return translatedString;
@@ -45,9 +45,10 @@ useMock.i18n = { language: 'en_US' };
 
 module.exports = {
   // this mock makes sure any components using the translate HoC receive the t function as a prop
-  Trans: ({ children }) => (Array.isArray(children) ? renderNodes(children) : renderNodes([children])),
+  Trans: ({ children }) => renderNodes(children),
   Translation: ({ children }) => children((k) => k, { i18n: {} }),
   useTranslation: () => useMock,
+
   // mock if needed
   I18nextProvider: reactI18next.I18nextProvider,
   initReactI18next: reactI18next.initReactI18next,

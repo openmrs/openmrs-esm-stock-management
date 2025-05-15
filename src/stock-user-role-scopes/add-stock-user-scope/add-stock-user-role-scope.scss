@@ -1,24 +1,25 @@
+@use '@carbon/styles/scss/spacing';
+@use '@carbon/styles/scss/type';
 @use '@carbon/layout';
-@use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
 .section {
-  margin: layout.$spacing-03;
+  margin: spacing.$spacing-03;
 }
 
 .sectionTitle {
   @include type.type-style('heading-compact-02');
   color: $text-02;
-  margin-bottom: layout.$spacing-04;
+  margin-bottom: spacing.$spacing-04;
 }
 
 .subTitle {
   font-size: 14px;
-  margin-bottom: layout.$spacing-04;
+  margin-bottom: spacing.$spacing-04;
 }
 
 .modalBody {
-  padding-bottom: layout.$spacing-05;
+  padding-bottom: spacing.$spacing-05;
 }
 
 .checkboxGrid {
@@ -49,6 +50,13 @@
 
 .form {
   margin: layout.$spacing-05;
+}
+
+.button {
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
 }
 
 .buttonSet {

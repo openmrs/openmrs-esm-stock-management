@@ -1,22 +1,20 @@
+import { Button, Form, Select, TextInput, SelectItem, ButtonSet } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
-import classNames from 'classnames';
-import { Button, ButtonSet, Select, SelectItem, Stack, TextInput } from '@carbon/react';
-import { useTranslation } from 'react-i18next';
-import { Save } from '@carbon/react/icons';
-import {
-  getCoreTranslation,
-  restBaseUrl,
-  showSnackbar,
-  type DefaultWorkspaceProps,
-  useConfig,
-  useLayoutType,
-} from '@openmrs/esm-framework';
+import styles from './add-stock-sources.scss';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
+import {
+  type DefaultWorkspaceProps,
+  restBaseUrl,
+  showSnackbar,
+  useConfig,
+  getCoreTranslation,
+} from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
-import styles from './add-stock-sources.scss';
+import { Save } from '@carbon/react/icons';
 
 type AddStockSourceProps = DefaultWorkspaceProps & {
   model?: StockSource;
@@ -24,7 +22,6 @@ type AddStockSourceProps = DefaultWorkspaceProps & {
 
 const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWorkspace }) => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === 'tablet';
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
   // get stock sources
@@ -50,11 +47,9 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   const handleSave = useCallback(
     (event) => {
       event.preventDefault();
-
       if (model) {
         formModel.uuid = model.uuid;
       }
-
       createOrUpdateStockSource(formModel)
         .then(
           () => {
@@ -87,51 +82,51 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   return (
     <div className={styles.formContainer}>
       <div className={styles.body}>
-        <Stack gap={5}>
+        <section className={styles.section}>
           <TextInput
             id="fullname"
-            labelText={t('fullName', 'Full name')}
-            onChange={onNameChanged}
-            placeholder="e.g National Medical Stores"
-            size="md"
             type="text"
+            labelText={t('fullName', 'Full Name')}
+            size="md"
+            onChange={onNameChanged}
             value={model?.name}
+            placeholder="e.g National Medical Stores"
           />
+        </section>
+        <section className={styles.section}>
           <TextInput
             id="acronym"
-            labelText={t('acronymOrCode', 'Acronym/Code')}
-            onChange={onAcronymChanged}
-            placeholder="e.g NMS"
-            size="md"
             type="text"
+            size="md"
+            placeholder="e.g NMS"
+            onChange={onAcronymChanged}
             value={model?.acronym}
+            labelText={t('acronym', 'Acronym/Code')}
           />
+        </section>
+        <section className={styles.section}>
           <Select
-            className="select-field"
-            id="sourceType"
-            labelText={t('sourceType', 'Source Type')}
             name="sourceType"
-            onChange={onSourceTypeChange}
+            className="select-field"
+            labelText={t('sourceType', 'Source Type')}
+            id="sourceType"
             value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
+            onChange={onSourceTypeChange}
           >
             <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
             {items?.answers?.map((sourceType) => (
               <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
             ))}
           </Select>
-        </Stack>
+        </section>
       </div>
-      <ButtonSet
-        className={classNames(styles.buttonSet, {
-          [styles.tablet]: isTablet,
-          [styles.desktop]: !isTablet,
-        })}
-      >
+
+      <ButtonSet className={styles.buttonSet}>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {getCoreTranslation('cancel')}
+          {getCoreTranslation('cancel', 'Cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>
-          {getCoreTranslation('save')}
+          {getCoreTranslation('save', 'Save')}
         </Button>
       </ButtonSet>
     </div>

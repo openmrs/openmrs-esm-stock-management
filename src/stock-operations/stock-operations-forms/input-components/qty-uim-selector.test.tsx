@@ -1,66 +1,64 @@
-import React from 'react';
-import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
 import QtyUomSelector from './quantity-uom-selector.component';
 
-jest.mock('../../../stock-items/stock-items.resource', () => ({
-  useStockItem: jest.fn().mockReturnValue({
-    isLoading: false,
-    item: {},
-    error: null,
-  }),
-  useStockItems: jest.fn().mockReturnValue({
-    isLoading: false,
-    error: null,
-    items: {},
-  }),
-  useStockBatches: jest.fn().mockReturnValue({
-    isLoading: false,
-    error: null,
-    items: {},
-  }),
+jest.mock('../../../stock-items/stock-items.resource');
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-const mockUseStockItem = jest.mocked(useStockItem);
+const mockUseStockItem = useStockItem as jest.Mock;
 
 describe('QtyUOMSelector', () => {
   const mockOnValueChange = jest.fn();
   const mockStockItemUuid = 'test-uuid';
-
-  const mockStockItem = {
-    acronym: null,
-    categoryName: 'Other Lymph Node Comments',
-    categoryUuid: '183f9497-b72e-4ebe-ae17-5dcf110ff3b6',
-    commonName: 'Ibuprofen 5 MG/ML Injectable Solution',
-    conceptName: 'IBUPROFEN',
-    conceptUuid: '77897AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    creatorFamilyName: 'Miller',
-    creatorGivenName: 'Mark',
-    dateCreated: new Date('2024-09-03T09:46:47.000+0300'),
-    defaultStockOperationsUoMFactor: null,
-    defaultStockOperationsUoMName: null,
-    defaultStockOperationsUoMUuid: null,
-    dispensingUnitName: 'Tablet',
-    dispensingUnitPackagingUoMFactor: 10.0,
-    dispensingUnitPackagingUoMName: 'Box',
-    dispensingUnitPackagingUoMUuid: '65dc9ec7-0663-4cf0-a35c-6a2d2cf99eee',
-    dispensingUnitUuid: '1513AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    drugName: 'Ibuprofen Injection solution  5mg/mL ',
+  const mockitem = {
+    uuid: '33225466-93c8-4720-b110-4f445f3764c6',
     drugUuid: '1776AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
-    expiryNotice: 180,
+    drugName: 'Ibuprofen Injection solution  5mg/mL ',
+    conceptUuid: '77897AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    conceptName: 'IBUPROFEN',
     hasExpiration: true,
-    isDrug: true,
-    links: [
-      {
-        rel: 'self',
-        uri: 'http://hie.kenyahmis.org/openmrs/ws/rest/v1/stockmanagement/stockitem/33225466-93c8-4720-b110-4f445f3764c6',
-        resourceAlias: 'stockitem',
-      },
-    ],
+    preferredVendorUuid: 'b7e481ef-06e7-46ba-8a7c-ab077aa3355f',
+    preferredVendorName: 'Kenya Medical Supplies Authority',
+    purchasePrice: 100.0,
+    purchasePriceUoMUuid: '65dc9ec7-0663-4cf0-a35c-6a2d2cf99eee',
+    purchasePriceUoMName: 'Box',
+    purchasePriceUoMFactor: 10.0,
+    dispensingUnitName: 'Tablet',
+    dispensingUnitUuid: '1513AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    dispensingUnitPackagingUoMUuid: '65dc9ec7-0663-4cf0-a35c-6a2d2cf99eee',
+    dispensingUnitPackagingUoMName: 'Box',
+    dispensingUnitPackagingUoMFactor: 10.0,
+    defaultStockOperationsUoMUuid: null,
+    defaultStockOperationsUoMName: null,
+    defaultStockOperationsUoMFactor: null,
+    categoryUuid: '183f9497-b72e-4ebe-ae17-5dcf110ff3b6',
+    categoryName: 'Other Lymph Node Comments',
+    commonName: 'Ibuprofen 5 MG/ML Injectable Solution',
+    acronym: null,
+    reorderLevel: null,
+    reorderLevelUoMUuid: null,
+    reorderLevelUoMName: null,
+    reorderLevelUoMFactor: null,
+    dateCreated: '2024-09-03T09:46:47.000+0300',
+    creatorGivenName: 'Mark',
+    creatorFamilyName: 'Miller',
+    voided: false,
+    expiryNotice: 180,
+    permission: {
+      canView: true,
+      canEdit: true,
+    },
     packagingUnits: [
       {
+        uuid: '8023ef7d-56da-442f-bc74-319f000840b4',
         factor: 1.0,
+        packagingUomUuid: '162382AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        packagingUomName: 'Vial',
+        stockItemUuid: '33225466-93c8-4720-b110-4f445f3764c6',
         isDefaultStockOperationsUoM: false,
         isDispensingUnit: false,
         links: [
@@ -70,14 +68,14 @@ describe('QtyUOMSelector', () => {
             resourceAlias: 'stockitempackaginguom',
           },
         ],
-        packagingUomName: 'Vial',
-        packagingUomUuid: '162382AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
         resourceVersion: '1.8',
-        stockItemUuid: '33225466-93c8-4720-b110-4f445f3764c6',
-        uuid: '8023ef7d-56da-442f-bc74-319f000840b4',
       },
       {
+        uuid: '65dc9ec7-0663-4cf0-a35c-6a2d2cf99eee',
         factor: 10.0,
+        packagingUomUuid: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        packagingUomName: 'Box',
+        stockItemUuid: '33225466-93c8-4720-b110-4f445f3764c6',
         isDefaultStockOperationsUoM: false,
         isDispensingUnit: true,
         links: [
@@ -87,113 +85,73 @@ describe('QtyUOMSelector', () => {
             resourceAlias: 'stockitempackaginguom',
           },
         ],
-        packagingUomName: 'Box',
-        packagingUomUuid: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
         resourceVersion: '1.8',
-        stockItemUuid: '33225466-93c8-4720-b110-4f445f3764c6',
-        uuid: '65dc9ec7-0663-4cf0-a35c-6a2d2cf99eee',
       },
     ],
-    permission: {
-      canApprove: false,
-      canDisplayReceivedItems: false,
-      canEdit: true,
-      canReceiveItems: false,
-      canUpdateBatchInformation: false,
-      canView: true,
-      isRequisitionAndCanIssueStock: false,
-    },
-    preferredVendorName: 'Kenya Medical Supplies Authority',
-    preferredVendorUuid: 'b7e481ef-06e7-46ba-8a7c-ab077aa3355f',
-    purchasePrice: 100.0,
-    purchasePriceUoMFactor: 10.0,
-    purchasePriceUoMName: 'Box',
-    purchasePriceUoMUuid: '65dc9ec7-0663-4cf0-a35c-6a2d2cf99eee',
-    reorderLevel: null,
-    reorderLevelUoMFactor: null,
-    reorderLevelUoMName: null,
-    reorderLevelUoMUuid: null,
+    references: [],
+    links: [
+      {
+        rel: 'self',
+        uri: 'http://hie.kenyahmis.org/openmrs/ws/rest/v1/stockmanagement/stockitem/33225466-93c8-4720-b110-4f445f3764c6',
+        resourceAlias: 'stockitem',
+      },
+    ],
     resourceVersion: '1.8',
-    uuid: '33225466-93c8-4720-b110-4f445f3764c6',
-    voided: false,
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     mockUseStockItem.mockReturnValue({
       isLoading: false,
-      item: mockStockItem,
-      error: null,
+      item: mockitem,
     });
   });
-
   it('should render Skeleton when loading stock item', () => {
-    mockUseStockItem.mockReturnValue({ isLoading: true, item: mockStockItem, error: null });
-
+    mockUseStockItem.mockReturnValue({ isLoading: true });
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
-
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
-
   it('should render Inline notification error when error ocuured while fetching item', () => {
     const errorMessage = 'error loading stock item';
-    mockUseStockItem.mockReturnValue({ isLoading: false, error: new Error(errorMessage), item: mockStockItem });
-
+    mockUseStockItem.mockReturnValue({ isLoading: false, error: new Error(errorMessage) });
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
-
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
-
   it('should render Inline notification error when error ocuured while fetching item', () => {
     const errorMessage = 'error loading stock item';
-    mockUseStockItem.mockReturnValue({ isLoading: false, error: new Error(errorMessage), item: mockStockItem });
-
+    mockUseStockItem.mockReturnValue({ isLoading: false, error: new Error(errorMessage) });
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
-
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
   it('should display error message when error prop is provided', () => {
     const errorMessage = 'This is an error';
-
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} error={errorMessage} />);
-
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
-
   it('should display error message when error prop is provided', () => {
     const errorMessage = 'This is an error';
-
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} error={errorMessage} />);
-
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
 
   it('should render packing uom options', async () => {
-    const user = userEvent.setup();
-
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
-
     const combobox = screen.getByRole('combobox');
-    await user.click(combobox);
-
-    mockStockItem.packagingUnits.forEach(({ factor, packagingUomName }) => {
+    await userEvent.click(combobox);
+    mockitem.packagingUnits.forEach(({ factor, packagingUomName }) => {
       expect(screen.getByText(`${packagingUomName} - ${factor}`)).toBeInTheDocument();
     });
   });
-
   it('should packing uom selection', async () => {
-    const user = userEvent.setup();
-    const itemToSelect = mockStockItem.packagingUnits[1];
-
+    const itemToSelect = mockitem.packagingUnits[1];
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
-
     const combobox = screen.getByRole('combobox');
     await userEvent.click(combobox);
-
     const option = screen.getByText(`${itemToSelect.packagingUomName} - ${itemToSelect.factor}`);
-    await user.click(option);
+    await userEvent.click(option);
     expect(mockOnValueChange).toHaveBeenCalledWith(itemToSelect.uuid);
   });
 });

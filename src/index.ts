@@ -15,8 +15,8 @@ import StockReports from './stock-reports/report-list/stock-reports.component';
 import StockSettings from './stock-settings/stock-settings.component';
 import StockSources from './stock-sources/stock-sources.component';
 import StockUserScopes from './stock-user-role-scopes/stock-user-role-scopes.component';
-import TransactionsBincardPrintPreviewModal from './stock-items/add-stock-item/transactions/printout/transactions-print-bincard-preview.modal';
-import TransactionsStockcardPrintPreviewModal from './stock-items/add-stock-item/transactions/printout/transactions-print-stockcard-preview.modal';
+import TransactionsBincardPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-bincard-preview.modal';
+import TransactionsStockcardPrintPreview from './stock-items/add-stock-item/transactions/printout/transactions-print-stockcard-preview.modal';
 
 const moduleName = '@openmrs/esm-stock-management-app';
 
@@ -59,7 +59,7 @@ export const expiredStockModal = getAsyncLifecycle(() => import('./stock-home/ex
 });
 
 export const importBulkStockItemsModal = getAsyncLifecycle(
-  () => import('./stock-items/add-bulk-stock-item/stock-items-bulk-import.modal'),
+  () => import('./stock-items/add-bulk-stock-item/stock-items-bulk-import.component'),
   {
     featureName: 'import-bulk-stock-items-modal',
     moduleName,
@@ -175,9 +175,9 @@ export const stockUserScopesFormWorkspace = getAsyncLifecycle(
   options,
 );
 
-export const transactionBincardPrintPreviewModal = getSyncLifecycle(TransactionsBincardPrintPreviewModal, options);
+export const transactionBincardPrintPreviewModal = getSyncLifecycle(TransactionsBincardPrintPreview, options);
 
-export const transactionStockcardPrintPreviewModal = getSyncLifecycle(TransactionsStockcardPrintPreviewModal, options);
+export const transactionStockcardPrintPreviewModal = getSyncLifecycle(TransactionsStockcardPrintPreview, options);
 
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);

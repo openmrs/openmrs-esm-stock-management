@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, ModalBody, ModalFooter, ModalHeader, FileUploader } from '@carbon/react';
-import { getCoreTranslation, showSnackbar } from '@openmrs/esm-framework';
-import { uploadStockItems } from './stock-items-bulk-import.resource';
+import { UploadStockItems } from './stock-items-bulk-import.resource';
+import { showSnackbar } from '@openmrs/esm-framework';
 
-export interface ImportBulkStockItemsModalProps {
+export interface ImportDialogPopupProps {
   closeModal: () => void;
 }
 
-const ImportBulkStockItemsModal: React.FC<ImportBulkStockItemsModalProps> = ({ closeModal }) => {
+const ImportDialogPopup: React.FC<ImportDialogPopupProps> = ({ closeModal }) => {
   const { t } = useTranslation();
   const [selectedFile, setSelectedFile] = useState<any>();
 
@@ -16,28 +16,27 @@ const ImportBulkStockItemsModal: React.FC<ImportBulkStockItemsModalProps> = ({ c
     if (!selectedFile) {
       return;
     }
-
     const formData = new FormData();
-
     if (selectedFile) {
       formData.append('file', selectedFile, 'Import_Stock_Items.csv');
       formData.append('hasHeader', 'true');
     }
-
-    uploadStockItems(formData).then(
+    UploadStockItems(formData).then(
       () => {
         showSnackbar({
+          isLowContrast: true,
+          title: t('rejectOrder', 'Uploaded Order'),
           kind: 'success',
-          title: t('stockItemsUploadedSuccessfully', 'Stock items uploaded successfully'),
+          subtitle: t('SuccessfullyUploadedStockItem', `You have successfully uploaded stock items`),
         });
         closeModal();
       },
       (err) => {
         showSnackbar({
-          kind: 'error',
-          isLowContrast: false,
-          subtitle: err?.message,
           title: t('errorUploadingItems', 'An error occurred uploading stock items'),
+          kind: 'error',
+          isLowContrast: true,
+          subtitle: err?.message,
         });
       },
     );
@@ -55,26 +54,26 @@ const ImportBulkStockItemsModal: React.FC<ImportBulkStockItemsModalProps> = ({ c
   return (
     <div>
       <Form>
-        <ModalHeader closeModal={closeModal} title={t('importStockItems', 'Import stock items')} />
+        <ModalHeader closeModal={closeModal} title={t('importStockItems', 'Import Stock Items')} />
         <ModalBody>
           <FileUploader
             accept={['.csv']}
-            buttonLabel={t('selectFile', 'Select file')}
-            filenameStatus="edit"
-            labelDescription={t('onlyCsvFilesAt2mbOrLess', 'Only .csv files at 2MB or less')}
-            labelTitle=""
             multiple={false}
-            name="file"
-            onChange={onFileChanged}
+            name={'file'}
+            buttonLabel="Select file"
+            labelDescription="Only .csv files at 2mb or less"
+            filenameStatus="edit"
+            labelTitle=""
             size="sm"
+            onChange={onFileChanged}
           />
         </ModalBody>
         <ModalFooter>
           <Button kind="secondary" onClick={closeModal}>
-            {getCoreTranslation('cancel')}
+            {t('cancel', 'Cancel')}
           </Button>
           <Button type="button" onClick={onConfirmUpload}>
-            {t('uploadStockItems', 'Upload stock items')}
+            {t('uploadStockItems', 'Upload StockItems')}
           </Button>
         </ModalFooter>
       </Form>
@@ -82,4 +81,4 @@ const ImportBulkStockItemsModal: React.FC<ImportBulkStockItemsModalProps> = ({ c
   );
 };
 
-export default ImportBulkStockItemsModal;
+export default ImportDialogPopup;
