@@ -110,12 +110,12 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
           />
         </FormGroup>
         <Select
-          className="select-field"
-          id="sourceType"
-          labelText={t('sourceType', 'Source Type')}
           name="sourceType"
-          onChange={onSourceTypeChange}
+          className="select-field"
+          labelText={t('sourceType', 'Source Type')}
+          id="sourceType"
           value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
+          onChange={onSourceTypeChange}
         >
           <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
           {items?.answers?.map((sourceType) => (

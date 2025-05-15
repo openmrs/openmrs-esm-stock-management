@@ -11,6 +11,7 @@
 .modalBody {
   padding-bottom: layout.$spacing-05;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -34,4 +35,16 @@
 
 .body {
   padding: 1rem;
+}
+
+.form {
+  margin: layout.$spacing-05;
+}
+.tablet {
+  padding: layout.$spacing-06 layout.$spacing-05;
+  background-color: white;
+}
+
+.desktop {
+  padding: 0;
 }
