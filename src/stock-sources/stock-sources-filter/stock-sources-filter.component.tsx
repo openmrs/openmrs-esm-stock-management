@@ -11,7 +11,6 @@ const StockSourcesFilter: React.FC<{
 }> = ({ onFilterChange }) => {
   const { t } = useTranslation();
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
-
   const { items, isLoading, error } = useConcept(stockSourceTypeUUID);
 
   if (isLoading) {
@@ -20,27 +19,29 @@ const StockSourcesFilter: React.FC<{
 
   if (error) {
     showSnackbar({
-      title: 'Error fetching stock sources',
+      title: t('errorFetchingStockSourceTypes', 'Error fetching stock source types'),
+      subtitle: error.message,
       kind: 'error',
       isLowContrast: true,
     });
   }
 
-  if (!items) {
+  if (Object.keys(items).length === 0) {
     return null;
   }
 
   return (
     <div className={styles.filterContainer}>
       <Dropdown
-        id="stockSourcesFiter"
-        items={[...items.answers]}
-        initialSelectedItem={items.answers[0]}
-        itemToString={(item) => (item ? item.display : 'Not Set')}
-        titleText="Filter: "
-        type="inline"
-        size="sm"
+        id="stockSourcesFilter"
+        initialSelectedItem={items?.answers?.[0]}
+        items={[...(items?.answers || [])]}
+        itemToString={(item) => (item ? item.display : t('notSet', 'Not Set'))}
+        label=""
         onChange={({ selectedItem }) => onFilterChange(selectedItem?.display)}
+        size="sm"
+        titleText={t('selectSourceType', 'Select source type')}
+        type="inline"
       />
     </div>
   );

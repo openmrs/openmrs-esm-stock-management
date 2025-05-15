@@ -2,14 +2,22 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { renderHook, act, render, screen, waitFor } from '@testing-library/react';
 import { type StockSource } from '../core/api/types/stockOperation/StockSource';
+import { type Concept } from '../core/api/types/concept/Concept';
+import { useConcept } from '../stock-lookups/stock-lookups.resource';
 import useStockSourcesPage from './stock-sources-items-table.resource';
 import StockSourcesItems from './stock-sources-items-table.component';
+
 const mockUseStockSourcesPage = jest.mocked(useStockSourcesPage);
+const mockUseConcept = jest.mocked(useConcept);
 
 jest.mock('./stock-sources-items-table.resource', () => ({
   __esModule: true,
   default: jest.fn(),
   useStockSourcesPage: jest.fn(),
+}));
+
+jest.mock('../stock-lookups/stock-lookups.resource', () => ({
+  useConcept: jest.fn(),
 }));
 
 describe('StockSourcesItems', () => {
@@ -35,7 +43,19 @@ describe('StockSourcesItems', () => {
   };
 
   beforeEach(() => {
-    mockUseStockSourcesPage.mockClear();
+    mockUseConcept.mockReturnValue({
+      items: {
+        uuid: '1',
+        display: 'Source Types',
+        answers: [
+          { uuid: '1', display: 'All' },
+          { uuid: '2', display: 'Internal' },
+          { uuid: '3', display: 'External' },
+        ] as Concept[],
+      } as Concept,
+      isLoading: false,
+      error: null,
+    });
   });
 
   it('should return initial values', () => {
