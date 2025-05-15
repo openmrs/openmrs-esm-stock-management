@@ -1,5 +1,5 @@
 @use '@carbon/layout';
-@use '@carbon/styles/scss/type';
+@use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
 .headerBtnContainer {
@@ -92,4 +92,8 @@
     min-width: 15rem;
     z-index: 1;
   }
+}
+
+.toolbarAction {
+  max-width: none;
 }

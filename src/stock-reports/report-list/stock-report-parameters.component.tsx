@@ -35,7 +35,7 @@ const StockReportParameters = (props: StockReportParametersProps) => {
       parseParametersToMap(props.model?.parameters, ['param.report']),
     );
   } catch (ex) {
-    console.log(ex);
+    console.error(ex);
   }
 
   return <span>{parameterMap}</span>;

@@ -82,9 +82,9 @@ export function getStockOperation(id: string): Promise<FetchResponse<StockOperat
 }
 
 // getStockOperationAndItems
-export function useStockOperationAndItems(id: string) {
+export function useStockOperationAndItems(id = '') {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
-  const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, openmrsFetch);
+  const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(id ? apiUrl : null, openmrsFetch);
   return {
     items: data?.data,
     isLoading,

@@ -143,6 +143,18 @@ export const getStockOperationItemFormSchema = (operationType: OperationType) =>
         purchasePrice: true,
       });
     case OperationType.ADJUSTMENT_OPERATION_TYPE:
+      return baseStockOperationItemSchema
+        .omit({
+          batchNo: true,
+          expiration: true,
+          purchasePrice: true,
+        })
+        .extend({
+          // Override quantity to allow negative values for negative adjustment operation
+          quantity: z.coerce.number().refine((value) => value !== 0, {
+            message: 'Quantity cannot be zero.',
+          }),
+        });
     case OperationType.DISPOSED_OPERATION_TYPE:
     case OperationType.RETURN_OPERATION_TYPE:
     case OperationType.STOCK_ISSUE_OPERATION_TYPE:

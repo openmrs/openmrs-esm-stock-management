@@ -1,3 +1,5 @@
+import React, { useCallback, useId, useMemo } from 'react';
+import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
 import {
   Button,
   DataTable,
@@ -9,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
-import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
@@ -25,6 +25,7 @@ import StockOperationItemBatchNoCell from './stock-operation-item-batch-no-cell.
 import StockOperationItemCell from './stock-operation-item-cell.component';
 import StockoperationItemExpiryCell from './stock-operation-item-expiry-cell.component';
 import styles from './stock-operation-items-form-step.scc.scss';
+import { showSnackbar } from '@openmrs/esm-framework';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -42,6 +43,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
+  const uniqueId = useId();
 
   const form = useFormContext<StockOperationItemDtoSchema>();
   const observableOperationItems = form.watch('stockOperationItems');
@@ -103,15 +105,8 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     ];
   }, [operationTypePermision, t]);
 
-  const handleDeleteStockOperationItem = useCallback(
-    (item: BaseStockOperationItemFormData) => {
-      form.setValue('stockOperationItems', observableOperationItems.filter((i) => i.uuid !== item.uuid) as any);
-    },
-    [form, observableOperationItems],
-  );
-
   const tableRows = useMemo(() => {
-    return observableOperationItems?.map((item) => {
+    return observableOperationItems?.map((item, index) => {
       const {
         batchNo,
         expiration,
@@ -124,7 +119,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
       } = item;
 
       return {
-        id: uuid,
+        id: uuid || `${uniqueId}-${index}`,
         item: stockItemUuid ? <StockOperationItemCell stockItemUuid={stockItemUuid} /> : '--',
         itemDetails: stockItemUuid ? <StockAvailability stockItemUuid={stockItemUuid} /> : '--',
         batch: (
@@ -178,7 +173,23 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ),
       };
     });
-  }, [observableOperationItems, onLaunchItemsForm, stockOperationType]);
+  }, [observableOperationItems, onLaunchItemsForm, stockOperationType, uniqueId]);
+
+  const handleNext = async () => {
+    const valid = await form.trigger(['stockOperationItems']);
+    if (valid) {
+      onNext();
+    } else {
+      showSnackbar({
+        kind: 'error',
+        title: 'Validation error',
+        subtitle:
+          observableOperationItems && observableOperationItems.length > 0
+            ? 'You must update batch infomation for items'
+            : 'You must add atleast one item',
+      });
+    }
+  };
 
   const headerTitle = t('stockoperationItems', 'Stock operation items');
 
@@ -238,7 +249,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         />
         <div className={styles.btnSet}>
           {typeof onNext === 'function' && (
-            <Button kind="primary" onClick={onNext} renderIcon={ArrowRight}>
+            <Button kind="primary" onClick={handleNext} renderIcon={ArrowRight}>
               {t('next', 'Next')}
             </Button>
           )}

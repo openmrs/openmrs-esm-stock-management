@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
-  TabPanel,
   DataTable,
+  DataTableSkeleton,
   Pagination,
   Table,
   TableBody,
@@ -11,23 +11,23 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarContent,
-  Tile,
-  DataTableSkeleton,
-  TableToolbarSearch,
-  TableToolbarMenu,
   TableToolbarAction,
+  TableToolbarContent,
+  TableToolbarMenu,
+  TableToolbarSearch,
+  TabPanel,
+  Tile,
 } from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
-import useStockSourcesPage from './stock-sources-items-table.resource';
+import { handleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
+import useStockSourcesPage from './stock-sources-items-table.resource';
 import AddStockSourceActionButton from './add-stock-source-button.component';
+import EditStockSourceActionsMenu from './edit-stock-source/edit-stock-source.component';
+import StockSourcesDeleteActionMenu from './stock-sources-delete/stock-sources-delete.component';
 import StockSourcesFilter from './stock-sources-filter/stock-sources-filter.component';
 import styles from './stock-sources.scss';
-import { useTranslation } from 'react-i18next';
-import StockSourcesDeleteActionMenu from './stock-sources-delete/stock-sources-delete.component';
-import EditStockSourceActionsMenu from './edit-stock-source/edit-stock-source.component';
-import { handleMutate } from '../utils';
 
 const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
@@ -81,15 +81,12 @@ const StockSourcesItems: React.FC = () => {
   return (
     <div className={styles.tableOverride}>
       <TabPanel>{t('panelDescription', 'List of partners who provide stock to the facility.')}</TabPanel>
-      <div id="table-tool-bar">
-        <div></div>
-        <div className="right-filters"></div>
-      </div>
+
       <DataTable
         rows={filteredTableRows}
         headers={tableHeaders}
-        isSortable={true}
-        useZebraStyles={true}
+        isSortable
+        useZebraStyles
         render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
@@ -110,7 +107,9 @@ const StockSourcesItems: React.FC = () => {
                   <StockSourcesFilter onFilterChange={handleFilterChange} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
+                  <TableToolbarAction className={styles.toolbarMenuAction} onClick={handleRefresh}>
+                    {t('refresh', 'Refresh')}
+                  </TableToolbarAction>
                 </TableToolbarMenu>
 
                 <AddStockSourceActionButton />

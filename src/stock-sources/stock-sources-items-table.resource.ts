@@ -1,9 +1,11 @@
-import { useStockSources } from './stock-sources.resource';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePagination } from '@openmrs/esm-framework';
+import { useStockSources } from './stock-sources.resource';
 import { type StockOperationFilter } from '../stock-operations/stock-operations.resource';
 
 export default function useStockSourcesPage(filter: StockOperationFilter) {
+  const { t } = useTranslation();
   const { items, isLoading, error } = useStockSources(filter);
 
   const pageSizes = [10, 20, 30, 40, 50];
@@ -14,26 +16,26 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
     () => [
       {
         id: 1,
-        header: 'Name',
+        header: t('name', 'Name'),
         key: 'name',
       },
       {
         id: 2,
-        header: 'Acronym',
+        header: t('acronym', 'Acronym'),
         key: 'acronym',
       },
       {
         id: 3,
-        header: 'Source Type',
+        header: t('sourceType', 'Source Type'),
         key: 'sourceType',
       },
       {
         id: 4,
-        header: 'actions',
+        header: t('actions', 'Actions'),
         key: 'actions',
       },
     ],
-    [],
+    [t],
   );
 
   return {

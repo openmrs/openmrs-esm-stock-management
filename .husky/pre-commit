@@ -1,1 +1,4 @@
-npx lint-staged
+set -e  # die on error
+
+yarn lint-staged
+yarn turbo run extract-translations

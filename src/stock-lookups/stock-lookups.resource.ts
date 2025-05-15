@@ -1,3 +1,6 @@
+import { useMemo } from 'react';
+import { uniqBy } from 'lodash-es';
+import useSWR from 'swr';
 import {
   type FetchResponse,
   type OpenmrsResource,
@@ -6,30 +9,24 @@ import {
   useSession,
   restBaseUrl,
 } from '@openmrs/esm-framework';
-import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
-import { type PageableResult } from '../core/api/types/PageableResult';
-import { type OpenMRSLocation, type OpenMRSLocationTag } from '../core/api/types/Location';
-import useSWR from 'swr';
-import { type Role } from '../core/api/types/identity/Role';
-import { type User } from '../core/api/types/identity/User';
-import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 import { type Concept } from '../core/api/types/concept/Concept';
-import { type Party } from '../core/api/types/Party';
 import { type Drug } from '../core/api/types/concept/Drug';
+import { type OpenMRSLocation, type OpenMRSLocationTag } from '../core/api/types/Location';
+import { type PageableResult } from '../core/api/types/PageableResult';
+import { type Party } from '../core/api/types/Party';
 import { type Patient } from '../core/api/types/identity/Patient';
-import { useMemo } from 'react';
-import { uniqBy } from 'lodash-es';
+import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type Role } from '../core/api/types/identity/Role';
+import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { type User } from '../core/api/types/identity/User';
 import { type UserRoleScope } from '../core/api/types/identity/UserRoleScope';
 
+export type ConceptFilterCriteria = ResourceFilterCriteria;
+export type DrugFilterCriteria = ResourceFilterCriteria;
+export type LocationFilterCriteria = ResourceFilterCriteria;
 export type PatientFilterCriteria = ResourceFilterCriteria;
-
 export type UserFilterCriteria = ResourceFilterCriteria;
 
-export type DrugFilterCriteria = ResourceFilterCriteria;
-
-export type ConceptFilterCriteria = ResourceFilterCriteria;
-
-export type LocationFilterCriteria = ResourceFilterCriteria;
 interface FHIRResponse {
   entry: Array<{ resource: fhir.Location }>;
   total: number;
@@ -190,7 +187,10 @@ export function useConcept(conceptUuid: string) {
       data: Concept;
     },
     Error
-  >(apiUrl, openmrsFetch);
+  >(conceptUuid ? apiUrl : null, openmrsFetch, {
+    errorRetryCount: 2,
+  });
+
   return {
     items: data?.data || <Concept>{},
     isLoading,
@@ -207,6 +207,7 @@ export function useParties() {
     },
     Error
   >(apiUrl, openmrsFetch);
+
   return {
     items: data?.data || <PageableResult<Party>>{},
     isLoading,

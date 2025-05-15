@@ -1,20 +1,22 @@
 import { Button, Form, Select, TextInput, SelectItem, ButtonSet, FormGroup, Stack } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
-import styles from './add-stock-sources.scss';
+import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
+import { Save } from '@carbon/react/icons';
+import {
+  getCoreTranslation,
+  restBaseUrl,
+  showSnackbar,
+  type DefaultWorkspaceProps,
+  useConfig,
+  useLayoutType,
+} from '@openmrs/esm-framework';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
-import {
-  type DefaultWorkspaceProps,
-  restBaseUrl,
-  showSnackbar,
-  useConfig,
-  getCoreTranslation,
-} from '@openmrs/esm-framework';
-import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
-import { Save } from '@carbon/react/icons';
+import styles from './add-stock-sources.scss';
 
 type AddStockSourceProps = DefaultWorkspaceProps & {
   model?: StockSource;
@@ -22,6 +24,7 @@ type AddStockSourceProps = DefaultWorkspaceProps & {
 
 const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWorkspace }) => {
   const { t } = useTranslation();
+  const isTablet = useLayoutType() === 'tablet';
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
   // get stock sources
@@ -47,9 +50,11 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   const handleSave = useCallback(
     (event) => {
       event.preventDefault();
+
       if (model) {
         formModel.uuid = model.uuid;
       }
+
       createOrUpdateStockSource(formModel)
         .then(
           () => {
@@ -85,32 +90,32 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
         <FormGroup legendText={''}>
           <TextInput
             id="fullname"
-            type="text"
-            labelText={t('fullName', 'Full Name')}
-            size="md"
+            labelText={t('fullName', 'Full name')}
             onChange={onNameChanged}
-            value={model?.name}
             placeholder="e.g National Medical Stores"
+            size="md"
+            type="text"
+            value={model?.name}
           />
         </FormGroup>
         <FormGroup legendText={''}>
           <TextInput
             id="acronym"
-            type="text"
-            size="md"
-            placeholder="e.g NMS"
+            labelText={t('acronymOrCode', 'Acronym/Code')}
             onChange={onAcronymChanged}
+            placeholder="e.g NMS"
+            size="md"
+            type="text"
             value={model?.acronym}
-            labelText={t('acronym', 'Acronym/Code')}
           />
         </FormGroup>
         <Select
-          name="sourceType"
           className="select-field"
-          labelText={t('sourceType', 'Source Type')}
           id="sourceType"
-          value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
+          labelText={t('sourceType', 'Source Type')}
+          name="sourceType"
           onChange={onSourceTypeChange}
+          value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
         >
           <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
           {items?.answers?.map((sourceType) => (
@@ -118,13 +123,17 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
           ))}
         </Select>
       </Stack>
-
-      <ButtonSet>
+      <ButtonSet
+        className={classNames(styles.buttonSet, {
+          [styles.tablet]: isTablet,
+          [styles.desktop]: !isTablet,
+        })}
+      >
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {getCoreTranslation('cancel', 'Cancel')}
+          {getCoreTranslation('cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>
-          {getCoreTranslation('save', 'Save')}
+          {getCoreTranslation('save')}
         </Button>
       </ButtonSet>
     </Form>

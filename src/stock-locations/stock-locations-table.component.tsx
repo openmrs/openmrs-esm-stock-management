@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useStockLocationPages } from './stock-locations-table.resource';
 import {
   Button,
   DataTableSkeleton,
@@ -8,15 +7,16 @@ import {
   TableToolbarSearch,
   Tile,
 } from '@carbon/react';
-import styles from '../stock-items/stock-items-table.scss';
-import { ResourceRepresentation } from '../core/api/api';
-import DataList from '../core/components/table/table.component';
+import { Add } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { mutate } from 'swr';
-import NewLocationForm from './add-locations-form.workspace';
-import { Add } from '@carbon/react/icons';
-import { handleMutate } from '../utils';
 import { restBaseUrl } from '@openmrs/esm-framework';
+import { handleMutate } from '../utils';
+import { ResourceRepresentation } from '../core/api/api';
+import { useStockLocationPages } from './stock-locations-table.resource';
+import DataList from '../core/components/table/table.component';
+import NewLocationForm from './add-locations-form.workspace';
+import styles from '../stock-items/stock-items-table.scss';
 
 interface StockLocationsTableProps {
   status?: string;
@@ -46,7 +46,9 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
           <>
             <TableToolbarSearch persistent onChange={onInputChange} />
             <TableToolbarMenu>
-              <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
+              <TableToolbarAction className={styles.toolbarMenuAction} onClick={handleRefresh}>
+                {t('refresh', 'Refresh')}
+              </TableToolbarAction>
             </TableToolbarMenu>
             {showLocationModal ? (
               <NewLocationForm onModalChange={setAddLocationModal} showModal={showLocationModal} mutate={mutate} />
