@@ -1,10 +1,13 @@
 import React from 'react';
-import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import StockItemsTableComponent from './stock-items-table.component';
-import { useStockItemsPages } from './stock-items-table.resource';
+import { render, screen, waitFor } from '@testing-library/react';
+import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
 import { handleMutate } from '../utils';
-import { launchAddOrStockItemWorkspace } from './stock-item.utils';
+import { launchAddOrEditStockItemWorkspace } from './stock-item.utils';
+import { useStockItemsPages } from './stock-items-table.resource';
+import StockItemsTableComponent from './stock-items-table.component';
+
+const mockUseStockItemsPages = jest.mocked(useStockItemsPages);
 
 jest.mock('./stock-items-table.resource', () => ({
   useStockItemsPages: jest.fn(),
@@ -15,109 +18,146 @@ jest.mock('../utils', () => ({
 }));
 
 jest.mock('./stock-item.utils', () => ({
-  launchAddOrStockItemWorkspace: jest.fn(),
-}));
-
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
+  launchAddOrEditStockItemWorkspace: jest.fn(),
 }));
 
 describe('StockItemsTableComponent', () => {
-  const mockUseStockItemsPages = {
-    isLoading: false,
-    items: Array(25)
-      .fill(null)
-      .map((_, index) => ({
-        uuid: `item-${index}`,
-        commonName: `Test Item ${index}`,
-        drugUuid: index % 2 === 0 ? `drug-${index}` : null,
-        conceptName: `Concept ${index}`,
-        dispensingUnitName: `Unit ${index}`,
-        defaultStockOperationsUoMName: `UoM ${index}`,
-        reorderLevel: index * 10,
-        reorderLevelUoMName: 'Units',
-      })),
-    totalCount: 25,
-    currentPageSize: 10,
-    setPageSize: jest.fn(),
-    pageSizes: [10, 20, 30],
-    currentPage: 1,
-    setCurrentPage: jest.fn(),
-    isDrug: '',
-    setDrug: jest.fn(),
-    setSearchString: jest.fn(),
-  };
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useStockItemsPages as jest.Mock).mockReturnValue(mockUseStockItemsPages);
+    mockUseStockItemsPages.mockReturnValue({
+      isLoading: false,
+      items: Array(25)
+        .fill(null)
+        .map((_, index) => ({
+          uuid: `item-${index}`,
+          commonName: `Test Item ${index}`,
+          drugUuid: index % 2 === 0 ? `drug-${index}` : null,
+          conceptName: `Concept ${index}`,
+          dispensingUnitName: `Unit ${index}`,
+          defaultStockOperationsUoMName: `UoM ${index}`,
+          reorderLevel: index * 10,
+          reorderLevelUoMName: 'Units',
+        })) as StockItemDTO[],
+      pagination: {
+        results: [],
+        totalPages: 3,
+        currentPage: 1,
+        paginated: true,
+        showNextButton: true,
+        showPreviousButton: false,
+        goTo: jest.fn(),
+        goToNext: jest.fn(),
+        goToPrevious: jest.fn(),
+      },
+      error: null,
+      totalCount: 25,
+      currentPageSize: 10,
+      setPageSize: jest.fn(),
+      pageSizes: [10, 20, 30],
+      currentPage: 1,
+      setCurrentPage: jest.fn(),
+      isDrug: '',
+      setDrug: jest.fn(),
+      setSearchString: jest.fn(),
+    });
   });
 
   it('renders initial state and UI elements correctly', async () => {
-    render(<StockItemsTableComponent />);
-    expect(screen.getByText('panelDescription')).toBeInTheDocument();
-    expect(screen.getByRole('searchbox')).toBeInTheDocument();
-
     const user = userEvent.setup();
-    const menuButton = screen.getByTestId('stock-items-menu');
-    await user.click(menuButton);
 
-    await screen.findByText('Refresh');
+    render(<StockItemsTableComponent />);
 
-    expect(screen.getByText('type')).toBeInTheDocument();
-    expect(screen.getByText('genericName')).toBeInTheDocument();
-    expect(screen.getByText('commonName')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /all/i })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /^pharmaceuticals$/i })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /non pharmaceuticals/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /import/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByRole('searchbox', { name: /filter table/i })).toBeInTheDocument();
+
+    const settingsMenuButton = screen.getByRole('button', { name: /settings/i });
+    await user.click(settingsMenuButton);
+    await screen.findByText(/refresh/i);
+
+    expect(screen.getByRole('button', { name: /generic name/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /common name/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /dispensing uom/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /bulk packaging/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /reorder level/i })).toBeInTheDocument();
   });
 
   it('displays skeleton loader when isLoading is true', () => {
-    (useStockItemsPages as jest.Mock).mockReturnValue({ ...mockUseStockItemsPages, isLoading: true });
+    mockUseStockItemsPages.mockReturnValue({
+      ...mockUseStockItemsPages,
+      isLoading: true,
+      items: [],
+      pagination: undefined,
+      totalCount: 0,
+      currentPageSize: 0,
+      currentPage: 0,
+      setCurrentPage: function (value: React.SetStateAction<number>): void {
+        throw new Error('Function not implemented.');
+      },
+      setPageSize: function (value: React.SetStateAction<number>): void {
+        throw new Error('Function not implemented.');
+      },
+      pageSizes: [],
+      error: undefined,
+      isDrug: '',
+      setDrug: undefined,
+      setSearchString: function (value: any): void {
+        throw new Error('Function not implemented.');
+      },
+    });
+
     render(<StockItemsTableComponent />);
+
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
   it('renders table rows correctly based on items prop', () => {
     render(<StockItemsTableComponent />);
-    expect(screen.getByText('Test Item 0')).toBeInTheDocument();
-    expect(screen.getAllByText('drug').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('other').length).toBeGreaterThan(0);
+
+    expect(screen.getByRole('cell', { name: /test item 0/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('cell', { name: /drug/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('cell', { name: /other/i }).length).toBeGreaterThan(0);
   });
 
   it('updates search input and triggers search function', async () => {
-    render(<StockItemsTableComponent />);
     const user = userEvent.setup();
+
+    render(<StockItemsTableComponent />);
+
     const searchInput = screen.getByRole('searchbox');
     await user.type(searchInput, 'test search');
     await waitFor(
       () => {
-        expect(mockUseStockItemsPages.setSearchString).toHaveBeenCalledWith('test search');
+        expect(mockUseStockItemsPages().setSearchString).toHaveBeenCalledWith('test search');
       },
       { timeout: 2000 },
     );
   });
 
   it('updates pagination when page or page size changes', async () => {
-    render(<StockItemsTableComponent />);
     const user = userEvent.setup();
-    const nextPageButton = screen.getByLabelText('Next page');
-    await user.click(nextPageButton);
-    expect(mockUseStockItemsPages.setCurrentPage).toHaveBeenCalled();
+    render(<StockItemsTableComponent />);
 
-    const pageSizeSelect = screen.getByLabelText('Items per page:');
+    const nextPageButton = screen.getByLabelText(/next page/i);
+    await user.click(nextPageButton);
+    expect(mockUseStockItemsPages().setCurrentPage).toHaveBeenCalled();
+
+    const pageSizeSelect = screen.getByLabelText(/items per page/i);
     await user.selectOptions(pageSizeSelect, '20');
-    expect(mockUseStockItemsPages.setPageSize).toHaveBeenCalledWith(20);
+    expect(mockUseStockItemsPages().setPageSize).toHaveBeenCalledWith(20);
   });
 
   it('triggers handleRefresh when refresh button is clicked', async () => {
+    const user = userEvent.setup();
     render(<StockItemsTableComponent />);
 
-    const user = userEvent.setup();
     const menuButton = screen.getByTestId('stock-items-menu');
     expect(menuButton).toBeInTheDocument();
     await user.click(menuButton);
 
-    const refreshButton = await screen.findByText('Refresh');
+    const refreshButton = await screen.findByText(/refresh/i);
     expect(refreshButton).toBeInTheDocument();
     await user.click(refreshButton);
     await waitFor(() => {
@@ -125,13 +165,14 @@ describe('StockItemsTableComponent', () => {
     });
   });
 
-  it('triggers launchAddOrEditDialog when edit button is clicked', async () => {
-    render(<StockItemsTableComponent />);
+  it('triggers launchAddOrEditStockItemWorkspace when edit button is clicked', async () => {
     const user = userEvent.setup();
-    const editButtons = screen.getAllByLabelText('Edit Stock Item');
+    render(<StockItemsTableComponent />);
+
+    const editButtons = screen.getAllByLabelText(/edit stock item/i);
     await user.click(editButtons[0]);
 
-    expect(launchAddOrStockItemWorkspace).toHaveBeenCalledWith(
+    expect(launchAddOrEditStockItemWorkspace).toHaveBeenCalledWith(
       expect.any(Function),
       expect.objectContaining({ uuid: 'item-0' }),
     );

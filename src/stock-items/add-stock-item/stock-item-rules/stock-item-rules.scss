@@ -1,13 +1,17 @@
-@use '@carbon/styles/scss/spacing';
-@use '@carbon/styles/scss/type';
+@use '@carbon/layout';
+@use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
 .section {
-  margin: spacing.$spacing-03;
+  margin: layout.$spacing-03;
 }
 
 .form {
   display: grid;
   gap: 1.5rem;
   padding-top: 1rem;
+}
+
+.toolbarMenuAction {
+  max-width: none;
 }

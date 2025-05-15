@@ -190,9 +190,10 @@ export function useConcept(conceptUuid: string) {
       data: Concept;
     },
     Error
-  >(apiUrl, openmrsFetch);
+  >(conceptUuid ? apiUrl : null, openmrsFetch);
+
   return {
-    items: data?.data || <Concept>{},
+    items: data?.data,
     isLoading,
     error,
   };

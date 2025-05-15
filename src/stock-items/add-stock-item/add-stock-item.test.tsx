@@ -1,22 +1,8 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import AddEditStockItem from './add-stock-item.component';
+import { render, screen } from '@testing-library/react';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
-
-// Mock components
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key) => key,
-  }),
-}));
-jest.mock('@carbon/react', () => {
-  const originalModule = jest.requireActual('@carbon/react');
-  return {
-    ...originalModule,
-    useMatchMedia: jest.fn().mockReturnValue(false),
-  };
-});
+import AddEditStockItem from './add-stock-item.component';
 
 jest.mock('@carbon/react/icons', () => ({
   Save: () => <div>Save Icon</div>,
@@ -129,11 +115,11 @@ describe('AddEditStockItem', () => {
     const user = userEvent.setup();
     render(<AddEditStockItem stockItem={mockModel} />);
 
-    await user.click(screen.getByText('packagingUnits'));
+    await user.click(screen.getByText(/packaging units/i));
     expect(screen.getByTestId('packaging-units')).toBeInTheDocument();
     expect(screen.getByText('Packaging Units: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('transactions'));
+    await user.click(screen.getByText(/transactions/i));
     expect(screen.getByTestId('transactions')).toBeInTheDocument();
     expect(screen.getByText('Transactions: test-uuid-123')).toBeInTheDocument();
   });
@@ -142,12 +128,12 @@ describe('AddEditStockItem', () => {
     render(<AddEditStockItem />);
 
     const disabledTabs = [
-      'packagingUnits',
-      'transactions',
-      'batchInformation',
-      'quantities',
-      'stockRules',
-      'references',
+      /batch information/i,
+      /packaging units/i,
+      /quantities/i,
+      /references/i,
+      /rules/i,
+      /transactions/i,
     ];
     disabledTabs.forEach((tabName) => {
       const tab = screen.getByRole('button', { name: tabName });
@@ -159,12 +145,12 @@ describe('AddEditStockItem', () => {
     render(<AddEditStockItem stockItem={mockModel} />);
 
     const enabledTabs = [
-      'packagingUnits',
-      'transactions',
-      'batchInformation',
-      'quantities',
-      'stockRules',
-      'references',
+      /batch information/i,
+      /packaging units/i,
+      /quantities/i,
+      /references/i,
+      /rules/i,
+      /transactions/i,
     ];
     enabledTabs.forEach((tabName) => {
       const tab = screen.getByRole('button', { name: tabName });
@@ -178,22 +164,22 @@ describe('AddEditStockItem', () => {
 
     expect(screen.getByText('Stock Item Details: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('packagingUnits'));
+    await user.click(screen.getByText(/packaging units/i));
     expect(screen.getByText('Packaging Units: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('transactions'));
+    await user.click(screen.getByText(/transactions/i));
     expect(screen.getByText('Transactions: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('batchInformation'));
+    await user.click(screen.getByText(/batch information/i));
     expect(screen.getByText('Batch Information: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('quantities'));
+    await user.click(screen.getByText(/quantities/i));
     expect(screen.getByText('Quantities: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('stockRules'));
+    await user.click(screen.getByText(/rules/i));
     expect(screen.getByText('Rules: test-uuid-123')).toBeInTheDocument();
 
-    await user.click(screen.getByText('references'));
+    await user.click(screen.getByText(/references/i));
     expect(screen.getByText('References: test-uuid-123')).toBeInTheDocument();
   });
 
@@ -201,13 +187,12 @@ describe('AddEditStockItem', () => {
     render(<AddEditStockItem stockItem={mockModel} />);
 
     const tabNames = [
-      'stockItemDetails',
-      'packagingUnits',
-      'transactions',
-      'batchInformation',
-      'quantities',
-      'stockRules',
-      'references',
+      /batch information/i,
+      /packaging units/i,
+      /quantities/i,
+      /references/i,
+      /rules/i,
+      /transactions/i,
     ];
     tabNames.forEach((tabName) => {
       expect(screen.getByText(tabName)).toBeInTheDocument();
