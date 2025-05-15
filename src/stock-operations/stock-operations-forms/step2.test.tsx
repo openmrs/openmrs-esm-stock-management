@@ -41,6 +41,11 @@ jest.mock('../stock-operations.resource', () => ({
     isLoading: false,
     error: null,
   }),
+  useStockOperationAndItems: jest.fn().mockReturnValue({
+    items: { results: [] },
+    isLoading: false,
+    error: null,
+  }),
 }));
 
 jest.mock('../../core/components/overlay/hook', () => ({
@@ -88,6 +93,7 @@ jest.mock('react-hook-form', () => ({
     getValues: jest.fn(),
     setValue: jest.fn(),
     handleSubmit: jest.fn(),
+    trigger: jest.fn().mockReturnValue(true),
   }),
   useFormContext: jest.fn().mockReturnValue({
     watch: jest.fn(),
@@ -109,6 +115,7 @@ jest.mock('react-hook-form', () => ({
     getValues: jest.fn(),
     setValue: jest.fn(),
     handleSubmit: jest.fn(),
+    trigger: jest.fn().mockReturnValue(true),
   }),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
   FormProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -354,6 +361,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       getValues: jest.fn(),
       setValue: jest.fn(),
       handleSubmit: jest.fn(),
+      trigger: jest.fn().mockReturnValue(true),
     } as unknown as UseFormReturn<BaseStockOperationItemFormData>);
 
     render(

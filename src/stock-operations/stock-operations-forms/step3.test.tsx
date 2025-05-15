@@ -75,6 +75,7 @@ jest.mock('react-hook-form', () => ({
     getValues: jest.fn(),
     setValue: jest.fn(),
     handleSubmit: jest.fn(),
+    trigger: jest.fn().mockReturnValue(true),
   }),
   useFormContext: jest.fn().mockReturnValue({
     watch: jest.fn(),
@@ -85,6 +86,7 @@ jest.mock('react-hook-form', () => ({
     getValues: jest.fn(),
     setValue: jest.fn(),
     handleSubmit: jest.fn(),
+    trigger: jest.fn().mockReturnValue(true),
   }),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
   FormProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,

@@ -127,7 +127,9 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
                     locale="en"
                     className={styles.datePickerInput}
                     dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                    {...field}
+                    value={field.value}
+                    name={field.name}
+                    disabled={field.disabled}
                     onChange={([newDate]) => {
                       field.onChange(newDate);
                     }}
@@ -139,6 +141,7 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
                       placeholder={DATE_PICKER_FORMAT}
                       labelText={t('expiriation', 'Expiration Date')}
                       invalid={error?.message}
+                      invalidText={error?.message}
                     />
                   </DatePicker>
                 )}
