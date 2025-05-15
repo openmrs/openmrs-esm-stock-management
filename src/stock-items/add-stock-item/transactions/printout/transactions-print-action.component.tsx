@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Stack, ComboButton, MenuItem } from '@carbon/react';
 import { Printer } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
-import { useStockItem } from '../../../stock-items.resource';
+import { useStockItem, useStockItemInventory } from '../../../stock-items.resource';
 import { showModal, useConfig } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../../../../config-schema';
 import styles from './printable-transaction.scss';
-import { useEffect, useMemo, useState } from 'react';
-import { StockItemInventoryFilter, useStockItemTransactions } from '../../../stock-items.resource';
+import { type StockItemInventoryFilter, useStockItemTransactions } from '../../../stock-items.resource';
 import { ResourceRepresentation } from '../../../../core/api/api';
 
 type Props = {
   itemUuid: string;
   columns: any;
   data: any;
+  filter?: StockItemInventoryFilter;
 };
 
-const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid }) => {
+const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid, filter }) => {
   const { t } = useTranslation();
 
   const { enablePrintButton } = useConfig<ConfigObject>();
@@ -28,8 +28,66 @@ const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid }) =
     isPatientTransaction: 'true',
   });
 
+  const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
+    startIndex: 0,
+    v: filter?.v || ResourceRepresentation.Default,
+    limit: 10,
+    q: filter?.q,
+    totalCount: true,
+  });
+
   const { item: stockItem, isLoading: isStockItemLoading } = useStockItem(itemUuid);
   const { items: stockCardData, isLoading: isStockCardLoading, error } = useStockItemTransactions(stockCardItemFilter);
+  const { items: inventoryBalance } = useStockItemInventory(stockItemFilter);
+
+  const [balances, setBalances] = useState<Record<string, { quantity: number; itemName: string }>>({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (stockCardData?.results?.length) {
+      setCurrentIndex(0);
+      setBalances({});
+    }
+  }, [stockCardData?.results]);
+
+  useEffect(() => {
+    const currentItem = stockCardData?.results?.[currentIndex];
+    if (currentItem?.stockItemUuid) {
+      setStockItemFilter((prev) => ({
+        ...prev,
+        stockItemUuid: currentItem.stockItemUuid,
+      }));
+    }
+  }, [currentIndex, stockCardData]);
+
+  useEffect(() => {
+    const currentItem = stockCardData?.results?.[currentIndex];
+    const stockItemUuid = currentItem?.stockItemUuid;
+
+    if (inventoryBalance?.total && stockItemUuid) {
+      setBalances((prev) => ({
+        ...prev,
+        [stockItemUuid]: {
+          quantity: Number(inventoryBalance.total),
+          itemName: currentItem.packagingUomName ?? '',
+        },
+      }));
+
+      setCurrentIndex((prev) => prev + 1);
+    }
+  }, [inventoryBalance, currentIndex, stockCardData]);
+
+  const stockCardWithBalance = useMemo(() => {
+    return (
+      stockCardData?.results?.map((transaction) => {
+        const balance = balances[transaction.stockItemUuid];
+        return {
+          ...transaction,
+          balance: `${balance?.quantity ?? ''} ${balance?.itemName ?? ''}`,
+        };
+      }) ?? []
+    );
+  }, [stockCardData?.results, balances]);
 
   const stockCardHeaders = useMemo(
     () => [
@@ -58,6 +116,10 @@ const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid }) =
         header: 'Transaction',
       },
       {
+        key: 'balance',
+        header: 'Balance',
+      },
+      {
         key: 'totalout',
         header: 'OUT',
       },
@@ -83,7 +145,7 @@ const TransactionsPrintAction: React.FC<Props> = ({ columns, data, itemUuid }) =
       onClose: () => dispose(),
       title: stockItem.drugName || stockItem.conceptName || '',
       columns: stockCardHeaders,
-      data: stockCardData.results,
+      data: stockCardWithBalance,
     });
   };
 

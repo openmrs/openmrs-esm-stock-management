@@ -1,4 +1,4 @@
-import { StockOperationFilter, useStockOperations } from '../stock-operations/stock-operations.resource';
+import { type StockOperationFilter, useStockOperations } from '../stock-operations/stock-operations.resource';
 
 export function useDisposalList(filter: StockOperationFilter) {
   const { items, isLoading, error } = useStockOperations(filter);

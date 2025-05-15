@@ -1,4 +1,4 @@
-import { StockOperationFilter, useStockOperations } from './stock-operations.resource';
+import { type StockOperationFilter, useStockOperations } from './stock-operations.resource';
 import { useMemo, useState } from 'react';
 import { usePagination } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';

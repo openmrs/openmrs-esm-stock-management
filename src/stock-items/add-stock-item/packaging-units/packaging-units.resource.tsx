@@ -1,6 +1,6 @@
 import { ResourceRepresentation } from '../../../core/api/api';
 import { useEffect, useState } from 'react';
-import { StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
+import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 
 export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
@@ -24,7 +24,7 @@ export function useStockItemPackageUnitsHook(v?: ResourceRepresentation) {
   const { items, isLoading, error, mutate } = useStockItemPackagingUOMs(stockItemFilter);
 
   return {
-    items: items.results,
+    items: items.results ?? [],
     totalCount: items.totalCount,
     isLoading,
     error,

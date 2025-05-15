@@ -1,5 +1,24 @@
+@use '@carbon/type';
+@use '@carbon/layout';
+@use '@carbon/colors';
+
 .formContainer {
-  max-height: calc(100vh - 100px);
-  overflow: scroll;
-  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.button {
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
+}
+
+.buttonSet {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

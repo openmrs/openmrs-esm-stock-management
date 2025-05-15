@@ -1,48 +1,49 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Layer, Tile } from '@carbon/react';
 import { useLayoutType } from '@openmrs/esm-framework';
 import StockHomeInventoryCard from './stock-home-inventory-card.component';
-import StockHomeReceivingCard from './stock-home-receiving-card.component';
 import StockHomeIssuingCard from './stock-home-issuing-card.component';
-import { Layer, Tile } from '@carbon/react';
+import StockHomeReceivingCard from './stock-home-receiving-card.component';
 import styles from './stock-home-detail-card.scss';
 
-const StockHomeDetailCards = () => {
+interface DetailCardProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+const DetailCard: React.FC<DetailCardProps> = ({ title, children }) => {
   const isTablet = useLayoutType() === 'tablet';
+  const responsiveStyles = isTablet ? styles.tabletHeading : styles.desktopHeading;
+
+  return (
+    <div className={styles.tilesContainer}>
+      <Layer>
+        <Tile>
+          <div className={responsiveStyles}>
+            <h4>{title}</h4>
+          </div>
+          {children}
+        </Tile>
+      </Layer>
+    </div>
+  );
+};
+
+const StockHomeDetailCards: React.FC = () => {
   const { t } = useTranslation();
 
   return (
     <div className={styles.cardContainer}>
-      <div className={styles.tilesContainer}>
-        <Layer>
-          <Tile>
-            <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-              <h4>{t('inventory Alerts', 'Inventory Alerts')}</h4>
-            </div>
-            <StockHomeInventoryCard />
-          </Tile>
-        </Layer>
-      </div>
-      <div className={styles.tilesContainer}>
-        <Layer>
-          <Tile>
-            <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-              <h4>{t('receiving', 'Receiving')}</h4>
-            </div>
-            <StockHomeReceivingCard />
-          </Tile>
-        </Layer>
-      </div>
-      <div className={styles.tilesContainer}>
-        <Layer>
-          <Tile>
-            <div className={isTablet ? styles.tabletHeading : styles.desktopHeading}>
-              <h4>{t('issuing', 'Issuing')}</h4>
-            </div>
-            <StockHomeIssuingCard />
-          </Tile>
-        </Layer>
-      </div>
+      <DetailCard title={t('inventoryAlerts', 'Inventory alerts')}>
+        <StockHomeInventoryCard />
+      </DetailCard>
+      <DetailCard title={t('receiving', 'Receiving')}>
+        <StockHomeReceivingCard />
+      </DetailCard>
+      <DetailCard title={t('issuing', 'Issuing')}>
+        <StockHomeIssuingCard />
+      </DetailCard>
     </div>
   );
 };

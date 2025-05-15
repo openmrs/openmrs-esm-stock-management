@@ -40,6 +40,11 @@ export const configSchema = {
     _description: 'UUID for the stock dispensing units uuid',
     _default: '162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
   },
+  useItemCommonNameAsDisplay: {
+    _type: Type.Boolean,
+    _description: 'true to use item common name as display and false to use Drug name as display',
+    _default: true,
+  },
   stockItemCategoryUUID: {
     _type: Type.ConceptUuid,
     _description: 'UUID for the stock item category',
@@ -74,6 +79,7 @@ export type ConfigObject = {
   stockSourceTypeUUID: string;
   dispensingUnitsUUID: string;
   stockItemCategoryUUID: string;
+  useItemCommonNameAsDisplay: boolean;
   logo: {
     src: string;
     alt: string;

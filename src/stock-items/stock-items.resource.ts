@@ -1,15 +1,17 @@
 import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
-import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
-import { PageableResult } from '../core/api/types/PageableResult';
-import { InventoryGroupBy, StockItemDTO } from '../core/api/types/stockItem/StockItem';
-import { StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
 import useSWR from 'swr';
-import { StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
-import { StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
-import { StockBatchDTO } from '../core/api/types/stockItem/StockBatchDTO';
-import { StockItemPackagingUOMDTO } from '../core/api/types/stockItem/StockItemPackagingUOM';
-import { StockRule } from '../core/api/types/stockItem/StockRule';
-import { StockItemReference, StockItemReferenceDTO } from '../core/api/types/stockItem/StockItemReference';
+import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type PageableResult } from '../core/api/types/PageableResult';
+import { type StockBatchDTO } from '../core/api/types/stockItem/StockBatchDTO';
+import { type InventoryGroupBy, type StockItemDTO } from '../core/api/types/stockItem/StockItem';
+import { type StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
+import { type StockItemPackagingUOMDTO } from '../core/api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemReference, type StockItemReferenceDTO } from '../core/api/types/stockItem/StockItemReference';
+import { type StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
+import { type StockRule } from '../core/api/types/stockItem/StockRule';
+import { type StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
+import { z } from 'zod';
+import { stockItemDetailsSchema, type StockItemFormData } from './validationSchema';
 
 export interface StockItemFilter extends ResourceFilterCriteria {
   isDrug?: string | null | undefined;
@@ -227,11 +229,11 @@ export function deleteStockItemPackagingUnit(id: string) {
 }
 
 // createStockItem
-export function createStockItem(item: StockItemDTO) {
+export function createStockItem(item: StockItemFormData) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockitem`;
   const abortController = new AbortController();
   delete item.isDrug;
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<StockItemDTO>(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -242,12 +244,12 @@ export function createStockItem(item: StockItemDTO) {
 }
 
 // updateStockItem
-export function updateStockItem(item: StockItemDTO) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${item.uuid}`;
+export function updateStockItem(stockItemUuid: string, item: StockItemFormData) {
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockitem/${stockItemUuid}`;
   const abortController = new AbortController();
   delete item.isDrug;
   delete item.dateCreated;
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<StockItemDTO>(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

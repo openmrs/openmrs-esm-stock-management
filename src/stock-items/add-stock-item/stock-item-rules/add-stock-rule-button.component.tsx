@@ -1,8 +1,7 @@
 import { Button } from '@carbon/react';
+import { launchWorkspace } from '@openmrs/esm-framework';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { launchOverlay } from '../../../core/components/overlay/hook';
-import StockRulesAddOrUpdate from './add-stock-rules.component';
 
 interface AddStockRuleActionButtonProps {
   stockItemUuid: string;
@@ -12,8 +11,11 @@ const AddStockRuleActionButton: React.FC<AddStockRuleActionButtonProps> = ({ sto
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchOverlay('Add Stock Rule', <StockRulesAddOrUpdate stockItemUuid={stockItemUuid} />);
-  }, [stockItemUuid]);
+    launchWorkspace('stock-item-rules-form-workspace', {
+      workspaceTitle: t('addStockRule', 'Add stock rule'),
+      stockItemUuid,
+    });
+  }, [stockItemUuid, t]);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">

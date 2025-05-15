@@ -1,8 +1,8 @@
-import React, { ReactNode, useState } from 'react';
+import React, { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComboBox, InlineLoading } from '@carbon/react';
-import { Drug } from '../../../core/api/types/concept/Drug';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import { type Drug } from '../../../core/api/types/concept/Drug';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { useDrugsHook } from './drug-selector.resource';
 import { fetchStockItem } from '../../stock-items.resource';
 

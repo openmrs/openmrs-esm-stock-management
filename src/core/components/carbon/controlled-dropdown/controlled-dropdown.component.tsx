@@ -1,6 +1,6 @@
 import React from 'react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
-import { DropdownProps, OnChangeData } from '@carbon/react/lib/components/Dropdown/Dropdown';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
+import { type DropdownProps, type OnChangeData } from '@carbon/react/lib/components/Dropdown/Dropdown';
 import { TextInput } from '@carbon/react';
 
 interface ControlledDropdownProps<T, K> extends DropdownProps<K> {

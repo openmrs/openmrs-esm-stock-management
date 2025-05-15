@@ -23,7 +23,7 @@ jobs:
       - name: 🟢 Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: 20
           registry-url: "https://registry.npmjs.org"
 
       - name: 💾 Cache dependencies
@@ -54,7 +54,7 @@ jobs:
             dist
           overwrite: true
 
-          
+
 
   pre_release:
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: 20
           registry-url: "https://registry.npmjs.org"
 
       - name: 💾 Cache dependencies
@@ -127,7 +127,7 @@ jobs:
       - name: 🟢 Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: 20
           registry-url: "https://registry.npmjs.org"
 
       - name: 💾 Cache dependencies
@@ -142,7 +142,15 @@ jobs:
         run: yarn install --immutable
 
       - run: yarn turbo run build --color
-      - name: 🚢 Publish
-        run: yarn run ci:publish
+      - name: 🚢 Publish to NPM
+        run: yarn config set npmAuthToken "${NODE_AUTH_TOKEN}" && yarn npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: 📤 Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist
+          overwrite: true

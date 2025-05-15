@@ -1,25 +1,25 @@
 import {
-  FetchResponse,
-  OpenmrsResource,
+  type FetchResponse,
+  type OpenmrsResource,
   fhirBaseUrl,
   openmrsFetch,
   useSession,
   restBaseUrl,
 } from '@openmrs/esm-framework';
-import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
-import { PageableResult } from '../core/api/types/PageableResult';
-import { OpenMRSLocation, OpenMRSLocationTag } from '../core/api/types/Location';
+import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type PageableResult } from '../core/api/types/PageableResult';
+import { type OpenMRSLocation, type OpenMRSLocationTag } from '../core/api/types/Location';
 import useSWR from 'swr';
-import { Role } from '../core/api/types/identity/Role';
-import { User } from '../core/api/types/identity/User';
-import { StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
-import { Concept } from '../core/api/types/concept/Concept';
-import { Party } from '../core/api/types/Party';
-import { Drug } from '../core/api/types/concept/Drug';
-import { Patient } from '../core/api/types/identity/Patient';
+import { type Role } from '../core/api/types/identity/Role';
+import { type User } from '../core/api/types/identity/User';
+import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { type Concept } from '../core/api/types/concept/Concept';
+import { type Party } from '../core/api/types/Party';
+import { type Drug } from '../core/api/types/concept/Drug';
+import { type Patient } from '../core/api/types/identity/Patient';
 import { useMemo } from 'react';
 import { uniqBy } from 'lodash-es';
-import { UserRoleScope } from '../core/api/types/identity/UserRoleScope';
+import { type UserRoleScope } from '../core/api/types/identity/UserRoleScope';
 
 export type PatientFilterCriteria = ResourceFilterCriteria;
 
@@ -168,14 +168,14 @@ export function useUsers(filter: UserFilterCriteria) {
 }
 
 // getUser
-export function useUser(id: string) {
-  const apiUrl = `${restBaseUrl}/user/${id}`;
+export function useUser(id: string, v?: string) {
+  const apiUrl = `${restBaseUrl}/user/${id}${toQueryParams({ v: v as any })}`;
   const { data, error, isLoading } = useSWR<
     {
       data: User;
     },
     Error
-  >(apiUrl, openmrsFetch);
+  >(id ? apiUrl : null, openmrsFetch);
   return {
     data: data?.data || <User>{},
     isLoading,

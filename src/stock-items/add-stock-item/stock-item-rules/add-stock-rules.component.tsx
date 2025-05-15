@@ -1,33 +1,30 @@
 import {
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
-  Form,
-  Select,
-  TextInput,
-  SelectItem,
-  FormGroup,
+  ButtonSet,
   Checkbox,
   CheckboxGroup,
+  Form,
+  FormGroup,
+  Select,
+  SelectItem,
+  TextInput,
 } from '@carbon/react';
-import React, { ChangeEvent, useCallback, useState, useEffect } from 'react';
-import styles from './add-stock-rules.scss';
-import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
-import { createOrUpdateStockRule } from './stock-rules.resource';
-import { StockRule } from '../../../core/api/types/stockItem/StockRule';
-import { showSnackbar } from '@openmrs/esm-framework';
+import { type DefaultWorkspaceProps, showSnackbar } from '@openmrs/esm-framework';
+import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { closeOverlay } from '../../../core/components/overlay/hook';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
+import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
+import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
+import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
+import styles from './add-stock-rules.scss';
+import { createOrUpdateStockRule } from './stock-rules.resource';
 
-interface AddStockRuleProps {
+interface AddStockRuleProps extends Partial<DefaultWorkspaceProps> {
   model?: StockRule;
   stockItemUuid?: string;
 }
 
-const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUuid }) => {
+const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUuid, closeWorkspace }) => {
   const { t } = useTranslation();
 
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
@@ -99,7 +96,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
     const selectedQuantityUnit = dispensingUnits?.results.find((x) => x.uuid === evt.target.value);
     setFormModel({
       ...formModel,
-      stockItemPackagingUOMUuid: selectedQuantityUnit.uuid,
+      stockItemPackagingUOMUuid: selectedQuantityUnit?.uuid,
     });
   };
 
@@ -142,7 +139,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
               kind: 'success',
               subtitle: t('stockRuleAddedSuccessfully', 'Stock Rule Added Successfully'),
             });
-            closeOverlay();
+            closeWorkspace?.();
           },
           (error) => {
             showSnackbar({
@@ -155,179 +152,178 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
         )
         .catch();
     },
-    [formModel, model, t, stockItemUuid],
+    [formModel, model, t, stockItemUuid, closeWorkspace],
   );
 
   return (
-    <div>
-      <Form onSubmit={onFormSubmit}>
-        <ModalHeader />
-        <ModalBody>
-          <FormGroup>
-            <section className={styles.section}>
-              <section className={styles.section}>
-                <Select
-                  name="location"
-                  className="select-field"
-                  labelText={t('location', 'Location')}
-                  id="location"
-                  value={formModel?.locationUuid ? formModel.locationUuid : ''}
-                  onChange={onLocationChange}
-                >
-                  <SelectItem disabled hidden value="" text={t('chooseLocation', 'Choose the location')} />
-                  {stockLocations?.map((location) => {
-                    return <SelectItem key={location.id} value={location.id} text={location.name} />;
-                  })}
-                </Select>
-              </section>
-
-              <section className={styles.section}>
-                <TextInput
-                  id="name"
-                  type="text"
-                  labelText={t('name', 'Rule Name')}
-                  size="md"
-                  onChange={onNameChanged}
-                  value={model?.name}
-                  placeholder="e.g Panado Alert"
-                />
-              </section>
-
-              <section className={styles.section}>
-                <Select
-                  name="quantityUnit"
-                  className="select-field"
-                  labelText={t('quantityUnit', 'Quantity Unit')}
-                  id="quantityUnit"
-                  value={formModel?.stockItemPackagingUOMUuid ? formModel.stockItemPackagingUOMUuid : ''}
-                  onChange={onQuantityUnitChange}
-                >
-                  <SelectItem disabled hidden value="" text={t('chooseQuantityUnit', 'Choose the Unit of Quantity')} />
-                  {dispensingUnits?.results.map((stockItemPackagingUOMUuid) => {
-                    return (
-                      <SelectItem
-                        key={stockItemPackagingUOMUuid.uuid}
-                        value={stockItemPackagingUOMUuid.uuid}
-                        text={stockItemPackagingUOMUuid.packagingUomName}
-                      />
-                    );
-                  })}
-                </Select>
-              </section>
-
-              <section className={styles.section}>
-                <TextInput
-                  id="quantity"
-                  type="number"
-                  labelText={t('quantity', 'Quantity Threshold')}
-                  size="md"
-                  onChange={onQuantityChanged}
-                  value={model?.quantity}
-                  placeholder="e.g 30 Boxes"
-                />
-              </section>
-            </section>
-          </FormGroup>
-
-          <FormGroup>
+    <Form onSubmit={onFormSubmit} className={styles.formContainer}>
+      <div>
+        <FormGroup>
+          <section className={styles.section}>
             <section className={styles.section}>
               <Select
-                name="alertRole"
+                name="location"
                 className="select-field"
-                labelText={t('alertRole', 'Alert Role')}
-                id="alertRole"
-                value={formModel?.alertRole ? formModel.alertRole : ''}
-                onChange={onAlertRoleChange}
+                labelText={t('location', 'Location')}
+                id="location"
+                value={formModel?.locationUuid ? formModel.locationUuid : ''}
+                onChange={onLocationChange}
               >
-                <SelectItem disabled hidden value="" text={t('chooseAlertRole', 'Choose an Alert Role')} />
-                {rolesData?.results?.map((alertRole) => {
-                  return <SelectItem key={alertRole.display} value={alertRole.display} text={alertRole.display} />;
+                <SelectItem disabled hidden value="" text={t('chooseLocation', 'Choose the location')} />
+                {stockLocations?.map((location) => {
+                  return <SelectItem key={location.id} value={location.id} text={location.name} />;
                 })}
               </Select>
             </section>
+
+            <section className={styles.section}>
+              <TextInput
+                id="name"
+                type="text"
+                labelText={t('name', 'Rule Name')}
+                size="md"
+                onChange={onNameChanged}
+                value={model?.name}
+                placeholder="e.g Panado Alert"
+              />
+            </section>
+
             <section className={styles.section}>
               <Select
-                name="mailRole"
+                name="quantityUnit"
                 className="select-field"
-                labelText={t('mailRole', 'Mail Role')}
-                id="mailRole"
-                value={formModel?.mailRole ? formModel.mailRole : ''}
-                onChange={onMailRoleChange}
+                labelText={t('quantityUnit', 'Quantity Unit')}
+                id="quantityUnit"
+                value={formModel?.stockItemPackagingUOMUuid ? formModel.stockItemPackagingUOMUuid : ''}
+                onChange={onQuantityUnitChange}
               >
-                <SelectItem disabled hidden value="" text={t('chooseMailRole', 'Choose a Mail Role')} />
-                {rolesData?.results?.map((mailRole) => {
-                  return <SelectItem key={mailRole.display} value={mailRole.display} text={mailRole.display} />;
+                <SelectItem disabled hidden value="" text={t('chooseQuantityUnit', 'Choose the Unit of Quantity')} />
+                {dispensingUnits?.results?.map((stockItemPackagingUOMUuid) => {
+                  return (
+                    <SelectItem
+                      key={stockItemPackagingUOMUuid.uuid}
+                      value={stockItemPackagingUOMUuid.uuid}
+                      text={stockItemPackagingUOMUuid.packagingUomName}
+                    />
+                  );
                 })}
               </Select>
             </section>
+
             <section className={styles.section}>
               <TextInput
-                id="evaluationFrequency"
+                id="quantity"
                 type="number"
-                labelText={t('evaluationFrequency', 'Frequency Check (Minutes)')}
+                labelText={t('quantity', 'Quantity Threshold')}
                 size="md"
-                onChange={onEvaluationFrequencyChanged}
-                value={model?.evaluationFrequency}
-                placeholder="e.g 30 Minutes"
-              />
-              <TextInput
-                id="actionFrequency"
-                type="number"
-                labelText={t('actionFrequency', 'Notification Frequency (Minutes)')}
-                size="md"
-                onChange={onActionFrequencyChanged}
-                value={model?.actionFrequency}
-                placeholder="e.g 3600 Minutes"
+                onChange={onQuantityChanged}
+                value={model?.quantity}
+                placeholder="e.g 30 Boxes"
               />
             </section>
+          </section>
+        </FormGroup>
+
+        <FormGroup>
+          <section className={styles.section}>
+            <Select
+              name="alertRole"
+              className="select-field"
+              labelText={t('alertRole', 'Alert Role')}
+              id="alertRole"
+              value={formModel?.alertRole ? formModel.alertRole : ''}
+              onChange={onAlertRoleChange}
+            >
+              <SelectItem disabled hidden value="" text={t('chooseAlertRole', 'Choose an Alert Role')} />
+              {rolesData?.results?.map((alertRole) => {
+                return <SelectItem key={alertRole.display} value={alertRole.display} text={alertRole.display} />;
+              })}
+            </Select>
+          </section>
+          <section className={styles.section}>
+            <Select
+              name="mailRole"
+              className="select-field"
+              labelText={t('mailRole', 'Mail Role')}
+              id="mailRole"
+              value={formModel?.mailRole ? formModel.mailRole : ''}
+              onChange={onMailRoleChange}
+            >
+              <SelectItem disabled hidden value="" text={t('chooseMailRole', 'Choose a Mail Role')} />
+              {rolesData?.results?.map((mailRole) => {
+                return <SelectItem key={mailRole.display} value={mailRole.display} text={mailRole.display} />;
+              })}
+            </Select>
+          </section>
+          <section className={styles.section}>
+            <TextInput
+              id="evaluationFrequency"
+              type="number"
+              labelText={t('evaluationFrequency', 'Frequency Check (Minutes)')}
+              size="md"
+              onChange={onEvaluationFrequencyChanged}
+              value={model?.evaluationFrequency}
+              placeholder="e.g 30 Minutes"
+            />
+            <TextInput
+              id="actionFrequency"
+              type="number"
+              labelText={t('actionFrequency', 'Notification Frequency (Minutes)')}
+              size="md"
+              onChange={onActionFrequencyChanged}
+              value={model?.actionFrequency}
+              placeholder="e.g 3600 Minutes"
+            />
+          </section>
+        </FormGroup>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            justifyContent: 'center',
+          }}
+        >
+          <FormGroup className="clear-margin-bottom">
+            <CheckboxGroup className={styles.checkboxGrid}>
+              <Checkbox
+                onChange={onEnabledChanged}
+                checked={formModel?.enabled}
+                labelText={`Enabled ?`}
+                value={model?.enabled}
+                id="chk-ruleEnabled"
+              />
+            </CheckboxGroup>
           </FormGroup>
+          <FormGroup className="clear-margin-bottom">
+            <CheckboxGroup className={styles.checkboxGrid}>
+              <Checkbox
+                onChange={onAppliesToChildrenChanged}
+                name="appliesToChildren"
+                checked={formModel?.enableDescendants}
+                value={model?.enableDescendants}
+                labelText={`Applies to child locations?`}
+                id="chk-ruleAppliesToChildren"
+              />
+            </CheckboxGroup>
+          </FormGroup>
+        </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              justifyContent: 'center',
-            }}
-          >
-            <FormGroup className="clear-margin-bottom">
-              <CheckboxGroup className={styles.checkboxGrid}>
-                <Checkbox
-                  onChange={onEnabledChanged}
-                  checked={formModel?.enabled}
-                  labelText={`Enabled ?`}
-                  value={model?.enabled}
-                  id="chk-ruleEnabled"
-                />
-              </CheckboxGroup>
-            </FormGroup>
-            <FormGroup className="clear-margin-bottom">
-              <CheckboxGroup className={styles.checkboxGrid}>
-                <Checkbox
-                  onChange={onAppliesToChildrenChanged}
-                  name="appliesToChildren"
-                  checked={formModel?.enableDescendants}
-                  value={model?.enableDescendants}
-                  labelText={`Applies to child locations?`}
-                  id="chk-ruleAppliesToChildren"
-                />
-              </CheckboxGroup>
-            </FormGroup>
-          </div>
-
-          <div>
-            This stock rule will be evaluated by checking if the stock quantities have lowered to the threshold or below
-            and a notification will be sent to the personnel with the specified role in the given location. The
-            notification will only be sent once per specified notification frequency.
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="secondary" onClick={closeOverlay}>
-            {t('cancel', 'Cancel')}
-          </Button>
-          <Button type="submit">{t('save', 'Save')}</Button>
-        </ModalFooter>
-      </Form>
-    </div>
+        <div>
+          This stock rule will be evaluated by checking if the stock quantities have lowered to the threshold or below
+          and a notification will be sent to the personnel with the specified role in the given location. The
+          notification will only be sent once per specified notification frequency.
+        </div>
+      </div>
+      <ButtonSet className={styles.buttonSet}>
+        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+          {t('cancel', 'Cancel')}
+        </Button>
+        <Button type="submit" className={styles.button}>
+          {t('save', 'Save')}
+        </Button>
+      </ButtonSet>
+    </Form>
   );
 };
 

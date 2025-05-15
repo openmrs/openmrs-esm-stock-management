@@ -4,7 +4,6 @@ import {
   DataTable,
   DataTableSkeleton,
   Link,
-  TabPanel,
   Pagination,
   Table,
   TableBody,
@@ -14,28 +13,29 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarContent,
-  TableToolbarSearch,
-  Tile,
-  TableToolbarMenu,
   TableToolbarAction,
+  TableToolbarContent,
+  TableToolbarMenu,
+  TableToolbarSearch,
+  TabPanel,
+  Tile,
 } from '@carbon/react';
-import styles from './stock-user-role-scopes.scss';
 import { ArrowDownLeft, ArrowLeft } from '@carbon/react/icons';
 import { isDesktop, restBaseUrl, useSession } from '@openmrs/esm-framework';
-import { ResourceRepresentation } from '../core/api/api';
-import useStockUserRoleScopesPage from './stock-user-role-scopes-items-table.resource';
-import AddStockUserRoleScopeActionButton from './add-stock-user-role-scope-button.component';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
+import { handleMutate } from '../utils';
+import { ResourceRepresentation } from '../core/api/api';
+import { URL_USER_ROLE_SCOPE } from '../constants';
+import AddStockUserRoleScopeActionButton from './add-stock-user-role-scope-button.component';
 import EditStockUserRoleActionsMenu from './edit-stock-user-scope/edit-stock-user-scope-action-menu.component';
 import StockUserScopeDeleteActionMenu from './delete-stock-user-scope/delete-stock-user-scope.component';
-import { URL_USER_ROLE_SCOPE } from '../constants';
-import { handleMutate } from '../utils';
+import useStockUserRoleScopesPage from './stock-user-role-scopes-items-table.resource';
+import styles from './stock-user-role-scopes.scss';
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
-
   const currentUser = useSession();
+
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
   };
@@ -46,6 +46,7 @@ function StockUserRoleScopesItems() {
       v: ResourceRepresentation.Default,
       totalCount: true,
     });
+
   const tableHeaders = useMemo(
     () => [
       {
@@ -71,7 +72,7 @@ function StockUserRoleScopesItems() {
       },
       {
         id: 4,
-        header: t('permanent', 'Permanent ?'),
+        header: t('permanent', 'Permanent'),
         key: 'permanent',
       },
       {
@@ -164,15 +165,11 @@ function StockUserRoleScopesItems() {
           'To access stock management features, users must have assigned roles specifying location and stock operation type scopes.',
         )}
       </TabPanel>
-      <div id="table-tool-bar">
-        <div></div>
-        <div className="right-filters"></div>
-      </div>
       <DataTable
-        rows={tableRows ?? []}
         headers={tableHeaders}
-        isSortable={true}
-        useZebraStyles={true}
+        isSortable
+        rows={tableRows ?? []}
+        useZebraStyles
         render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
@@ -185,7 +182,9 @@ function StockUserRoleScopesItems() {
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
                 <TableToolbarMenu>
-                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
+                  <TableToolbarAction className={styles.toolbarAction} onClick={handleRefresh}>
+                    {t('refresh', 'Refresh')}
+                  </TableToolbarAction>
                 </TableToolbarMenu>
                 <AddStockUserRoleScopeActionButton />
               </TableToolbarContent>
@@ -230,7 +229,9 @@ function StockUserRoleScopesItems() {
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>{t('noOperationsToDisplay', 'No Stock User scopes to display')}</p>
+                    <p className={styles.content}>
+                      {t('noStockUserRoleScopesToDisplay', 'No stock user role scopes to display')}
+                    </p>
                     <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>

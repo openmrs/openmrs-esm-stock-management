@@ -27,7 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourceRepresentation } from '../core/api/api';
 import AddStockItemActionButton from './add-stock-item/add-stock-action-button.component';
 import FilterStockItems from './components/filter-stock-items/filter-stock-items.component';
-import { launchAddOrEditDialog } from './stock-item.utils';
+import { launchAddOrStockItemWorkspace } from './stock-item.utils';
 import { useStockItemsPages } from './stock-items-table.resource';
 import styles from './stock-items-table.scss';
 import AddStockItemsBulktImportActionButton from './add-bulk-stock-item/add-stock-items-bulk-import-action-button.component';
@@ -144,7 +144,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             size="md"
             onClick={() => {
               stockItem.isDrug = !!stockItem.drugUuid;
-              launchAddOrEditDialog(t, stockItem, true);
+              launchAddOrStockItemWorkspace(t, stockItem);
             }}
             iconDescription={t('editStockItem', 'Edit Stock Item')}
             renderIcon={(props) => <Edit size={16} {...props} />}

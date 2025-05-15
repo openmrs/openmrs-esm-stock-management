@@ -103,24 +103,6 @@
       "component": "stockSources"
     },
     {
-      "name": "locations-db-link",
-      "slot": "stock-page-dashboard-slot",
-      "component": "stockLocationsLink",
-      "meta": {
-        "name": "locations",
-        "slot": "locations-dashboard-slot",
-        "title": "Locations"
-      },
-      "order": 4,
-      "online": true,
-      "offline": true
-    },
-    {
-      "name": "stock-locations-db",
-      "slot": "locations-dashboard-slot",
-      "component": "stockLocations"
-    },
-    {
       "name": "reports-db-link",
       "slot": "stock-page-dashboard-slot",
       "component": "stockReportsLink",
@@ -192,8 +174,16 @@
       "component": "deletePackagingUnitModal"
     },
     {
+      "name": "expired-stock-modal",
+      "component": "expiredStockModal"
+    },
+    {
       "name": "import-bulk-stock-items",
       "component": "importBulkStockItemsModal"
+    },
+    {
+      "name": "receiving-stock-modal",
+      "component": "receivingStockModal"
     },
     {
       "name": "stock-operation-dialog",
@@ -206,6 +196,62 @@
     {
       "name": "transactions-print-stockcard-preview-modal",
       "component": "transactionStockcardPrintPreviewModal"
+    }
+  ],
+  "workspaces": [
+    {
+      "name": "stock-operation-form-workspace",
+      "component": "stockOperationFormWorkspace",
+      "title": "Stock Operation",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-item-rules-form-workspace",
+      "component": "stockItemRulesFormWorkspace",
+      "title": "Stock Item Rules",
+      "type": "form"
+    },
+    {
+      "name": "stock-item-form-workspace",
+      "component": "stockItemFormWorkspace",
+      "title": "Stock Items",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-sources-form-workspace",
+      "component": "stockSourcesFormWorkspace",
+      "title": "Stock Sources",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-location-form-workspace",
+      "component": "stockLocationsFormWorkspace",
+      "title": "Stock Locations",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-user-role-scopes-form-workspace",
+      "component": "stockUserScopesFormWorkspace",
+      "title": "User Role Scopes",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-reports-form-workspace",
+      "component": "stockReportsFormWorkspace",
+      "title": "Reports",
+      "type": "form",
+      "canMaximize": true,
+      "width": "extra-wide"
     }
   ],
   "pages": [

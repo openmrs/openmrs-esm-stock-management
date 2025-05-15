@@ -2,7 +2,7 @@ import { CLOSE_PRINT_AFTER_PRINT } from '../../constants';
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
 import { GetHeaderSection, GetPrintTemplate } from '../../core/print/PrintTemplate';
 import { printDocument } from '../../core/print/printUtils';
-import { StockOperationPrintData } from './StockOperationReport';
+import { type StockOperationPrintData } from './StockOperationReport';
 
 export const FormatGoodsReceivedDocument = async (data: StockOperationPrintData): Promise<string> => {
   const emptyRowCount: number = Math.max(0, 25 - (data?.items?.length ?? 0));

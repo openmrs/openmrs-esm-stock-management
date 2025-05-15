@@ -1,6 +1,6 @@
 {
   "name": "@openmrs/esm-stock-management-app",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "license": "MPL-2.0",
   "description": "Stock management microfrontend for OpenMRS 3.x",
   "browser": "dist/openmrs-esm-stock-management-app.js",
@@ -11,14 +11,14 @@
     "serve": "webpack serve --mode=development",
     "build": "webpack --mode production",
     "analyze": "webpack --mode=production --env analyze=true",
-    "lint": "cross-env eslint src --ext tsx,ts --fix --max-warnings=0",
+    "lint": "eslint src --ext tsx,ts --fix --max-warnings=0",
     "prettier": "prettier --write \"src/**/*.{css,scss,ts,tsx}\" --list-different",
     "typescript": "tsc",
     "test": "jest --config jest.config.js --passWithNoTests",
     "verify": "turbo run lint typescript coverage",
     "coverage": "yarn test --coverage",
     "prepare": "husky install",
-    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./i18next-parser.config.js",
+    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./tools/i18next-parser.config.js",
     "postinstall": "husky",
     "test-e2e": "playwright test"
   },
@@ -42,9 +42,9 @@
     "url": "https://github.com/openmrs/openmrs-esm-stock-management-app/issues"
   },
   "dependencies": {
-    "@carbon/react": "^1.33.1",
+    "@carbon/react": "^1.76.0",
     "@hookform/resolvers": "^3.3.0",
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.52.0",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "lodash-es": "^4.17.21",
@@ -55,7 +55,7 @@
     "zod": "^3.22.2"
   },
   "peerDependencies": {
-    "@openmrs/esm-framework": "5.x",
+    "@openmrs/esm-framework": "6.x",
     "dayjs": "1.x",
     "react": "18.x",
     "react-i18next": "11.x",
@@ -86,6 +86,7 @@
     "css-loader": "^6.8.1",
     "dayjs": "^1.11.9",
     "eslint": "^8.44.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-testing-library": "^6.3.0",
     "husky": "^9.1.6",
@@ -105,7 +106,7 @@
     "rxjs": "^6.6.7",
     "swc-loader": "^0.2.3",
     "swr": "^2.2.4",
-    "turbo": "^2.2.3",
+    "turbo": "^2.5.2",
     "typescript": "^4.9.5",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
@@ -115,5 +116,5 @@
     "*.{ts,tsx}": "eslint --cache --fix --max-warnings 0",
     "*.{css,scss,ts,tsx}": "prettier --write --list-different"
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.9.1"
 }

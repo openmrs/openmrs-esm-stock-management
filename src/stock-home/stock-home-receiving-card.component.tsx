@@ -1,30 +1,34 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
-import { navigate, useLayoutType } from '@openmrs/esm-framework';
-import styles from './stock-home-detail-card.scss';
 import { Delivery } from '@carbon/react/icons';
+import { showModal } from '@openmrs/esm-framework';
 import { ResourceRepresentation } from '../core/api/api';
 import { useStockReceiving } from './stock-home-receiving.resource';
+import styles from './stock-home-detail-card.scss';
 
 const StockHomeReceivingCard = () => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === 'tablet';
 
   const { items, isLoading } = useStockReceiving({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
 
-  if (isLoading) return <></>;
+  if (isLoading) {
+    return null;
+  }
 
   if (items?.length === 0) {
-    return (
-      <>
-        <p className={styles.content}>{t('receivedNull', 'No received to display')}</p>
-      </>
-    );
+    return <p className={styles.content}>{t('noReceivedStock', 'No received stock to display')}</p>;
   }
+
+  const launchReceivingStockModal = () => {
+    const dispose = showModal('receiving-stock-modal', {
+      closeModal: () => dispose(),
+      receivingStock: items,
+    });
+  };
 
   return (
     <>
@@ -46,15 +50,8 @@ const StockHomeReceivingCard = () => {
           </div>
         )),
       )}
-      <Button
-        onClick={() => {
-          navigate({
-            to: `${window.getOpenmrsSpaBase()}stock-management/orders`,
-          });
-        }}
-        kind="ghost"
-      >
-        {t('receivedView', 'View All')}
+      <Button kind="ghost" onClick={launchReceivingStockModal} size="sm">
+        {t('viewAll', 'View All')}
       </Button>
     </>
   );

@@ -1,8 +1,8 @@
 import React from 'react';
-import { RadioButtonGroupProps } from '@carbon/react/lib/components/RadioButtonGroup/RadioButtonGroup';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import { type RadioButtonGroupProps } from '@carbon/react/lib/components/RadioButtonGroup/RadioButtonGroup';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { RadioButtonGroup, RadioButton } from '@carbon/react';
-import { RadioOption } from '../../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource';
+import { type RadioOption } from '../../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource';
 
 interface ControlledRadioButtonGroupProps<T> extends RadioButtonGroupProps {
   controllerName: string;
@@ -19,12 +19,12 @@ const ControlledRadioButtonGroup = <T,>(props: ControlledRadioButtonGroupProps<T
       render={({ field: { onChange, value, ref } }) => (
         <RadioButtonGroup
           {...props}
-          onChange={(selection: boolean, name: string, event: unknown) => {
-            onChange(selection, name, event);
+          onChange={(selectedValue: string, name: string, event: React.ChangeEvent<HTMLInputElement>) => {
+            onChange(selectedValue, name, event);
 
             // Fire prop change
             if (props.onChange) {
-              props.onChange(selection, name, event);
+              props.onChange(selectedValue, name, event);
             }
           }}
           id={props.name}

@@ -2,8 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStockItem } from '../../stock-items.resource';
 import DispensingPackageMeasurement from '../dispensing-package-measurement/dispensing-package-measurement.component';
-import { Control, FormState } from 'react-hook-form';
-import { StockItemFormData } from '../../validationSchema';
+import { type Control, type FormState } from 'react-hook-form';
+import { type StockItemFormData } from '../../validationSchema';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
 import { NumberInputSkeleton } from '@carbon/react';
 

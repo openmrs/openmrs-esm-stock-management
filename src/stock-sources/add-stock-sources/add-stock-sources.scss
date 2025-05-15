@@ -1,6 +1,6 @@
 @use '@carbon/layout';
 @use '@carbon/type';
-@use '~@openmrs/esm-styleguide/src/vars' as *;
+@use '@openmrs/esm-styleguide/src/vars' as *;
 
 .section {
   margin: layout.$spacing-03;
@@ -14,4 +14,28 @@
 
 .modalBody {
   padding-bottom: layout.$spacing-05;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.button {
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  min-width: 50%;
+}
+
+.buttonSet {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.body {
+  padding: 1rem;
 }

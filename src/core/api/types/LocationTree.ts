@@ -1,4 +1,4 @@
-import { BaseOpenmrsObject } from './BaseOpenmrsObject';
+import { type BaseOpenmrsObject } from './BaseOpenmrsObject';
 
 export interface LocationTree extends BaseOpenmrsObject {
   parentLocationId: number;

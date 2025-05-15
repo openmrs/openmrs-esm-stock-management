@@ -1,9 +1,10 @@
+@use '@carbon/colors';
 @use '@carbon/layout';
 @use '@carbon/type';
-@use '~@openmrs/esm-styleguide/src/vars' as *;
+@use '@openmrs/esm-styleguide/src/vars' as *;
 
 .container {
-  margin: 2rem 0;
+  margin: layout.$spacing-07 0;
 }
 
 .emptyStateContainer,
@@ -12,13 +13,9 @@
 }
 
 .tilesContainer {
-  background-color: $ui-02;
   border: 1px solid $ui-03;
-  border-bottom: none;
+  min-height: 7.875rem;
   width: 100%;
-  margin: 0 auto;
-  max-width: 95vw;
-  padding-bottom: 0;
 }
 
 .headerContainer {
@@ -92,13 +89,13 @@
   @include type.type-style('heading-compact-01');
   color: $text-02;
   margin-top: layout.$spacing-05;
-  margin-bottom: layout.$spacing-03;
 }
 
 .desktopHeading,
 .tabletHeading {
   text-align: left;
   text-transform: capitalize;
+  margin-bottom: layout.$spacing-05;
 
   h4 {
     @include type.type-style('heading-compact-02');
@@ -113,11 +110,6 @@
       @include brand-03(border-bottom-color);
     }
   }
-}
-
-.tile {
-  text-align: center;
-  border: 1px solid $ui-03;
 }
 
 .filterEmptyState {
@@ -146,24 +138,26 @@
 
 .cardContainer {
   display: flex;
-  margin: 0 auto;
+  padding: layout.$spacing-05;
+  background-color: #ffffff;
+  flex-flow: row wrap;
+  flex-grow: 1;
+  gap: layout.$spacing-05;
+  align-items: stretch;
 }
 
 .cardContainer > * {
-  flex: 1;
-  margin: 8px 8px;
-}
-
-.cardContainerBig {
-  display: flex;
-  flex-direction: column;
+  flex: 1 1 0;
+  height: 100%;
 }
 
 .card {
   display: flex;
-  border: 1px solid #ccc;
+  flex-direction: column;
   margin: 10px;
-  background-color: #f4f4f4;
+  background-color: colors.$gray-10;
+  height: 100%;
+  justify-content: space-between;
 }
 
 .icon {
@@ -172,31 +166,31 @@
 
 .colorLineYellow {
   width: 5px;
-  background-color: #f1c21b;
+  background-color: colors.$yellow-30;
   margin-right: 10px;
 }
 
 .colorLineBlue {
   width: 5px;
-  background-color: #0f62fe;
+  background-color: colors.$blue-60;
   margin-right: 10px;
 }
 
 .colorLineOrange {
   width: 5px;
-  background-color: #ff832b;
+  background-color: colors.$orange-40;
   margin-right: 10px;
 }
 
 .colorLineGreen {
   width: 5px;
-  background-color: #198038;
+  background-color: colors.$green-60;
   margin-right: 10px;
 }
 
 .colorLineRed {
   width: 5px;
-  background-color: #da1e28;
+  background-color: colors.$red-60;
   margin-right: 10px;
 }
 
@@ -206,6 +200,6 @@
 }
 
 .cardText p {
-  font-size: 0.9em;
-  color: #525252;
+  font-size: layout.$spacing-05;
+  color: colors.$gray-70;
 }

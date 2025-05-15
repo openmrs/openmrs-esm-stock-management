@@ -2,7 +2,7 @@ import { openmrsFetch, restBaseUrl, usePagination } from '@openmrs/esm-framework
 import { StockReportFilter } from './report-list/stock-report-filters';
 import { toQueryParams } from '../core/api/api';
 import useSWR from 'swr';
-import { ReportType } from './ReportType';
+import { type ReportType } from './ReportType';
 import { useState } from 'react';
 
 export function useReportTypes() {

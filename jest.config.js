@@ -18,13 +18,13 @@ module.exports = {
     '^dexie$': require.resolve('dexie'),
     '^react-i18next$': path.resolve(__dirname, '__mocks__', 'react-i18next.js'),
   },
-  setupFilesAfterEnv: ['<rootDir>/src/setup-tests.ts'],
+  setupFilesAfterEnv: ['<rootDir>/tools/setup-tests.ts'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'http://localhost/',
   },
   testPathIgnorePatterns: [
-    "/node_modules/",
-      "/e2e/"  // Ignore the e2e directory containing Playwright tests
-    ]
+    '/node_modules/',
+    '/e2e/', // Ignore the e2e directory containing Playwright tests
+  ],
 };

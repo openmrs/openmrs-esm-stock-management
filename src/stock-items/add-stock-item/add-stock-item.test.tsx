@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AddEditStockItem from './add-stock-item.component';
-import { StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 
 // Mock components
 jest.mock('react-i18next', () => ({
@@ -22,8 +22,8 @@ jest.mock('@carbon/react/icons', () => ({
   Save: () => <div>Save Icon</div>,
 }));
 
-jest.mock('./stock-item-details/stock-item-details.component', () => ({ model }) => (
-  <div data-testid="stock-item-details">Stock Item Details: {model.uuid}</div>
+jest.mock('./stock-item-details/stock-item-details.component', () => ({ stockItem }) => (
+  <div data-testid="stock-item-details">Stock Item Details: {stockItem?.uuid}</div>
 ));
 
 jest.mock('./packaging-units/packaging-units.component', () => ({ stockItemUuid }) => (
@@ -120,14 +120,14 @@ describe('AddEditStockItem', () => {
   };
 
   it('renders correctly with initial state and default selected tab', () => {
-    render(<AddEditStockItem model={mockModel} />);
+    render(<AddEditStockItem stockItem={mockModel} />);
     expect(screen.getByTestId('stock-item-details')).toBeInTheDocument();
     expect(screen.getByText('Stock Item Details: test-uuid-123')).toBeInTheDocument();
   });
 
   it('changes selected tab when clicking on different tabs', async () => {
     const user = userEvent.setup();
-    render(<AddEditStockItem model={mockModel} isEditing={true} />);
+    render(<AddEditStockItem stockItem={mockModel} />);
 
     await user.click(screen.getByText('packagingUnits'));
     expect(screen.getByTestId('packaging-units')).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe('AddEditStockItem', () => {
   });
 
   it('disables tabs when isEditing is false', () => {
-    render(<AddEditStockItem model={mockModel} isEditing={false} />);
+    render(<AddEditStockItem />);
 
     const disabledTabs = [
       'packagingUnits',
@@ -150,13 +150,13 @@ describe('AddEditStockItem', () => {
       'references',
     ];
     disabledTabs.forEach((tabName) => {
-      const tab = screen.getByRole('tab', { name: tabName });
+      const tab = screen.getByRole('button', { name: tabName });
       expect(tab).toHaveAttribute('aria-disabled', 'true');
     });
   });
 
   it('enables tabs when isEditing is true', () => {
-    render(<AddEditStockItem model={mockModel} isEditing={true} />);
+    render(<AddEditStockItem stockItem={mockModel} />);
 
     const enabledTabs = [
       'packagingUnits',
@@ -167,14 +167,14 @@ describe('AddEditStockItem', () => {
       'references',
     ];
     enabledTabs.forEach((tabName) => {
-      const tab = screen.getByRole('tab', { name: tabName });
-      expect(tab).not.toHaveAttribute('aria-disabled', 'true');
+      const tab = screen.getByRole('button', { name: tabName });
+      expect(tab).toHaveAttribute('aria-disabled', 'false');
     });
   });
 
   it('renders correct components based on model prop', async () => {
     const user = userEvent.setup();
-    render(<AddEditStockItem model={mockModel} isEditing={true} />);
+    render(<AddEditStockItem stockItem={mockModel} />);
 
     expect(screen.getByText('Stock Item Details: test-uuid-123')).toBeInTheDocument();
 
@@ -198,7 +198,7 @@ describe('AddEditStockItem', () => {
   });
 
   it('translates tab names correctly', () => {
-    render(<AddEditStockItem model={mockModel} />);
+    render(<AddEditStockItem stockItem={mockModel} />);
 
     const tabNames = [
       'stockItemDetails',

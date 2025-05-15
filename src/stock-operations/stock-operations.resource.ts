@@ -1,10 +1,13 @@
-import { FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
+import { type FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import useSWR from 'swr';
-import { ResourceFilterCriteria, toQueryParams } from '../core/api/api';
-import { PageableResult } from '../core/api/types/PageableResult';
-import { StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
-import { StopOperationAction } from '../core/api/types/stockOperation/StockOperationAction';
-import { InventoryGroupBy } from '../core/api/types/stockItem/StockItem';
+import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type PageableResult } from '../core/api/types/PageableResult';
+import { type InventoryGroupBy } from '../core/api/types/stockItem/StockItem';
+import { type StopOperationAction } from '../core/api/types/stockOperation/StockOperationAction';
+import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
+import { type StockOperationItemDtoSchema } from './validation-schema';
+import { type StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
+import { type StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
 
 export interface StockOperationFilter extends ResourceFilterCriteria {
   status?: string | null | undefined;
@@ -63,7 +66,7 @@ export function useStockOperation(id: string | null) {
   const apiUrl = id ? `${restBaseUrl}/stockmanagement/stockoperation/${id}` : null;
   const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, apiUrl ? openmrsFetch : null);
   return {
-    items: data?.data || {},
+    items: data?.data,
     isLoading,
     error,
   };
@@ -83,7 +86,7 @@ export function useStockOperationAndItems(id: string) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${id}?v=full`;
   const { data, error, isLoading } = useSWR<{ data: StockOperationDTO }, Error>(apiUrl, openmrsFetch);
   return {
-    items: data.data ? data.data : {},
+    items: data?.data,
     isLoading,
     error,
   };
@@ -124,30 +127,30 @@ export function deleteStockOperationItem(id: string) {
 }
 
 // createStockOperation
-export function createStockOperation(item: StockOperationDTO) {
+export function createStockOperation(data: StockOperationItemDtoSchema) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation`;
   const abortController = new AbortController();
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<StockOperationDTO>(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     signal: abortController.signal,
-    body: item,
+    body: data,
   });
 }
 
 // updateStockOperation
-export function updateStockOperation(item: StockOperationDTO) {
-  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${item.uuid}`;
+export function updateStockOperation(stockOperation: StockOperationDTO, data: StockOperationItemDtoSchema) {
+  const apiUrl = `${restBaseUrl}/stockmanagement/stockoperation/${stockOperation.uuid}`;
   const abortController = new AbortController();
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<StockOperationDTO>(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     signal: abortController.signal,
-    body: item,
+    body: data,
   });
 }
 
@@ -183,7 +186,7 @@ export function updateStockOperationBatchNumbers(item: StockOperationDTO, uuid: 
 export function getStockOperationItemsCost(filter: StockOperationFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockoperationitemcost?v=default&stockOperationUuid=${filter}`;
   const abortController = new AbortController();
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<{ results: Array<StockOperationItemCost> }>(apiUrl, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -195,7 +198,7 @@ export function getStockOperationItemsCost(filter: StockOperationFilter) {
 export function getStockItemInventory(filter: StockItemInventoryFilter) {
   const apiUrl = `${restBaseUrl}/stockmanagement/stockiteminventory${toQueryParams(filter)}&v=default`;
   const abortController = new AbortController();
-  return openmrsFetch(apiUrl, {
+  return openmrsFetch<{ results: Array<StockItemInventory> }>(apiUrl, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

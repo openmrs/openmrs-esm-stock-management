@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getStockOperationTypes, useConcept } from '../stock-lookups/stock-lookups.resource';
 import { DropdownSkeleton, MultiSelect } from '@carbon/react';
+import { getStockOperationTypes, useConcept } from '../stock-lookups/stock-lookups.resource';
 import { StockFilters } from '../constants';
 import { StockOperationStatusTypes } from '../core/api/types/stockOperation/StockOperationStatus';
 import styles from '../stock-items/stock-items-table.scss';
 
 interface StockOperationFiltersProps {
   conceptUuid?: string;
-  onFilterChange: (selectedItems: any[], filterType: string) => void;
   filterName: string;
+  onFilterChange: (selectedItems: any[], filterType: string) => void;
 }
 
 const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptUuid, onFilterChange, filterName }) => {
@@ -58,11 +58,12 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptU
 
   return (
     <MultiSelect
+      autoAlign
       className={styles.filtersAlign}
+      disabled={!dataItems.length}
       id="multiSelect"
       label={filterName}
-      size="md"
-      labelInline={true}
+      labelInline
       items={dataItems}
       itemToString={(item) => (item ? item.display : 'Not Set')}
       onChange={({ selectedItems }) => {
@@ -74,7 +75,6 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptU
         }
       }}
       placeholder={`Filter by ${filterName}`}
-      style={{ minWidth: 'auto', width: 'auto' }}
     />
   );
 };
