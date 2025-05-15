@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { showSnackbar } from '@openmrs/esm-framework';
+import { useTranslation } from 'react-i18next';
 import { Button, ModalHeader, ModalBody, ModalFooter, TextArea } from '@carbon/react';
+import { showSnackbar, getCoreTranslation } from '@openmrs/esm-framework';
+import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { deleteStockItemPackagingUnit } from '../../stock-items.resource';
 import { useStockItemPackageUnitsHook } from './packaging-units.resource';
-import { useTranslation } from 'react-i18next';
-import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
-
 import styles from '../packaging-units/packaging-units.scss';
 
 interface DeletePackagingUnitProps {

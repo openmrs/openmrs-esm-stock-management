@@ -1,44 +1,27 @@
 import React from 'react';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
-import { showSnackbar, useConfig, ErrorState, launchWorkspace } from '@openmrs/esm-framework';
-import { useStockOperationTypes, useUser } from '../../stock-lookups/stock-lookups.resource';
-import { getStockOperationLinks, useStockOperations } from '../stock-operations.resource';
-import { StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
-import { closeOverlay } from '../../core/components/overlay/hook';
-import StockOperationForm from './stock-operation-form.component';
-import useParties from './hooks/useParties';
 import userEvent from '@testing-library/user-event';
-import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
-import { useStockItem, useStockItems, useStockBatches } from '../../stock-items/stock-items.resource';
-import { initialStockOperationValue } from '../../core/utils/utils';
-import { useForm, useFormContext, Controller, FormProvider } from 'react-hook-form';
-import { type BaseStockOperationItemFormData, StockOperationItemFormData } from '../validation-schema';
-import { useStockItemBatchInformationHook } from '../../stock-items/add-stock-item/batch-information/batch-information.resource';
-import { useFilterableStockItems } from './hooks/useFilterableStockItems';
+import { render, screen } from '@testing-library/react';
+import { useFormContext, type UseFormReturn } from 'react-hook-form';
+import { useConfig, useSession } from '@openmrs/esm-framework';
 import { formatForDatePicker } from '../../constants';
-import { receiptOperationTypeMock } from '../../../__mocks__';
-jest.mock('react-i18next', () => ({
-  useTranslation: jest.fn().mockReturnValue({ t: (key) => key }),
-}));
+import { receiptOperationTypeMock } from '@mocks';
+import { type BaseStockOperationItemFormData } from '../validation-schema';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { useFilterableStockItems } from './hooks/useFilterableStockItems';
+import { useStockItem } from '../../stock-items/stock-items.resource';
+import { useStockOperations } from '../stock-operations.resource';
+import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
+import useParties from './hooks/useParties';
+import StockOperationForm from './stock-operation-form.component';
 
-jest.mock('@openmrs/esm-framework', () => ({
-  ActionMenu: jest.fn(() => null),
-  showSnackbar: jest.fn(),
-  useDebounce: jest.fn((x) => x),
-  getGlobalStore: jest.fn(() => ({
-    getState: jest.fn(),
-    subscribe: jest.fn(),
-    setState: jest.fn(),
-  })),
-  parseDate: jest.fn((date) => new Date(date)),
-  showNotification: jest.fn(),
-  usePagination: jest.fn(() => ({ currentPage: 1, setPage: jest.fn() })),
-  useSession: jest.fn(() => ({ user: { display: 'Test User' } })),
-  useConfig: jest.fn(),
-  ErrorState: jest.fn(({ error }: { error: any }) => <div>{error}</div>),
-  launchWorkspace: jest.fn(),
-}));
+const mockUseConfig = jest.mocked(useConfig);
+const mockUseFilterableStockItems = jest.mocked(useFilterableStockItems);
+const mockUseFormContext = jest.mocked(useFormContext);
+const mockUseParties = jest.mocked(useParties);
+const mockUseSession = jest.mocked(useSession);
+const mockUseStockItem = jest.mocked(useStockItem);
+const mockUseStockOperations = jest.mocked(useStockOperations);
+const mockUseStockOperationTypes = jest.mocked(useStockOperationTypes);
 
 jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
   useStockOperationTypes: jest.fn(),
@@ -50,6 +33,15 @@ jest.mock('../stock-operations.resource', () => ({
   operationStatusColor: jest.fn(() => 'some-color'),
   getStockOperationLinks: jest.fn(),
   useStockOperations: jest.fn().mockReturnValue({
+    items: {
+      results: [],
+      links: [],
+      totalCount: 0,
+    },
+    isLoading: false,
+    error: null,
+  }),
+  useStockOperationAndItems: jest.fn().mockReturnValue({
     items: { results: [] },
     isLoading: false,
     error: null,
@@ -78,6 +70,7 @@ jest.mock('../../stock-items/stock-items.resource', () => ({
     items: {},
   }),
 }));
+
 jest.mock('./hooks/useFilterableStockItems', () => ({
   useFilterableStockItems: jest.fn().mockReturnValue({
     stockItemsList: [],
@@ -87,7 +80,9 @@ jest.mock('./hooks/useFilterableStockItems', () => ({
     isLoading: false,
   }),
 }));
+
 jest.mock('./hooks/useParties', () => jest.fn());
+
 jest.mock('react-hook-form', () => ({
   useForm: jest.fn().mockReturnValue({
     watch: jest.fn(),
@@ -98,16 +93,29 @@ jest.mock('react-hook-form', () => ({
     getValues: jest.fn(),
     setValue: jest.fn(),
     handleSubmit: jest.fn(),
+    trigger: jest.fn().mockReturnValue(true),
   }),
   useFormContext: jest.fn().mockReturnValue({
     watch: jest.fn(),
     formState: {
       errors: {},
+      isDirty: false,
+      isLoading: false,
+      isSubmitted: false,
+      isSubmitSuccessful: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: {},
+      dirtyFields: {},
+      disabled: false,
     },
     resetField: jest.fn(),
     getValues: jest.fn(),
     setValue: jest.fn(),
     handleSubmit: jest.fn(),
+    trigger: jest.fn().mockReturnValue(true),
   }),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
   FormProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -134,21 +142,71 @@ jest.mock('../../stock-items/add-stock-item/batch-information/batch-information.
 
 describe('Stock Operation step 2 (stock operation items details)', () => {
   beforeEach(() => {
-    const mockStockOperationTypes = { results: [] };
-    (useStockOperationTypes as jest.Mock).mockReturnValue(mockStockOperationTypes);
-    (useStockOperations as jest.Mock).mockReturnValue({ items: { results: [] }, isLoading: false, error: null });
-    (useConfig as jest.Mock).mockReturnValue({ autoPopulateResponsiblePerson: true });
-    (useParties as jest.Mock).mockReturnValue({
-      destinationParties: [],
-      sourceParties: [],
+    const mockStockOperationTypes = {
+      types: {
+        results: [],
+        links: [],
+        totalCount: 0,
+      },
       isLoading: false,
-      error: undefined,
-      sourceTags: [],
+      error: null,
+    };
+
+    mockUseStockOperationTypes.mockReturnValue(mockStockOperationTypes);
+
+    mockUseStockOperations.mockReturnValue({
+      items: {
+        results: [],
+        links: [],
+        totalCount: 0,
+      },
+      isLoading: false,
+      error: null,
+    });
+
+    mockUseConfig.mockReturnValue({ autoPopulateResponsiblePerson: true });
+
+    mockUseParties.mockReturnValue({
+      destinationParties: [],
+      destinationPartiesFilter: jest.fn(),
       destinationTags: [],
+      error: undefined,
+      isLoading: false,
+      mutate: jest.fn(),
+      parties: [],
+      sourceParties: [],
+      sourcePartiesFilter: jest.fn(),
+      sourceTags: [],
+    });
+
+    mockUseSession.mockReturnValue({
+      authenticated: true,
+      sessionId: 'test-session-id',
+      user: {
+        uuid: 'test-user-uuid',
+        display: 'Test User',
+        username: 'testuser',
+        systemId: 'test-system-id',
+        userProperties: {},
+        person: { uuid: 'test-person-uuid' },
+        privileges: [],
+        roles: [],
+        retired: false,
+        links: [],
+        locale: 'en',
+        allowedLocales: ['en'],
+      },
+      sessionLocation: {
+        uuid: 'test-location-uuid',
+        display: 'Test Location',
+        links: [],
+      },
     });
   });
 
   it('should have both previous and next btns', async () => {
+    const user = userEvent.setup();
+
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
@@ -159,13 +217,15 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       />,
     );
     // MOVE TO STEP 2
-    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+    await user.click(screen.getByRole('button', { name: /Next/i }));
 
     expect(screen.getByRole('button', { name: /Next/i })).toBeInTheDocument();
     expect(screen.getByTestId('previous-btn')).toBeInTheDocument();
   });
 
   it('should render stock operation items table with item search component', async () => {
+    const user = userEvent.setup();
+
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
@@ -175,16 +235,17 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
+
     const nextButton = screen.getByRole('button', { name: /Next/i });
     expect(nextButton).toBeInTheDocument();
-    await userEvent.click(nextButton);
+    await user.click(nextButton);
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(
       screen.getByRole('searchbox', {
         name(accessibleName, element) {
           return (
             element.getAttribute('id') === 'search-stock-operation-item' &&
-            element.getAttribute('placeholder') === 'findItems' &&
+            element.getAttribute('placeholder') === 'Find your items' &&
             element.getAttribute('name') === 'search-stock-operation-item'
           );
         },
@@ -193,8 +254,10 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   });
 
   it('should search stock operation item and render results', async () => {
+    const user = userEvent.setup();
+
     const mocksetSearchString = jest.fn();
-    (useFilterableStockItems as jest.Mock).mockReturnValue({
+    mockUseFilterableStockItems.mockReturnValue({
       stockItemsList: [
         { uuid: 'mock-uuid', commonName: 'mock-common-name', drugName: 'mock-common-name' },
       ] as Array<StockItemDTO>,
@@ -203,6 +266,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       isLoading: false,
       setSearchString: mocksetSearchString,
     });
+
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
@@ -212,21 +276,24 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
+
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
-    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+    await user.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
     const searchInput = screen.getByRole('searchbox', {
-      name: (_, element) => element.getAttribute('id') === 'search-stock-operation-item',
+      name: /search/i,
     });
     expect(searchInput).toBeInTheDocument();
-    await userEvent.click(searchInput);
-    await userEvent.type(searchInput, 'stock');
+    await user.click(searchInput);
+    await user.type(searchInput, 'stock');
     expect(mocksetSearchString).toHaveBeenCalledWith('stock');
     expect(screen.getByText('mock-common-name'));
   });
 
   it('should properly handle stock operation item selection', async () => {
-    (useFilterableStockItems as jest.Mock).mockReturnValue({
+    const user = userEvent.setup();
+
+    mockUseFilterableStockItems.mockReturnValue({
       stockItemsList: [
         { uuid: 'mock-uuid', commonName: 'mock-common-name', drugName: 'mock-common-name' },
       ] as Array<StockItemDTO>,
@@ -235,6 +302,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       isLoading: false,
       setSearchString: jest.fn(),
     });
+
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
@@ -245,27 +313,30 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       />,
     );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
-    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+    await user.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
     const searchInput = screen.getByRole('searchbox', {
       name: (_, element) => element.getAttribute('id') === 'search-stock-operation-item',
     });
-    await userEvent.click(searchInput);
-    await userEvent.type(searchInput, 'stock');
-    await userEvent.click(screen.getByText('mock-common-name'));
+    await user.click(searchInput);
+    await user.type(searchInput, 'stock');
+    await user.click(screen.getByText('mock-common-name'));
     // Look for common name at the top of workspace
-    expect(screen.getByText(/noDrugNameAvailable|noCommonNameAvailable|mock-common-name/i)).toBeInTheDocument();
+    expect(screen.getByText(/no drug name available|no common name available|mock-common-name/i)).toBeInTheDocument();
   });
 
   it('should render stock operation items in data table', async () => {
-    (useStockItem as jest.Mock).mockReturnValue({
+    const user = userEvent.setup();
+
+    mockUseStockItem.mockReturnValue({
       isLoading: false,
       error: null,
       item: { commonName: 'mock-stock-item-common name', uuid: 'mock-uuid' } as StockItemDTO,
     });
+
     const mockQuantity = 99999;
     const mockExpiration = new Date();
-    (useFormContext as jest.Mock).mockReturnValue({
+    mockUseFormContext.mockReturnValue({
       watch: jest.fn().mockReturnValue([
         {
           quantity: mockQuantity,
@@ -275,11 +346,24 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       resetField: jest.fn(),
       formState: {
         errors: {},
+        isDirty: false,
+        isLoading: false,
+        isSubmitted: false,
+        isSubmitSuccessful: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: {},
+        dirtyFields: {},
+        disabled: false,
       },
       getValues: jest.fn(),
       setValue: jest.fn(),
       handleSubmit: jest.fn(),
-    });
+      trigger: jest.fn().mockReturnValue(true),
+    } as unknown as UseFormReturn<BaseStockOperationItemFormData>);
+
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
@@ -289,8 +373,9 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
+
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
-    await userEvent.click(screen.getByRole('button', { name: /Next/i }));
+    await user.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
     expect(screen.getByText(mockQuantity.toLocaleString())).toBeInTheDocument(); //Find by quentity
     expect(screen.getByText(formatForDatePicker(mockExpiration))).toBeInTheDocument(); //Find by quentity

@@ -1,3 +1,5 @@
+import React, { useMemo } from 'react';
+import classNames from 'classnames';
 import {
   Button,
   ButtonSet,
@@ -10,8 +12,7 @@ import {
   TextInput,
 } from '@carbon/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DefaultWorkspaceProps, useConfig } from '@openmrs/esm-framework';
-import React, { useMemo } from 'react';
+import { useConfig, useLayoutType } from '@openmrs/esm-framework';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type z } from 'zod';
@@ -20,14 +21,14 @@ import {
   operationFromString,
   type StockOperationType,
 } from '../../../core/api/types/stockOperation/StockOperationType';
-import { useStockItem } from '../../../stock-items/stock-items.resource';
 import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
-import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import { type ConfigObject } from '../../../config-schema';
+import { useStockItem } from '../../../stock-items/stock-items.resource';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
-import styles from './stock-item-form.scss';
 import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
-import { type ConfigObject } from '../../../config-schema';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import styles from './stock-item-form.scss';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
@@ -37,18 +38,19 @@ export interface StockItemFormProps {
 }
 
 const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stockOperationItem, onSave, onBack }) => {
+  const isTablet = useLayoutType() === 'tablet';
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
-  const formschema = useMemo(() => {
+  const formSchema = useMemo(() => {
     return getStockOperationItemFormSchema(operationType);
   }, [operationType]);
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
   const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
 
-  const fields = formschema.keyof().options;
-  const form = useForm<z.infer<typeof formschema>>({
-    resolver: zodResolver(formschema),
+  const fields = formSchema.keyof().options;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: stockOperationItem,
     mode: 'all',
   });
@@ -66,9 +68,10 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
     return `${item?.drugName || t('noDrugNameAvailable', 'No drug name available') + (commonName ?? '')}`;
   }, [item, useItemCommonNameAsDisplay, t]);
 
-  const onSubmit = (data: z.infer<typeof formschema>) => {
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
     onSave?.(data);
   };
+
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
@@ -124,7 +127,9 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
                     locale="en"
                     className={styles.datePickerInput}
                     dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                    {...field}
+                    value={field.value}
+                    name={field.name}
+                    disabled={field.disabled}
                     onChange={([newDate]) => {
                       field.onChange(newDate);
                     }}
@@ -136,6 +141,7 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
                       placeholder={DATE_PICKER_FORMAT}
                       labelText={t('expiriation', 'Expiration Date')}
                       invalid={error?.message}
+                      invalidText={error?.message}
                     />
                   </DatePicker>
                 )}
@@ -197,7 +203,12 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
         )}
       </Stack>
 
-      <ButtonSet className={styles.buttonSet}>
+      <ButtonSet
+        className={classNames(styles.buttonSet, {
+          [styles.tablet]: isTablet,
+          [styles.desktop]: !isTablet,
+        })}
+      >
         <Button className={styles.button} kind="secondary" onClick={onBack}>
           {t('discard', 'Discard')}
         </Button>

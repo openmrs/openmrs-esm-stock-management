@@ -1,7 +1,11 @@
-@use '@carbon/styles/scss/colors';
-@use '@carbon/styles/scss/type';
+@use '@carbon/colors';
 @use '@carbon/layout';
+@use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
+
+.container {
+  margin: layout.$spacing-05;
+}
 
 .content {
   @include type.type-style('heading-compact-02');
@@ -77,4 +81,8 @@
   .text {
     margin-right: 4px;
   }
+}
+
+.toolbarMenuAction {
+  max-width: none;
 }

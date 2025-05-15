@@ -34,6 +34,7 @@ const UniqueBatchNoEntryInput: React.FC<UniqueBatchNoEntryInputProps> = ({
   useEffect(() => {
     if (batchNoAlreadyUsed) {
       setError(t('batchNumberAlreadyUsed', 'Batch number already used'));
+      onValueChange?.('');
     } else {
       setError(undefined);
       onValueChange?.(value);

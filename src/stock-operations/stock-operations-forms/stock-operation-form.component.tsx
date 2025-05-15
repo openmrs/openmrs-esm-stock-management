@@ -26,9 +26,9 @@ import BaseOperationDetailsFormStep from './steps/base-operation-details-form-st
 import ReceivedItems from './steps/received-items.component';
 import StockOperationItemsFormStep from './steps/stock-operation-items-form-step.component';
 import StockOperationSubmissionFormStep from './steps/stock-operation-submission-form-step.component';
-import StockIssueFormInitializerWithRelatedRequisitionOperation from './stock-issue-form-initializer-with-related-requisition-operation.component';
 import StockItemForm, { type StockItemFormProps } from './stock-item-form/stock-item-form.workspace';
 import StockOperationStepper from './stock-operation-stepper/stock-operation-stepper.component';
+import { useStockOperationAndItems } from '../stock-operations.resource';
 
 /**
  * Props interface for the StockOperationForm component
@@ -72,6 +72,8 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
     user: { uuid: defaultLoggedUserUuid },
   } = useSession();
   const { autoPopulateResponsiblePerson } = useConfig<ConfigObject>();
+  const { error, items: _stockOperation, isLoading } = useStockOperationAndItems(stockRequisitionUuid);
+
   const form = useForm<StockOperationItemDtoSchema>({
     defaultValues: {
       responsiblePersonUuid:
@@ -95,6 +97,23 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
       destinationUuid: stockOperation?.destinationUuid ?? '',
     },
     mode: 'all',
+    values: stockRequisitionUuid
+      ? {
+          sourceUuid: _stockOperation?.destinationUuid,
+          destinationUuid: _stockOperation?.sourceUuid,
+          operationTypeUuid: stockOperationType?.uuid,
+          stockOperationItems: (_stockOperation?.stockOperationItems?.map((item) =>
+            pick(
+              { ...item, expiration: item?.expiration ? parseDate(item.expiration as any) : undefined },
+              stockOperationItemFormSchema.keyof().options,
+            ),
+          ) ?? []) as any,
+          requisitionStockOperationUuid: stockRequisitionUuid,
+          responsiblePersonUuid: _stockOperation?.responsiblePersonUuid,
+          responsiblePersonOther: _stockOperation?.responsiblePersonOther,
+          operationDate: _stockOperation?.operationDate ? parseDate(_stockOperation!.operationDate as any) : today(),
+        }
+      : undefined,
     resolver: zodResolver(formschema),
   });
   const [renderItemForm, setRenderItemForm] = useState(false);
@@ -137,7 +156,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             onNext={() => setSelectedIndex(1)}
           />
         ),
-        disabled: false,
+        disabled: !stockOperation,
       },
       {
         name: t('stockItems', 'Stock Items'),
@@ -150,7 +169,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             onLaunchItemsForm={handleLaunchStockItem}
           />
         ),
-        disabled: false,
+        disabled: !stockOperation,
       },
       {
         name: operationTypePermision?.requiresDispatchAcknowledgement ? 'Submit/Dispatch' : 'Submit/Complete',
@@ -163,7 +182,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             dismissWorkspace={closeWorkspace}
           />
         ),
-        disabled: false,
+        disabled: !stockOperation,
       },
     ].concat(
       showReceivedItems
@@ -171,7 +190,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
             {
               name: t('receivedItems', 'Received Items'),
               component: <ReceivedItems stockOperation={stockOperation} onPrevious={() => setSelectedIndex(2)} />,
-              disabled: false,
+              disabled: !stockOperation,
             },
           ]
         : [],
@@ -218,14 +237,25 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
     }
   }, [form.formState.errors]);
 
+  // Stock issue errors (while fetching related requisitio or if no supplied requisition)
+  useEffect(() => {
+    if (operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && !stockRequisitionUuid)
+      showSnackbar({
+        kind: 'error',
+        title: t('stockIssueError', 'StockIssue error'),
+        subtitle: t('relatedStockRequisitionRequired', 'Related stock requisition Required'),
+      });
+    if (error) {
+      showSnackbar({
+        kind: 'error',
+        title: t('stockIssueError', 'StockIssue error'),
+        subtitle: error?.message,
+      });
+    }
+  }, [stockRequisitionUuid, error, t, operationType]);
+
   return (
     <FormProvider {...form}>
-      {stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE && (
-        <StockIssueFormInitializerWithRelatedRequisitionOperation
-          stockRequisitionUuid={stockRequisitionUuid as string}
-          stockOperationType={stockOperationType}
-        />
-      )}
       {renderItemForm ? (
         <StockItemForm {...itemsFormProps} />
       ) : (

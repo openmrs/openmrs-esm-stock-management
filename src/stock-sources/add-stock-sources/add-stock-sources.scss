@@ -2,10 +2,6 @@
 @use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
-.section {
-  margin: layout.$spacing-03;
-}
-
 .sectionTitle {
   @include type.type-style('heading-compact-02');
   color: $text-02;
@@ -15,6 +11,7 @@
 .modalBody {
   padding-bottom: layout.$spacing-05;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -23,6 +20,7 @@
 }
 
 .button {
+  height: layout.$spacing-10;
   display: flex;
   align-content: flex-start;
   align-items: baseline;
@@ -39,6 +37,15 @@
   padding: 1rem;
 }
 
+
 .form {
   margin: layout.$spacing-05;
+}
+.tablet {
+  padding: layout.$spacing-06 layout.$spacing-05;
+  background-color: white;
+}
+
+.desktop {
+  padding: 0;
 }
