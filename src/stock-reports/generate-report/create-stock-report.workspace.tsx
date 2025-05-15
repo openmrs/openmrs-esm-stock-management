@@ -381,11 +381,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               render={({ field: { onChange } }) => (
                 <ComboBox
                   id="report"
-                  size="md"
-                  labelText={t('reportName', 'Report')}
+                  labelText={t('reportName', 'Report name')}
                   items={reportTypes}
                   itemToString={(item) => `${item?.name ?? item?.name ?? ''}`}
-                  placeholder="Filter..."
+                  placeholder={t('filter...', 'Filter...')}
                   onChange={({ selectedItem }) => {
                     onChange(selectedItem.name);
                     handleReportNameChange(selectedItem.name);
@@ -412,7 +411,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
                       onChange(selectedItem.uuid);
                     }}
                     itemToString={(item) => (item && item?.display ? `${item?.display}` : '')}
-                    placeholder="Filter..."
+                    placeholder={t('filter...', 'Filter...')}
                   />
                 )}
               />
