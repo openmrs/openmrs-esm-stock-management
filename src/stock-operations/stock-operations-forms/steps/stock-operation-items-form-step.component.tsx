@@ -1,3 +1,5 @@
+import React, { useCallback, useId, useMemo } from 'react';
+import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
 import {
   Button,
   DataTable,
@@ -9,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
-import React, { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
@@ -42,6 +42,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
 }) => {
   const { t } = useTranslation();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
+  const uniqueId = useId();
 
   const form = useFormContext<StockOperationItemDtoSchema>();
   const observableOperationItems = form.watch('stockOperationItems');
@@ -111,7 +112,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
   );
 
   const tableRows = useMemo(() => {
-    return observableOperationItems?.map((item) => {
+    return observableOperationItems?.map((item, index) => {
       const {
         batchNo,
         expiration,
@@ -124,7 +125,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
       } = item;
 
       return {
-        id: uuid,
+        id: uuid || `${uniqueId}-${index}`,
         item: stockItemUuid ? <StockOperationItemCell stockItemUuid={stockItemUuid} /> : '--',
         itemDetails: stockItemUuid ? <StockAvailability stockItemUuid={stockItemUuid} /> : '--',
         batch: (
@@ -178,7 +179,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ),
       };
     });
-  }, [observableOperationItems, onLaunchItemsForm, stockOperationType]);
+  }, [observableOperationItems, onLaunchItemsForm, stockOperationType, uniqueId]);
 
   const headerTitle = t('stockoperationItems', 'Stock operation items');
 

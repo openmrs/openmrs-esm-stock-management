@@ -1,10 +1,10 @@
-import { ComboBox, SelectSkeleton } from '@carbon/react';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ComboBox, SelectSkeleton } from '@carbon/react';
 import { type StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
+import { formatForDatePicker } from '../../../constants';
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
-import { formatForDatePicker } from '../../../constants';
 
 interface BatchNoSelectorProps {
   stockItemUuid: string;
@@ -48,23 +48,23 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
 
   return (
     <ComboBox
-      style={{ flexGrow: '1' }}
-      titleText={t('batchNo', 'Batch')}
-      name={'stockBatchUuid'}
       id={'stockBatchUuid'}
+      invalid={!!error}
+      invalidText={error}
       items={filteredBatches || []}
-      onChange={(data: { selectedItem?: StockBatchDTO }) => {
-        onValueChange(data.selectedItem?.uuid);
-      }}
-      selectedItem={initialSelectedItem}
       itemToString={(s: StockBatchDTO) =>
         s?.batchNo
           ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} | Expiry: ${formatForDatePicker(s.expiration)}`
           : ''
       }
+      name={'stockBatchUuid'}
+      onChange={(data: { selectedItem?: StockBatchDTO }) => {
+        onValueChange(data.selectedItem?.uuid);
+      }}
       placeholder={t('filter', "'Filter") + '...'}
-      invalid={error}
-      invalidText={error}
+      selectedItem={initialSelectedItem}
+      style={{ flexGrow: '1' }}
+      titleText={t('batchNo', 'Batch no.')}
     />
   );
 };
