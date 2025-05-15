@@ -1,8 +1,8 @@
-import { type StockItemFilter, useStockItems } from './stock-items.resource';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ResourceRepresentation } from '../core/api/api';
 import { usePagination } from '@openmrs/esm-framework';
+import { type StockItemFilter, useStockItems } from './stock-items.resource';
+import { ResourceRepresentation } from '../core/api/api';
 
 export function useStockItemsPages(v?: ResourceRepresentation) {
   const { t } = useTranslation();

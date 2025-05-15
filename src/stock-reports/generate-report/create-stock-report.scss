@@ -1,5 +1,5 @@
-@use '@carbon/styles/scss/spacing';
-@use '@carbon/styles/scss/type';
+@use '@carbon/layout';
+@use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
 
 .formContainer {
@@ -11,6 +11,7 @@
 }
 
 .button {
+  height: layout.$spacing-10;
   display: flex;
   align-content: flex-start;
   align-items: baseline;
