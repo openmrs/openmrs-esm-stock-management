@@ -123,7 +123,7 @@ export const baseStockOperationItemSchema = z.object({
   batchNo: z.string().min(1, { message: 'Required' }),
   stockBatchUuid: z.string().optional(),
   expiration: z.coerce.date({ required_error: 'Required' }),
-  quantity: z.coerce.number().min(1, { message: 'Required' }),
+  quantity: z.coerce.number(), // Allow negative value for adjustment operation
   purchasePrice: z.coerce.number().nullish(),
   hasExpiration: z.boolean().nullish(),
 });

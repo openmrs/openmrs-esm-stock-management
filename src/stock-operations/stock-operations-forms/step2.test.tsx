@@ -54,6 +54,11 @@ jest.mock('../stock-operations.resource', () => ({
     isLoading: false,
     error: null,
   }),
+  useStockOperationAndItems: jest.fn().mockReturnValue({
+    items: { results: [] },
+    isLoading: false,
+    error: null,
+  }),
 }));
 
 jest.mock('../../core/components/overlay/hook', () => ({

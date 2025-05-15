@@ -9,9 +9,10 @@ import {
   TextArea,
   TextInput,
 } from '@carbon/react';
+import { ArrowRight } from '@carbon/react/icons';
 import { ErrorState } from '@openmrs/esm-framework';
 import React, { type ChangeEvent, type FC, useEffect, useMemo } from 'react';
-import { Controller, useFormContext, useFormState } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, MAIN_STORE_LOCATION_TAG } from '../../../constants';
 import { type Party } from '../../../core/api/types/Party';
@@ -23,7 +24,6 @@ import useParties from '../hooks/useParties';
 import StockOperationReasonSelector from '../input-components/stock-operation-reason-selector.component';
 import UsersSelector from '../input-components/users-selector.component';
 import styles from '../stock-operation-form.scss';
-import { ArrowRight } from '@carbon/react/icons';
 
 type BaseOperationDetailsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -51,6 +51,18 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     () => OperationType.STOCK_ISSUE_OPERATION_TYPE === stockOperationType.operationType,
     [stockOperationType],
   );
+  const handleNext = async () => {
+    const valid = await form.trigger([
+      'responsiblePersonUuid',
+      'operationDate',
+      'remarks',
+      'sourceUuid',
+      'destinationUuid',
+      'reasonUuid',
+      'responsiblePersonOther',
+    ]);
+    if (valid) onNext();
+  };
 
   // initialize location fields
   useEffect(() => {
@@ -142,7 +154,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
             <ComboBox
               titleText={
                 isStockIssueOperation
-                  ? t('destination', 'destination')
+                  ? t('source', 'Source')
                   : stockOperationType?.hasDestination || stockOperation?.destinationUuid
                   ? t('from', 'From')
                   : t('location', 'Location')
@@ -155,7 +167,6 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
               onChange={(data: { selectedItem: Party }) => {
                 field.onChange(data.selectedItem?.uuid);
               }}
-              initialSelectedItem={sourceParties.find((p) => p.uuid === field.value)}
               selectedItem={sourceParties.find((p) => p.uuid === field.value)}
               itemToString={(item?: Party) => (item && item?.name ? `${item?.name}` : '')}
               shouldFilterItem={() => true}
@@ -181,7 +192,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                 readOnly={field.disabled}
                 titleText={
                   isStockIssueOperation
-                    ? t('source', 'Source')
+                    ? t('destination', 'destination')
                     : stockOperationType?.hasSource || stockOperation?.atLocationUuid
                     ? t('to', 'To')
                     : t('location', 'Location')
@@ -193,7 +204,6 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                 onChange={(data: { selectedItem: Party }) => {
                   field.onChange(data.selectedItem?.uuid);
                 }}
-                initialSelectedItem={destinationParties.find((p) => p.uuid === field.value)}
                 selectedItem={destinationParties.find((p) => p.uuid === field.value)}
                 itemToString={(item?: Party) => (item && item?.name ? `${item?.name}` : '')}
                 shouldFilterItem={() => true}
@@ -240,23 +250,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       </Column>
       <div className={styles.btnSet}>
         {typeof onNext === 'function' && (
-          <Button
-            kind="primary"
-            onClick={async () => {
-              const valid = await form.trigger([
-                'responsiblePersonUuid',
-                'operationDate',
-                'remarks',
-                'sourceUuid',
-                'destinationUuid',
-                'reasonUuid',
-                'responsiblePersonOther',
-              ]);
-              if (valid) onNext();
-            }}
-            role="button"
-            renderIcon={ArrowRight}
-          >
+          <Button kind="primary" onClick={handleNext} role="button" renderIcon={ArrowRight}>
             {t('next', 'Next')}
           </Button>
         )}

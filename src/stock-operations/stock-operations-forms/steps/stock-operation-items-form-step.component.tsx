@@ -104,13 +104,6 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     ];
   }, [operationTypePermision, t]);
 
-  const handleDeleteStockOperationItem = useCallback(
-    (item: BaseStockOperationItemFormData) => {
-      form.setValue('stockOperationItems', observableOperationItems.filter((i) => i.uuid !== item.uuid) as any);
-    },
-    [form, observableOperationItems],
-  );
-
   const tableRows = useMemo(() => {
     return observableOperationItems?.map((item) => {
       const {
@@ -181,6 +174,22 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     });
   }, [observableOperationItems, onLaunchItemsForm, stockOperationType]);
 
+  const handleNext = async () => {
+    const valid = await form.trigger(['stockOperationItems']);
+    if (valid) {
+      onNext();
+    } else {
+      showSnackbar({
+        kind: 'error',
+        title: 'Validation error',
+        subtitle:
+          observableOperationItems && observableOperationItems.length > 0
+            ? 'You must update batch infomation for items'
+            : 'You must add atleast one item',
+      });
+    }
+  };
+
   const headerTitle = t('stockoperationItems', 'Stock operation items');
 
   return (
@@ -239,22 +248,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         />
         <div className={styles.btnSet}>
           {typeof onNext === 'function' && (
-            <Button
-              kind="primary"
-              onClick={async () => {
-                const valid = await form.trigger(['stockOperationItems']);
-                if (valid) {
-                  onNext();
-                } else {
-                  showSnackbar({
-                    kind: 'error',
-                    title: 'Validation error',
-                    subtitle: 'You must select atleast one item',
-                  });
-                }
-              }}
-              renderIcon={ArrowRight}
-            >
+            <Button kind="primary" onClick={handleNext} renderIcon={ArrowRight}>
               {t('next', 'Next')}
             </Button>
           )}
