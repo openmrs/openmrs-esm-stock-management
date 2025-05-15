@@ -1,39 +1,32 @@
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Button,
   DataTable,
   DataTableSkeleton,
-  InlineLoading,
+  TabPanel,
   Pagination,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableExpandedRow,
-  TableExpandHeader,
-  TableExpandRow,
   TableHead,
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarAction,
   TableToolbarContent,
-  TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
+  Button,
+  InlineLoading,
+  TableToolbarMenu,
+  TableToolbarAction,
+  TableExpandHeader,
+  TableExpandRow,
+  TableExpandedRow,
 } from '@carbon/react';
-import {
-  CheckmarkOutline,
-  Copy,
-  Download,
-  IncompleteCancel,
-  MisuseOutline,
-  View,
-  WarningAltFilled,
-} from '@carbon/react/icons';
 import { isDesktop, restBaseUrl, useSession } from '@openmrs/esm-framework';
+import NewReportActionButton from './new-report-button.component';
+import styles from './stock-reports.scss';
 import { useGetReports } from '../stock-reports.resource';
 import {
   URL_BATCH_JOB_ARTIFACT,
@@ -48,12 +41,19 @@ import {
   BatchJobStatusFailed,
   BatchJobStatusPending,
 } from '../../core/api/types/BatchJob';
+import {
+  CheckmarkOutline,
+  Copy,
+  Download,
+  IncompleteCancel,
+  MisuseOutline,
+  View,
+  WarningAltFilled,
+} from '@carbon/react/icons';
 import { handleMutate } from '../../utils';
 import { PrivilagedView } from '../../core/components/privilages-component/privilages.component';
-import NewReportActionButton from './new-report-button.component';
 import StockReportStatus from './stock-report-status.component';
 import StockReportParameters from './stock-report-parameters.component';
-import styles from './stock-reports.scss';
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
@@ -202,9 +202,12 @@ const StockReports: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.tableOverride}>
       <TabPanel>{t('ReportDescription', 'List of reports requested by users')}</TabPanel>
-
+      <div id="table-tool-bar">
+        <div></div>
+        <div className="right-filters"></div>
+      </div>
       <DataTable
         rows={tableRows}
         headers={tableHeaders}
@@ -222,9 +225,7 @@ const StockReports: React.FC = () => {
               <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch persistent onChange={onInputChange} />
                 <TableToolbarMenu>
-                  <TableToolbarAction className={styles.toolbarMenuAction} onClick={handleRefresh}>
-                    {t('refresh', 'Refresh')}
-                  </TableToolbarAction>
+                  <TableToolbarAction onClick={handleRefresh}>Refresh</TableToolbarAction>
                 </TableToolbarMenu>
                 {canCreateReport && <NewReportActionButton />}
               </TableToolbarContent>

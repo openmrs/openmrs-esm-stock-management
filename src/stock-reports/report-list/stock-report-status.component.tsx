@@ -37,7 +37,7 @@ const StockReportStatus = (props: StockReportStatusProps) => {
   try {
     executionStateMap = displayParameterMap(props.model?.uuid, parseParametersToMap(props.model?.executionState));
   } catch (ex) {
-    console.error(ex);
+    console.log(ex);
   }
   return (
     <div className={styles.statusContainer}>

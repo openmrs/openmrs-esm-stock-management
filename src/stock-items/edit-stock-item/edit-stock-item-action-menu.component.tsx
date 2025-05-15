@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
-import { launchAddOrEditStockItemWorkspace } from '../stock-item.utils';
+import { launchAddOrStockItemWorkspace } from '../stock-item.utils';
 
 interface EditStockItemActionsMenuProps {
   data: StockItemDTO;
@@ -17,7 +17,7 @@ const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({ dat
       size="md"
       onClick={() => {
         data.isDrug = !!data.drugUuid;
-        launchAddOrEditStockItemWorkspace(t, data);
+        launchAddOrStockItemWorkspace(t, data);
       }}
       iconDescription={t('editStockItem', 'Edit Stock Item')}
     >

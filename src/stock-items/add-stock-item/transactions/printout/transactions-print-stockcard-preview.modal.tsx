@@ -1,23 +1,17 @@
 import React, { useRef } from 'react';
+import TransactionsBincardPrintout from './transactions-bincard-printout.component';
+import TransactionsStockcardPrintout from './transactions-stockcard-printout.component';
 import { ModalBody, ModalHeader, ModalFooter, Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
-import { getCoreTranslation } from '@openmrs/esm-framework';
-import TransactionsStockcardPrintout from './transactions-stockcard-printout.component';
-
-type TransactionsStockcardPrintPreviewModalProps = {
+type Props = {
   onClose?: () => void;
   title?: string;
   columns: any;
   data: any;
 };
 
-const TransactionsStockcardPrintPreviewModal: React.FC<TransactionsStockcardPrintPreviewModalProps> = ({
-  onClose,
-  title,
-  columns,
-  data,
-}) => {
+const TransactionsStockcardPrintPreview: React.FC<Props> = ({ onClose, title, columns, data }) => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -26,7 +20,7 @@ const TransactionsStockcardPrintPreviewModal: React.FC<TransactionsStockcardPrin
   });
   return (
     <>
-      <ModalHeader closeModal={onClose} title={t('printStockCard', 'Print Stock Card')} />
+      <ModalHeader closeModal={onClose} title={t('printbincard', 'Print Stock Card')} />
       <ModalBody>
         <div ref={ref}>
           <TransactionsStockcardPrintout title={title} columns={columns} items={data} />
@@ -34,14 +28,14 @@ const TransactionsStockcardPrintPreviewModal: React.FC<TransactionsStockcardPrin
       </ModalBody>
       <ModalFooter>
         <Button kind="secondary" onClick={onClose}>
-          {getCoreTranslation('cancel')}
+          {t('cancel', 'Cancel')}
         </Button>
         <Button type="button" onClick={handlePrint}>
-          {getCoreTranslation('print')}
+          {t('print', 'Print')}
         </Button>
       </ModalFooter>
     </>
   );
 };
 
-export default TransactionsStockcardPrintPreviewModal;
+export default TransactionsStockcardPrintPreview;

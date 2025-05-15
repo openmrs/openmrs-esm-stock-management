@@ -1,6 +1,3 @@
-import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import {
   Button,
   ButtonSet,
@@ -12,13 +9,15 @@ import {
   SelectItem,
   TextInput,
 } from '@carbon/react';
-import { type DefaultWorkspaceProps, getCoreTranslation, showSnackbar, useLayoutType } from '@openmrs/esm-framework';
-import { createOrUpdateStockRule } from './stock-rules.resource';
+import { type DefaultWorkspaceProps, showSnackbar } from '@openmrs/esm-framework';
+import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
+import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 import styles from './add-stock-rules.scss';
+import { createOrUpdateStockRule } from './stock-rules.resource';
 
 interface AddStockRuleProps extends Partial<DefaultWorkspaceProps> {
   model?: StockRule;
@@ -27,7 +26,7 @@ interface AddStockRuleProps extends Partial<DefaultWorkspaceProps> {
 
 const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUuid, closeWorkspace }) => {
   const { t } = useTranslation();
-  const isTablet = useLayoutType() === 'tablet';
+
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
     startIndex: 0,
     v: ResourceRepresentation.Default,
@@ -316,17 +315,12 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
           notification will only be sent once per specified notification frequency.
         </div>
       </div>
-      <ButtonSet
-        className={classNames(styles.buttonSet, {
-          [styles.tablet]: isTablet,
-          [styles.desktop]: !isTablet,
-        })}
-      >
+      <ButtonSet className={styles.buttonSet}>
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {getCoreTranslation('cancel')}
+          {t('cancel', 'Cancel')}
         </Button>
         <Button type="submit" className={styles.button}>
-          {getCoreTranslation('save')}
+          {t('save', 'Save')}
         </Button>
       </ButtonSet>
     </Form>

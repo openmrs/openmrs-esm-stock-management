@@ -8,7 +8,7 @@ import {
   type StopOperationActionType,
 } from '../../core/api/types/stockOperation/StockOperationAction';
 import { executeStockOperationAction } from '../stock-operations.resource';
-import { getCoreTranslation, restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
+import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { closeOverlay } from '../../core/components/overlay/hook';
 import { extractErrorMessagesFromResponse } from '../../constants';
 import { handleMutate } from '../../utils';
@@ -135,7 +135,7 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({ title, requ
         </ModalBody>
         <ModalFooter>
           <Button kind="secondary" onClick={closeModal}>
-            {getCoreTranslation('cancel')}
+            {t('cancel', 'Cancel')}
           </Button>
           {isApproving ? <InlineLoading /> : <Button type="submit">{t('submit', 'Submit')}</Button>}
         </ModalFooter>

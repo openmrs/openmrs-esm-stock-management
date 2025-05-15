@@ -1,5 +1,3 @@
-import React, { useMemo } from 'react';
-import classNames from 'classnames';
 import {
   Button,
   ButtonSet,
@@ -12,7 +10,8 @@ import {
   TextInput,
 } from '@carbon/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useConfig, useLayoutType } from '@openmrs/esm-framework';
+import { DefaultWorkspaceProps, useConfig } from '@openmrs/esm-framework';
+import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type z } from 'zod';
@@ -21,14 +20,14 @@ import {
   operationFromString,
   type StockOperationType,
 } from '../../../core/api/types/stockOperation/StockOperationType';
-import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
-import { type ConfigObject } from '../../../config-schema';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
+import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
-import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
-import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import styles from './stock-item-form.scss';
+import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
+import { type ConfigObject } from '../../../config-schema';
 
 export interface StockItemFormProps {
   stockOperationType: StockOperationType;
@@ -38,19 +37,18 @@ export interface StockItemFormProps {
 }
 
 const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stockOperationItem, onSave, onBack }) => {
-  const isTablet = useLayoutType() === 'tablet';
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
   }, [stockOperationType]);
-  const formSchema = useMemo(() => {
+  const formschema = useMemo(() => {
     return getStockOperationItemFormSchema(operationType);
   }, [operationType]);
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
   const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
 
-  const fields = formSchema.keyof().options;
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const fields = formschema.keyof().options;
+  const form = useForm<z.infer<typeof formschema>>({
+    resolver: zodResolver(formschema),
     defaultValues: stockOperationItem,
     mode: 'all',
   });
@@ -68,10 +66,9 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
     return `${item?.drugName || t('noDrugNameAvailable', 'No drug name available') + (commonName ?? '')}`;
   }, [item, useItemCommonNameAsDisplay, t]);
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (data: z.infer<typeof formschema>) => {
     onSave?.(data);
   };
-
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
       <Stack gap={4} className={styles.grid}>
@@ -200,12 +197,7 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
         )}
       </Stack>
 
-      <ButtonSet
-        className={classNames(styles.buttonSet, {
-          [styles.tablet]: isTablet,
-          [styles.desktop]: !isTablet,
-        })}
-      >
+      <ButtonSet className={styles.buttonSet}>
         <Button className={styles.button} kind="secondary" onClick={onBack}>
           {t('discard', 'Discard')}
         </Button>

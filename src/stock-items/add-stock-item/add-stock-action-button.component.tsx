@@ -1,18 +1,18 @@
+import { Button } from '@carbon/react';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@carbon/react';
-import { launchAddOrEditStockItemWorkspace } from '../stock-item.utils';
+import { launchAddOrStockItemWorkspace } from '../stock-item.utils';
 
 const AddStockItemActionButton: React.FC = () => {
   const { t } = useTranslation();
 
-  const handleAddOrLaunchStockItemWorkspace = useCallback(() => {
-    launchAddOrEditStockItemWorkspace(t);
+  const handleClick = useCallback(() => {
+    launchAddOrStockItemWorkspace(t);
   }, [t]);
 
   return (
-    <Button onClick={handleAddOrLaunchStockItemWorkspace} size="md" kind="primary">
-      {t('addStockItem', 'Add stock item')}
+    <Button onClick={handleClick} size="md" kind="primary">
+      {t('addNewStock', 'Add New')}
     </Button>
   );
 };

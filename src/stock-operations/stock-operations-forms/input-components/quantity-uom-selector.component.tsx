@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
 import { ComboBox, InlineNotification, SkeletonText } from '@carbon/react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
@@ -32,20 +32,20 @@ const QtyUomSelector: React.FC<QtyUomSelectorProps> = ({ stockItemUuid, error, i
 
   return (
     <ComboBox
-      id={'stockItemPackagingUOMUuid'}
-      initialSelectedItem={initialSelectedItem}
-      invalid={!!error}
-      invalidText={error}
-      items={item?.packagingUnits ?? []}
-      itemToString={(s: StockItemPackagingUOMDTO) =>
-        s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ''
-      }
+      titleText={t('quantityUom', 'Qty UoM')}
       name={'stockItemPackagingUOMUuid'}
+      id={'stockItemPackagingUOMUuid'}
+      items={item?.packagingUnits ?? []}
       onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
         onValueChange?.(data.selectedItem?.uuid);
       }}
+      initialSelectedItem={initialSelectedItem}
+      itemToString={(s: StockItemPackagingUOMDTO) =>
+        s.packagingUomName ? `${s?.packagingUomName} - ${s?.factor} ` : ''
+      }
       placeholder={t('filter', 'Filter') + '...'}
-      titleText={t('quantityUom', 'Qty UoM')}
+      invalid={error}
+      invalidText={error}
     />
   );
 };

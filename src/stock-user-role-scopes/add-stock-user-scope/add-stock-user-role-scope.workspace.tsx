@@ -403,10 +403,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
         })}
       >
         <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
-          {getCoreTranslation('cancel')}
+          {getCoreTranslation('cancel', 'Cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={addStockUserRole} renderIcon={Save}>
-          {getCoreTranslation('save')}
+          {getCoreTranslation('save', 'Save')}
         </Button>
       </ButtonSet>
     </Form>

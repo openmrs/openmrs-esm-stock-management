@@ -1,16 +1,24 @@
 import React from 'react';
-import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
-import { type FetchResponse, useConfig } from '@openmrs/esm-framework';
-import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
-import { createOrUpdateStockSource } from '../stock-sources.resource';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom/extend-expect';
 import StockSourcesAddOrUpdate from './add-stock-sources.workspace';
+import { createOrUpdateStockSource } from '../stock-sources.resource';
+import { useConfig } from '@openmrs/esm-framework';
 
-const mockCreateOrUpdateStockSource = jest.mocked(createOrUpdateStockSource);
-const mockUseConfig = jest.mocked(useConfig);
+import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 
-jest.mock('../stock-sources.resource', () => ({
-  createOrUpdateStockSource: jest.fn(),
+jest.mock('../stock-sources.resource');
+jest.mock('@openmrs/esm-framework', () => ({
+  showSnackbar: jest.fn(),
+  useConfig: jest.fn(),
+  getCoreTranslation: jest.fn((key, defaultValue) => {
+    const translations: Record<string, string> = {
+      cancel: 'Cancel',
+      save: 'Save',
+    };
+    return translations[key] ?? defaultValue;
+  }),
 }));
 
 jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
@@ -26,7 +34,7 @@ jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
 
 describe('StockSourcesAddOrUpdate', () => {
   beforeEach(() => {
-    mockUseConfig.mockReturnValue({ stockSourceTypeUUID: 'mock-uuid' });
+    (useConfig as jest.Mock).mockReturnValue({ stockSourceTypeUUID: 'mock-uuid' });
   });
 
   it('renders correctly without model prop', () => {
@@ -38,9 +46,9 @@ describe('StockSourcesAddOrUpdate', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/acronym\/code/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/source type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText('Full Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Acronym/Code')).toBeInTheDocument();
+    expect(screen.getByLabelText('Source Type')).toBeInTheDocument();
   });
 
   it('renders correctly with model prop', () => {
@@ -102,9 +110,9 @@ describe('StockSourcesAddOrUpdate', () => {
         promptBeforeClosing={jest.fn()}
       />,
     );
-    expect(screen.getByLabelText(/full name/i)).toHaveValue('Test Source');
-    expect(screen.getByLabelText(/acronym\/code/i)).toHaveValue('TS');
-    expect(screen.getByLabelText(/source type/i)).toHaveValue('type1');
+    expect(screen.getByLabelText('Full Name')).toHaveValue('Test Source');
+    expect(screen.getByLabelText('Acronym/Code')).toHaveValue('TS');
+    expect(screen.getByLabelText('Source Type')).toHaveValue('type1');
   });
 
   it('updates form fields correctly on user input', async () => {
@@ -118,21 +126,16 @@ describe('StockSourcesAddOrUpdate', () => {
       />,
     );
 
-    await user.type(screen.getByLabelText(/full name/i), 'New Source');
-    await user.type(screen.getByLabelText(/acronym\/code/i), 'NS');
+    await user.type(screen.getByLabelText('Full Name'), 'New Source');
+    await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
 
-    expect(screen.getByLabelText(/full name/i)).toHaveValue('New Source');
-    expect(screen.getByLabelText(/acronym\/code/i)).toHaveValue('NS');
+    expect(screen.getByLabelText('Full Name')).toHaveValue('New Source');
+    expect(screen.getByLabelText('Acronym/Code')).toHaveValue('NS');
   });
 
   it('calls createOrUpdateStockSource with correct data on form submission', async () => {
     const user = userEvent.setup();
-    mockCreateOrUpdateStockSource.mockResolvedValue({
-      data: {},
-      ok: true,
-      status: 200,
-      statusText: 'OK',
-    } as unknown as FetchResponse);
+    (createOrUpdateStockSource as jest.Mock).mockResolvedValue({});
 
     render(
       <StockSourcesAddOrUpdate
@@ -143,20 +146,15 @@ describe('StockSourcesAddOrUpdate', () => {
       />,
     );
 
-    await user.type(screen.getByLabelText(/full name/i), 'New Source');
-    await user.type(screen.getByLabelText(/acronym\/code/i), 'NS');
-    await user.selectOptions(screen.getByLabelText(/source type/i), 'type2');
+    await user.type(screen.getByLabelText('Full Name'), 'New Source');
+    await user.type(screen.getByLabelText('Acronym/Code'), 'NS');
+    await user.selectOptions(screen.getByLabelText('Source Type'), 'type2');
     await user.click(screen.getByText('Save'));
   });
 
   it('shows success message and closes overlay on successful submission', async () => {
     const user = userEvent.setup();
-    mockCreateOrUpdateStockSource.mockResolvedValue({
-      data: {},
-      ok: true,
-      status: 200,
-      statusText: 'OK',
-    } as unknown as FetchResponse);
+    (createOrUpdateStockSource as jest.Mock).mockResolvedValue({});
 
     render(
       <StockSourcesAddOrUpdate
@@ -167,12 +165,12 @@ describe('StockSourcesAddOrUpdate', () => {
       />,
     );
 
-    await user.click(screen.getByText(/save/i));
+    await user.click(screen.getByText('Save'));
   });
 
   it('shows error message on failed submission', async () => {
     const user = userEvent.setup();
-    mockCreateOrUpdateStockSource.mockRejectedValue(new Error('API Error'));
+    (createOrUpdateStockSource as jest.Mock).mockRejectedValue(new Error('API Error'));
 
     render(
       <StockSourcesAddOrUpdate
@@ -183,7 +181,7 @@ describe('StockSourcesAddOrUpdate', () => {
       />,
     );
 
-    await user.click(screen.getByText(/save/i));
+    await user.click(screen.getByText('Save'));
   });
 
   it('closes overlay when cancel button is clicked', async () => {
@@ -197,6 +195,6 @@ describe('StockSourcesAddOrUpdate', () => {
       />,
     );
 
-    await user.click(screen.getByText(/cancel/i));
+    await user.click(screen.getByText('Cancel'));
   });
 });
