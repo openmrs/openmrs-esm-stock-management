@@ -1,5 +1,3 @@
-import React, { useMemo } from 'react';
-import classNames from 'classnames';
 import {
   Button,
   ButtonSet,
@@ -13,21 +11,22 @@ import {
 } from '@carbon/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useConfig, useLayoutType } from '@openmrs/esm-framework';
+import classNames from 'classnames';
+import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type z } from 'zod';
+import { type ConfigObject } from '../../../config-schema';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
 import {
   operationFromString,
   type StockOperationType,
 } from '../../../core/api/types/stockOperation/StockOperationType';
-import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
-import { type ConfigObject } from '../../../config-schema';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
+import { type BaseStockOperationItemFormData, getStockOperationItemFormSchema } from '../../validation-schema';
+import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import BatchNoSelector from '../input-components/batch-no-selector.component';
 import QtyUomSelector from '../input-components/quantity-uom-selector.component';
-import UniqueBatchNoEntryInput from '../input-components/unique-batch-no-entry-input.component';
-import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
 import styles from './stock-item-form.scss';
 
 export interface StockItemFormProps {
@@ -85,12 +84,15 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
                 defaultValue={stockOperationItem?.batchNo}
                 name={'batchNo' as any}
                 render={({ field, fieldState: { error } }) => (
-                  <UniqueBatchNoEntryInput
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    stockItemUuid={stockOperationItem.stockItemUuid}
-                    error={error?.message}
-                    stockOperationItemUuid={stockOperationItem.uuid}
+                  <TextInput
+                    label={t('qty', 'Qty')}
+                    maxLength={50}
+                    {...field}
+                    invalidText={error?.message}
+                    invalid={error?.message}
+                    placeholder={t('batchNumber', 'Batch Number')}
+                    labelText={t('batchNumber', 'Batch Number')}
+                    id="batchNumber"
                   />
                 )}
               />
