@@ -1,11 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { InlineLoading } from '@carbon/react';
 import { ErrorState } from '@openmrs/esm-framework';
-import { useDisposalList } from './useDisposalList';
 import { ResourceRepresentation } from '../core/api/api';
-import { useStockInventoryItems } from './stock-home-inventory-items.resource';
+import { useDisposalList } from './useDisposalList';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
+import { useStockInventoryItems } from './stock-home-inventory-items.resource';
 import { type StockOperationFilter } from '../stock-operations/stock-operations.resource';
 import useStockList from './useStockList';
 import MetricsCard from '../core/components/card/metrics-card-component';
@@ -13,8 +12,8 @@ import styles from './stock-home.scss';
 
 const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
   const { t } = useTranslation();
-  const { stockList: allStocks, isLoading, error } = useStockList();
-  const { items: expiryItems, isLoading: inventoryLoading } = useStockInventory();
+  const { stockList: allStocks, error } = useStockList();
+  const { items: expiryItems } = useStockInventory();
   const { items: stockItems } = useStockInventoryItems();
 
   const currentDate = new Date();
@@ -39,10 +38,6 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
-
-  if (isLoading) {
-    return <InlineLoading role="progressbar" description={t('loading', 'Loading...')} />;
-  }
 
   if (error) {
     return <ErrorState headerTitle={t('errorStockMetric', 'Error fetching stock metrics')} error={error} />;
