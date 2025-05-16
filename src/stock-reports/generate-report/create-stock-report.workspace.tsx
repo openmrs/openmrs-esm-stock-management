@@ -14,6 +14,9 @@ import {
   RadioButtonGroup,
   Select,
   SelectItem,
+  Form,
+  FormGroup,
+  Stack,
 } from '@carbon/react';
 import {
   type ConfigObject,
@@ -368,50 +371,51 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   };
 
   return (
-    <div className={styles.formContainer}>
-      <div className={styles.body}>
+    <Form className={styles.container}>
+      <Stack className={styles.form} gap={5}>
         <>
-          <span>{t('reportName', 'Report')}</span>
-          <Controller
-            control={control}
-            name="reportName"
-            render={({ field: { onChange } }) => (
-              <ComboBox
-                id="report"
-                size="md"
-                labelText={t('reportName', 'Report')}
-                items={reportTypes}
-                itemToString={(item) => `${item?.name ?? item?.name ?? ''}`}
-                placeholder="Filter..."
-                onChange={({ selectedItem }) => {
-                  onChange(selectedItem.name);
-                  handleReportNameChange(selectedItem.name);
-                }}
-              />
-            )}
-          />
+          <FormGroup legendText={t('reportName', 'Report name')}>
+            <Controller
+              control={control}
+              name="reportName"
+              render={({ field: { onChange } }) => (
+                <ComboBox
+                  id="report"
+                  labelText={t('reportName', 'Report name')}
+                  items={reportTypes}
+                  itemToString={(item) => `${item?.name ?? item?.name ?? ''}`}
+                  placeholder={t('filter', 'Filter...')}
+                  onChange={({ selectedItem }) => {
+                    onChange(selectedItem.name);
+                    handleReportNameChange(selectedItem.name);
+                  }}
+                />
+              )}
+            />
+          </FormGroup>
         </>
 
         {displayStockItemCategory && (
           <>
-            <span>{t('stockItemCategory', 'Stock Item Category')}</span>
-            <Controller
-              control={control}
-              name="stockReportItemCategory"
-              render={({ field: { onChange } }) => (
-                <ComboBox
-                  id="stockReportItem"
-                  size="md"
-                  labelText={t('stockItemCategory', 'Stock Item Category')}
-                  items={stockItemCategories}
-                  onChange={({ selectedItem }) => {
-                    onChange(selectedItem.uuid);
-                  }}
-                  itemToString={(item) => (item && item?.display ? `${item?.display}` : '')}
-                  placeholder="Filter..."
-                />
-              )}
-            />
+            <FormGroup legendText={t('stockItemCategory', 'Stock Item Category')}>
+              <Controller
+                control={control}
+                name="stockReportItemCategory"
+                render={({ field: { onChange } }) => (
+                  <ComboBox
+                    id="stockReportItem"
+                    size="md"
+                    labelText={t('stockItemCategory', 'Stock Item Category')}
+                    items={stockItemCategories}
+                    onChange={({ selectedItem }) => {
+                      onChange(selectedItem.uuid);
+                    }}
+                    itemToString={(item) => (item && item?.display ? `${item?.display}` : '')}
+                    placeholder={t('filter', 'Filter...')}
+                  />
+                )}
+              />
+            </FormGroup>
           </>
         )}
         {displayStartDate && (
@@ -551,7 +555,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           />
         )}
         {displayFulfillment && (
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '0 1rem' }}>
+          <div className={styles.flexRow}>
             <Controller
               control={control}
               name="fullFillment"
@@ -640,7 +644,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
             )}
           />
         )}
-      </div>
+      </Stack>
 
       <ButtonSet
         className={classNames(styles.buttonSet, {
@@ -655,7 +659,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           {getCoreTranslation('save')}
         </Button>
       </ButtonSet>
-    </div>
+    </Form>
   );
 };
 
