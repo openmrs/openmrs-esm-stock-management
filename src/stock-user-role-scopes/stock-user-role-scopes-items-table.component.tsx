@@ -123,10 +123,10 @@ function StockUserRoleScopesItems() {
             <span key={key}>
               {location?.locationName}
               {location?.enableDescendants ? (
-                <ArrowDownLeft key={`${key}-${index}-0`} />
+                <ArrowDownLeft className={styles.arrowIcon} key={`${key}-${index}-0`} size={12} />
               ) : (
-                <ArrowLeft key={`${key}-${index}-1`} />
-              )}{' '}
+                <ArrowLeft className={styles.arrowIcon} key={`${key}-${index}-1`} size={12} />
+              )}
             </span>
           );
         }),

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, InlineLoading } from '@carbon/react';
+import { IconButton, InlineLoading } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { TrashCan } from '@carbon/react/icons';
-import { deleteUserRoleScopes } from '../stock-user-role-scopes.resource';
 import { restBaseUrl, showModal, showSnackbar } from '@openmrs/esm-framework';
+import { deleteUserRoleScopes } from '../stock-user-role-scopes.resource';
 import { handleMutate } from '../../utils';
 
 interface StockUserScopDeleteActionMenuProps {
@@ -51,13 +51,14 @@ const StockUserScopeDeleteActionMenu: React.FC<StockUserScopDeleteActionMenuProp
   }, [t, uuid]);
 
   const deleteButton = (
-    <Button
+    <IconButton
+      autoAlign
       kind="ghost"
-      size="md"
+      label={t('deleteUserRoleScope', 'Delete user role scope')}
       onClick={handleDeleteStockUserScope}
-      iconDescription={t('deleteUserScope', 'Delete Stock User Scope')}
-      renderIcon={(props) => <TrashCan size={16} {...props} />}
-    />
+    >
+      <TrashCan size={16} />
+    </IconButton>
   );
 
   return deletingUserScope ? <InlineLoading /> : deleteButton;
