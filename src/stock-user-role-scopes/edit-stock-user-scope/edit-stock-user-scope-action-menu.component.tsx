@@ -1,10 +1,9 @@
-import { Button } from '@carbon/react';
-import { Edit } from '@carbon/react/icons';
-
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
+import { IconButton } from '@carbon/react';
+import { Edit } from '@carbon/react/icons';
 import { launchWorkspace } from '@openmrs/esm-framework';
+import { type UserRoleScope } from '../../core/api/types/identity/UserRoleScope';
 
 interface EditStockUserRoleActionsMenuProps {
   data: UserRoleScope;
@@ -13,20 +12,22 @@ interface EditStockUserRoleActionsMenuProps {
 const EditStockUserRoleActionsMenu: React.FC<EditStockUserRoleActionsMenuProps> = ({ data }) => {
   const { t } = useTranslation();
 
-  const handleClick = useCallback(() => {
+  const handleLaunchWorkspace = useCallback(() => {
     launchWorkspace('stock-user-role-scopes-form-workspace', {
-      workspaceTitle: t('editUserScope', 'Edit user scope role'),
+      workspaceTitle: t('editUserRoleScope', 'Edit user role scope'),
       model: data,
     });
   }, [data, t]);
 
   return (
-    <Button
+    <IconButton
+      autoAlign
       kind="ghost"
-      onClick={handleClick}
-      iconDescription={t('editUserScope', 'Edit user scope role')}
-      renderIcon={(props) => <Edit size={16} {...props} />}
-    />
+      label={t('editUserRoleScope', 'Edit user role scope')}
+      onClick={handleLaunchWorkspace}
+    >
+      <Edit size={16} />
+    </IconButton>
   );
 };
 export default EditStockUserRoleActionsMenu;
