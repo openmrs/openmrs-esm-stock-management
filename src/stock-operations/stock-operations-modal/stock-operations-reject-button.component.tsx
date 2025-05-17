@@ -13,7 +13,7 @@ interface StockOperationRejectButtonProps {
 const StockOperationRejectButton: React.FC<StockOperationRejectButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
   const launchRejectModal = useCallback(() => {
-    const dispose = showModal('stock-operation-dialog', {
+    const dispose = showModal('stock-operations-modal', {
       title: 'Reject',
       operation: operation,
       requireReason: true,

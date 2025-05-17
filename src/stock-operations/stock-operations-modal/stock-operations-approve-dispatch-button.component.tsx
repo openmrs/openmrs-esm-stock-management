@@ -13,7 +13,7 @@ interface StockOperationApproveDispatchButtonProps {
 const StockOperationApproveDispatchButton: React.FC<StockOperationApproveDispatchButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
   const launchApproveDispatchModal = useCallback(() => {
-    const dispose = showModal('stock-operation-dialog', {
+    const dispose = showModal('stock-operations-modal', {
       title: 'Dispatch',
       operation: operation,
       requireReason: false,
