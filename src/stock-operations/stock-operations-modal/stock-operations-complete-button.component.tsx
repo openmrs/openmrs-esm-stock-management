@@ -14,7 +14,7 @@ interface StockOperationCompleteButtonProps {
 const StockOperationCompleteButton: React.FC<StockOperationCompleteButtonProps> = ({ operation, reason }) => {
   const { t } = useTranslation();
   const launchCompleteModal = useCallback(() => {
-    const dispose = showModal('stock-operation-dialog', {
+    const dispose = showModal('stock-operations-modal', {
       title: 'Complete',
       operation: operation,
       requireReason: reason,

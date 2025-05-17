@@ -57,7 +57,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           });
           if (!stockItem) {
             onCloseWorkspace?.();
-            // launch edit dialog
+            // launch edit stock item workspace
             const item = response.data;
             item.isDrug = !!item.drugUuid;
             launchAddOrEditStockItemWorkspace(t, item);
