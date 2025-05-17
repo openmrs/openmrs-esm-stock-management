@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useLayoutType, isDesktop, useExtensionStore, ExtensionSlot, WorkspaceContainer } from '@openmrs/esm-framework';
-import DashboardView from './dashboard-view.component';
-import styles from './home-dashboard.scss';
 import { type DashboardConfig } from '../types';
+import DashboardView from './dashboard-view.component';
 import Overlay from '../core/components/overlay/overlay.component';
+import styles from './home-dashboard.scss';
 
 export default function Dashboard() {
   const params = useParams();
