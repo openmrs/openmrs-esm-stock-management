@@ -124,7 +124,11 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           location: (
             <>
               {stockOperation?.sourceName ?? ''}
-              {stockOperation?.sourceName && stockOperation?.destinationName ? <ArrowRight size={16} /> : ''}{' '}
+              {stockOperation?.sourceName && stockOperation?.destinationName ? (
+                <ArrowRight className={styles.arrowIcon} key={`${index}-0`} size={12} />
+              ) : (
+                ''
+              )}{' '}
               {stockOperation?.destinationName ?? ''}
             </>
           ),
