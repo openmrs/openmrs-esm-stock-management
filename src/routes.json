@@ -186,8 +186,8 @@
       "component": "receivingStockModal"
     },
     {
-      "name": "stock-operation-dialog",
-      "component": "stockOperationModal"
+      "name": "stock-operations-modal",
+      "component": "stockOperationsModal"
     },
     {
       "name": "transactions-print-bincard-preview-modal",

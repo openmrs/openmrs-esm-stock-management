@@ -6,14 +6,14 @@ import {
   type StockOperationType,
   StockOperationTypeHasPrint,
 } from '../core/api/types/stockOperation/StockOperationType';
-import StockOperationApprovalButton from './stock-operations-dialog/stock-operations-approve-button.component';
-import StockOperationApproveDispatchButton from './stock-operations-dialog/stock-operations-approve-dispatch-button.component';
-import StockOperationCancelButton from './stock-operations-dialog/stock-operations-cancel-button.component';
-import StockOperationCompleteDispatchButton from './stock-operations-dialog/stock-operations-completed-dispatch-button.component';
-import StockOperationIssueStockButton from './stock-operations-dialog/stock-operations-issue-stock-button.component';
-import StockOperationPrintButton from './stock-operations-dialog/stock-operations-print-button.component';
-import StockOperationRejectButton from './stock-operations-dialog/stock-operations-reject-button.component';
-import StockOperationReturnButton from './stock-operations-dialog/stock-operations-return-button.component';
+import StockOperationApprovalButton from './stock-operations-modal/stock-operations-approve-button.component';
+import StockOperationApproveDispatchButton from './stock-operations-modal/stock-operations-approve-dispatch-button.component';
+import StockOperationCancelButton from './stock-operations-modal/stock-operations-cancel-button.component';
+import StockOperationCompleteDispatchButton from './stock-operations-modal/stock-operations-completed-dispatch-button.component';
+import StockOperationIssueStockButton from './stock-operations-modal/stock-operations-issue-stock-button.component';
+import StockOperationPrintButton from './stock-operations-modal/stock-operations-print-button.component';
+import StockOperationRejectButton from './stock-operations-modal/stock-operations-reject-button.component';
+import StockOperationReturnButton from './stock-operations-modal/stock-operations-return-button.component';
 import useOperationTypePermisions from './stock-operations-forms/hooks/useOperationTypePermisions';
 import styles from './stock-operations-table.scss';
 

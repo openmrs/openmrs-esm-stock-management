@@ -13,7 +13,7 @@ interface StockOperationReturnButtonProps {
 const StockOperationReturnButton: React.FC<StockOperationReturnButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
   const launchReturnModal = useCallback(() => {
-    const dispose = showModal('stock-operation-dialog', {
+    const dispose = showModal('stock-operations-modal', {
       title: 'Return',
       operation: operation,
       requireReason: true,

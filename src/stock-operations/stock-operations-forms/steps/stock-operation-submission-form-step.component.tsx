@@ -9,12 +9,12 @@ import { extractErrorMessagesFromResponse } from '../../../constants';
 import { handleMutate } from '../../../utils';
 import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { otherUser } from '../../../core/utils/utils';
-import { showActionDialogButton } from '../../stock-operation.utils';
+import { launchStockOperationsModal } from '../../stock-operation.utils';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { type StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
 import { type StockOperationItemDtoSchema } from '../../validation-schema';
-import styles from '../stock-operation-form.scss';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
+import styles from '../stock-operation-form.scss';
 
 type StockOperationSubmissionFormStepProps = {
   onPrevious?: () => void;
@@ -125,17 +125,17 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
 
   const handleComplete = useCallback(() => {
     handleSave().then((operation) => {
-      showActionDialogButton('Complete', false, { ...operation, status: 'COMPLETED' });
+      launchStockOperationsModal('Complete', false, { ...operation, status: 'COMPLETED' });
     });
   }, [handleSave]);
   const handleSubmitForReview = useCallback(() => {
     handleSave().then((operation) => {
-      showActionDialogButton('Submit', false, { ...operation, status: 'SUBMITTED' });
+      launchStockOperationsModal('Submit', false, { ...operation, status: 'SUBMITTED' });
     });
   }, [handleSave]);
   const handleDispatch = useCallback(() => {
     handleSave().then((operation) => {
-      showActionDialogButton('Dispatch', false, { ...operation, status: 'DISPATCHED' });
+      launchStockOperationsModal('Dispatch', false, { ...operation, status: 'DISPATCHED' });
     });
   }, [handleSave]);
 
