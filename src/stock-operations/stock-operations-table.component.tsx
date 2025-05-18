@@ -22,7 +22,6 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
@@ -150,7 +149,9 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
 
   return (
     <div>
-      <TabPanel>{t('stockOperationTrackMovement', 'Stock operations to track movement of stock.')}</TabPanel>
+      <h2 className={styles.tableHeader}>
+        {t('stockOperationsTableHeader', 'Stock operations to track movement of stock.')}
+      </h2>
       <DataTable
         headers={tableHeaders}
         isSortable

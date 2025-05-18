@@ -213,7 +213,10 @@ describe('StockSourcesItems', () => {
       items: mockItems as unknown as StockSource[],
       isLoading: false,
       totalItems: 2,
-      tableHeaders: [{ id: 0, key: 'name', header: 'Name' }],
+      tableHeaders: [
+        { id: 0, key: 'name', header: 'Name' },
+        { id: 1, key: 'sourceType', header: 'Source Type' },
+      ],
       currentPage: 1,
       pageSizes: [10, 20, 50],
       goTo: jest.fn(),
@@ -223,21 +226,42 @@ describe('StockSourcesItems', () => {
       error: null,
     });
 
+    // Mock the concept data for the filter
+    mockUseConcept.mockReturnValue({
+      items: {
+        uuid: '1',
+        display: 'Source Types',
+        answers: [
+          { uuid: '1', display: 'All' },
+          { uuid: '2', display: 'Internal' },
+          { uuid: '3', display: 'External' },
+        ] as Concept[],
+      } as Concept,
+      isLoading: false,
+      error: null,
+    });
+
     render(<StockSourcesItems />);
 
-    expect(screen.getByText('Source A')).toBeInTheDocument();
-    expect(screen.getByText('Source B')).toBeInTheDocument();
+    // Initial state - both sources should be visible
+    expect(screen.getByText(/source a/i)).toBeInTheDocument();
+    expect(screen.getByText(/source b/i)).toBeInTheDocument();
 
-    const filterInput = screen.getByLabelText('');
-    await user.type(filterInput, 'Internal');
+    // Find and click the source type filter dropdown
+    const filterDropdown = screen.getByRole('combobox', { name: /select source type/i });
+    await user.click(filterDropdown);
 
+    // Select "Internal" from the dropdown
+    const internalOption = screen.getByRole('option', { name: /internal/i });
+    await user.click(internalOption);
+
+    // Wait for Source B to disappear
     await waitFor(() => {
-      expect(screen.getByText('Source A')).toBeInTheDocument();
+      expect(screen.queryByText(/source b/i)).not.toBeInTheDocument();
     });
 
-    await waitFor(() => {
-      expect(screen.getByText('Source B')).toBeInTheDocument();
-    });
+    // Verify Source A is still visible
+    expect(screen.getByText(/source a/i)).toBeInTheDocument();
   });
 
   test('renders a message when no stock sources are available', () => {

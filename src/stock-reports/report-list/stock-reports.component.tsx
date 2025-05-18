@@ -21,7 +21,6 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
 } from '@carbon/react';
 import {
@@ -203,8 +202,7 @@ const StockReports: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <TabPanel>{t('ReportDescription', 'List of reports requested by users')}</TabPanel>
-
+      <h2 className={styles.tableHeader}>{t('stockReportsTableHeader', 'List of reports requested by users.')}</h2>
       <DataTable
         rows={tableRows}
         headers={tableHeaders}

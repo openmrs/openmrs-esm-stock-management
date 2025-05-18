@@ -1,15 +1,15 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import styles from './stock-settings.scss';
-import { navigate } from '@openmrs/esm-framework';
 import { Button } from '@carbon/react';
 import { UserSettings } from '@carbon/react/icons';
+import { useTranslation } from 'react-i18next';
+import { navigate } from '@openmrs/esm-framework';
+import styles from './stock-settings.scss';
 
 function StockSettings() {
   const { t } = useTranslation();
 
   return (
-    <div className={styles.StockSettings}>
+    <div className={styles.container}>
       <div className={styles.tableHeader}>
         {t(
           'comingSoonUnderDev',
