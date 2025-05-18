@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button, Form, InlineLoading, ModalBody, ModalFooter, ModalHeader, TextArea } from '@carbon/react';
+import { getCoreTranslation, restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
-import { Button, Form, ModalBody, ModalFooter, ModalHeader, TextArea, InlineLoading } from '@carbon/react';
-import styles from './stock-operations-dialog.scss';
 import {
   type StopOperationAction,
   type StopOperationActionType,
 } from '../../core/api/types/stockOperation/StockOperationAction';
 import { executeStockOperationAction } from '../stock-operations.resource';
-import { getCoreTranslation, restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
-import { closeOverlay } from '../../core/components/overlay/hook';
 import { extractErrorMessagesFromResponse } from '../../constants';
 import { handleMutate } from '../../utils';
+import styles from './stock-operations.scss';
 
-interface StockOperationDialogProps {
+interface StockOperationsModalProps {
   title: string;
   requireReason: boolean;
   operation: StockOperationDTO;
   closeModal: () => void;
 }
 
-const StockOperationDialog: React.FC<StockOperationDialogProps> = ({ title, requireReason, operation, closeModal }) => {
+const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requireReason, operation, closeModal }) => {
   const confirmType = title.toLocaleLowerCase().trim();
-
   const { t } = useTranslation();
-
   const [notes, setNotes] = useState('');
-
   const [isApproving, setIsApproving] = useState(false);
 
   const handleClick = async (event) => {
@@ -88,7 +84,6 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({ title, requ
           kind: 'success',
         }),
           closeModal();
-        closeOverlay();
         handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
       },
       (err) => {
@@ -103,7 +98,6 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({ title, requ
           kind: 'error',
         }),
           closeModal();
-        closeOverlay();
       },
     );
   };
@@ -144,4 +138,4 @@ const StockOperationDialog: React.FC<StockOperationDialogProps> = ({ title, requ
   );
 };
 
-export default StockOperationDialog;
+export default StockOperationsModal;

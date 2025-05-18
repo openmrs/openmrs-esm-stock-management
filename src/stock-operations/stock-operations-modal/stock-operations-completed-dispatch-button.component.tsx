@@ -17,7 +17,7 @@ const StockOperationCompleteDispatchButton: React.FC<StockOperationCompleteDispa
 }) => {
   const { t } = useTranslation();
   const launchcompletedDispatchModal = useCallback(() => {
-    const dispose = showModal('stock-operation-dialog', {
+    const dispose = showModal('stock-operations-modal', {
       title: 'Complete Dispatch',
       operation: operation,
       requireReason: reason,

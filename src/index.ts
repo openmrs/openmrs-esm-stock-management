@@ -132,8 +132,8 @@ export const stockSettingsLink = getSyncLifecycle(
 
 export const stockManagement = getSyncLifecycle(stockManagementComponent, options);
 
-export const stockOperationModal = getAsyncLifecycle(
-  () => import('./stock-operations/stock-operations-dialog/stock-operations-dialog.component'),
+export const stockOperationsModal = getAsyncLifecycle(
+  () => import('./stock-operations/stock-operations-modal/stock-operations.modal'),
   {
     featureName: 'stock-operation-modal',
     moduleName,

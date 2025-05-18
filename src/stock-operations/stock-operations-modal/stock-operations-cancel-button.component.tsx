@@ -13,7 +13,7 @@ interface StockOperationCancelButtonProps {
 const StockOperationCancelButton: React.FC<StockOperationCancelButtonProps> = ({ operation }) => {
   const { t } = useTranslation();
   const launchCancelModal = useCallback(() => {
-    const dispose = showModal('stock-operation-dialog', {
+    const dispose = showModal('stock-operations-modal', {
       title: 'Cancel',
       operation: operation,
       requireReason: true,

@@ -149,7 +149,7 @@ describe('StockSourcesAddOrUpdate', () => {
     await user.click(screen.getByText('Save'));
   });
 
-  it('shows success message and closes overlay on successful submission', async () => {
+  it('shows success message and closes the workspace on successful submission', async () => {
     const user = userEvent.setup();
     mockCreateOrUpdateStockSource.mockResolvedValue({
       data: {},
@@ -186,7 +186,7 @@ describe('StockSourcesAddOrUpdate', () => {
     await user.click(screen.getByText(/save/i));
   });
 
-  it('closes overlay when cancel button is clicked', async () => {
+  it('closes workspace when cancel button is clicked', async () => {
     const user = userEvent.setup();
     render(
       <StockSourcesAddOrUpdate
