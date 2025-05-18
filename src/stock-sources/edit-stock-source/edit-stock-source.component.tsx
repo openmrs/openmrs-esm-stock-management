@@ -24,7 +24,7 @@ const EditStockSourceActionsMenu: React.FC<EditStockSourcesActionMenuProps> = ({
       kind="ghost"
       size="md"
       onClick={handleLaunchWorkspace}
-      label={t('editStockSources', 'Edit stock source')}
+      label={t('editStockSource', 'Edit stock source')}
     >
       <Edit size={16} />
     </IconButton>
