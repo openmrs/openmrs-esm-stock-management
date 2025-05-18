@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button } from '@carbon/react';
+import { IconButton } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ interface EditStockSourcesActionMenuProps {
 
 const EditStockSourceActionsMenu: React.FC<EditStockSourcesActionMenuProps> = ({ data }) => {
   const { t } = useTranslation();
-  const handleClick = useCallback(() => {
+  const handleLaunchWorkspace = useCallback(() => {
     launchWorkspace('stock-sources-form-workspace', {
       workspaceTitle: t('editStockSource', 'Edit stock source'),
       model: data,
@@ -20,13 +20,14 @@ const EditStockSourceActionsMenu: React.FC<EditStockSourcesActionMenuProps> = ({
   }, [data, t]);
 
   return (
-    <Button
+    <IconButton
       kind="ghost"
       size="md"
-      onClick={() => handleClick()}
-      iconDescription={t('editStockSource', 'Edit stock source')}
-      renderIcon={(props) => <Edit size={16} {...props} />}
-    />
+      onClick={handleLaunchWorkspace}
+      label={t('editStockSources', 'Edit stock source')}
+    >
+      <Edit size={16} />
+    </IconButton>
   );
 };
 export default EditStockSourceActionsMenu;

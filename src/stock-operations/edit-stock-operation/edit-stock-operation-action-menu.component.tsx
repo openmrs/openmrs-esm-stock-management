@@ -1,4 +1,4 @@
-import { Button, InlineLoading } from '@carbon/react';
+import { IconButton, InlineLoading } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -7,63 +7,75 @@ import { type StockOperationDTO } from '../../core/api/types/stockOperation/Stoc
 import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 import { useStockOperationAndItems } from '../stock-operations.resource';
+import styles from './edit-stock-operation-button.scss';
 
 interface EditStockOperationActionMenuProps {
   stockOperation: StockOperationDTO;
   showIcon?: boolean;
   showprops?: boolean;
 }
-
 const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> = ({
   stockOperation: _stockOperation,
   showIcon = true,
   showprops = true,
 }) => {
   const { t } = useTranslation();
-  const { error, isLoading, operationTypes } = useFilteredOperationTypesByRoles();
+
   const {
-    isLoading: isLoadingStockoperation,
-    items: stockOperation,
+    error: operationTypesError,
+    isLoading: isOperationTypesLoading,
+    operationTypes,
+  } = useFilteredOperationTypesByRoles();
+
+  const {
+    isLoading: isStockOperationLoading,
+    items: fetchedStockOperation,
     error: stockOperationError,
-  } = useStockOperationAndItems(_stockOperation.uuid);
+  } = useStockOperationAndItems(_stockOperation?.uuid);
+
   const activeOperationType = useMemo(
-    () => operationTypes?.find((op) => op?.uuid === stockOperation?.operationTypeUuid),
-    [operationTypes, stockOperation],
+    () => operationTypes?.find((op) => op?.uuid === fetchedStockOperation?.operationTypeUuid),
+    [operationTypes, fetchedStockOperation],
   );
 
-  const handleEdit = useCallback(() => {
+  const handleLaunchWorkspace = useCallback(() => {
     launchStockoperationAddOrEditWorkSpace(
       t,
       activeOperationType,
-      stockOperation,
-      stockOperation?.requisitionStockOperationUuid,
+      fetchedStockOperation,
+      fetchedStockOperation?.requisitionStockOperationUuid,
     );
-  }, [t, activeOperationType, stockOperation]);
+  }, [t, activeOperationType, fetchedStockOperation]);
 
   useEffect(() => {
-    if (error) {
+    if (operationTypesError || stockOperationError) {
       showSnackbar({
         kind: 'error',
-        title: t('stockOperationError', 'Error loading stock operation types'),
-        subtitle: error?.message ?? stockOperationError?.message,
+        title: t('stockOperationError', 'Error loading stock operation'),
+        subtitle: operationTypesError?.message || stockOperationError?.message || '',
       });
     }
-  }, [error, t, stockOperationError]);
+  }, [operationTypesError, stockOperationError, t]);
 
-  if (isLoading || isLoadingStockoperation) return <InlineLoading status="active" iconDescription="Loading" />;
+  if (isOperationTypesLoading || isStockOperationLoading) {
+    return <InlineLoading status="active" iconDescription="Loading" />;
+  }
 
-  if (error || stockOperationError) return <>--</>;
+  if (operationTypesError || stockOperationError) {
+    return <>--</>;
+  }
 
   return (
-    <Button
+    <IconButton
+      className={styles.editStockButton}
       kind="ghost"
       size="sm"
-      onClick={handleEdit}
-      iconDescription={t('editStockOperation', 'Edit Stock Operation')}
-      renderIcon={showIcon ? Edit : undefined}
+      onClick={handleLaunchWorkspace}
+      label={t('editStockOperation', 'Edit Stock Operation')}
+      renderIcon={showIcon ? () => <Edit size={16} /> : undefined}
     >
-      {showprops && stockOperation?.operationNumber}
-    </Button>
+      {showprops && <span className={styles.operationNumberText}>{fetchedStockOperation?.operationNumber}</span>}
+    </IconButton>
   );
 };
 
