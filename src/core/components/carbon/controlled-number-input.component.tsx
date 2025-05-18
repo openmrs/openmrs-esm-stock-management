@@ -2,7 +2,7 @@ import React from 'react';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { type NumberInputProps } from '@carbon/react/lib/components/NumberInput/NumberInput';
 import { NumberInput } from '@carbon/react';
-import { type StockItemPackagingUOMDTO } from '../../../api/types/stockItem/StockItemPackagingUOM';
+import { type StockItemPackagingUOMDTO } from '../../api/types/stockItem/StockItemPackagingUOM';
 
 interface ControlledNumberInputProps<T> extends NumberInputProps {
   row?: StockItemPackagingUOMDTO;

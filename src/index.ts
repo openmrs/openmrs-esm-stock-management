@@ -2,7 +2,7 @@ import { defineConfigSchema, getAsyncLifecycle, getSyncLifecycle } from '@openmr
 import { configSchema } from './config-schema';
 import { createDashboardLink } from './createDashboardLink';
 import appMenu from './stock-app-menu-item/item.component';
-import deletePackagingUnitModalButtonComponent from './stock-items/add-stock-item/packaging-units/packaging-units-delete-modal-button.component';
+import deletePackagingUnitModalButtonComponent from './stock-items/add-stock-item/packaging-units/delete-packaging-unit-action-button.component';
 import Root from './root.component';
 import SideMenu from './side-menu/side-menu.component';
 import StockHomeLandingPage from './stock-home/stock-home-landing-page-component';
@@ -27,13 +27,13 @@ const options = {
 
 export const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
-export const deleteStockModal = getAsyncLifecycle(() => import('./stock-sources/delete-stock-modal.component'), {
+export const deleteStockModal = getAsyncLifecycle(() => import('./stock-sources/delete-stock-source.modal'), {
   featureName: 'delete-stock-modal',
   moduleName,
 });
 
 export const deleteUserScopeModal = getAsyncLifecycle(
-  () => import('./stock-user-role-scopes/delete-stock-user-scope-modal.component'),
+  () => import('./stock-user-role-scopes/delete-stock-user-scope.modal'),
   {
     featureName: 'delete-stock-user-scope-modal',
     moduleName,
@@ -41,7 +41,7 @@ export const deleteUserScopeModal = getAsyncLifecycle(
 );
 
 export const deletePackagingUnitModal = getAsyncLifecycle(
-  () => import('./stock-items/add-stock-item/packaging-units/packaging-units-delete-modal.component'),
+  () => import('./stock-items/add-stock-item/packaging-units/packaging-units-delete.modal'),
   {
     featureName: 'delete-packaging-unit-modal',
     moduleName,

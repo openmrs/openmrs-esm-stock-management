@@ -4,13 +4,13 @@ import { Button, ModalHeader, ModalBody, ModalFooter } from '@carbon/react';
 import { getCoreTranslation } from '@openmrs/esm-framework';
 import styles from './delete-stock-modal.scss';
 
-interface DeleteConfirmationProps {
+interface DeleteStockSourceModalProps {
   uuid?: string;
   close: () => void;
   onConfirmation: () => void;
 }
 
-const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ close, onConfirmation, uuid }) => {
+const DeleteStockSourceModal: React.FC<DeleteStockSourceModalProps> = ({ close, onConfirmation, uuid }) => {
   const { t } = useTranslation();
   const handleCancel = () => close();
   const handleDelete = () => onConfirmation?.();
@@ -39,4 +39,4 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ close, onConfir
   );
 };
 
-export default DeleteConfirmation;
+export default DeleteStockSourceModal;

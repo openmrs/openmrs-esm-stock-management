@@ -1,34 +1,34 @@
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
 import { TrashCan } from '@carbon/react/icons';
 import { showModal } from '@openmrs/esm-framework';
 import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 
-interface DeleteModalButtonProps {
+interface DeletePackagingUnitActionButtonProps {
   row?: StockItemPackagingUOMDTO;
-  closeModal: () => void;
 }
 
-const DeleteModalButton: React.FC<DeleteModalButtonProps> = ({ row }) => {
+const DeletePackagingUnitActionButton: React.FC<DeletePackagingUnitActionButtonProps> = ({ row }) => {
+  const { t } = useTranslation();
   const launchDeleteModal = useCallback(() => {
     const dispose = showModal('delete-packaging-unit-modal', {
       closeModal: () => dispose(),
       row,
     });
   }, [row]);
+
   return (
-    <div>
-      <Button
-        type="button"
-        size="sm"
-        className="submitButton clear-padding-margin"
-        iconDescription={'Delete'}
-        kind="ghost"
-        renderIcon={TrashCan}
-        onClick={launchDeleteModal}
-      />
-    </div>
+    <Button
+      type="button"
+      size="sm"
+      className="submitButton clear-padding-margin"
+      iconDescription={t('delete', 'Delete')}
+      kind="ghost"
+      renderIcon={TrashCan}
+      onClick={launchDeleteModal}
+    />
   );
 };
 
-export default DeleteModalButton;
+export default DeletePackagingUnitActionButton;

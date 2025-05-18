@@ -21,8 +21,8 @@ import { handleMutate } from '../../../utils';
 import { type PackageUnitFormData, packageUnitSchema } from './validationSchema';
 import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { useStockItemPackageUnitsHook } from './packaging-units.resource';
-import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input/controlled-number-input.component';
-import DeleteModalButton from './packaging-units-delete-modal-button.component';
+import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input.component';
+import DeletePackagingUnitActionButton from './delete-packaging-unit-action-button.component';
 import PackagingUnitsConceptSelector from '../packaging-units-concept-selector/packaging-units-concept-selector.component';
 import styles from './packaging-units.scss';
 
@@ -299,7 +299,7 @@ const PackagingUnitRow: React.FC<{
           />
         </TableCell>
         <TableCell>
-          <DeleteModalButton closeModal={() => true} row={row} />
+          <DeletePackagingUnitActionButton row={row} />
         </TableCell>
       </TableRow>
     </>

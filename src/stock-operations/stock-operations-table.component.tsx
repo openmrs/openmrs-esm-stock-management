@@ -261,7 +261,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>
                   <div className={styles.tileContent}>
-                    <p className={styles.content}>{t('noOperationsToDisplay', 'No Stock Operations to display')}</p>
+                    <p className={styles.content}>{t('noOperationsToDisplay', 'No stock operations to display')}</p>
                     <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                   </div>
                 </Tile>
