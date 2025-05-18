@@ -40,10 +40,6 @@ jest.mock('../stock-operations.resource', () => ({
   }),
 }));
 
-jest.mock('../../core/components/overlay/hook', () => ({
-  closeOverlay: jest.fn(),
-}));
-
 jest.mock('../../stock-items/stock-items.resource', () => ({
   useStockItem: jest.fn(),
   useStockItems: jest.fn().mockReturnValue({

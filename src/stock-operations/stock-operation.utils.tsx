@@ -8,7 +8,7 @@ export const launchStockoperationAddOrEditWorkSpace = (
   t: TFunction,
   operationType: StockOperationType,
   stockOperation?: StockOperationDTO,
-  stockRequisitionUuid?: string, // Only suplied on stock issue (when overlay is launched for stock issue)
+  stockRequisitionUuid?: string, // Only supplied on stock issue (when workspace is launched for stock issue)
 ) => {
   launchWorkspace('stock-operation-form-workspace', {
     workspaceTitle: stockOperation
@@ -32,8 +32,8 @@ export function getStockOperationUniqueId() {
   return `${new Date().getTime()}-${Math.random().toString(36).substring(2, 16)}`;
 }
 
-export const showActionDialogButton = (title: string, requireReason: boolean, operation: StockOperationDTO) => {
-  const dispose = showModal('stock-operation-dialog', {
+export const launchStockOperationsModal = (title: string, requireReason: boolean, operation: StockOperationDTO) => {
+  const dispose = showModal('stock-operations-modal', {
     title: title,
     operation: operation,
     requireReason: requireReason,
