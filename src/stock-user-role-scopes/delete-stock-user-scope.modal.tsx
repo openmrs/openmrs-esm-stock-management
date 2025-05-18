@@ -2,15 +2,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ModalHeader, ModalBody, ModalFooter } from '@carbon/react';
 import { getCoreTranslation } from '@openmrs/esm-framework';
-import styles from '../../../root.scss';
+import styles from './delete-stock-user-scope-modal.scss';
 
-interface DeleteConfirmationProps {
+interface DeleteStockUserScopeModalProps {
   uuid?: string;
   close: () => void;
   onConfirmation: () => void;
 }
 
-const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ close, onConfirmation, uuid }) => {
+const DeleteStockUserScopeModal: React.FC<DeleteStockUserScopeModalProps> = ({ close, onConfirmation }) => {
   const { t } = useTranslation();
   const handleCancel = () => close();
   const handleDelete = () => onConfirmation?.();
@@ -18,15 +18,11 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ close, onConfir
   return (
     <>
       <ModalHeader closeModal={close} className={styles.productiveHeading03}>
-        {t('deleteStockRule', 'Delete Stock Rule')}?
+        {t('deleteStockUserScope', 'Delete Stock User Scope')}?
       </ModalHeader>
       <ModalBody>
         <p className={styles.bodyLong01}>
-          {t(
-            'deleteRuleConfirmationText',
-            `Are you sure you want to delete this stock rule? This action can't be undone.`,
-            { encounter: uuid },
-          )}
+          {t('deleteConfirmationText', "Are you sure you want to delete this User Scope? This action can't be undone.")}
         </p>
       </ModalBody>
       <ModalFooter>
@@ -41,4 +37,4 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({ close, onConfir
   );
 };
 
-export default DeleteConfirmation;
+export default DeleteStockUserScopeModal;

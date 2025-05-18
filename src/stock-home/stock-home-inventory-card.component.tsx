@@ -17,7 +17,7 @@ const StockHomeInventoryCard = () => {
   }
 
   if (stockItems?.length === 0) {
-    return <p>{t('noInventoryAlerts', 'No inventory alerts to display')}</p>;
+    return <p className={styles.content}>{t('noInventoryAlerts', 'No inventory alerts to display')}</p>;
   }
 
   const currentDate = new Date();

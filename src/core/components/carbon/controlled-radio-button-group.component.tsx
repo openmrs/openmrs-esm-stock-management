@@ -2,7 +2,7 @@ import React from 'react';
 import { type RadioButtonGroupProps } from '@carbon/react/lib/components/RadioButtonGroup/RadioButtonGroup';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { RadioButtonGroup, RadioButton } from '@carbon/react';
-import { type RadioOption } from '../../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource';
+import { type RadioOption } from '../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource';
 
 interface ControlledRadioButtonGroupProps<T> extends RadioButtonGroupProps {
   controllerName: string;

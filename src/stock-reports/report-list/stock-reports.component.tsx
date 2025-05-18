@@ -49,7 +49,7 @@ import {
   BatchJobStatusPending,
 } from '../../core/api/types/BatchJob';
 import { handleMutate } from '../../utils';
-import { PrivilagedView } from '../../core/components/privilages-component/privilages.component';
+import { PrivilegedView } from '../../core/components/privileged-view-component/privileged-view.component';
 import NewReportActionButton from './new-report-button.component';
 import StockReportStatus from './stock-report-status.component';
 import StockReportParameters from './stock-report-parameters.component';
@@ -274,7 +274,7 @@ const StockReports: React.FC = () => {
               </TableBody>
             </Table>
             {!canViewReports ? (
-              <PrivilagedView
+              <PrivilegedView
                 title="Can not view stock reports"
                 description="You have no permissions to view reports"
               />

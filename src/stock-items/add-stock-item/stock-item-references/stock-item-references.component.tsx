@@ -21,7 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type StockItemReferenceData } from './validation-schema';
 import { stockItemDetailsSchema } from '../../validationSchema';
 import { type StockItemReferenceDTO } from '../../../core/api/types/stockItem/StockItemReference';
-import ControlledTextInput from '../../../core/components/carbon/controlled-text-input/controlled-text-input.component';
+import ControlledTextInput from '../../../core/components/carbon/controlled-text-input.component';
 import { createStockItemReference, deleteStockItemReference } from '../../stock-items.resource';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { extractErrorMessagesFromResponse } from '../../../constants';

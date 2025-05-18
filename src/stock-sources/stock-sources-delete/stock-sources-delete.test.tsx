@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { type FetchResponse, showModal, showSnackbar } from '@openmrs/esm-framework';
 import { deleteStockSource } from '../stock-sources.resource';
 import { handleMutate } from '../../utils';
-import DeleteConfirmation from '../../stock-user-role-scopes/delete-stock-user-scope-modal.component';
+import DeleteConfirmation from '../../stock-user-role-scopes/delete-stock-user-scope.modal';
 import StockSourcesDeleteActionMenu from './stock-sources-delete.component';
 
 const mockDeleteStockSource = jest.mocked(deleteStockSource);
