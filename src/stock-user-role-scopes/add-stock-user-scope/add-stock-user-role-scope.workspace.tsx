@@ -331,7 +331,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
             </>
           )}
         </CheckboxGroup>
-        <FormGroup legendText={t('stockOperation', 'Stock Operations')}>
+        <FormGroup legendText={t('stockOperations', 'Stock operations')}>
           <span className={styles.subTitle}>
             {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
           </span>

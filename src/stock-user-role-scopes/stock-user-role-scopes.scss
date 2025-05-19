@@ -68,3 +68,8 @@
 .arrowIcon {
   margin: 0 layout.$spacing-02;
 }
+
+.tableHeader {
+  @include type.type-style('body-02');
+  margin: layout.$spacing-05 0;
+}

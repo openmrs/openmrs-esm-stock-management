@@ -18,7 +18,6 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
 } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
@@ -140,7 +139,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
         <IconButton
           kind="ghost"
           label={t('editStockItem', 'Edit stock item')}
-          size="md"
           onClick={() => {
             stockItem.isDrug = !!stockItem.drugUuid;
             launchAddOrEditStockItemWorkspace(t, stockItem);
@@ -158,7 +156,9 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
 
   return (
     <>
-      <TabPanel>{t('panelDescription', 'Drugs and other stock items managed by the system.')}</TabPanel>
+      <h2 className={styles.tableHeader}>
+        {t('stockItemsTableHeader', 'Drugs and other stock items managed by the system.')}
+      </h2>
       <DataTable
         rows={tableRows}
         headers={tableHeaders}

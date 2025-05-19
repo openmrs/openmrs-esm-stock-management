@@ -15,7 +15,6 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
 } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +62,7 @@ const StockSourcesItems: React.FC = () => {
       };
     });
   }, [items]);
+
   const handleFilterChange = (selectedSourceType: string) => {
     setSelectedSourceType(selectedSourceType);
   };
@@ -80,8 +80,9 @@ const StockSourcesItems: React.FC = () => {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>{t('panelDescription', 'List of partners who provide stock to the facility.')}</TabPanel>
-
+      <h2 className={styles.tableHeader}>
+        {t('stockSourcesTableHeader', 'List of partners who provide stock to the facility.')}
+      </h2>
       <DataTable
         rows={filteredTableRows}
         headers={tableHeaders}

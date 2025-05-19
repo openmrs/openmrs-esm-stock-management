@@ -97,3 +97,8 @@
 .toolbarAction {
   max-width: none;
 }
+
+.tableHeader {
+  @include type.type-style('body-02');
+  margin: layout.$spacing-05 0;
+}

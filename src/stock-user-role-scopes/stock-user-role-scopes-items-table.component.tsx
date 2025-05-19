@@ -17,7 +17,6 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-  TabPanel,
   Tile,
 } from '@carbon/react';
 import { ArrowDownLeft, ArrowLeft } from '@carbon/react/icons';
@@ -159,12 +158,12 @@ function StockUserRoleScopesItems() {
 
   return (
     <div className={styles.tableOverride}>
-      <TabPanel>
+      <h2 className={styles.tableHeader}>
         {t(
-          'panelDescription',
+          'stockUserRoleScopesTableHeader',
           'To access stock management features, users must have assigned roles specifying location and stock operation type scopes.',
         )}
-      </TabPanel>
+      </h2>
       <DataTable
         headers={tableHeaders}
         isSortable
