@@ -2,10 +2,8 @@ import React from 'react';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight } from '@carbon/react/icons';
 import { isEmpty } from 'lodash-es';
 import { Tile } from '@carbon/react';
-import { ConfigurableLink } from '@openmrs/esm-framework';
 import styles from './metrics-card.scss';
 
 dayjs.extend(isSameOrBefore);
@@ -15,7 +13,6 @@ interface MetricsCardProps {
   value: number;
   headerLabel: string;
   children?: React.ReactNode;
-  view: string;
   count?: { expiry6months: Array<any> };
   outOfStockCount?: { itemsBelowMin: Array<any>; itemsAboveMax: Array<any> };
   disposedCount?: { expired: Array<any>; poorQuality: Array<any> };
@@ -25,7 +22,6 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
   value,
   headerLabel,
   children,
-  view,
   count,
   outOfStockCount,
   disposedCount,
@@ -39,12 +35,6 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
           <label className={styles.headerLabel}>{headerLabel}</label>
           {children}
         </div>
-        {view && (
-          <ConfigurableLink className={styles.link} to={`\${openmrsSpaBase}/stock-management/orders`}>
-            <span>{t('view', 'View')}</span>
-            <ArrowRight size={16} />
-          </ConfigurableLink>
-        )}
       </div>
       <div className={styles.metricsGrid}>
         <div>

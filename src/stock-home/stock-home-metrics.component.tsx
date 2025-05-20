@@ -56,7 +56,6 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
         headerLabel={t('expiringStock', 'Expiring stock')}
         label={t('expiringStock', 'Expiring stock')}
         value={filteredData?.length || 0}
-        view="items"
       />
       <MetricsCard
         label={t('outOfStock', 'Out of stock')}
@@ -66,7 +65,6 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
           itemsAboveMax: [],
         }}
         value={allStocks?.length}
-        view="items"
       />
       <MetricsCard
         disposedCount={{
@@ -76,7 +74,6 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
         headerLabel={t('disposedStock', 'Disposed stock')}
         label={t('disposedStock', 'Disposed stock')}
         value={items?.length || 0}
-        view="items"
       />
     </div>
   );
