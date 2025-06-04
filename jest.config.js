@@ -6,9 +6,9 @@ module.exports = {
   clearMocks: true,
   collectCoverageFrom: ['**/src/**/*.component.tsx', '!**/node_modules/**', '!**/src/declarations.d.ts', '!**/e2e/**'],
   transform: {
-    '^.+\\.tsx?$': ['@swc/jest'],
+    '^.+\\.[jt]sx?$': ['@swc/jest'],
   },
-  transformIgnorePatterns: ['/node_modules/(?!@openmrs)'],
+  transformIgnorePatterns: ['/node_modules/(?!@openmrs|.+\\.pnp\\.[^\\/]+$)'],
   moduleNameMapper: {
     '@openmrs/esm-framework': '@openmrs/esm-framework/mock',
     '\\.(s?css)$': 'identity-obj-proxy',
