@@ -30,6 +30,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
         return {
           ...item,
           quantity: matchingBatch.quantity ?? '',
+          quantityUoM: matchingBatch.quantityUoM,
         };
       }
       return item;
@@ -54,7 +55,9 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
       items={filteredBatches || []}
       itemToString={(s: StockBatchDTO) =>
         s?.batchNo
-          ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} | Expiry: ${formatForDatePicker(s.expiration)}`
+          ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} ${
+              (s as StockBatchDTO & { quantityUoM: string })?.quantityUoM
+            } | Expiry: ${formatForDatePicker(s.expiration)}`
           : ''
       }
       name={'stockBatchUuid'}
