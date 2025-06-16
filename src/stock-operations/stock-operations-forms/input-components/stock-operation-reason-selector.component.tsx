@@ -6,15 +6,23 @@ import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../../config-schema';
 import { type Concept } from '../../../core/api/types/concept/Concept';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
+import { OperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 
-const StockOperationReasonSelector = () => {
-  const { stockAdjustmentReasonUUID } = useConfig<ConfigObject>();
+type StockOperationReasonSelectorProps = {
+  stockOperationType: string;
+};
+
+const StockOperationReasonSelector: React.FC<StockOperationReasonSelectorProps> = ({ stockOperationType }) => {
+  const { stockAdjustmentReasonUUID, stockTakeReasonUUID } = useConfig<ConfigObject>();
+  const operationReason =
+    stockOperationType === OperationType.STOCK_TAKE_OPERATION_TYPE ? stockTakeReasonUUID : stockAdjustmentReasonUUID;
+
   const form = useFormContext<{ reasonUuid: string }>();
   const {
     isLoading,
     error,
     items: { answers: reasons },
-  } = useConcept(stockAdjustmentReasonUUID);
+  } = useConcept(operationReason);
   const { t } = useTranslation();
   if (isLoading) return <SelectSkeleton role="progressbar" />;
 
