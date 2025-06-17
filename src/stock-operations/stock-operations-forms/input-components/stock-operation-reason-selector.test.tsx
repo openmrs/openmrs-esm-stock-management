@@ -64,7 +64,7 @@ describe('StockoperationReasonSelector', () => {
       error: null,
     });
 
-    render(<StockOperationReasonSelector />);
+    render(<StockOperationReasonSelector stockOperationType={''} />);
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
@@ -77,7 +77,7 @@ describe('StockoperationReasonSelector', () => {
       error: new Error(errorMessahe),
     });
 
-    render(<StockOperationReasonSelector />);
+    render(<StockOperationReasonSelector stockOperationType={''} />);
 
     expect(screen.getByRole('status')).toBeInTheDocument();
     expect(screen.getByText(errorMessahe)).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('StockoperationReasonSelector', () => {
   it('renders ComboBox with reasons', async () => {
     const user = userEvent.setup();
 
-    render(<StockOperationReasonSelector />);
+    render(<StockOperationReasonSelector stockOperationType={''} />);
 
     const combobox = screen.getByRole('combobox');
     await user.click(combobox);
