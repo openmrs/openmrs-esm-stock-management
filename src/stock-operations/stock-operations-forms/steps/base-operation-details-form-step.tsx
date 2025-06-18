@@ -223,7 +223,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       <UsersSelector />
       {operationTypePermision.requiresStockAdjustmentReason && (
         <Column>
-          <StockOperationReasonSelector />
+          <StockOperationReasonSelector stockOperationType={stockOperationType?.operationType} />
         </Column>
       )}
       <Column>
