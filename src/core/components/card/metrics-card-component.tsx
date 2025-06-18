@@ -51,8 +51,8 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         )}
         {!isEmpty(outOfStockCount) && (
           <div className={styles.countGrid}>
-            <span className={styles.belowMinLabel}>{t('itemsUnderstocked', 'Items understocked')}</span>
-            <span className={styles.aboveMaxLabel}>{t('itemsOverstocked', 'Items overstocked')}</span>
+            <span className={styles.belowMinLabel}>{t('understockedItems', 'Understocked items')}</span>
+            <span className={styles.aboveMaxLabel}>{t('overstockedItems', 'Overstocked items')}</span>
             <p className={styles.belowMinValue}>{outOfStockCount.itemsBelowMin?.length}</p>
             <p className={styles.aboveMaxValue}>{outOfStockCount.itemsAboveMax?.length}</p>
           </div>
