@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComboBox, SelectSkeleton } from '@carbon/react';
-import { type StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
+import { type StockBatchWithUoM } from '../../../core/api/types/stockItem/StockBatchDTO';
 import { formatForDatePicker } from '../../../constants';
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
@@ -16,7 +16,6 @@ interface BatchNoSelectorProps {
 const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error, initialValue, onValueChange }) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid);
   const { t } = useTranslation();
-
   const { items, setStockItemUuid, isLoading: isLoadingBatchinfo } = useStockItemBatchInformationHook();
 
   useEffect(() => {
@@ -24,46 +23,90 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
   }, [stockItemUuid, setStockItemUuid]);
 
   const stockItemBatchesInfo = useMemo(() => {
-    return stockItemBatchNos?.map((item) => {
+    if (!stockItemBatchNos) return [];
+
+    return stockItemBatchNos.map((item) => {
       const matchingBatch = items?.find((batch) => batch.batchNumber === item.batchNo);
-      if (matchingBatch) {
-        return {
-          ...item,
-          quantity: matchingBatch.quantity ?? '',
-        };
-      }
-      return item;
+
+      return matchingBatch
+        ? ({
+            ...item,
+            ...matchingBatch,
+            quantity: String(matchingBatch.quantity),
+          } as StockBatchWithUoM)
+        : (item as StockBatchWithUoM);
     });
   }, [stockItemBatchNos, items]);
 
   const filteredBatches = useMemo(() => {
-    return stockItemBatchesInfo?.filter((s) => s.quantity !== undefined && s.quantity !== 0);
+    if (!stockItemBatchesInfo) return [];
+
+    return stockItemBatchesInfo.filter((batch) => {
+      const quantity = typeof batch.quantity === 'string' ? parseFloat(batch.quantity) : batch.quantity;
+
+      return !isNaN(quantity) && quantity > 0;
+    });
   }, [stockItemBatchesInfo]);
+
   const initialSelectedItem = useMemo(
-    () => filteredBatches?.find((s) => s.uuid === initialValue),
+    () => filteredBatches.find((batch) => batch.uuid === initialValue) ?? null,
     [filteredBatches, initialValue],
   );
 
-  if (isLoading || isLoadingBatchinfo) return <SelectSkeleton role="progressbar" />;
+  const formatQuantityDisplay = useCallback((batch: StockBatchWithUoM): string => {
+    if (batch.quantity === undefined) return 'Unknown';
+
+    const quantity = typeof batch.quantity === 'string' ? parseFloat(batch.quantity) : batch.quantity;
+
+    if (isNaN(quantity)) return 'Unknown';
+
+    const baseQuantity = quantity.toString();
+
+    if (!batch.quantityUoM) return baseQuantity;
+
+    const withUnit = `${baseQuantity} ${batch.quantityUoM}`;
+
+    if (!batch.quantityFactor) return withUnit;
+
+    const factor = parseFloat(batch.quantityFactor);
+    return !isNaN(factor) && factor > 1 ? `${withUnit} (${factor} units each)` : withUnit;
+  }, []);
+
+  const itemToString = useCallback(
+    (batch: StockBatchWithUoM | null): string => {
+      if (!batch?.batchNo) return '';
+
+      const quantityDisplay = formatQuantityDisplay(batch);
+      const expiryDate = batch.expiration ? formatForDatePicker(batch.expiration) : 'No expiry';
+
+      return `${batch.batchNo} | Qty: ${quantityDisplay} | Expiry: ${expiryDate}`;
+    },
+    [formatQuantityDisplay],
+  );
+
+  const handleChange = useCallback(
+    (data: { selectedItem?: StockBatchWithUoM | null }) => {
+      onValueChange?.(data.selectedItem?.uuid ?? '');
+    },
+    [onValueChange],
+  );
+
+  if (isLoading || isLoadingBatchinfo) {
+    return <SelectSkeleton role="progressbar" />;
+  }
 
   return (
     <ComboBox
-      id={'stockBatchUuid'}
+      id="stockBatchUuid"
       invalid={!!error}
       invalidText={error}
-      items={filteredBatches || []}
-      itemToString={(s: StockBatchDTO) =>
-        s?.batchNo
-          ? `${s?.batchNo} | Qty: ${s?.quantity ?? 'Unknown'} | Expiry: ${formatForDatePicker(s.expiration)}`
-          : ''
-      }
-      name={'stockBatchUuid'}
-      onChange={(data: { selectedItem?: StockBatchDTO }) => {
-        onValueChange(data.selectedItem?.uuid);
-      }}
-      placeholder={t('filter', "'Filter") + '...'}
+      items={filteredBatches}
+      itemToString={itemToString}
+      name="stockBatchUuid"
+      onChange={handleChange}
+      placeholder={`${t('filter', 'Filter')}...`}
       selectedItem={initialSelectedItem}
-      style={{ flexGrow: '1' }}
+      style={{ flexGrow: 1 }}
       titleText={t('batchNo', 'Batch no.')}
     />
   );
