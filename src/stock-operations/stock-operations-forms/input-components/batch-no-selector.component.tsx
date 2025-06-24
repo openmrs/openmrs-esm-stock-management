@@ -53,35 +53,38 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
     [filteredBatches, initialValue],
   );
 
-  const formatQuantityDisplay = useCallback((batch: StockBatchWithUoM): string => {
-    if (batch.quantity === undefined) return 'Unknown';
+  const formatQuantityDisplay = useCallback(
+    (batch: StockBatchWithUoM): string => {
+      if (batch.quantity === undefined) return t('unknown', 'Unknown');
 
-    const quantity = typeof batch.quantity === 'string' ? parseFloat(batch.quantity) : batch.quantity;
+      const quantity = typeof batch.quantity === 'string' ? parseFloat(batch.quantity) : batch.quantity;
 
-    if (isNaN(quantity)) return 'Unknown';
+      if (isNaN(quantity)) return t('unknown', 'Unknown');
 
-    const baseQuantity = quantity.toString();
+      const baseQuantity = quantity.toString();
 
-    if (!batch.quantityUoM) return baseQuantity;
+      if (!batch.quantityUoM) return baseQuantity;
 
-    const withUnit = `${baseQuantity} ${batch.quantityUoM}`;
+      const withUnit = `${baseQuantity} ${batch.quantityUoM}`;
 
-    if (!batch.quantityFactor) return withUnit;
+      if (!batch.quantityFactor) return withUnit;
 
-    const factor = parseFloat(batch.quantityFactor);
-    return !isNaN(factor) && factor > 1 ? `${withUnit} (${factor} units each)` : withUnit;
-  }, []);
+      const factor = parseFloat(batch.quantityFactor);
+      return !isNaN(factor) && factor > 1 ? `${withUnit} (${factor} units each)` : withUnit;
+    },
+    [t],
+  );
 
   const itemToString = useCallback(
     (batch: StockBatchWithUoM | null): string => {
       if (!batch?.batchNo) return '';
 
       const quantityDisplay = formatQuantityDisplay(batch);
-      const expiryDate = batch.expiration ? formatForDatePicker(batch.expiration) : 'No expiry';
+      const expiryDate = batch.expiration ? formatForDatePicker(batch.expiration) : t('noExpiry', 'No expiry');
 
       return `${batch.batchNo} | Qty: ${quantityDisplay} | Expiry: ${expiryDate}`;
     },
-    [formatQuantityDisplay],
+    [formatQuantityDisplay, t],
   );
 
   const handleChange = useCallback(
