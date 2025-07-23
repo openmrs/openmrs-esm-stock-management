@@ -6,7 +6,7 @@ import { useDisposalList } from './useDisposalList';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
 import { type StockOperationFilter } from '../stock-operations/stock-operations.resource';
-import useStockList, { useOutOfStockList } from './useStockList';
+import { useOutOfStockList } from './useStockList';
 import MetricsCard from '../core/components/card/metrics-card-component';
 import styles from './stock-home.scss';
 
@@ -40,7 +40,11 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
   });
 
   if (outOfStockError) {
-    return <ErrorState headerTitle={t('errorStockMetric', 'Error fetching stock metrics')} error={outOfStockError} />;
+    return (
+      <div className={styles.errorStateContainer}>
+        <ErrorState headerTitle={t('errorStockMetric', 'Error fetching stock metrics')} error={outOfStockError} />
+      </div>
+    );
   }
 
   const filteredItems =
