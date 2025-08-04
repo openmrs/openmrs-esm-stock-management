@@ -26,7 +26,7 @@ Admin privileges to install and configure the module.
 
 Installation
 
-Start the module and configure initial settings such as locations and stock items.
+Start the module and configure initial settings such as locations and stock items, stock sources.
 
 Documentation
 
