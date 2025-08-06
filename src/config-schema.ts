@@ -76,19 +76,19 @@ export const configSchema = {
 
 export type ConfigObject = {
   autoPopulateResponsiblePerson: boolean;
-  enablePrintButton: boolean;
-  printItemCost: boolean;
-  printBalanceOnHand: boolean;
-  packagingUnitsUUID: string;
-  stockAdjustmentReasonUUID: string;
-  stockSourceTypeUUID: string;
   dispensingUnitsUUID: string;
-  stockItemCategoryUUID: string;
-  useItemCommonNameAsDisplay: boolean;
+  enablePrintButton: boolean;
   logo: {
     src: string;
     alt: string;
     name: string;
   };
+  packagingUnitsUUID: string;
+  printBalanceOnHand: boolean;
+  printItemCost: boolean;
+  stockAdjustmentReasonUUID: string;
+  stockItemCategoryUUID: string;
+  stockSourceTypeUUID: string;
   stockTakeReasonUUID;
+  useItemCommonNameAsDisplay: boolean;
 };
