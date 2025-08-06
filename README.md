@@ -158,4 +158,4 @@ For full documentation, visit the [OpenMRS Wiki - Stock Module](https://openmrs.
 
 ## License
 
-This app is released under the MPL 2.0.
+This app is released under the [MPL 2.0 license with Healthcare Disclaimer](https://openmrs.org/license).
