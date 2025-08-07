@@ -1,6 +1,5 @@
 import useSWR from 'swr';
-import { type FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
-import { type OutofStockListResponse } from '../types';
+import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 
 interface StockList {
   uuid: string;
@@ -32,18 +31,3 @@ const useStockList = () => {
 };
 
 export default useStockList;
-
-export const useOutOfStockList = () => {
-  const url = `${restBaseUrl}/stockmanagement/metrics/outofstockitemstotal`;
-  const { data, error, isLoading, mutate } = useSWR<FetchResponse<OutofStockListResponse>>(url, openmrsFetch);
-
-  const totalOutOfStock = data?.data.results?.reduce((total, item) => total + item.outOfStock, 0) ?? 0;
-
-  return {
-    outOfStockItemsList: data?.data.results ?? [],
-    totalOutOfStock,
-    isLoading,
-    error,
-    mutate,
-  };
-};
