@@ -89,6 +89,6 @@ export type ConfigObject = {
   stockAdjustmentReasonUUID: string;
   stockItemCategoryUUID: string;
   stockSourceTypeUUID: string;
-  stockTakeReasonUUID;
+  stockTakeReasonUUID: string;
   useItemCommonNameAsDisplay: boolean;
 };
