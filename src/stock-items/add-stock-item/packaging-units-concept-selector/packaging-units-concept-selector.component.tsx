@@ -22,12 +22,12 @@ interface PackagingUnitsConceptSelectorProps<T> {
 }
 
 const PackagingUnitsConceptSelector = <T,>(props: PackagingUnitsConceptSelectorProps<T>) => {
-  const { packagingUnitsUUID } = useConfig<ConfigObject>();
+  const { packingUnitsUUID } = useConfig<ConfigObject>();
 
   const {
     items: { answers: dispensingUnits },
     isLoading,
-  } = useConcept(packagingUnitsUUID);
+  } = useConcept(packingUnitsUUID);
 
   if (isLoading) return <TextInputSkeleton />;
 
