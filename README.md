@@ -85,7 +85,7 @@ The following configuration options are available for customization:
 
 These must be configured to match your OpenMRS concept dictionary. These UUIDs link the stock management system to the appropriate concepts in your OpenMRS installation:
 
-- **`packagingUnitsUUID`** - UUID of the concept set containing packaging unit options (e.g., "Box", "Bottle", "Strip"). Used when defining how stock items are packaged for storage and distribution.
+- **`packingUnitsUUID`** - UUID of the concept set containing packaging unit options (e.g., "Box", "Bottle", "Strip"). Used when defining how stock items are packaged for storage and distribution.
 
 - **`dispensingUnitsUUID`** - UUID of the concept set for dispensing units (e.g., "Tablet", "ml", "Capsule"). Used when dispensing stock items to patients or other locations.
 
@@ -99,7 +99,7 @@ These must be configured to match your OpenMRS concept dictionary. These UUIDs l
 
 ```json
 {
-  "packagingUnitsUUID": "bce2b1af-98b1-48a2-98a2-3e4ffb3c79c2",
+  "packingUnitsUUID": "bce2b1af-98b1-48a2-98a2-3e4ffb3c79c2",
   "dispensingUnitsUUID": "162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "stockAdjustmentReasonUUID": "47f0825e-8648-47c2-b847-d3197ed6bb72",
   "stockTakeReasonUUID": "47f0825e-8648-47c2-b847-d3197ed6bb72",

@@ -1,76 +1,76 @@
 import { Type } from '@openmrs/esm-framework';
 export const configSchema = {
-  printItemCost: {
-    type: Type.Boolean,
+  autoPopulateResponsiblePerson: {
+    _type: Type.Boolean,
     _default: false,
-    _description: 'Whether to print item costs on the print out',
+    _description: 'Auto-populate responsible person in stock operations with the currently logged-in user',
+  },
+  dispensingUnitsUUID: {
+    _type: Type.ConceptUuid,
+    _description: 'UUID for the stock dispensing units',
+    _default: '162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
   },
   enablePrintButton: {
     _type: Type.Boolean,
     _default: true,
     _description: 'Enable or disable the print button in the stock management UI',
   },
-  autoPopulateResponsiblePerson: {
-    type: Type.Boolean,
-    _default: false,
-    _description: 'Auto populate responsible person in stock operations with the currently logged in user',
-  },
-  printBalanceOnHand: {
-    type: Type.Boolean,
-    _default: false,
-    _description: 'Whether to print balance on hand on the print out',
-  },
-  packagingUnitsUUID: {
-    _type: Type.ConceptUuid,
-    _description: 'UUID for the packaging unit',
-    _default: 'bce2b1af-98b1-48a2-98a2-3e4ffb3c79c2',
-  },
-  stockAdjustmentReasonUUID: {
-    _type: Type.ConceptUuid,
-    _description: 'UUID for the stock adjustment reasons',
-    _default: '47f0825e-8648-47c2-b847-d3197ed6bb72',
-  },
-  stockTakeReasonUUID: {
-    _type: Type.ConceptUuid,
-    _description: 'UUID for the stock take reasons',
-    _default: '47f0825e-8648-47c2-b847-d3197ed6bb72',
-  },
-  stockSourceTypeUUID: {
-    _type: Type.ConceptUuid,
-    _description: 'UUID for the stock source types',
-    _default: '2e1e8049-9cbe-4a2d-b1e5-8a91e5d7d97d',
-  },
-  dispensingUnitsUUID: {
-    _type: Type.ConceptUuid,
-    _description: 'UUID for the stock dispensing units uuid',
-    _default: '162402AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-  },
-  useItemCommonNameAsDisplay: {
-    _type: Type.Boolean,
-    _description: 'true to use item common name as display and false to use Drug name as display',
-    _default: true,
-  },
-  stockItemCategoryUUID: {
-    _type: Type.ConceptUuid,
-    _description: 'UUID for the stock item category',
-    _default: '6d24eb6e-b42f-4706-ab2d-ae4472161f6a',
-  },
   logo: {
     src: {
       _type: Type.String,
       _default: null,
-      _description: 'A path or URL to an image.',
+      _description: 'A path or URL to an image',
     },
     alt: {
       _type: Type.String,
       _default: 'Logo',
-      _description: 'Alt text, shown on hover',
+      _description: 'Alt text shown on hover',
     },
     name: {
       _type: Type.String,
       _default: null,
       _description: 'The organization name displayed when image is absent',
     },
+  },
+  packingUnitsUUID: {
+    _type: Type.ConceptUuid,
+    _description: 'UUID for the packaging unit',
+    _default: 'a6d438fe-05c1-4d4d-9755-c11cf6b0b3b9',
+  },
+  printBalanceOnHand: {
+    _type: Type.Boolean,
+    _default: false,
+    _description: 'Whether to include balance on hand on the printout',
+  },
+  printItemCost: {
+    _type: Type.Boolean,
+    _default: false,
+    _description: 'Whether to include item costs on the printout',
+  },
+  stockAdjustmentReasonUUID: {
+    _type: Type.ConceptUuid,
+    _description: 'UUID for the stock adjustment reasons',
+    _default: '3a9021d1-d6c1-4fc2-8e30-ca8e204e44de',
+  },
+  stockItemCategoryUUID: {
+    _type: Type.ConceptUuid,
+    _description: 'UUID for the stock item category',
+    _default: '8ccf6066-9297-4d76-aaf3-00aa3714d198',
+  },
+  stockSourceTypeUUID: {
+    _type: Type.ConceptUuid,
+    _description: 'UUID for the stock source types',
+    _default: '937a0440-95f7-42f6-aaef-16cf611fcf10',
+  },
+  stockTakeReasonUUID: {
+    _type: Type.ConceptUuid,
+    _description: 'UUID for the stock take reasons',
+    _default: 'faa466c5-0953-4d4f-8ea7-d9a06341c3f3',
+  },
+  useItemCommonNameAsDisplay: {
+    _type: Type.Boolean,
+    _description: 'Use item common name as display (true) or drug name as display (false)',
+    _default: true,
   },
 };
 
@@ -83,7 +83,7 @@ export type ConfigObject = {
     alt: string;
     name: string;
   };
-  packagingUnitsUUID: string;
+  packingUnitsUUID: string;
   printBalanceOnHand: boolean;
   printItemCost: boolean;
   stockAdjustmentReasonUUID: string;
