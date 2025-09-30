@@ -1,21 +1,19 @@
 import React, { type ReactNode, useMemo, useState } from 'react';
-import { type Concept } from '../../../core/api/types/concept/Concept';
-import { type Control, Controller, type FieldValues } from 'react-hook-form';
-import { useConcepts } from '../../../stock-lookups/stock-lookups.resource';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
+import { type Control, Controller, type FieldValues } from 'react-hook-form';
+import { type Concept } from '../../../core/api/types/concept/Concept';
+import { useConcepts } from '../../../stock-lookups/stock-lookups.resource';
 
 interface ConceptsSelectorProps<T> {
   conceptUuid?: string;
-  onConceptUuidChange?: (unit: Concept) => void;
-  title?: string;
-  placeholder?: string;
+  control: Control<FieldValues, T>;
+  controllerName: string;
   invalid?: boolean;
   invalidText?: ReactNode;
-
-  // Control
-  controllerName: string;
   name: string;
-  control: Control<FieldValues, T>;
+  onConceptUuidChange?: (unit: Concept) => void;
+  placeholder?: string;
+  title?: string;
 }
 
 const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
@@ -24,7 +22,8 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
     isLoading,
   } = useConcepts({});
   const [inputValue, setInputValue] = useState('');
-  const handleInputChange = (value) => {
+
+  const handleInputChange = (value: string) => {
     setInputValue(value);
   };
 
@@ -34,34 +33,36 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
       : concepts.filter((concept) => concept.display?.toLowerCase().includes(inputValue.trim()?.toLowerCase()));
   }, [inputValue, concepts]);
 
-  if (isLoading) return <TextInputSkeleton />;
+  if (isLoading) {
+    return <TextInputSkeleton />;
+  }
 
   return (
     <Controller
-      name={props.controllerName}
       control={props.control}
-      render={({ field: { onChange, ref } }) => (
+      name={props.controllerName}
+      render={({ field: { onChange, value, ref } }) => (
         <ComboBox
-          titleText={props.title}
-          name={props.name}
-          control={props.control}
-          controllerName={props.controllerName}
           id={props.name}
-          size={'md'}
-          items={filteredConcepts}
-          onChange={(data: { selectedItem: Concept }) => {
-            props.onConceptUuidChange?.(data.selectedItem);
-            onChange(data.selectedItem.uuid);
-          }}
-          initialSelectedItem={concepts?.find((p) => p.uuid === props.conceptUuid) || {}}
-          itemToString={(item?: Concept) => (item && item?.display ? `${item?.display}` : '')}
-          shouldFilterItem={() => true}
-          onInputChange={(event) => handleInputChange(event)}
-          inputValue={inputValue}
-          placeholder={props.placeholder}
-          ref={ref}
           invalid={props.invalid}
           invalidText={props.invalidText}
+          items={filteredConcepts}
+          itemToString={(item?: Concept) => item?.display ?? ''}
+          name={props.name}
+          onChange={(data: { selectedItem: Concept | null }) => {
+            if (data.selectedItem) {
+              props.onConceptUuidChange?.(data.selectedItem);
+              onChange(data.selectedItem.uuid);
+            } else {
+              onChange('');
+            }
+          }}
+          onInputChange={handleInputChange}
+          placeholder={props.placeholder}
+          ref={ref}
+          selectedItem={concepts?.find((p) => p.uuid === value) ?? null}
+          size="md"
+          titleText={props.title}
         />
       )}
     />

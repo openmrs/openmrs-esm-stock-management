@@ -1,59 +1,59 @@
 import React, { type ReactNode } from 'react';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
-import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
-import { type Concept } from '../../../core/api/types/concept/Concept';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
-import { type ConfigObject } from '../../../config-schema';
 import { useConfig } from '@openmrs/esm-framework';
+import { type Concept } from '../../../core/api/types/concept/Concept';
+import { type ConfigObject } from '../../../config-schema';
+import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 
 interface DispensingUnitSelectorProps<T> {
+  control: Control<FieldValues, T>;
+  controllerName: string;
   dispensingUnitUuid?: string;
-  onDispensingUnitChange?: (unit: Concept) => void;
-  title?: string;
-  placeholder?: string;
   invalid?: boolean;
   invalidText?: ReactNode;
-
-  // Control
-  controllerName: string;
   name: string;
-  control: Control<FieldValues, T>;
+  onDispensingUnitChange?: (unit: Concept) => void;
+  placeholder?: string;
+  title?: string;
 }
 
 const DispensingUnitSelector = <T,>(props: DispensingUnitSelectorProps<T>) => {
-  const { dispensingUnitsUUID } = useConfig<ConfigObject>();
+  const { packingUnitsUUID } = useConfig<ConfigObject>();
   const {
-    items: { setMembers: dispensingUnits },
+    items: { answers: packingUnits },
     isLoading,
-  } = useConcept(dispensingUnitsUUID);
+  } = useConcept(packingUnitsUUID);
 
-  if (isLoading) return <TextInputSkeleton />;
+  if (isLoading) {
+    return <TextInputSkeleton />;
+  }
 
   return (
     <Controller
-      name={props.controllerName}
       control={props.control}
+      name={props.controllerName}
       render={({ field: { onChange, value, ref } }) => (
         <ComboBox
-          titleText={props.title}
-          name={props.name}
-          control={props.control}
-          controllerName={props.controllerName}
           id={props.name}
-          size={'md'}
-          items={dispensingUnits || []}
-          onChange={(data: { selectedItem: Concept }) => {
-            props.onDispensingUnitChange?.(data.selectedItem);
-            onChange(data.selectedItem.uuid);
-          }}
-          initialSelectedItem={dispensingUnits?.find((p) => p.uuid === props.dispensingUnitUuid) || {}}
-          itemToString={(item?: Concept) => (item && item?.display ? `${item?.display}` : '')}
-          shouldFilterItem={() => true}
-          value={dispensingUnits?.find((p) => p.uuid === value)?.display ?? ''}
-          placeholder={props.placeholder}
-          ref={ref}
+          name={props.name}
+          items={packingUnits || []}
+          selectedItem={packingUnits?.find((p) => p.uuid === value) ?? null}
           invalid={props.invalid}
           invalidText={props.invalidText}
+          itemToString={(item?: Concept) => item?.display ?? ''}
+          onChange={(data: { selectedItem: Concept | null }) => {
+            if (data.selectedItem) {
+              props.onDispensingUnitChange?.(data.selectedItem);
+              onChange(data.selectedItem.uuid);
+            } else {
+              onChange('');
+            }
+          }}
+          placeholder={props.placeholder}
+          ref={ref}
+          size="md"
+          titleText={props.title}
         />
       )}
     />
