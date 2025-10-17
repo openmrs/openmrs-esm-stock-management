@@ -1,4 +1,4 @@
-import { type TFunction } from 'react-i18next';
+import { type TFunction } from 'i18next';
 import { launchWorkspace } from '@openmrs/esm-framework';
 import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
 

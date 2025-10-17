@@ -1,5 +1,5 @@
 import { launchWorkspace, showModal } from '@openmrs/esm-framework';
-import { type TFunction } from 'react-i18next';
+import { type TFunction } from 'i18next';
 import { useLocation } from 'react-router-dom';
 import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
 import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
