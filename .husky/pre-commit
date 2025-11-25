@@ -1,4 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
 set -e  # die on error
 
-yarn lint-staged
-yarn turbo run extract-translations
+yarn lint-staged --no-stash
+yarn turbo extract-translations
