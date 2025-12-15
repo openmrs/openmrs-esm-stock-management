@@ -18,9 +18,10 @@ import {
   TableToolbarSearch,
   Tile,
 } from '@carbon/react';
-import { isDesktop } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
 import { ResourceRepresentation } from '../../../core/api/api';
+import { handleMutate } from '../../../utils';
 import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { useStockItemRules } from './stock-item-rules.resource';
 import AddStockRuleActionButton from './add-stock-rule-button.component';
@@ -44,6 +45,10 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, c
       totalCount: true,
       stockItemUuid: stockItemUuid,
     });
+
+  const handleRefresh = () => {
+    handleMutate(`${restBaseUrl}/stockmanagement/stockrule`);
+  };
 
   const tableRows = useMemo(() => {
     return items?.map((stockRule, index) => ({
@@ -76,12 +81,8 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, c
 
   return (
     <div className={styles.tableOverride}>
-      <DataTable
-        rows={tableRows}
-        headers={tableHeaders}
-        isSortable={true}
-        useZebraStyles={true}
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
+      <DataTable rows={tableRows} headers={tableHeaders} isSortable useZebraStyles>
+        {({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -101,7 +102,7 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, c
                   <StockRulesFilter stockItemUuid={stockItemUuid} />
                 </div>
                 <TableToolbarMenu>
-                  <TableToolbarAction className={styles.toolbarMenuAction} onClick={''}>
+                  <TableToolbarAction className={styles.toolbarMenuAction} onClick={handleRefresh}>
                     {t('refresh', 'Refresh')}
                   </TableToolbarAction>
                 </TableToolbarMenu>
@@ -156,7 +157,7 @@ const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, c
             ) : null}
           </TableContainer>
         )}
-      ></DataTable>
+      </DataTable>
       <Pagination
         page={currentPage}
         pageSize={currentPageSize}

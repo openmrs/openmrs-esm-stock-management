@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DropdownSkeleton, MultiSelect } from '@carbon/react';
 import { getStockOperationTypes, useConcept } from '../stock-lookups/stock-lookups.resource';
 import { StockFilters } from '../constants';
@@ -12,6 +13,7 @@ interface StockOperationFiltersProps {
 }
 
 const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptUuid, onFilterChange, filterName }) => {
+  const { t } = useTranslation();
   const { items, isLoading } = useConcept(conceptUuid);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [dataItems, setDataItems] = useState([]);
@@ -65,7 +67,7 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptU
       label={filterName}
       labelInline
       items={dataItems}
-      itemToString={(item) => (item ? item.display : 'Not Set')}
+      itemToString={(item) => (item ? item.display : t('notSet', 'Not Set'))}
       onChange={({ selectedItems }) => {
         if (selectedItems) {
           onFilterChange(
@@ -74,7 +76,7 @@ const StockOperationsFilters: React.FC<StockOperationFiltersProps> = ({ conceptU
           );
         }
       }}
-      placeholder={`Filter by ${filterName}`}
+      placeholder={t('filterBy', 'Filter by {{filterName}}', { filterName })}
     />
   );
 };

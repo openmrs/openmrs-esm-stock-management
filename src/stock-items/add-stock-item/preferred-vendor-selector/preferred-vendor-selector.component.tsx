@@ -37,9 +37,6 @@ const PreferredVendorSelector = <T,>(props: PreferredVendorSelectorProps<T>) => 
       render={({ field: { onChange, value, ref } }) => (
         <ComboBox
           titleText={props.title}
-          name={props.name}
-          control={props.control}
-          controllerName={props.controllerName}
           id={props.name}
           size={'md'}
           items={sourcesList || []}

@@ -27,7 +27,7 @@ const StockOperationCompleteDispatchButton: React.FC<StockOperationCompleteDispa
 
   return (
     <Button onClick={launchcompletedDispatchModal} renderIcon={(props) => <Arrival size={16} {...props} />}>
-      {t('complete', 'Complete Dispatch ')}
+      {t('completeDispatch', 'Complete dispatch')}
     </Button>
   );
 };

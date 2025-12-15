@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { showSnackbar } from '@openmrs/esm-framework';
 import { saveLocation } from './stock-locations-table.resource';
 import { type locationData, type LocationMutator } from '../stock-items/types';
-import LocationAdministrationForm from './location-admin-form.component';
 import { extractErrorMessagesFromResponse } from '../constants';
+import LocationAdministrationForm from './location-admin-form.component';
 
 interface LocationFormProps {
   showModal: boolean;
@@ -33,7 +33,7 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange
       saveLocation({ locationPayload: locationbject })
         .then(() => {
           showSnackbar({
-            title: t('formCreated', 'Add Location'),
+            title: t('locationCreatedTitle', 'Location created'),
             kind: 'success',
             isLowContrast: true,
             subtitle: t('locationCreatedSuccessfully', 'Location {{locationName}} was created successfully.', {
@@ -60,15 +60,13 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange
   );
 
   return (
-    <>
-      <LocationAdministrationForm
-        onModalChange={onModalChange}
-        showModal={showModal}
-        handleCreateQuestion={handleCreateQuestion}
-        headerTitle={headerTitle}
-        initialData={initialData}
-      />
-    </>
+    <LocationAdministrationForm
+      onModalChange={onModalChange}
+      showModal={showModal}
+      handleCreateQuestion={handleCreateQuestion}
+      headerTitle={headerTitle}
+      initialData={initialData}
+    />
   );
 };
 export default NewLocationForm;

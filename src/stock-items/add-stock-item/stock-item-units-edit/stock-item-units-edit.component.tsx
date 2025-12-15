@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { NumberInputSkeleton } from '@carbon/react';
 import { useStockItem } from '../../stock-items.resource';
-import DispensingPackageMeasurement from '../dispensing-package-measurement/dispensing-package-measurement.component';
 import { type Control, type FormState } from 'react-hook-form';
 import { type StockItemFormData } from '../../validationSchema';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input.component';
-import { NumberInputSkeleton } from '@carbon/react';
+import DispensingPackageMeasurement from '../dispensing-package-measurement/dispensing-package-measurement.component';
 
 interface StockItemUnitsEditProps {
   stockItemUuid: string;

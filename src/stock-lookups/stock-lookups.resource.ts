@@ -15,7 +15,7 @@ import { type OpenMRSLocation, type OpenMRSLocationTag } from '../core/api/types
 import { type PageableResult } from '../core/api/types/PageableResult';
 import { type Party } from '../core/api/types/Party';
 import { type Patient } from '../core/api/types/identity/Patient';
-import { type ResourceFilterCriteria, toQueryParams } from '../core/api/api';
+import { type ResourceFilterCriteria, type ResourceRepresentation, toQueryParams } from '../core/api/api';
 import { type Role } from '../core/api/types/identity/Role';
 import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 import { type User } from '../core/api/types/identity/User';
@@ -166,7 +166,7 @@ export function useUsers(filter: UserFilterCriteria) {
 
 // getUser
 export function useUser(id: string, v?: string) {
-  const apiUrl = `${restBaseUrl}/user/${id}${toQueryParams({ v: v as any })}`;
+  const apiUrl = `${restBaseUrl}/user/${id}${toQueryParams({ v: (v as ResourceRepresentation) || undefined })}`;
   const { data, error, isLoading } = useSWR<
     {
       data: User;

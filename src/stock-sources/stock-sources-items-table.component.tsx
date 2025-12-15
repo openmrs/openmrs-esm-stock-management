@@ -21,11 +21,12 @@ import { useTranslation } from 'react-i18next';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import { handleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
-import useStockSourcesPage from './stock-sources-items-table.resource';
+import { type CustomTableHeader } from '../core/components/table/types';
 import AddStockSourceActionButton from './add-stock-source-button.component';
 import EditStockSourceActionsMenu from './edit-stock-source/edit-stock-source.component';
 import StockSourcesDeleteActionMenu from './stock-sources-delete/stock-sources-delete.component';
 import StockSourcesFilter from './stock-sources-filter/stock-sources-filter.component';
+import useStockSourcesPage from './stock-sources-items-table.resource';
 import styles from './stock-sources.scss';
 
 const StockSourcesItems: React.FC = () => {
@@ -83,12 +84,8 @@ const StockSourcesItems: React.FC = () => {
       <h2 className={styles.tableHeader}>
         {t('stockSourcesTableHeader', 'List of partners who provide stock to the facility.')}
       </h2>
-      <DataTable
-        rows={filteredTableRows}
-        headers={tableHeaders}
-        isSortable
-        useZebraStyles
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
+      <DataTable rows={filteredTableRows} headers={tableHeaders} isSortable useZebraStyles>
+        {({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -125,12 +122,19 @@ const StockSourcesItems: React.FC = () => {
                         <TableHeader
                           {...getHeaderProps({
                             header,
-                            isSortable: header.isSortable,
+                            isSortable: (header as CustomTableHeader).isSortable,
                           })}
                           className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
                         >
-                          {header.header?.content ?? header.header}
+                          {(() => {
+                            const customHeader = header as CustomTableHeader;
+                            return typeof customHeader.header === 'object' &&
+                              customHeader.header !== null &&
+                              'content' in customHeader.header
+                              ? (customHeader.header.content as React.ReactNode)
+                              : (customHeader.header as React.ReactNode);
+                          })()}
                         </TableHeader>
                       ),
                   )}
@@ -164,7 +168,7 @@ const StockSourcesItems: React.FC = () => {
             ) : null}
           </TableContainer>
         )}
-      ></DataTable>
+      </DataTable>
       <Pagination
         page={currentPage}
         pageSize={currentPageSize}

@@ -29,7 +29,7 @@ const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonPro
     if (error) {
       showSnackbar({
         kind: 'error',
-        title: t('stockOperationError', 'Error loading stock operation types'),
+        title: t('stockOperationTypesError', 'Error loading stock operation types'),
         subtitle: error?.message,
       });
     }

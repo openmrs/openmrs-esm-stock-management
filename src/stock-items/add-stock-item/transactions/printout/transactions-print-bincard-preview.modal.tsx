@@ -28,7 +28,7 @@ const TransactionsBincardPrintPreviewModal: React.FC<TransactionsBincardPrintPre
   });
   return (
     <>
-      <ModalHeader closeModal={onClose} title={t('printbincard', 'Print Bin Card')} />
+      <ModalHeader closeModal={onClose} title={t('printBinCard', 'Print Bin Card')} />
       <ModalBody>
         <div ref={ref}>
           <TransactionsBincardPrintout title={title} columns={columns} data={data} />

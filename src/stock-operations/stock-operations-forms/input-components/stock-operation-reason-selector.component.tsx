@@ -1,8 +1,8 @@
-import { ComboBox, InlineNotification, SelectSkeleton } from '@carbon/react';
-import { useConfig } from '@openmrs/esm-framework';
 import React from 'react';
+import { ComboBox, InlineNotification, SelectSkeleton } from '@carbon/react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useConfig } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../../../config-schema';
 import { type Concept } from '../../../core/api/types/concept/Concept';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
@@ -56,7 +56,7 @@ const StockOperationReasonSelector: React.FC<StockOperationReasonSelectorProps> 
             field.onChange(data?.selectedItem?.uuid);
           }}
           ref={field.ref}
-          invalid={error?.message}
+          invalid={!!error?.message}
           invalidText={error?.message}
         />
       )}

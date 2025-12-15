@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
 import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
 import { DataTableSkeleton } from '@carbon/react';
-import DataList from '../../../core/components/table/table.component';
+import { type StockItemInventoryFilter } from '../../stock-items.resource';
 import { useStockItemBatchInformationHook } from './batch-information.resource';
 import BatchInformationLocationsFilter from './batch-information-locations/batch-information-locations-filter.component';
-import { useForm } from 'react-hook-form';
-import { type StockItemInventoryFilter } from '../../stock-items.resource';
+import DataList from '../../../core/components/table/table.component';
 
 interface BatchInformationProps {
   onSubmit?: () => void;
@@ -32,7 +32,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({ stockItemUuid }) =>
       },
       {
         key: 'batch',
-        header: t('batchNumber', 'Batch Number'),
+        header: t('batchNumber', 'Batch number'),
       },
       {
         key: 'quantity',

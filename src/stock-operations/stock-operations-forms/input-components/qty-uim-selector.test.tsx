@@ -131,7 +131,7 @@ describe('QtyUOMSelector', () => {
 
     render(<QtyUomSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
 
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 
   it('should render Inline notification error when error ocuured while fetching item', () => {

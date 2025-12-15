@@ -4,43 +4,48 @@ import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { RadioButtonGroup, RadioButton } from '@carbon/react';
 import { type RadioOption } from '../../../stock-items/add-stock-item/stock-item-details/stock-item-details.resource';
 
-interface ControlledRadioButtonGroupProps<T> extends RadioButtonGroupProps {
+interface ControlledRadioButtonGroupProps<T>
+  extends Omit<RadioButtonGroupProps, 'onChange' | 'id' | 'ref' | 'value' | 'defaultSelected'> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
-  options: RadioOption[]; // Change the type to RadioOption[]
+  options: RadioOption[];
+  id?: string;
+  onChange?: (selectedValue: string, name: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ControlledRadioButtonGroup = <T,>(props: ControlledRadioButtonGroupProps<T>) => {
+  const { controllerName, name, control, options, onChange: onChangeProp, id: propsId, ...radioGroupProps } = props;
+
   return (
     <Controller
-      name={props.controllerName}
-      control={props.control}
+      name={controllerName}
+      control={control}
       render={({ field: { onChange, value, ref } }) => (
         <RadioButtonGroup
-          {...props}
+          {...radioGroupProps}
+          name={name}
           onChange={(selectedValue: string, name: string, event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(selectedValue, name, event);
+            onChange(selectedValue);
 
             // Fire prop change
-            if (props.onChange) {
-              props.onChange(selectedValue, name, event);
+            if (onChangeProp) {
+              onChangeProp(selectedValue, name, event);
             }
           }}
-          id={props.name}
+          id={name}
           ref={ref}
-          defaultSelected={props.id}
-          value={value}
+          defaultSelected={propsId}
+          valueSelected={value}
         >
-          {props.options.map((option, index) => (
+          {options.map((option, index) => (
             <RadioButton
-              key={`${index}-${props.name}-${option.value}`}
-              id={`${props.name}-${option.value}`}
+              key={`${index}-${name}-${option.value}`}
+              id={`${name}-${option.value}`}
               labelText={option.label}
-              value={option.value}
+              value={String(option.value)}
               checked={value === option.value}
               onChange={() => onChange(option.value)}
-              ref={ref}
             />
           ))}
         </RadioButtonGroup>

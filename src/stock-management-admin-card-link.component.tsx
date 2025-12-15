@@ -11,7 +11,7 @@ const StockManagementCardLink: React.FC = () => {
       <ClickableTile href={window.getOpenmrsSpaBase() + 'stock-management'} rel="noopener noreferrer">
         <div>
           <div className="heading">{header}</div>
-          <div className="content">{t('stockManagement', 'Stock Management')}</div>
+          <div className="content">{t('stockManagement', 'Stock management')}</div>
         </div>
         <div className="iconWrapper">
           <ArrowRight size={16} />

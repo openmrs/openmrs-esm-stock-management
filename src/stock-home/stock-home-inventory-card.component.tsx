@@ -55,8 +55,8 @@ const StockHomeInventoryCard = () => {
           <div className={styles.cardText}>
             <p>{t('expiringStock', 'Expiring stock')}</p>
             <p>
-              <strong>{item?.drugName}</strong> {t('batchNo', 'Batch No:')} {item?.batchNo} {t('quantity', 'Quantity:')}{' '}
-              {item?.quantity} {item?.dispensingUnitName}
+              <strong>{item?.drugName}</strong> {t('batchNumberLabel', 'Batch number:')} {item?.batchNo}{' '}
+              {t('quantityLabel', 'Quantity:')} {item?.quantity} {item?.dispensingUnitName}
             </p>
           </div>
         </div>

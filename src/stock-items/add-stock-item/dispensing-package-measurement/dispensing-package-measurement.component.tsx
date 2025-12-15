@@ -1,7 +1,7 @@
-import React, { type ReactNode, useMemo, useState } from 'react';
+import React, { type ReactNode, useMemo } from 'react';
+import { ComboBox, SelectSkeleton } from '@carbon/react';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
-import { ComboBox, SelectSkeleton } from '@carbon/react';
 
 interface DispensingPackageMeasurementProps<T> {
   dispensingUnitPackagingUoMUuid?: string;
@@ -40,9 +40,6 @@ const DispensingPackageMeasurement = <T,>(props: DispensingPackageMeasurementPro
         render={({ field: { onChange, ref } }) => (
           <ComboBox
             titleText={props.title}
-            name={props.name}
-            control={props.control}
-            controllerName={props.controllerName}
             id={props.name}
             size={'sm'}
             items={props.packagingUnits ?? []}

@@ -106,7 +106,7 @@ describe('BatchNoSelector', () => {
     render(<BatchNoSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(screen.getByText(/batch no./i)).toBeInTheDocument();
+    expect(screen.getByText(/batch number/i)).toBeInTheDocument();
   });
 
   it('should handle batch selection', async () => {

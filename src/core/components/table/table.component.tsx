@@ -76,10 +76,10 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
   };
   const handleExport = (object) => {
     const csvString = convertToCSV(list, columns);
-    if (object.currentTarget.innerText === 'Download As CSV') {
+    if (object.currentTarget.innerText === t('downloadAsCSV', 'Download As CSV')) {
       const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8' });
       saveAs(blob, 'data.csv');
-    } else if (object.currentTarget.innerText === 'Download As Json') {
+    } else if (object.currentTarget.innerText === t('downloadAsJson', 'Download As Json')) {
       const jsonBlob = new Blob([csvString], { type: 'application/json' });
       saveAs(jsonBlob, 'data.json');
     }
@@ -119,15 +119,17 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
                     ) : (
                       <>
                         <OverflowMenu
-                          size="sm"
-                          kind="tertiary"
-                          renderIcon={DocumentDownload}
-                          iconDescription="Download As"
                           focusTrap={false}
+                          iconDescription={t('downloadOptions', 'Download options')}
+                          renderIcon={DocumentDownload}
+                          size="sm"
                         >
-                          <OverflowMenuItem itemText="Download As CSV" onClick={handleExport} />
-                          <OverflowMenuItem itemText="Download As PDF" onClick={handleExport} />
-                          <OverflowMenuItem itemText="Download As Json" onClick={handleExport} />
+                          <OverflowMenuItem
+                            itemText={t('downloadAsCSV', 'Download As CSV')}
+                            onClick={(object) => handleExport(object)}
+                          />
+                          <OverflowMenuItem itemText={t('downloadAsPDF', 'Download as PDF')} onClick={handleExport} />
+                          <OverflowMenuItem itemText={t('downloadAsJson', 'Download As Json')} onClick={handleExport} />
                         </OverflowMenu>
                         <TableToolbarSearch
                           className={styles.itemListSearch}
@@ -172,8 +174,8 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
                 </div>
               ) : null}
               <Pagination
-                forwardText="Next page"
-                backwardText="Previous page"
+                forwardText={t('nextPage', 'Next page')}
+                backwardText={t('previousPage', 'Previous page')}
                 page={currentPage}
                 pageSize={currentPageSize}
                 pageSizes={pageSizes}

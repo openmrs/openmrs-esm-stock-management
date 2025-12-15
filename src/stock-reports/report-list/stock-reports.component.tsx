@@ -165,7 +165,7 @@ const StockReports: React.FC = () => {
               type="button"
               size="sm"
               className="submitButton clear-padding-margin"
-              iconDescription={'Edit'}
+              iconDescription={t('edit', 'Edit')}
               kind="ghost"
               renderIcon={View}
               // onClick={(e) => onViewItem(batchJob.uuid, e)}
@@ -194,7 +194,7 @@ const StockReports: React.FC = () => {
         </div>
       ),
     }));
-  }, [reports, onDownloadReportClick]);
+  }, [reports, onDownloadReportClick, t]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;
@@ -203,12 +203,8 @@ const StockReports: React.FC = () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.tableHeader}>{t('stockReportsTableHeader', 'List of reports requested by users.')}</h2>
-      <DataTable
-        rows={tableRows}
-        headers={tableHeaders}
-        isSortable={true}
-        useZebraStyles={true}
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
+      <DataTable rows={tableRows} headers={tableHeaders} isSortable useZebraStyles>
+        {({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -288,7 +284,7 @@ const StockReports: React.FC = () => {
             ) : null}
           </TableContainer>
         )}
-      ></DataTable>
+      </DataTable>
       <Pagination
         page={currentPage}
         pageSize={currentPageSize}

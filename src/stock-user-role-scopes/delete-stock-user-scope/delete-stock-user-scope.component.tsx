@@ -29,7 +29,7 @@ const StockUserScopeDeleteActionMenu: React.FC<StockUserScopDeleteActionMenuProp
               setDeletingUserScope(false);
               showSnackbar({
                 isLowContrast: true,
-                title: t('deletingstockUserScope', 'Delete Stock User Scope'),
+                title: t('deletingStockUserScope', 'Delete Stock User Scope'),
                 kind: 'success',
                 subtitle: t('stockUserScopeDeletedSuccessfully', 'Stock User Scope Deleted Successfully'),
               });

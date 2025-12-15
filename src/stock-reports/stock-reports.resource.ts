@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export function useReportTypes() {
   const apiUrl = `${restBaseUrl}/stockmanagement/report?v=default`;
-  const { data, error, isLoading } = useSWR<{ data: { results: ReportType } }, Error>(apiUrl, openmrsFetch);
+  const { data, error, isLoading } = useSWR<{ data: { results: ReportType[] } }, Error>(apiUrl, openmrsFetch);
   return {
     reportTypes: data?.data?.results ?? [],
     isLoading,

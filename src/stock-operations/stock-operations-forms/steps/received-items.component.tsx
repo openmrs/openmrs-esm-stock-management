@@ -37,7 +37,7 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ stockOperation, onPreviou
     { key: 'item', header: t('item', 'Item') },
     { key: 'requested', header: t('requested', 'Requested') },
     { key: 'batch', header: t('batch', 'Batch No') },
-    { key: 'expiry', header: t('expiry', 'Expiry Date') },
+    { key: 'expiry', header: t('expiry', 'Expiry') },
     { key: 'qtySent', header: t('quantitySent', 'Quantity Sent') },
     { key: 'qtyReceived', header: t('quantityReceived', 'Quantity Received') },
     {
@@ -101,7 +101,7 @@ const ReceivedItems: React.FC<ReceivedItemsProps> = ({ stockOperation, onPreviou
             <Button
               data-testid="previous-btn"
               hasIconOnly
-              iconDescription={t('previous', 'Previous')}
+              iconDescription={t('previousButton', 'Previous')}
               kind="secondary"
               onClick={onPrevious}
               renderIcon={ArrowLeft}

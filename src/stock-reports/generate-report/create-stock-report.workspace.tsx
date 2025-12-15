@@ -8,14 +8,14 @@ import {
   ComboBox,
   DatePicker,
   DatePickerInput,
+  Form,
+  FormGroup,
   InlineLoading,
   NumberInput,
   RadioButton,
   RadioButtonGroup,
   Select,
   SelectItem,
-  Form,
-  FormGroup,
   Stack,
 } from '@carbon/react';
 import {
@@ -112,7 +112,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   useEffect(() => {
     let hasResetParameters = false;
     if (selectedReportName) {
-      const reportType = (reportTypes as any)?.find((p) => p.name === selectedReportName);
+      const reportType = Array.isArray(reportTypes)
+        ? reportTypes.find((p) => p.name === selectedReportName)
+        : undefined;
       if (reportType) {
         setDisplayDate(reportType.parameters?.some((p) => p === ReportParameter.Date));
         setDisplayStartDate(reportType.parameters?.some((p) => p === ReportParameter.StartDate));
@@ -159,7 +161,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
         display: 'All Categories',
         name: 'All Categories',
         uuid: '',
-      } as any as Concept,
+      } as unknown as Concept,
       ...((items && items?.answers?.length > 0 ? items?.answers : items?.setMembers) ?? []),
     ];
   }, [items]);
@@ -178,9 +180,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   }
 
   const handleSave = async (report: StockReportSchema) => {
-    const reportSystemName = (reportTypes as any).find(
-      (reportType) => reportType.name === report.reportName,
-    )?.systemName;
+    const reportSystemName = Array.isArray(reportTypes)
+      ? reportTypes.find((reportType) => reportType.name === report.reportName)?.systemName
+      : undefined;
 
     let hideSplash = true;
     try {
@@ -331,14 +333,14 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           if (response.status === 201) {
             showSnackbar({
               title: t('batchJob', 'Batch Job'),
-              subtitle: t('BatchJobSuccess', 'Batch job created successfully'),
+              subtitle: t('batchJobSuccess', 'Batch job created successfully'),
               kind: 'success',
             });
             handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
             closeWorkspace();
           } else {
             showSnackbar({
-              title: t('BatchJobErrorTitle', 'Batch job'),
+              title: t('batchJobErrorTitle', 'Batch job'),
               subtitle: t('batchJobErrorMessage', 'Error creating batch job'),
               kind: 'error',
             });
@@ -347,7 +349,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
         })
         .catch(() => {
           showSnackbar({
-            title: t('BatchJobErrorTitle', 'Batch job'),
+            title: t('batchJobErrorTitle', 'Batch job'),
             subtitle: t('batchJobErrorMessage', 'Error creating batch job'),
             kind: 'error',
           });
@@ -360,6 +362,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
       }
     }
   };
+
   const getReportParameter = (
     name: string,
     value: string,
@@ -381,8 +384,8 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               render={({ field: { onChange } }) => (
                 <ComboBox
                   id="report"
-                  labelText={t('reportName', 'Report name')}
-                  items={reportTypes}
+                  titleText={t('reportName', 'Report name')}
+                  items={Array.isArray(reportTypes) ? reportTypes : [reportTypes]}
                   itemToString={(item) => `${item?.name ?? item?.name ?? ''}`}
                   placeholder={t('filter', 'Filter...')}
                   onChange={({ selectedItem }) => {
@@ -405,7 +408,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
                   <ComboBox
                     id="stockReportItem"
                     size="md"
-                    labelText={t('stockItemCategory', 'Stock Item Category')}
+                    titleText={t('stockItemCategory', 'Stock Item Category')}
                     items={stockItemCategories}
                     onChange={({ selectedItem }) => {
                       onChange(selectedItem.uuid);
@@ -433,11 +436,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               >
                 <DatePickerInput
                   id="startDate"
-                  name="startDate"
                   placeholder={DATE_PICKER_FORMAT}
-                  labelText={t('startDate', 'Start Date')}
-                  defaultValue=""
-                  invalid={errors?.startDate?.message}
+                  labelText={t('startDate', 'Start date')}
+                  invalid={!!errors?.startDate?.message}
                   invalidText={errors?.startDate?.message}
                 />
               </DatePicker>
@@ -459,11 +460,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               >
                 <DatePickerInput
                   id="endDate"
-                  name="endDate"
                   placeholder={DATE_PICKER_FORMAT}
-                  labelText={t('endDate', 'End Date')}
-                  defaultValue=""
-                  invalid={errors?.endDate?.message}
+                  labelText={t('endDate', 'End date')}
+                  invalid={!!errors?.endDate?.message}
                   invalidText={errors?.endDate?.message}
                 />
               </DatePicker>
@@ -474,15 +473,15 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           <Select
             id="inventoryGroupBy"
             defaultValue={model?.inventoryGroupBy}
-            invalid={errors?.inventoryGroupBy?.message}
+            invalid={!!errors?.inventoryGroupBy?.message}
             invalidText={errors?.inventoryGroupBy?.message}
             labelText={t('inventoryBy', 'Inventory by')}
             onChange={(e) => setValue('inventoryGroupBy', e.target.value)}
           >
-            <SelectItem value="" text={t('SelectOption', 'Select an option')} />
+            <SelectItem value="" text={t('selectOption', 'Select an option')} />
             <SelectItem value="StockItemOnly" text={t('stockItem', 'Stock Item')} />
-            <SelectItem value="LocationStockItem" text={t('locationAndStockItem', 'Location and Stock Item')} />
-            <SelectItem value="LocationStockItemBatchNo" text={t('locationAndBatchno', 'Location and Batch')} />
+            <SelectItem value="LocationStockItem" text={t('locationAndStockItem', 'Location and stock item')} />
+            <SelectItem value="LocationStockItemBatchNo" text={t('locationAndBatchNo', 'Location and batch')} />
           </Select>
         )}
         {displayLocation && (
@@ -497,7 +496,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               setValue('location', selectedLocation?.name || '');
             }}
             defaultValue=""
-            invalid={errors?.location?.message}
+            invalid={!!errors?.location?.message}
             invalidText={errors?.location?.message}
           >
             <SelectItem disabled hidden value="" text={t('chooseALocation', 'Choose a location')} />
@@ -514,7 +513,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               <Checkbox
                 id="childLocations"
                 onChange={onChange}
-                value={value}
+                checked={value}
                 labelText={t('includeChildLocations', 'Include Child Locations')}
               />
             )}
@@ -526,7 +525,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
             name="mostLeastMoving"
             render={({ field: { onChange, value } }) => (
               <RadioButtonGroup name="mostLeastMoving" legendText={t('rank', 'Rank')} onChange={onChange} value={value}>
-                <RadioButton value="MostMoving" id="mostLeastMovingMost" labelText={t('mostMoving', 'Most Moving')} />
+                <RadioButton value="MostMoving" id="mostLeastMovingMost" labelText={t('mostMoving', 'Most moving')} />
                 <RadioButton
                   value="LeastMoving"
                   id="mostLeastMovingLeast"
@@ -547,9 +546,8 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
                 disableWheel
                 hideSteppers
                 value={value}
-                onchange={onChange}
+                onChange={onChange}
                 label={t('limit', 'Limit')}
-                defaultValue={20}
               />
             )}
           />
@@ -633,11 +631,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
               >
                 <DatePickerInput
                   id="date"
-                  name="date"
                   placeholder={DATE_PICKER_FORMAT}
                   labelText={t('date', 'Date')}
-                  defaultValue=""
-                  invalid={errors?.date?.message}
+                  invalid={!!errors?.date?.message}
                   invalidText={errors?.date?.message}
                 />
               </DatePicker>
@@ -652,10 +648,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           [styles.desktop]: !isTablet,
         })}
       >
-        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+        <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
           {getCoreTranslation('cancel')}
         </Button>
-        <Button type="submit" className={styles.button} onClick={handleSave}>
+        <Button type="submit" className={styles.button}>
           {getCoreTranslation('save')}
         </Button>
       </ButtonSet>

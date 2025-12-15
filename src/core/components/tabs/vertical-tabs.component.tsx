@@ -20,12 +20,8 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({ tabs, title, hasContainer, 
       `}
     >
       {title && <p className={styles.heading}>{title}</p>}
-      <div className={styles.tab}>
-        <Tabs
-          className={`${styles.verticalTabs}`}
-          selectedIndex={selectedIndex}
-          onChange={({ selectedIndex }) => onChange?.(selectedIndex)}
-        >
+      <div className={`${styles.tab} ${styles.verticalTabs}`}>
+        <Tabs selectedIndex={selectedIndex} onChange={({ selectedIndex }) => onChange?.(selectedIndex)}>
           <TabList aria-label="navigation">
             {tabs.map((tab: TabItem, index: number) => (
               <Tab key={index} disabled={tab.disabled}>

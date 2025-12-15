@@ -1,3 +1,4 @@
+import React, { type ChangeEvent, type FC, useEffect, useMemo } from 'react';
 import {
   Button,
   Column,
@@ -10,10 +11,9 @@ import {
   TextInput,
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
-import { ErrorState } from '@openmrs/esm-framework';
-import React, { type ChangeEvent, type FC, useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ErrorState } from '@openmrs/esm-framework';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, MAIN_STORE_LOCATION_TAG } from '../../../constants';
 import { type Party } from '../../../core/api/types/Party';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
@@ -42,7 +42,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
     destinationParties,
     sourceParties,
     isLoading: isPartiesLoading,
-    error: patiesError,
+    error: partiesError,
     sourceTags,
     destinationTags,
   } = useParties(stockOperationType);
@@ -61,7 +61,9 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       'reasonUuid',
       'responsiblePersonOther',
     ]);
-    if (valid) onNext();
+    if (valid) {
+      onNext();
+    }
   };
 
   // initialize location fields
@@ -96,9 +98,9 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       />
     );
 
-  if (patiesError)
+  if (partiesError)
     return (
-      <ErrorState error={patiesError} headerTitle={t('partieserror', 'Error launching base operation details form')} />
+      <ErrorState error={partiesError} headerTitle={t('partiesError', 'Error launching base operation details form')} />
     );
 
   return (
@@ -113,7 +115,6 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
           render={({ field, fieldState: { error } }) => (
             <DatePicker
               readOnly={field.disabled}
-              id={`operationDate`}
               datePickerType="single"
               locale="en"
               className={styles.datePickerInput}
@@ -125,12 +126,10 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
               }}
             >
               <DatePickerInput
-                autoComplete="off"
                 id={`operationDate-input`}
-                name="operationDate-input"
                 placeholder={DATE_PICKER_FORMAT}
                 labelText={t('operationDate', 'Operation Date')}
-                invalid={error?.message}
+                invalid={!!error?.message}
                 invalidText={error?.message}
                 size="lg"
               />
@@ -176,7 +175,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                   : t('chooseALocation', 'Choose a location')
               }
               ref={field.ref}
-              invalid={error?.message}
+              invalid={!!error?.message}
               invalidText={error?.message}
             />
           )}
@@ -192,7 +191,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                 readOnly={field.disabled}
                 titleText={
                   isStockIssueOperation
-                    ? t('destination', 'destination')
+                    ? t('destination', 'Destination')
                     : stockOperationType?.hasSource || stockOperation?.atLocationUuid
                     ? t('to', 'To')
                     : t('location', 'Location')
@@ -213,7 +212,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
                     : t('location', 'Location')
                 }
                 ref={field.ref}
-                invalid={error?.message}
+                invalid={!!error?.message}
                 invalidText={error?.message}
               />
             )}
@@ -239,10 +238,10 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                 field.onChange(e.target.value);
               }}
-              placeholder={t('enterRemarks', 'Enter remarks') + ' ...'}
+              placeholder={t('enterRemarksPlaceholder', 'Enter remarks...')}
               id={'remarks'}
               labelText={t('remarks', 'Remarks')}
-              invalid={error?.message}
+              invalid={!!error?.message}
               invalidText={error?.message}
             />
           )}
@@ -251,7 +250,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
       <div className={styles.btnSet}>
         {typeof onNext === 'function' && (
           <Button kind="primary" onClick={handleNext} role="button" renderIcon={ArrowRight}>
-            {t('next', 'Next')}
+            {t('nextButton', 'Next')}
           </Button>
         )}
       </div>

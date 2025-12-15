@@ -1,11 +1,11 @@
 import React, { type ReactNode } from 'react';
+import { ComboBox, TextInputSkeleton } from '@carbon/react';
 import { type Concept } from '../../../core/api/types/concept/Concept';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
-import { ComboBox, TextInputSkeleton } from '@carbon/react';
+import { type ConfigObject } from '../../../config-schema';
 import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { useConfig } from '@openmrs/esm-framework';
-import { type ConfigObject } from '../../../config-schema';
 
 interface PackagingUnitsConceptSelectorProps<T> {
   row?: StockItemPackagingUOMDTO;
@@ -38,9 +38,6 @@ const PackagingUnitsConceptSelector = <T,>(props: PackagingUnitsConceptSelectorP
       render={({ field: { onChange } }) => (
         <ComboBox
           titleText={props.title}
-          name={props.name}
-          control={props.control}
-          controllerName={props.controllerName}
           id={`${props.name}-${props.row.id}-${props.row.uuid}`}
           size="md"
           items={

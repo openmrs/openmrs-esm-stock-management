@@ -20,7 +20,7 @@ const QuantityUomCell: React.FC<QuantityUomCellProps> = ({ stockItemPackagingUOM
     if (error) {
       showSnackbar({
         kind: 'error',
-        title: t('packagingUomError', 'Error loading stockItemPackagingUOM name'),
+        title: t('packagingUomError', 'Error loading Stock item'),
         subtitle: error?.message,
       });
     }

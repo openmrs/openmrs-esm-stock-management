@@ -31,6 +31,7 @@ import AddStockItemActionButton from './add-stock-item/add-stock-action-button.c
 import AddStockItemsBulktImportActionButton from './add-bulk-stock-item/add-stock-items-bulk-import-action-button.component';
 import EditStockItemActionsMenu from './edit-stock-item/edit-stock-item-action-menu.component';
 import FilterStockItems from './components/filter-stock-items/filter-stock-items.component';
+import { type CustomTableHeader } from '../core/components/table/types';
 import styles from './stock-items-table.scss';
 
 interface StockItemsTableProps {
@@ -80,17 +81,17 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       },
       {
         id: 1,
-        header: t('genericName', 'Generic Name'),
+        header: t('genericName', 'Generic name'),
         key: 'genericName',
       },
       {
         id: 2,
-        header: t('commonName', 'Common Name'),
+        header: t('commonName', 'Common name'),
         key: 'commonName',
       },
       {
         id: 3,
-        header: t('tradeName', 'Trade Name'),
+        header: t('tradeName', 'Trade name'),
         key: 'tradeName',
       },
       {
@@ -100,12 +101,12 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       },
       {
         id: 5,
-        header: t('defaultStockOperationsUoMName', 'Bulk Packaging'),
+        header: t('defaultStockOperationsUoMName', 'Bulk packaging'),
         key: 'defaultStockOperationsUoMName',
       },
       {
         id: 6,
-        header: t('reorderLevel', 'Reorder Level'),
+        header: t('reorderLevel', 'Reorder level'),
         key: 'reorderLevel',
       },
       {
@@ -159,12 +160,8 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       <h2 className={styles.tableHeader}>
         {t('stockItemsTableHeader', 'Drugs and other stock items managed by the system.')}
       </h2>
-      <DataTable
-        rows={tableRows}
-        headers={tableHeaders}
-        isSortable
-        useZebraStyles
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, getBatchActionProps }) => (
+      <DataTable rows={tableRows} headers={tableHeaders} isSortable useZebraStyles>
+        {({ rows, headers, getHeaderProps, getTableProps, getRowProps, getBatchActionProps }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -181,7 +178,9 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                 }}
               >
                 <TableToolbarSearch
-                  onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(e) =>
+                    handleSearch(typeof e === 'string' ? e : (e as React.ChangeEvent<HTMLInputElement>).target.value)
+                  }
                   persistent
                   placeholder={t('searchStockItems', 'Search stock items')}
                   value={searchInput}
@@ -205,13 +204,20 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                         <TableHeader
                           {...getHeaderProps({
                             header,
-                            isSortable: header.isSortable,
+                            isSortable: (header as CustomTableHeader).isSortable,
                           })}
                           className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
                           isSortable={header.key !== 'name'}
                         >
-                          {header.header?.content ?? header.header}
+                          {(() => {
+                            const customHeader = header as CustomTableHeader;
+                            return typeof customHeader.header === 'object' &&
+                              customHeader.header !== null &&
+                              'content' in customHeader.header
+                              ? (customHeader.header.content as React.ReactNode)
+                              : (customHeader.header as React.ReactNode);
+                          })()}
                         </TableHeader>
                       ),
                   )}
@@ -249,7 +255,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
             ) : null}
           </TableContainer>
         )}
-      ></DataTable>
+      </DataTable>
       <Pagination
         className={styles.paginationOverride}
         onChange={({ page, pageSize }) => {

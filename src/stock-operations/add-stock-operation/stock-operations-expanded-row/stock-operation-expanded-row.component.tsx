@@ -86,8 +86,8 @@ const StockOperationExpandedRow: React.FC<StockOperationExpandedRowProps> = (pro
         <Row className={styles.statusContainerRow}>
           {isLoading && (
             <InlineLoading
-              description={t('loading StockoperationLinks', 'Loading stock operation links') + '...'}
-              iconDescription={t('loading StockoperationLinks', 'Loading stock operation links')}
+              description={t('loadingStockOperationLinks', 'Loading stock operation links...')}
+              iconDescription={t('loadingStockOperationLinksIcon', 'Loading stock operation links')}
             />
           )}
           {currentOperationType && (
@@ -100,8 +100,8 @@ const StockOperationExpandedRow: React.FC<StockOperationExpandedRowProps> = (pro
         <Row className={styles.statusContainerRow}>
           {isLoading && (
             <InlineLoading
-              description={t('loadingOperationActions', 'Loading stock operation actions') + '...'}
-              iconDescription={t('loadingOperationActions', 'Loading stock operation actions')}
+              description={t('loadingOperationActions', 'Loading stock operation actions...')}
+              iconDescription={t('loadingOperationActionsIcon', 'Loading stock operation actions')}
             />
           )}
           {currentOperationType && (
