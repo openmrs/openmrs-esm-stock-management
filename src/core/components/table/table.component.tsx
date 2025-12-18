@@ -74,21 +74,29 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
       }),
     );
   };
-  const handleExport = (object) => {
+  const handleExportCSV = () => {
     const csvString = convertToCSV(list, columns);
-    if (object.currentTarget.innerText === t('downloadAsCSV', 'Download As CSV')) {
-      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8' });
-      saveAs(blob, 'data.csv');
-    } else if (object.currentTarget.innerText === t('downloadAsJson', 'Download As Json')) {
-      const jsonBlob = new Blob([csvString], { type: 'application/json' });
-      saveAs(jsonBlob, 'data.json');
-    }
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8' });
+    saveAs(blob, 'data.csv');
   };
+
+  const handleExportJSON = () => {
+    const jsonString = JSON.stringify(list, null, 2);
+    const jsonBlob = new Blob([jsonString], { type: 'application/json' });
+    saveAs(jsonBlob, 'data.json');
+  };
+
+  const handleExportPDF = () => {
+    // PDF export functionality can be implemented here when needed
+    console.warn('PDF export not yet implemented');
+  };
+
   const convertToCSV = (data, columns) => {
     const header = columns.map((col) => col.header).join(',');
     const rows = data.map((row) => columns.map((col) => JSON.stringify(row[col.key])).join(','));
     return [header, ...rows].join('\n');
   };
+
   return (
     <>
       <DataTable
@@ -125,11 +133,20 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
                           size="sm"
                         >
                           <OverflowMenuItem
+                            className={styles.menuItem}
                             itemText={t('downloadAsCSV', 'Download As CSV')}
-                            onClick={(object) => handleExport(object)}
+                            onClick={handleExportCSV}
                           />
-                          <OverflowMenuItem itemText={t('downloadAsPDF', 'Download as PDF')} onClick={handleExport} />
-                          <OverflowMenuItem itemText={t('downloadAsJson', 'Download As Json')} onClick={handleExport} />
+                          <OverflowMenuItem
+                            className={styles.menuItem}
+                            itemText={t('downloadAsPDF', 'Download as PDF')}
+                            onClick={handleExportPDF}
+                          />
+                          <OverflowMenuItem
+                            className={styles.menuItem}
+                            itemText={t('downloadAsJson', 'Download As JSON')}
+                            onClick={handleExportJSON}
+                          />
                         </OverflowMenu>
                         <TableToolbarSearch
                           className={styles.itemListSearch}
