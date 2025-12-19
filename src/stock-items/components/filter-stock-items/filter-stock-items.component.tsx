@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { RadioButton, RadioButtonGroup } from '@carbon/react';
 import styles from './filter-stock-items.scss';
 
@@ -8,16 +9,17 @@ interface FilterStockItemsProps {
 }
 
 const FilterStockItems: React.FC<FilterStockItemsProps> = ({ filterType, changeFilterType }) => {
+  const { t } = useTranslation();
   return (
     <RadioButtonGroup
       name="is-drug"
       defaultSelected={filterType}
-      onChange={changeFilterType}
+      onChange={(value) => changeFilterType(value as string)}
       className={styles.spacing}
     >
-      <RadioButton labelText="All" value="" id="is-drug-all" />
-      <RadioButton labelText="Pharmaceuticals" value="true" id="is-drug-drug" />
-      <RadioButton labelText="Non Pharmaceuticals" value="false" id="is-drug-other" />
+      <RadioButton labelText={t('all', 'All')} value="" id="is-drug-all" />
+      <RadioButton labelText={t('pharmaceuticals', 'Pharmaceuticals')} value="true" id="is-drug-drug" />
+      <RadioButton labelText={t('nonPharmaceuticals', 'Non Pharmaceuticals')} value="false" id="is-drug-other" />
     </RadioButtonGroup>
   );
 };

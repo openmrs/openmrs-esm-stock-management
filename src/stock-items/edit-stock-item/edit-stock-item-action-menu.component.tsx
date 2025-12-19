@@ -19,7 +19,7 @@ const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({ dat
         data.isDrug = !!data.drugUuid;
         launchAddOrEditStockItemWorkspace(t, data);
       }}
-      iconDescription={t('editStockItem', 'Edit Stock Item')}
+      iconDescription={t('editStockItem', 'Edit stock item')}
     >
       {`${data?.drugName ?? data.conceptName}`}
     </Button>

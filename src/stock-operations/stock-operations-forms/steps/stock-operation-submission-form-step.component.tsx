@@ -66,14 +66,14 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
             kind: del.status === 'rejected' ? 'error' : 'success',
             title:
               del.status === 'rejected'
-                ? t('stockoperationItemDeleteError', 'Error deleting stock operation item {{item}}', {
+                ? t('stockOperationItemDeleteError', 'Error deleting stock operation item {{item}}', {
                     item: itemsToDelete[index].commonName,
                   })
                 : t('success', 'Success'),
             subtitle:
               del.status === 'rejected'
                 ? del.reason?.message
-                : t('stockoperationItemDeletSuccess', 'Stock operation item {{item}} deleted succesfully', {
+                : t('stockOperationItemDeleteSuccess', 'Stock operation item {{item}} deleted successfully', {
                     item: itemsToDelete[index].commonName,
                   }),
           });
@@ -233,7 +233,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
       <div className={styles.btnSet}>
         {typeof onNext === 'function' && (
           <Button kind="tertiary" onClick={onNext} renderIcon={ArrowRight}>
-            {t('next', 'Next')}
+            {t('nextButton', 'Next')}
           </Button>
         )}
         {typeof onPrevious === 'function' && (
@@ -243,7 +243,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
             renderIcon={ArrowLeft}
             hasIconOnly
             data-testid="previous-btn"
-            iconDescription={t('previous', 'Previous')}
+            iconDescription={t('previousButton', 'Previous')}
           />
         )}
       </div>

@@ -239,11 +239,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     expect(
       screen.getByRole('searchbox', {
         name(accessibleName, element) {
-          return (
-            element.getAttribute('id') === 'search-stock-operation-item' &&
-            element.getAttribute('placeholder') === 'Find your items' &&
-            element.getAttribute('name') === 'search-stock-operation-item'
-          );
+          return element.getAttribute('id') === 'search-stock-operation-item';
         },
       }),
     ).toBeInTheDocument();

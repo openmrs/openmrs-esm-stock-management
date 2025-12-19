@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Button,
   DataTable,
+  DataTableSkeleton,
   Table,
   TableBody,
   TableCell,
@@ -10,22 +11,22 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  DataTableSkeleton,
 } from '@carbon/react';
-import styles from './stock-item-references.scss';
 import { TrashCan, Save } from '@carbon/react/icons';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-import StockSourceSelector from './stock-references-selector.component';
 import { useStockItemReferencesHook } from './stock-item-references.resource';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type StockItemReferenceData } from './validation-schema';
 import { stockItemDetailsSchema } from '../../validationSchema';
 import { type StockItemReferenceDTO } from '../../../core/api/types/stockItem/StockItemReference';
-import ControlledTextInput from '../../../core/components/carbon/controlled-text-input.component';
 import { createStockItemReference, deleteStockItemReference } from '../../stock-items.resource';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { extractErrorMessagesFromResponse } from '../../../constants';
 import { handleMutate } from '../../../utils';
+import ControlledTextInput from '../../../core/components/carbon/controlled-text-input.component';
+import StockSourceSelector from './stock-references-selector.component';
+import { type CustomTableHeader, type CustomTableRow } from '../../../core/components/table/types';
+import styles from './stock-item-references.scss';
 
 interface StockReferencesProps {
   isEditing?: boolean;
@@ -42,7 +43,7 @@ const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
 
-  const tableHeaders = useMemo(
+  const tableHeaders = useMemo<CustomTableHeader[]>(
     () => [
       {
         key: 'source',
@@ -84,7 +85,7 @@ const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
         handleMutate(`${restBaseUrl}/stockmanagement/stockitemreference`);
 
         showSnackbar({
-          title: t('saveReferenceTitle', 'StockItem Reference'),
+          title: t('saveReferenceTitle', 'Stock Item Reference'),
           subtitle: t('saveStockItemReferenceMessage', 'Stock Item Reference saved successfully'),
           kind: 'success',
         });
@@ -94,7 +95,7 @@ const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
 
         const err = extractErrorMessagesFromResponse(error);
         showSnackbar({
-          title: t('saveStockItemReferenceErrorTitle', 'StockItem Reference'),
+          title: t('saveStockItemReferenceErrorTitle', 'Stock Item Reference'),
           subtitle: t('saveStockItemReferenceErrorMessage', 'Error saving stock item reference' + err.join(',')),
           kind: 'error',
         });
@@ -107,27 +108,35 @@ const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
   return (
     <FormProvider {...stockReferenceForm}>
       <DataTable
-        rows={items ?? []}
-        headers={tableHeaders}
+        rows={(items ?? []).map((item, idx) => ({ ...item, id: item.uuid || `ref-${idx}` })) as CustomTableRow[]}
+        headers={tableHeaders as any}
         isSortable={false}
-        useZebraStyles={true}
-        render={({ headers, getHeaderProps, getTableProps }) => (
+        useZebraStyles
+      >
+        {({ headers, getHeaderProps, getTableProps }) => (
           <TableContainer className={styles.referencesTableContainer}>
             <Table {...getTableProps()} className={styles.referencesTable}>
               <TableHead>
                 <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader
-                      {...getHeaderProps({
-                        header,
-                        isSortable: false,
-                      })}
-                      style={header.styles}
-                      key={header.key}
-                    >
-                      {header.header?.content ?? header.header}
-                    </TableHeader>
-                  ))}
+                  {headers.map((header) => {
+                    const customHeader = header as CustomTableHeader;
+                    return (
+                      <TableHeader
+                        {...getHeaderProps({
+                          header,
+                          isSortable: false,
+                        })}
+                        style={customHeader.styles}
+                        key={header.key}
+                      >
+                        {typeof customHeader.header === 'object' &&
+                        customHeader.header !== null &&
+                        'content' in customHeader.header
+                          ? (customHeader.header.content as React.ReactNode)
+                          : (customHeader.header as React.ReactNode)}
+                      </TableHeader>
+                    );
+                  })}
                   <TableHeader style={{ width: '70%' }} />
                 </TableRow>
               </TableHead>
@@ -140,7 +149,7 @@ const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
             </Table>
           </TableContainer>
         )}
-      />
+      </DataTable>
 
       <Button
         name="save"
@@ -171,9 +180,9 @@ const StockReferencesRow: React.FC<{
     deleteStockItemReference(row.uuid).then(
       () => {
         showSnackbar({
-          title: t('deletePackagingUnitTitle', `Delete StockItem reference`),
+          title: t('deleteStockItemReference', 'Delete stock item reference'),
           kind: 'success',
-          subtitle: t('deleteStockItemReferenceMesaage', `StockItem reference deleted Successfully`),
+          subtitle: t('deleteStockItemReferenceMessage', 'Stock item reference deleted successfully'),
         });
       },
       (error) => {
@@ -217,7 +226,7 @@ const StockReferencesRow: React.FC<{
             type="button"
             size="sm"
             className="submitButton clear-padding-margin"
-            iconDescription={'Delete'}
+            iconDescription={t('delete', 'Delete')}
             kind="ghost"
             renderIcon={TrashCan}
             onClick={(e) => handleDelete(e)}

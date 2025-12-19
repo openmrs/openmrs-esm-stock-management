@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './printable-transaction-header.scss';
 import { useConfig } from '@openmrs/esm-framework';
 import { useTranslation } from 'react-i18next';
-import startCase from 'lodash-es/startCase';
+import { startCase } from 'lodash-es';
 
 interface PrintableTransactionHeaderProps {
   itemName: string;
@@ -15,7 +15,7 @@ const PrintableStockcardTransactionHeader: React.FC<PrintableTransactionHeaderPr
   return (
     <div className={styles.container}>
       <div className={styles.printableHeader}>
-        <p className={styles.heading}>{t('bincard', 'Stock Card')}</p>
+        <p className={styles.heading}>{t('stockCard', 'Stock card')}</p>
         {logo?.src ? (
           <img className={styles.img} height={60} width={250} src={logo.src} alt={logo.alt} />
         ) : logo?.name ? (
@@ -41,7 +41,7 @@ const PrintableStockcardTransactionHeader: React.FC<PrintableTransactionHeaderPr
 
       <div className={styles.printableBody}>
         <div className={styles.transactionDetails}>
-          <p className={styles.itemHeading}>{t('itemname', 'Item Name')}</p>
+          <p className={styles.itemHeading}>{t('itemName', 'Item name')}</p>
           <p className={styles.itemLabel}>{startCase(itemName)}</p>
         </div>
       </div>

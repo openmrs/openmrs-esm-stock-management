@@ -8,7 +8,6 @@ export const startOfDay = dayjs(new Date().setUTCHours(0, 0, 0, 0)).format(omrsD
 export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const DATE_PICKER_FORMAT = 'DD/MM/YYYY';
-
 export const DATE_PICKER_CONTROL_FORMAT = 'd/m/Y';
 
 export const formatForDatePicker = (date: Date | null | undefined) => {
@@ -54,7 +53,7 @@ export const APP_STOCKMANAGEMENT_STOCKOPERATIONS = 'App: stockmanagement.stockop
 /** @type {string}: Task: stockmanagement.stockoperations.mutate, Able to create and update stock operations*/
 export const TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE = 'Task: stockmanagement.stockoperations.mutate';
 
-/** @type {string}: Task: stockmanagement.stockoperations.approve, Able to aprove stock operations*/
+/** @type {string}: Task: stockmanagement.stockoperations.approve, Able to approve stock operations*/
 export const TASK_STOCKMANAGEMENT_STOCKOPERATIONS_APPROVE = 'Task: stockmanagement.stockoperations.approve';
 
 /** @type {string}: Task: stockmanagement.stockoperations.receiveitems, Able to receive dispatched stock items*/
@@ -84,7 +83,7 @@ export const INVENTORY_CLERK_ROLE_UUID = 'd210eb66-2188-11ed-9dff-507b9dea1806';
 export const INVENTORY_MANAGER_ROLE_UUID = 'cca4be4b-2188-11ed-9dff-507b9dea1806';
 export const INVENTORY_DISPENSING_ROLE_UUID = '84bdd876-4694-11ed-8109-00155dcc3fc0';
 export const INVENTORY_REPORTING_ROLE_UUID = 'a49be648-6b0a-11ed-93a2-806d973f13a9';
-export const INVENTORY_ADMNISTRATOR_ROLE_UUID = '2083fd40-3391-11ed-a667-507b9dea1806';
+export const INVENTORY_ADMINISTRATOR_ROLE_UUID = '2083fd40-3391-11ed-a667-507b9dea1806';
 
 export const STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND = true;
 export const STOCK_OPERATION_PRINT_DISABLE_COSTS = true;

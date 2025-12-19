@@ -136,9 +136,9 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
           () => {
             showSnackbar({
               isLowContrast: true,
-              title: t('addedRule', 'Add Rule'),
+              title: t('addedRule', 'Add rule'),
               kind: 'success',
-              subtitle: t('stockRuleAddedSuccessfully', 'Stock Rule Added Successfully'),
+              subtitle: t('stockRuleAddedSuccessfully', 'Stock rule added successfully'),
             });
             closeWorkspace?.();
           },
@@ -159,7 +159,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
   return (
     <Form onSubmit={onFormSubmit} className={styles.formContainer}>
       <div>
-        <FormGroup>
+        <FormGroup legendText={t('ruleConfiguration', 'Rule configuration')}>
           <section className={styles.section}>
             <section className={styles.section}>
               <Select
@@ -181,7 +181,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
               <TextInput
                 id="name"
                 type="text"
-                labelText={t('name', 'Rule Name')}
+                labelText={t('ruleName', 'Rule name')}
                 size="md"
                 onChange={onNameChanged}
                 value={model?.name}
@@ -193,7 +193,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
               <Select
                 name="quantityUnit"
                 className="select-field"
-                labelText={t('quantityUnit', 'Quantity Unit')}
+                labelText={t('quantityUnit', 'Quantity unit')}
                 id="quantityUnit"
                 value={formModel?.stockItemPackagingUOMUuid ? formModel.stockItemPackagingUOMUuid : ''}
                 onChange={onQuantityUnitChange}
@@ -215,7 +215,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
               <TextInput
                 id="quantity"
                 type="number"
-                labelText={t('quantity', 'Quantity Threshold')}
+                labelText={t('quantityThreshold', 'Quantity threshold')}
                 size="md"
                 onChange={onQuantityChanged}
                 value={model?.quantity}
@@ -225,12 +225,12 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
           </section>
         </FormGroup>
 
-        <FormGroup>
+        <FormGroup legendText={t('notifications', 'Notifications')}>
           <section className={styles.section}>
             <Select
               name="alertRole"
               className="select-field"
-              labelText={t('alertRole', 'Alert Role')}
+              labelText={t('alertRole', 'Alert role')}
               id="alertRole"
               value={formModel?.alertRole ? formModel.alertRole : ''}
               onChange={onAlertRoleChange}
@@ -245,7 +245,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
             <Select
               name="mailRole"
               className="select-field"
-              labelText={t('mailRole', 'Mail Role')}
+              labelText={t('mailRole', 'Mail role')}
               id="mailRole"
               value={formModel?.mailRole ? formModel.mailRole : ''}
               onChange={onMailRoleChange}
@@ -285,24 +285,24 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
             justifyContent: 'center',
           }}
         >
-          <FormGroup className="clear-margin-bottom">
-            <CheckboxGroup className={styles.checkboxGrid}>
+          <FormGroup className="clear-margin-bottom" legendText={t('enabled', 'Enabled')}>
+            <CheckboxGroup className={styles.checkboxGrid} legendText="">
               <Checkbox
                 onChange={onEnabledChanged}
                 checked={formModel?.enabled}
                 labelText={`Enabled ?`}
-                value={model?.enabled}
+                value={model?.enabled ? 'true' : 'false'}
                 id="chk-ruleEnabled"
               />
             </CheckboxGroup>
           </FormGroup>
-          <FormGroup className="clear-margin-bottom">
-            <CheckboxGroup className={styles.checkboxGrid}>
+          <FormGroup className="clear-margin-bottom" legendText={t('scope', 'Scope')}>
+            <CheckboxGroup className={styles.checkboxGrid} legendText="">
               <Checkbox
                 onChange={onAppliesToChildrenChanged}
                 name="appliesToChildren"
                 checked={formModel?.enableDescendants}
-                value={model?.enableDescendants}
+                value={model?.enableDescendants ? 'true' : 'false'}
                 labelText={`Applies to child locations?`}
                 id="chk-ruleAppliesToChildren"
               />
@@ -322,7 +322,7 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
           [styles.desktop]: !isTablet,
         })}
       >
-        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+        <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
           {getCoreTranslation('cancel')}
         </Button>
         <Button type="submit" className={styles.button}>

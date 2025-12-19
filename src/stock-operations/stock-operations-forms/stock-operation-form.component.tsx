@@ -80,7 +80,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
         stockOperation?.responsiblePersonUuid ?? // if person uuid exist, make it default
         (stockOperation?.responsiblePersonOther ? otherUser.uuid : undefined) ?? // if other resp person exist, default other user uuid
         (autoPopulateResponsiblePerson ? defaultLoggedUserUuid : undefined), //Else default login user if configured
-      operationDate: stockOperation?.operationDate ? parseDate(stockOperation!.operationDate as any) : today(),
+      operationDate: stockOperation?.operationDate ? parseDate(String(stockOperation.operationDate)) : today(),
       remarks: stockOperation?.remarks ?? '',
 
       operationTypeUuid: stockOperation?.operationTypeUuid ?? stockOperationType?.uuid,
@@ -89,7 +89,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
       stockOperationItems:
         stockOperation?.stockOperationItems?.map((item) =>
           pick(
-            { ...item, expiration: item.expiration ? parseDate(item.expiration as any) : undefined },
+            { ...item, expiration: item.expiration ? parseDate(String(item.expiration)) : undefined },
             stockOperationItemFormSchema.keyof().options,
           ),
         ) ?? [],
@@ -102,16 +102,18 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
           sourceUuid: _stockOperation?.destinationUuid,
           destinationUuid: _stockOperation?.sourceUuid,
           operationTypeUuid: stockOperationType?.uuid,
-          stockOperationItems: (_stockOperation?.stockOperationItems?.map((item) =>
-            pick(
-              { ...item, expiration: item?.expiration ? parseDate(item.expiration as any) : undefined },
-              stockOperationItemFormSchema.keyof().options,
-            ),
-          ) ?? []) as any,
+          stockOperationItems: (_stockOperation?.stockOperationItems && _stockOperation.stockOperationItems.length > 0
+            ? _stockOperation.stockOperationItems.map((item) =>
+                pick(
+                  { ...item, expiration: item?.expiration ? parseDate(String(item.expiration)) : undefined },
+                  stockOperationItemFormSchema.keyof().options,
+                ),
+              )
+            : []) as [BaseStockOperationItemFormData, ...BaseStockOperationItemFormData[]],
           requisitionStockOperationUuid: stockRequisitionUuid,
           responsiblePersonUuid: _stockOperation?.responsiblePersonUuid,
           responsiblePersonOther: _stockOperation?.responsiblePersonOther,
-          operationDate: _stockOperation?.operationDate ? parseDate(_stockOperation!.operationDate as any) : today(),
+          operationDate: _stockOperation?.operationDate ? parseDate(String(_stockOperation.operationDate)) : today(),
         }
       : undefined,
     resolver: zodResolver(formschema),
@@ -125,14 +127,17 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
         stockOperationType,
         stockOperationItem,
         onSave: (data) => {
-          const items = (form.getValues('stockOperationItems') ?? []) as Array<BaseStockOperationItemFormData>;
+          const items = (form.getValues('stockOperationItems') ?? []) as BaseStockOperationItemFormData[];
           const index = items.findIndex((i) => i.uuid === data.uuid);
           if (index === -1) {
             items.push(data);
           } else {
             items[index] = data;
           }
-          form.setValue('stockOperationItems', items as any);
+          form.setValue(
+            'stockOperationItems',
+            items as [BaseStockOperationItemFormData, ...BaseStockOperationItemFormData[]],
+          );
           setRenderItemForm(false);
           setItemFormProps(undefined);
         },
@@ -159,7 +164,7 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
         disabled: !stockOperation,
       },
       {
-        name: t('stockItems', 'Stock Items'),
+        name: t('stockItems', 'Stock items'),
         component: (
           <StockOperationItemsFormStep
             stockOperation={stockOperation}

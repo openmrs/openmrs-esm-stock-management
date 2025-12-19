@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useMemo } from 'react';
+import React, { useId, useMemo } from 'react';
 import { ArrowLeft, ArrowRight, Edit, TrashCan } from '@carbon/react/icons';
 import {
   Button,
@@ -13,6 +13,7 @@ import {
 } from '@carbon/react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { showSnackbar } from '@openmrs/esm-framework';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { getStockOperationUniqueId } from '../../stock-operation.utils';
@@ -24,8 +25,8 @@ import StockAvailability from './stock-availability-cell.component';
 import StockOperationItemBatchNoCell from './stock-operation-item-batch-no-cell.component';
 import StockOperationItemCell from './stock-operation-item-cell.component';
 import StockoperationItemExpiryCell from './stock-operation-item-expiry-cell.component';
+import { type CustomTableHeader } from '../../../core/components/table/types';
 import styles from './stock-operation-items-form-step.scc.scss';
-import { showSnackbar } from '@openmrs/esm-framework';
 
 type StockOperationItemsFormStepProps = {
   stockOperation?: StockOperationDTO;
@@ -63,7 +64,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ? [
             {
               key: 'batch',
-              header: t('batchNo', 'Batch No'),
+              header: t('batchNo', 'Batch number'),
               styles: { width: '15% !important' },
             },
           ]
@@ -87,11 +88,11 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
 
       {
         key: 'quantity',
-        header: t('qty', 'Qty'),
+        header: t('quantity', 'Quantity'),
       },
       {
         key: 'quantityuom',
-        header: t('quantityUom', 'Qty UoM'),
+        header: t('quantityUom', 'Quantity unit of measurement'),
       },
       ...(operationTypePermision.canCaptureQuantityPrice
         ? [
@@ -151,7 +152,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               type="button"
               size="sm"
               className="submitButton clear-padding-margin"
-              iconDescription={'Edit'}
+              iconDescription={t('edit', 'Edit')}
               kind="ghost"
               renderIcon={Edit}
               onClick={() => {
@@ -162,7 +163,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               type="button"
               size="sm"
               className="submitButton clear-padding-margin"
-              iconDescription={'Delete'}
+              iconDescription={t('delete', 'Delete')}
               kind="ghost"
               renderIcon={TrashCan}
               onClick={() => {
@@ -173,7 +174,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ),
       };
     });
-  }, [observableOperationItems, onLaunchItemsForm, stockOperationType, uniqueId]);
+  }, [observableOperationItems, onLaunchItemsForm, stockOperationType, t, uniqueId]);
 
   const handleNext = async () => {
     const valid = await form.trigger(['stockOperationItems']);
@@ -191,7 +192,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
     }
   };
 
-  const headerTitle = t('stockoperationItems', 'Stock operation items');
+  const headerTitle = t('stockOperationItems', 'Stock operation items');
 
   return (
     <div style={{ margin: '10px' }}>
@@ -209,13 +210,8 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
             })
           }
         />
-        <DataTable
-          rows={tableRows ?? []}
-          headers={headers}
-          isSortable={false}
-          useZebraStyles={true}
-          className={styles.dataTable}
-          render={({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
+        <DataTable rows={tableRows ?? []} headers={headers} isSortable={false} useZebraStyles>
+          {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
             <TableContainer>
               <Table {...getTableProps()}>
                 <TableHead>
@@ -226,10 +222,17 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
                           header,
                           isSortable: false,
                         })}
-                        style={header?.styles}
+                        style={(header as CustomTableHeader)?.styles}
                         key={header.key}
                       >
-                        {header.header?.content ?? header?.header}
+                        {(() => {
+                          const customHeader = header as CustomTableHeader;
+                          return typeof customHeader.header === 'object' &&
+                            customHeader.header !== null &&
+                            'content' in customHeader.header
+                            ? (customHeader.header.content as React.ReactNode)
+                            : (customHeader.header as React.ReactNode);
+                        })()}
                       </TableHeader>
                     ))}
                   </TableRow>
@@ -246,11 +249,11 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               </Table>
             </TableContainer>
           )}
-        />
+        </DataTable>
         <div className={styles.btnSet}>
           {typeof onNext === 'function' && (
             <Button kind="primary" onClick={handleNext} renderIcon={ArrowRight}>
-              {t('next', 'Next')}
+              {t('nextButton', 'Next')}
             </Button>
           )}
           {typeof onPrevious === 'function' && (
@@ -260,7 +263,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
               renderIcon={ArrowLeft}
               hasIconOnly
               data-testid="previous-btn"
-              iconDescription={t('previous', 'Previous')}
+              iconDescription={t('previousButton', 'Previous')}
             />
           )}
         </div>

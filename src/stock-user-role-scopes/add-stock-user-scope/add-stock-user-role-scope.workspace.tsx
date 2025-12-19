@@ -42,7 +42,7 @@ import {
   DATE_PICKER_CONTROL_FORMAT,
   DATE_PICKER_FORMAT,
   formatForDatePicker,
-  INVENTORY_ADMNISTRATOR_ROLE_UUID,
+  INVENTORY_ADMINISTRATOR_ROLE_UUID,
   INVENTORY_CLERK_ROLE_UUID,
   INVENTORY_DISPENSING_ROLE_UUID,
   INVENTORY_MANAGER_ROLE_UUID,
@@ -124,6 +124,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
       setFilteredItems(filtered);
     }
   };
+
   useEffect(() => {
     if (model?.userUuid) {
       setSelectedUserUuid(model.userUuid);
@@ -133,6 +134,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   const handleSearchQueryChange = (query: string) => {
     filterItems(query);
   };
+
   const onStockOperationTypeChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const operationType = formModel?.operationTypes?.find((x) => x.operationTypeUuid === event?.target?.value);
     if (operationType) {
@@ -187,7 +189,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
       INVENTORY_MANAGER_ROLE_UUID,
       INVENTORY_DISPENSING_ROLE_UUID,
       INVENTORY_REPORTING_ROLE_UUID,
-      INVENTORY_ADMNISTRATOR_ROLE_UUID,
+      INVENTORY_ADMINISTRATOR_ROLE_UUID,
     ];
 
     const filteredStockRoles = data.selectedItem?.roles
@@ -226,7 +228,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           isLowContrast: true,
           title: t('addUserRole', 'Add User role'),
           kind: 'success',
-          subtitle: t('successfullysaved', 'You have successfully saved user role scope'),
+          subtitle: t('successfullySaved', 'You have successfully saved user role scope'),
         });
         closeWorkspace();
       },
@@ -242,32 +244,36 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
       },
     );
   };
+
   if (isLoading || loadingRoles || loadingUsers) {
     return (
       <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
     );
   }
+
   return (
     <Form className={styles.container}>
       <Stack className={styles.form} gap={5}>
         <div>
           {users?.results?.length > 0 && (
-            <>
-              <FormGroup legendText={t('user', 'User')}>
-                <ComboBox
-                  id="userName"
-                  initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
-                  items={filteredItems.length ? filteredItems : usersResults}
-                  itemToString={(item) => `${item?.person?.display ?? item?.display ?? ''}`}
-                  labelText={t('user', 'User')}
-                  onChange={onUserChanged}
-                  onInputChange={handleSearchQueryChange}
-                  placeholder="Filter..."
-                  shouldFilterItem={() => true}
-                  size="md"
-                />
-              </FormGroup>
-            </>
+            <FormGroup legendText={t('user', 'User')}>
+              <ComboBox
+                id="userName"
+                initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
+                items={filteredItems.length ? filteredItems : usersResults}
+                itemToString={(item) => {
+                  if (!item || typeof item !== 'object') return '';
+                  const itemWithPerson = item as { person?: { display?: string }; display?: string };
+                  return `${itemWithPerson?.person?.display ?? itemWithPerson?.display ?? ''}`;
+                }}
+                titleText={t('user', 'User')}
+                onChange={onUserChanged}
+                onInputChange={handleSearchQueryChange}
+                placeholder={t('filterUsers', 'Filter users')}
+                shouldFilterItem={() => true}
+                size="md"
+              />
+            </FormGroup>
           )}
         </div>
         <Select
@@ -286,13 +292,13 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
             })
           )}
         </Select>
-        <CheckboxGroup className={styles.checkboxGrid}>
+        <CheckboxGroup className={styles.checkboxGrid} legendText="">
           <Checkbox
             checked={formModel?.enabled}
             id="chk-userEnabled"
             labelText={t('enabled', 'Enabled')}
             onChange={onEnabledChanged}
-            value={model?.enabled}
+            value={model?.enabled ? 'true' : 'false'}
           />
           <Checkbox
             checked={formModel?.permanent}
@@ -300,35 +306,29 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
             labelText={t('permanent', 'Permanent')}
             name="isPermanent"
             onChange={onPermanentChanged}
-            value={model?.permanent}
+            value={model?.permanent ? 'true' : 'false'}
           />
 
           {!formModel?.permanent && (
-            <>
-              <DatePicker
-                dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                datePickerType="range"
-                light
-                locale="en"
-                minDate={formatForDatePicker(MinDate)}
-                onChange={onActiveDatesChange}
-              >
-                <DatePickerInput
-                  id="date-picker-input-id-start"
-                  labelText={t('activeFrom', 'Active From')}
-                  name="activeFrom"
-                  placeholder={DATE_PICKER_FORMAT}
-                  value={formatForDatePicker(formModel?.activeFrom)}
-                />
-                <DatePickerInput
-                  id="date-picker-input-id-finish"
-                  labelText={t('activeTo', 'Active To')}
-                  name="activeTo"
-                  placeholder={DATE_PICKER_FORMAT}
-                  value={formatForDatePicker(formModel?.activeTo)}
-                />
-              </DatePicker>
-            </>
+            <DatePicker
+              dateFormat={DATE_PICKER_CONTROL_FORMAT}
+              datePickerType="range"
+              light
+              locale="en"
+              minDate={formatForDatePicker(MinDate)}
+              onChange={onActiveDatesChange}
+            >
+              <DatePickerInput
+                id="date-picker-input-id-start"
+                labelText={t('activeFrom', 'Active From')}
+                placeholder={DATE_PICKER_FORMAT}
+              />
+              <DatePickerInput
+                id="date-picker-input-id-finish"
+                labelText={t('activeTo', 'Active To')}
+                placeholder={DATE_PICKER_FORMAT}
+              />
+            </DatePicker>
           )}
         </CheckboxGroup>
         <FormGroup legendText={t('stockOperations', 'Stock operations')}>
@@ -336,7 +336,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
             {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
           </span>
         </FormGroup>
-        <CheckboxGroup className={styles.checkboxGrid}>
+        <CheckboxGroup className={styles.checkboxGrid} legendText="">
           {stockOperations?.length > 0 &&
             stockOperations.map((type) => {
               return (
@@ -358,7 +358,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
             {t('toggleMessage', 'Use the toggle to apply this scope to the locations under the selected location.')}
           </span>
         </FormGroup>
-        <CheckboxGroup className={styles.checkboxGrid}>
+        <CheckboxGroup className={styles.checkboxGrid} legendText="">
           {stockLocations?.length > 0 &&
             stockLocations.map((type) => {
               const checkedLocation = findCheckedLocation(type);
@@ -386,9 +386,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
                       hideLabel
                       id={`tg-loc-child-${type.id}`}
                       key={`tg-loc-child-key-${type.id}`}
-                      onToggleClick={getToggledValue(type.id)}
+                      toggled={getToggledValue(type.id)}
                       size="sm"
-                      value={type.id}
                     />
                   )}
                 </div>
@@ -402,10 +401,10 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
           [styles.desktop]: !isTablet,
         })}
       >
-        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+        <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
           {getCoreTranslation('cancel')}
         </Button>
-        <Button type="submit" className={styles.button} onClick={addStockUserRole} renderIcon={Save}>
+        <Button type="submit" className={styles.button} renderIcon={Save}>
           {getCoreTranslation('save')}
         </Button>
       </ButtonSet>

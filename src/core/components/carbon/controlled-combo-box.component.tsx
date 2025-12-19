@@ -1,31 +1,34 @@
 import React from 'react';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
-import { ComboBox } from '@carbon/react';
+import { ComboBox, type ComboBoxProps } from '@carbon/react';
 
-interface ControlledComboBoxProps<T> {
+interface ControlledComboBoxProps<T, ItemType>
+  extends Omit<ComboBoxProps<ItemType>, 'onChange' | 'id' | 'ref' | 'value'> {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
   onChange?: (e: { selectedItem: never }) => void;
 }
 
-const ControlledComboBox = <T,>(props: ControlledComboBoxProps<T>) => {
+const ControlledComboBox = <T, ItemType = unknown>(props: ControlledComboBoxProps<T, ItemType>) => {
+  const { controllerName, name, control, onChange: onChangeProp, ...comboBoxProps } = props;
+
   return (
     <Controller
-      name={props.controllerName}
-      control={props.control}
+      name={controllerName}
+      control={control}
       render={({ field: { onChange, value, ref } }) => (
         <ComboBox
-          {...props}
+          {...comboBoxProps}
           onChange={(e: { selectedItem: never }) => {
             onChange(e);
 
             // Fire prop change
-            if (props.onChange) {
-              props.onChange(e);
+            if (onChangeProp) {
+              onChangeProp(e);
             }
           }}
-          id={props.name}
+          id={name}
           ref={ref}
           value={value}
         />

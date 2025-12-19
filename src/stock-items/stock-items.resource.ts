@@ -10,8 +10,7 @@ import { type StockItemReference, type StockItemReferenceDTO } from '../core/api
 import { type StockItemTransactionDTO } from '../core/api/types/stockItem/StockItemTransaction';
 import { type StockRule } from '../core/api/types/stockItem/StockRule';
 import { type StockOperationItemCost } from '../core/api/types/stockOperation/StockOperationItemCost';
-import { z } from 'zod';
-import { stockItemDetailsSchema, type StockItemFormData } from './validationSchema';
+import { type StockItemFormData } from './validationSchema';
 
 export interface StockItemFilter extends ResourceFilterCriteria {
   isDrug?: string | null | undefined;

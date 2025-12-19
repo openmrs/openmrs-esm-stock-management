@@ -1,5 +1,5 @@
-import { ComboBox, InlineNotification, SelectSkeleton, Column, TextInput } from '@carbon/react';
 import React, { useEffect } from 'react';
+import { ComboBox, InlineNotification, SelectSkeleton, Column, TextInput } from '@carbon/react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type User } from '../../../core/api/types/identity/User';
@@ -68,10 +68,10 @@ const UsersSelector = () => {
                   ? otherUser
                   : ''
               }
-              itemToString={(item) => item?.person?.display || ''}
+              itemToString={(item) => (typeof item === 'string' ? item : item?.person?.display || '')}
               onInputChange={debouncedSearch}
-              placeholder={t('filter', 'Filter ...')}
-              invalid={error?.message}
+              placeholder={t('filter', 'Filter...')}
+              invalid={!!error?.message}
               invalidText={error?.message}
               ref={field.ref}
             />
@@ -93,8 +93,8 @@ const UsersSelector = () => {
                 name="responsiblePersonOther"
                 size="lg"
                 labelText={t('responsiblePerson', 'Responsible Person')}
-                placeholder={t('pleaseSpecify', 'Please Specify')}
-                invalid={error?.message}
+                placeholder={t('pleaseSpecify', 'Please specify')}
+                invalid={!!error?.message}
                 invalidText={error?.message}
               />
             )}

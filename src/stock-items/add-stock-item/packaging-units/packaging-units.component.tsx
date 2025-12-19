@@ -24,6 +24,7 @@ import { useStockItemPackageUnitsHook } from './packaging-units.resource';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input.component';
 import DeletePackagingUnitActionButton from './delete-packaging-unit-action-button.component';
 import PackagingUnitsConceptSelector from '../packaging-units-concept-selector/packaging-units-concept-selector.component';
+import { type CustomTableHeader, type CustomTableRow } from '../../../core/components/table/types';
 import styles from './packaging-units.scss';
 
 interface PackagingUnitsProps {
@@ -57,7 +58,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid, handleTa
   }, [items]);
 
   const { t } = useTranslation();
-  const tableHeaders = useMemo(
+  const tableHeaders = useMemo<CustomTableHeader[]>(
     () => [
       {
         key: 'packaging',
@@ -189,27 +190,40 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid, handleTa
   return (
     <FormProvider {...packageUnitForm}>
       <DataTable
-        rows={[...items, {}]}
-        headers={tableHeaders}
+        rows={
+          [
+            ...items.map((item, idx) => ({ ...item, id: item.uuid || `item-${idx}` })),
+            { id: 'new-row' },
+          ] as CustomTableRow[]
+        }
+        headers={tableHeaders as any}
         isSortable={false}
-        useZebraStyles={true}
-        render={({ headers, getHeaderProps, getTableProps }) => (
+        useZebraStyles
+      >
+        {({ headers, getHeaderProps, getTableProps }) => (
           <TableContainer className={styles.packagingTableContainer}>
             <Table {...getTableProps()} className={styles.packingTable}>
               <TableHead>
                 <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader
-                      {...getHeaderProps({
-                        header,
-                        isSortable: false,
-                      })}
-                      style={header.styles}
-                      key={header.key}
-                    >
-                      {header.header?.content ?? header.header}
-                    </TableHeader>
-                  ))}
+                  {headers.map((header) => {
+                    const customHeader = header as CustomTableHeader;
+                    return (
+                      <TableHeader
+                        {...getHeaderProps({
+                          header,
+                          isSortable: false,
+                        })}
+                        style={customHeader.styles}
+                        key={header.key}
+                      >
+                        {typeof customHeader.header === 'object' &&
+                        customHeader.header !== null &&
+                        'content' in customHeader.header
+                          ? (customHeader.header.content as React.ReactNode)
+                          : (customHeader.header as React.ReactNode)}
+                      </TableHeader>
+                    );
+                  })}
                   <TableHeader style={{ width: '70%' }} />
                 </TableRow>
               </TableHead>
@@ -232,7 +246,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid, handleTa
             </Table>
           </TableContainer>
         )}
-      />
+      </DataTable>
       <div className={styles.packageUnitsBtn}>
         <Button kind="secondary" onClick={handleCancelPackagingUnits}>
           {getCoreTranslation('cancel')}

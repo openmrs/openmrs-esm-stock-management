@@ -22,7 +22,10 @@ const DeleteStockUserScopeModal: React.FC<DeleteStockUserScopeModalProps> = ({ c
       </ModalHeader>
       <ModalBody>
         <p className={styles.bodyLong01}>
-          {t('deleteConfirmationText', "Are you sure you want to delete this User Scope? This action can't be undone.")}
+          {t(
+            'deleteUserScopeConfirmation',
+            "Are you sure you want to delete this User Scope? This action can't be undone.",
+          )}
         </p>
       </ModalBody>
       <ModalFooter>

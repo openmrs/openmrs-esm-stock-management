@@ -101,7 +101,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                   <>
                     <TextInput
                       id="location"
-                      labelText={t('location', 'Location Name')}
+                      labelText={t('locationName', 'Location name')}
                       placeholder={t('locationPlaceholder', 'Add a location')}
                       invalidText={fieldState.error?.message}
                       {...field}
@@ -116,11 +116,16 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
                   render={({ field }) => (
                     <FilterableMultiSelect
                       id="tag"
-                      titleText={t('selectTags', 'Select tag(s)')}
-                      helperText="This is helper text"
+                      titleText={t('selectTags', 'Select tags')}
+                      helperText={t('selectTagsHelper', 'Select one or more tags for this location')}
                       items={Tags ?? []}
                       {...field}
-                      itemToString={(item) => (item ? item.display : '')}
+                      itemToString={(item) => {
+                        if (item && typeof item === 'object' && 'display' in item) {
+                          return (item as { display: string }).display;
+                        }
+                        return '';
+                      }}
                       selectionFeedback="top-after-reopen"
                     />
                   )}

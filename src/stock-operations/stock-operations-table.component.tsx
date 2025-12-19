@@ -148,16 +148,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
   }
 
   return (
-    <div>
+    <>
       <h2 className={styles.tableHeader}>
         {t('stockOperationsTableHeader', 'Stock operations to track movement of stock.')}
       </h2>
-      <DataTable
-        headers={tableHeaders}
-        isSortable
-        rows={tableRows}
-        useZebraStyles
-        render={({
+      <DataTable headers={tableHeaders} isSortable rows={tableRows} useZebraStyles>
+        {({
           expandRow,
           getExpandedRowProps,
           getHeaderProps,
@@ -190,8 +186,16 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     onChange={([startDate, endDate]) => handleDateFilterChange([startDate, endDate])}
                     value={[selectedFromDate, selectedToDate]}
                   >
-                    <DatePickerInput labelText={t('startDate', 'Start date')} placeholder={DATE_PICKER_FORMAT} />
-                    <DatePickerInput labelText={t('endDate', 'End date')} placeholder={DATE_PICKER_FORMAT} />
+                    <DatePickerInput
+                      id="stock-operations-start-date"
+                      labelText={t('startDate', 'Start date')}
+                      placeholder={DATE_PICKER_FORMAT}
+                    />
+                    <DatePickerInput
+                      id="stock-operations-end-date"
+                      labelText={t('endDate', 'End date')}
+                      placeholder={DATE_PICKER_FORMAT}
+                    />
                   </DatePicker>
                   <StockOperationsFilters filterName={StockFilters.SOURCES} onFilterChange={handleOnFilterChange} />
                   <StockOperationsFilters filterName={StockFilters.STATUS} onFilterChange={handleOnFilterChange} />
@@ -274,12 +278,12 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
             ) : null}
             {Boolean(filterApplied && isLoading) && (
               <div className={styles.rowLoadingContainer}>
-                <InlineLoading description={t('loading', 'Loading...')} />
+                <InlineLoading description={t('loadingPlaceholder', 'Loading...')} />
               </div>
             )}
           </TableContainer>
         )}
-      ></DataTable>
+      </DataTable>
       {items.length > 0 && (
         <Pagination
           page={currentPage}
@@ -297,7 +301,7 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
           className={styles.paginationOverride}
         />
       )}
-    </div>
+    </>
   );
 };
 

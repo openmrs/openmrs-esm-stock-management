@@ -53,7 +53,7 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({ stockItem, closeWorkspa
       disabled: !isEditing,
     },
     {
-      name: t('stockRules', 'Rules'),
+      name: t('rules', 'Rules'),
       component: <StockItemRules stockItemUuid={stockItem?.uuid} />,
       disabled: !isEditing,
     },

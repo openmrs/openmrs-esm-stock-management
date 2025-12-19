@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import {
   Button,
   ButtonSet,
@@ -9,12 +10,11 @@ import {
   Stack,
   TextInput,
 } from '@carbon/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useConfig, useLayoutType } from '@openmrs/esm-framework';
 import classNames from 'classnames';
-import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useConfig, useLayoutType } from '@openmrs/esm-framework';
 import { type z } from 'zod';
 import { type ConfigObject } from '../../../config-schema';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
@@ -48,7 +48,8 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
   const { useItemCommonNameAsDisplay } = useConfig<ConfigObject>();
 
   const fields = formSchema.keyof().options;
-  const form = useForm<z.infer<typeof formSchema>>({
+  type FormData = z.infer<typeof formSchema>;
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: stockOperationItem,
     mode: 'all',
@@ -77,21 +78,21 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
         <p className={styles.title}>{useItemCommonNameAsDisplay ? commonName : drugName}</p>
 
         {(operationTypePermision.requiresActualBatchInfo || operationTypePermision.requiresBatchUuid) &&
-          fields.includes('batchNo' as any) && (
+          fields.includes('batchNo' as keyof FormData) && (
             <Column>
               <Controller
                 control={form.control}
                 defaultValue={stockOperationItem?.batchNo}
-                name={'batchNo' as any}
+                name={'batchNo' as keyof FormData}
                 render={({ field, fieldState: { error } }) => (
                   <TextInput
-                    label={t('qty', 'Qty')}
                     maxLength={50}
                     {...field}
+                    value={String(field.value ?? '')}
                     invalidText={error?.message}
-                    invalid={error?.message}
-                    placeholder={t('batchNumber', 'Batch Number')}
-                    labelText={t('batchNumber', 'Batch Number')}
+                    invalid={!!error?.message}
+                    placeholder={t('batchNumber', 'Batch number')}
+                    labelText={t('batchNumber', 'Batch number')}
                     id="batchNumber"
                   />
                 )}
@@ -103,7 +104,7 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
           <Column>
             <Controller
               control={form.control}
-              name={'stockBatchUuid' as any}
+              name={'stockBatchUuid' as keyof FormData}
               render={({ field, fieldState: { error } }) => (
                 <BatchNoSelector
                   initialValue={stockOperationItem?.stockBatchUuid}
@@ -116,37 +117,35 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
           </Column>
         )}
         {(operationTypePermision.requiresActualBatchInfo || operationTypePermision.requiresBatchUuid) &&
-          fields.includes('expiration' as any) && (
+          fields.includes('expiration' as keyof FormData) && (
             <Column>
               <Controller
                 control={form.control}
-                name={'expiration' as any}
-                render={({ field, fieldState: { error } }) => (
-                  <DatePicker
-                    id={`expiration`}
-                    datePickerType="single"
-                    minDate={formatForDatePicker(today())}
-                    locale="en"
-                    className={styles.datePickerInput}
-                    dateFormat={DATE_PICKER_CONTROL_FORMAT}
-                    value={field.value}
-                    name={field.name}
-                    disabled={field.disabled}
-                    onChange={([newDate]) => {
-                      field.onChange(newDate);
-                    }}
-                  >
-                    <DatePickerInput
-                      autoComplete="off"
-                      id={`expiration-input`}
-                      name="operationDate"
-                      placeholder={DATE_PICKER_FORMAT}
-                      labelText={t('expiriation', 'Expiration Date')}
-                      invalid={error?.message}
-                      invalidText={error?.message}
-                    />
-                  </DatePicker>
-                )}
+                name={'expiration' as keyof FormData}
+                render={({ field, fieldState: { error } }) => {
+                  const { value, onChange, onBlur, name, ref } = field;
+                  return (
+                    <DatePicker
+                      datePickerType="single"
+                      minDate={formatForDatePicker(today())}
+                      locale="en"
+                      className={styles.datePickerInput}
+                      dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                      value={(value as unknown as Date) || null}
+                      onChange={([newDate]) => {
+                        onChange(newDate);
+                      }}
+                    >
+                      <DatePickerInput
+                        id={`expiration-input`}
+                        placeholder={DATE_PICKER_FORMAT}
+                        labelText={t('expiration', 'Expiration date')}
+                        invalid={!!error?.message}
+                        invalidText={error?.message}
+                      />
+                    </DatePicker>
+                  );
+                }}
               />
             </Column>
           )}
@@ -163,9 +162,9 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
                 hideSteppers
                 id={`qty`}
                 {...field}
-                label={t('qty', 'Qty')}
+                label={t('quantity', 'Quantity')}
                 invalidText={error?.message}
-                invalid={error?.message}
+                invalid={!!error?.message}
               />
             )}
           />
@@ -185,21 +184,29 @@ const StockItemForm: React.FC<StockItemFormProps> = ({ stockOperationType, stock
           />
         </Column>
 
-        {operationTypePermision?.canCaptureQuantityPrice && fields.includes('purchasePrice' as any) && (
+        {operationTypePermision?.canCaptureQuantityPrice && fields.includes('purchasePrice' as keyof FormData) && (
           <Column>
             <Controller
               control={form.control}
-              name={'purchasePrice' as any}
-              render={({ field, fieldState: { error } }) => (
-                <TextInput
-                  {...field}
-                  labelText={t('purchasePrice', 'Purchase Price')}
-                  invalid={error?.message}
-                  invalidText={error?.message}
-                  id={`purchaseprice`}
-                  placeholder={t('purchasePrice', 'Purchase Price')}
-                />
-              )}
+              name={'purchasePrice' as keyof FormData}
+              render={({ field, fieldState: { error } }) => {
+                const { value, onChange, onBlur, disabled, name, ref } = field;
+                return (
+                  <TextInput
+                    value={String(value ?? '')}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    disabled={disabled}
+                    name={name}
+                    ref={ref}
+                    labelText={t('purchasePrice', 'Purchase Price')}
+                    invalid={!!error?.message}
+                    invalidText={error?.message}
+                    id={`purchaseprice`}
+                    placeholder={t('purchasePrice', 'Purchase Price')}
+                  />
+                );
+              }}
             />
           </Column>
         )}

@@ -107,10 +107,10 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error,
       itemToString={itemToString}
       name="stockBatchUuid"
       onChange={handleChange}
-      placeholder={`${t('filter', 'Filter')}...`}
+      placeholder={t('filterPlaceholder', 'Filter...')}
       selectedItem={initialSelectedItem}
       style={{ flexGrow: 1 }}
-      titleText={t('batchNo', 'Batch no.')}
+      titleText={t('batchNo', 'Batch number')}
     />
   );
 };

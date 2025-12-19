@@ -9,7 +9,7 @@ import {
 } from '@carbon/react';
 import { Add } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
-import { mutate } from 'swr';
+import { useSWRConfig } from 'swr';
 import { restBaseUrl } from '@openmrs/esm-framework';
 import { handleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
@@ -24,7 +24,7 @@ interface StockLocationsTableProps {
 
 const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
-
+  const { mutate } = useSWRConfig();
   const [showLocationModal, setAddLocationModal] = useState(false);
 
   const { tableHeaders, tableRows, items, isLoading } = useStockLocationPages({
@@ -69,7 +69,7 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   return (
     <div className={styles.tileContainer}>
       <Tile className={styles.tile}>
-        <p className={styles.content}>{t('noStockItemsToDisplay', 'No stock items to display')}</p>
+        <p className={styles.content}>{t('noLocationsToDisplay', 'No locations to display')}</p>
       </Tile>
     </div>
   );

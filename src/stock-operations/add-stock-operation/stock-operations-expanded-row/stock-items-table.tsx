@@ -1,3 +1,5 @@
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   DataTable,
   Pagination,
@@ -11,8 +13,6 @@ import {
   Tile,
 } from '@carbon/react';
 import { formatDate, parseDate, usePagination } from '@openmrs/esm-framework';
-import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { type StockOperationItemDTO } from '../../../core/api/types/stockOperation/StockOperationItemDTO';
 import styles from './stock-items-table.scss';
 
@@ -23,7 +23,7 @@ const StockItemsTable: React.FC<Props> = ({ items }) => {
   const { t } = useTranslation();
   const [pageSize, setPageSize] = useState(10);
   const pageSizesOptions = useMemo(() => [5, 10, 20, 50, 100], []);
-  const [searchText, setSearchText] = useState();
+  const [searchText, setSearchText] = useState<string>('');
 
   const handleSearch = (item: StockOperationItemDTO) => {
     if (!searchText) return true;
@@ -39,7 +39,7 @@ const StockItemsTable: React.FC<Props> = ({ items }) => {
         key: 'commonName',
       },
       {
-        header: t('batchNo', 'Batch No'),
+        header: t('batchNo', 'Batch number'),
         key: 'batchNo',
       },
       {
@@ -47,11 +47,11 @@ const StockItemsTable: React.FC<Props> = ({ items }) => {
         key: 'expiration',
       },
       {
-        header: t('qty', 'Qty'),
+        header: t('quantity', 'Quantity'),
         key: 'quantity',
       },
       {
-        header: t('uom', 'UoM'),
+        header: t('uom', 'Unit of Measurement'),
         key: 'stockItemPackagingUOMName',
       },
     ],
@@ -71,8 +71,12 @@ const StockItemsTable: React.FC<Props> = ({ items }) => {
   return (
     <Tile className={styles.container}>
       <span className={styles.title}>{t('stockItems', 'Stock items')}</span>
-      <Search value={searchText} onChange={({ target: { value } }) => setSearchText(value)} />
-      <DataTable useZebraStyles={true} rows={tableRows} headers={headers}>
+      <Search
+        labelText={t('search', 'Search')}
+        value={searchText}
+        onChange={({ target: { value } }) => setSearchText(value as string)}
+      />
+      <DataTable useZebraStyles rows={tableRows} headers={headers}>
         {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
           <Table {...getTableProps()}>
             <TableHead>

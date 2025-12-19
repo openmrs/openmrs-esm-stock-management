@@ -61,12 +61,12 @@ function StockUserRoleScopesItems() {
       },
       {
         id: 2,
-        header: t('location', 'Location(s)'),
+        header: t('locations', 'Locations'),
         key: 'locations',
       },
       {
         id: 3,
-        header: t('stockOperations', 'Stock Operations'),
+        header: t('stockOperations', 'Stock operations'),
         key: 'stockOperations',
       },
       {
@@ -76,7 +76,7 @@ function StockUserRoleScopesItems() {
       },
       {
         id: 5,
-        header: t('ActiveFrom', 'Active From '),
+        header: t('activeFrom', 'Active From'),
         key: 'activeFrom',
       },
       {
@@ -86,7 +86,7 @@ function StockUserRoleScopesItems() {
       },
       {
         id: 7,
-        header: t('enabled', 'Enabled ?'),
+        header: t('enabled', 'Enabled'),
         key: 'enabled',
       },
       {
@@ -111,7 +111,7 @@ function StockUserRoleScopesItems() {
             `${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`
           ) : (
             <Link
-              to={URL_USER_ROLE_SCOPE(userRoleScope?.uuid)}
+              href={URL_USER_ROLE_SCOPE(userRoleScope?.uuid)}
             >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
           ),
 
@@ -164,12 +164,8 @@ function StockUserRoleScopesItems() {
           'To access stock management features, users must have assigned roles specifying location and stock operation type scopes.',
         )}
       </h2>
-      <DataTable
-        headers={tableHeaders}
-        isSortable
-        rows={tableRows ?? []}
-        useZebraStyles
-        render={({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
+      <DataTable headers={tableHeaders} isSortable rows={tableRows ?? []} useZebraStyles>
+        {({ rows, headers, getHeaderProps, getTableProps, getRowProps, onInputChange }) => (
           <TableContainer>
             <TableToolbar
               style={{
@@ -238,7 +234,7 @@ function StockUserRoleScopesItems() {
             ) : null}
           </TableContainer>
         )}
-      ></DataTable>
+      </DataTable>
       <Pagination
         page={currentPage}
         pageSize={currentPageSize}

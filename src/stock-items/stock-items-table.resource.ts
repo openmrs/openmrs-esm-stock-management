@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePagination } from '@openmrs/esm-framework';
 import { type StockItemFilter, useStockItems } from './stock-items.resource';

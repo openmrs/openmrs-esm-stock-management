@@ -49,11 +49,11 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
         if (response?.data) {
           showSnackbar({
             isLowContrast: true,
-            title: stockItem ? `${t('editStockItem', 'Edit Stock Item')}` : `${t('addStockItem', 'Add Stock Item')}`,
+            title: stockItem ? `${t('editStockItem', 'Edit stock item')}` : `${t('addStockItem', 'Add stock item')}`,
             kind: 'success',
             subtitle: stockItem
-              ? `${t('stockItemEdited', 'Stock Item Edited Successfully')}`
-              : `${t('stockItemAdded', 'Stock Item Added Successfully')}`,
+              ? `${t('stockItemEdited', 'Stock item edited successfully')}`
+              : `${t('stockItemAdded', 'Stock item added successfully')}`,
           });
           if (!stockItem) {
             onCloseWorkspace?.();
@@ -91,8 +91,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
           {!stockItem && (
             <FormGroup
               className="clear-margin-bottom"
-              legendText={t('itemType', 'Item Type')}
-              title={t('itemType', 'Item Type')}
+              legendText={t('itemType', 'Item type')}
+              title={t('itemType', 'Item type')}
             >
               <ControlledRadioButtonGroup
                 control={control}
@@ -110,8 +110,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               name="drugUuid"
               controllerName="drugUuid"
               control={control}
-              title={t('pleaseSpecify', 'Please specify:')}
-              placeholder="Choose a drug"
+              title={t('pleaseSpecify', 'Please specify')}
+              placeholder={t('chooseADrug', 'Choose a drug')}
               drugUuid={stockItem?.drugUuid}
               invalid={!!errors.drugUuid}
               invalidText={errors.drugUuid && errors?.drugUuid?.message}
@@ -121,7 +121,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               name="conceptUuid"
               controllerName="conceptUuid"
               control={control}
-              title={t('pleaseSpecify', 'Please specify') + ':'}
+              title={t('pleaseSpecify', 'Please specify')}
               placeholder={t('chooseAnItem', 'Choose an item')}
               invalid={!!errors.drugUuid}
               invalidText={errors.drugUuid && errors?.drugUuid?.message}
@@ -174,7 +174,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
             </FormGroup>
 
             {observableHasExpiration && (
-              <FormGroup className="clear-margin-bottom" title={t('expirationNotice', 'Expiration Notice (days)')}>
+              <FormGroup className="clear-margin-bottom" legendText={t('expirationNotice', 'Expiration Notice (days)')}>
                 <ControlledNumberInput
                   id="expiryNotice"
                   name="expiryNotice"
@@ -221,7 +221,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               name="dispensingUnitUuid"
               controllerName="dispensingUnitUuid"
               control={control}
-              title={t('dispensingUnit', 'Dispensing Unit') + ':'}
+              title={t('dispensingUnit', 'Dispensing unit') + ':'}
               placeholder={t('dispensingUnitHolder', 'Choose a dispensing unit')}
               invalid={!!errors.dispensingUnitUuid}
               invalidText={errors.dispensingUnitUuid && errors?.dispensingUnitUuid?.message}

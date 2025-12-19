@@ -76,7 +76,11 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ 
         inventoryFilter.groupBy = 'LocationStockItem';
         inventoryFilter.includeStockItemName = 'true';
 
-        inventoryFilter.date = (parentOperation?.dateCreated ?? operation?.dateCreated) as any;
+        inventoryFilter.date = parentOperation?.dateCreated
+          ? new Date(parentOperation.dateCreated).toISOString()
+          : operation?.dateCreated
+          ? new Date(operation.dateCreated).toISOString()
+          : null;
         // get stock item inventory
         const res = await getStockItemInventory(inventoryFilter);
         itemInventory = res.data?.results;
@@ -119,7 +123,7 @@ const StockOperationPrintButton: React.FC<StockOperationCancelButtonProps> = ({ 
       renderIcon={(props) => <Printer size={16} {...props} />}
     >
       {loading || isLoading ? (
-        <InlineLoading description={t('loading', 'Loading') + '...'} iconDescription={t('loading', 'Loading')} />
+        <InlineLoading description={t('loadingPlaceholder', 'Loading...')} iconDescription={t('loading', 'Loading')} />
       ) : (
         t('print', 'Print')
       )}

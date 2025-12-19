@@ -1,11 +1,11 @@
 import React, { type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { type Concept } from '../../../core/api/types/concept/Concept';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
+import { useConfig } from '@openmrs/esm-framework';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 import { type ConfigObject } from '../../../config-schema';
-import { useConfig } from '@openmrs/esm-framework';
-import { useTranslation } from 'react-i18next';
 
 interface StockItemCategorySelectorProps<T> {
   categoryUuid?: string;
@@ -42,9 +42,6 @@ const StockItemCategorySelector = <T,>(props: StockItemCategorySelectorProps<T>)
       render={({ field: { onChange, value, ref } }) => (
         <ComboBox
           titleText={props.title}
-          name={props.name}
-          control={props.control}
-          controllerName={props.controllerName}
           id={props.name}
           size={'md'}
           items={filteredCategories || []}

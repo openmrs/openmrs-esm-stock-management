@@ -1,8 +1,8 @@
+import React, { useCallback, useEffect } from 'react';
 import { ButtonSkeleton, OverflowMenu, OverflowMenuItem } from '@carbon/react';
 import { OverflowMenuVertical } from '@carbon/react/icons';
-import { showSnackbar } from '@openmrs/esm-framework';
-import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { showSnackbar } from '@openmrs/esm-framework';
 import { OperationType, type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
@@ -24,7 +24,7 @@ const StockOperationTypesSelector = () => {
     if (error) {
       showSnackbar({
         kind: 'error',
-        title: t('stockOperationError', 'Error loading stock operation types'),
+        title: t('stockOperationTypesError', 'Error loading stock operation types'),
         subtitle: error?.message,
       });
     }
@@ -42,7 +42,7 @@ const StockOperationTypesSelector = () => {
           <OverflowMenuVertical size={16} />
         </>
       )}
-      menuOffset={{ right: '-100px' }}
+      menuOffset={{ top: 0, left: -100 }}
       style={{
         backgroundColor: '#007d79',
         backgroundImage: 'none',

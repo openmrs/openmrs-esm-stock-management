@@ -1,12 +1,12 @@
-import { IconButton, InlineLoading } from '@carbon/react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Button, InlineLoading } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 import { showSnackbar } from '@openmrs/esm-framework';
-import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
-import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 import { useStockOperationAndItems } from '../stock-operations.resource';
+import useFilteredOperationTypesByRoles from '../stock-operations-forms/hooks/useFilteredOperationTypesByRoles';
 import styles from './edit-stock-operation-button.scss';
 
 interface EditStockOperationActionMenuProps {
@@ -51,7 +51,7 @@ const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> 
     if (operationTypesError || stockOperationError) {
       showSnackbar({
         kind: 'error',
-        title: t('stockOperationError', 'Error loading stock operation'),
+        title: t('stockOperationLoadError', 'Error loading stock operation'),
         subtitle: operationTypesError?.message || stockOperationError?.message || '',
       });
     }
@@ -66,16 +66,15 @@ const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> 
   }
 
   return (
-    <IconButton
+    <Button
       className={styles.editStockButton}
       kind="ghost"
       size="sm"
       onClick={handleLaunchWorkspace}
-      label={t('editStockOperation', 'Edit Stock Operation')}
       renderIcon={showIcon ? () => <Edit size={16} /> : undefined}
     >
       {showprops && <span className={styles.operationNumberText}>{fetchedStockOperation?.operationNumber}</span>}
-    </IconButton>
+    </Button>
   );
 };
 

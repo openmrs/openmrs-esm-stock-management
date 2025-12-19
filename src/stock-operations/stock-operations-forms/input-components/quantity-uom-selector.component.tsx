@@ -24,7 +24,7 @@ const QtyUomSelector: React.FC<QtyUomSelectorProps> = ({ stockItemUuid, error, i
     }
   }, [initialSelectedItem, onValueChange]);
 
-  if (isLoading) return <SkeletonText role="progressbar" />;
+  if (isLoading) return <SkeletonText />;
 
   if (stockItemError)
     return (
@@ -49,8 +49,8 @@ const QtyUomSelector: React.FC<QtyUomSelectorProps> = ({ stockItemUuid, error, i
       onChange={(data: { selectedItem?: StockItemPackagingUOMDTO }) => {
         onValueChange?.(data.selectedItem?.uuid);
       }}
-      placeholder={t('filter', 'Filter') + '...'}
-      titleText={t('quantityUom', 'Qty UoM')}
+      placeholder={t('filterPlaceholder', 'Filter...')}
+      titleText={t('quantityUom', 'Quantity unit of measurement')}
     />
   );
 };

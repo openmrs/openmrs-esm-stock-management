@@ -34,9 +34,9 @@ const DeletePackagingUnitModal: React.FC<DeletePackagingUnitModalProps> = ({ row
         closeModal();
         showSnackbar({
           isLowContrast: true,
-          title: t('deletePackagingUnitTitle', 'Delete packing item'),
+          title: t('deletePackingItem', 'Delete packing item'),
           kind: 'success',
-          subtitle: t('deletePackagingUnitMesaage', 'Stock Item packing unit deleted Successfully'),
+          subtitle: t('deletePackagingUnitMessage', 'Stock item packing unit deleted successfully'),
         });
       },
       (error) => {

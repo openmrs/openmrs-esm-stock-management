@@ -1,15 +1,15 @@
-import { Button, Form, Select, TextInput, SelectItem, ButtonSet, FormGroup, Stack } from '@carbon/react';
 import React, { type ChangeEvent, useCallback, useState } from 'react';
 import classNames from 'classnames';
+import { Button, Form, Select, TextInput, SelectItem, ButtonSet, FormGroup, Stack } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { Save } from '@carbon/react/icons';
 import {
   getCoreTranslation,
   restBaseUrl,
   showSnackbar,
-  type DefaultWorkspaceProps,
   useConfig,
   useLayoutType,
+  type DefaultWorkspaceProps,
 } from '@openmrs/esm-framework';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
@@ -62,8 +62,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
               isLowContrast: true,
               title: t('addedSource', 'Add Source'),
               kind: 'success',
-              subtitle: t('stockSourceAddedSuccessfully', 'Stock Source Added Successfully'),
-              timeoutInMs: 5000,
+              subtitle: t('stockSourceAddedSuccessfully', 'Stock source added successfully'),
             });
 
             handleMutate(`${restBaseUrl}/stockmanagement/stocksource`);
@@ -84,6 +83,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
     },
     [formModel, model, t, closeWorkspace],
   );
+
   return (
     <Form className={styles.container}>
       <Stack className={styles.form} gap={5}>
@@ -112,7 +112,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
         <Select
           name="sourceType"
           className="select-field"
-          labelText={t('sourceType', 'Source Type')}
+          labelText={t('sourceType', 'Source type')}
           id="sourceType"
           value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
           onChange={onSourceTypeChange}
@@ -129,7 +129,7 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
           [styles.desktop]: !isTablet,
         })}
       >
-        <Button kind="secondary" onClick={closeWorkspace} className={styles.button}>
+        <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
           {getCoreTranslation('cancel')}
         </Button>
         <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>

@@ -109,7 +109,9 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
         <ModalBody>
           <div className={styles.modalBody}>
             <section className={styles.section}>
-              <h5 className={styles.section}>Would you really like to {title} the operation ?</h5>
+              <h5 className={styles.section}>
+                {t('confirmOperation', 'Would you really like to {{title}} the operation?', { title })}
+              </h5>
             </section>
             <br />
             {requireReason && (
@@ -118,7 +120,7 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
                   labelText={t('notes', 'Please explain the reason:')}
                   id="nextNotes"
                   name="nextNotes"
-                  invalidText="Required"
+                  invalidText={t('required', 'Required')}
                   maxCount={500}
                   enableCounter
                   onChange={(e) => setNotes(e.target.value)}
