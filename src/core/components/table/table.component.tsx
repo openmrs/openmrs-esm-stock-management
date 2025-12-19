@@ -86,11 +86,6 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
     saveAs(jsonBlob, 'data.json');
   };
 
-  const handleExportPDF = () => {
-    // PDF export functionality can be implemented here when needed
-    console.warn('PDF export not yet implemented');
-  };
-
   const convertToCSV = (data, columns) => {
     const header = columns.map((col) => col.header).join(',');
     const rows = data.map((row) => columns.map((col) => JSON.stringify(row[col.key])).join(','));
@@ -136,11 +131,6 @@ const DataList: React.FC<ListProps> = ({ columns, data, children, totalItems, go
                             className={styles.menuItem}
                             itemText={t('downloadAsCSV', 'Download As CSV')}
                             onClick={handleExportCSV}
-                          />
-                          <OverflowMenuItem
-                            className={styles.menuItem}
-                            itemText={t('downloadAsPDF', 'Download as PDF')}
-                            onClick={handleExportPDF}
                           />
                           <OverflowMenuItem
                             className={styles.menuItem}
