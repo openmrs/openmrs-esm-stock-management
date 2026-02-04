@@ -8,6 +8,7 @@ import {
   openmrsFetch,
   useSession,
   restBaseUrl,
+  useFhirFetchAll,
 } from '@openmrs/esm-framework';
 import { type Concept } from '../core/api/types/concept/Concept';
 import { type Drug } from '../core/api/types/concept/Drug';
@@ -54,13 +55,10 @@ export function useStockLocations(filter: LocationFilterCriteria) {
 */
 export function useStockTagLocations() {
   const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary `;
-  const { data, error, isLoading } = useSWR<{ data: FHIRResponse }>(apiUrl, openmrsFetch);
-  const stockLocations = useMemo(
-    () => data?.data?.entry?.map((response) => response.resource) ?? [],
-    [data?.data?.entry],
-  );
+  const { data, error, isLoading } = useFhirFetchAll<fhir.Location>(apiUrl);
+
   return {
-    stockLocations: uniqBy(stockLocations, 'id') ?? [],
+    stockLocations: uniqBy(data, 'id') ?? [],
     isLoading,
     error,
   };
