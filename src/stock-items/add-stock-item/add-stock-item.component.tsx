@@ -66,7 +66,7 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({ stockItem, closeWorkspa
 
   return (
     <StockOperationStepper
-      steps={tabs.map((tab, index) => ({
+      steps={tabs.map((tab) => ({
         title: tab.name,
         component: tab.component,
         disabled: tab.disabled,

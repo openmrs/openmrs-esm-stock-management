@@ -21,7 +21,7 @@ const ControlledComboBox = <T, ItemType = unknown>(props: ControlledComboBoxProp
         <ComboBox
           {...comboBoxProps}
           onChange={(e: { selectedItem: never }) => {
-            onChange(e);
+            onChange(e.selectedItem);
 
             // Fire prop change
             if (onChangeProp) {

@@ -17,7 +17,7 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useStockItemReferencesHook } from './stock-item-references.resource';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type StockItemReferenceData } from './validation-schema';
-import { stockItemDetailsSchema } from '../../validationSchema';
+import { createStockItemDetailsSchema } from '../../validationSchema';
 import { type StockItemReferenceDTO } from '../../../core/api/types/stockItem/StockItemReference';
 import { createStockItemReference, deleteStockItemReference } from '../../stock-items.resource';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
@@ -67,7 +67,7 @@ const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
   const stockReferenceForm = useForm<StockItemReferenceData>({
     defaultValues: {},
     mode: 'all',
-    resolver: zodResolver(stockItemDetailsSchema),
+    resolver: zodResolver(createStockItemDetailsSchema(t)),
   });
 
   const handleSaveStockItemReference = () => {
