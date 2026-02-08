@@ -93,7 +93,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   /* Only load locations tagged to perform stock related activities.
      Unless a location is tag as main store, main pharmacy or dispensing, it will not be listed here.
    */
-  const { stockLocations } = useStockTagLocations();
+  const { stockLocations, isLoading: isLoadingStockLocations } = useStockTagLocations();
   const onEnabledChanged = (): void => {
     const isEnabled = !formModel?.enabled;
     setFormModel({ ...formModel, enabled: isEnabled });
@@ -245,7 +245,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
     );
   };
 
-  if (isLoading || loadingRoles || loadingUsers) {
+  if (isLoading || loadingRoles || loadingUsers || isLoadingStockLocations) {
     return (
       <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
     );
