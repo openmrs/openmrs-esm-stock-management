@@ -10,7 +10,7 @@ import { createStockItem, updateStockItem } from '../../stock-items.resource';
 import { expirationOptions, radioOptions, StockItemType } from './stock-item-details.resource';
 import { handleMutate } from '../../../utils';
 import { launchAddOrEditStockItemWorkspace } from '../../stock-item.utils';
-import { stockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
+import { createStockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
 import { type StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
 import ConceptsSelector from '../concepts-selector/concepts-selector.component';
 import ControlledNumberInput from '../../../core/components/carbon/controlled-number-input.component';
@@ -37,7 +37,7 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
     const { handleSubmit, control, formState, watch } = useForm<StockItemFormData>({
       defaultValues: stockItem ?? {},
       mode: 'all',
-      resolver: zodResolver(stockItemDetailsSchema),
+      resolver: zodResolver(createStockItemDetailsSchema(t)),
     });
 
     const { errors } = formState;
@@ -112,7 +112,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               control={control}
               title={t('pleaseSpecify', 'Please specify')}
               placeholder={t('chooseADrug', 'Choose a drug')}
-              drugUuid={stockItem?.drugUuid}
+              initialDrugName={stockItem?.drugName ?? stockItem?.conceptName ?? undefined}
+              readOnly={!!stockItem}
               invalid={!!errors.drugUuid}
               invalidText={errors.drugUuid && errors?.drugUuid?.message}
             />
@@ -181,10 +182,10 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
                   control={control}
                   controllerName="expiryNotice"
                   min={0}
-                  hideSteppers={true}
-                  size={'md'}
-                  allowEmpty={true}
-                  label={t('expiryNoticeDays', 'Expiration Notice (days)')}
+                  hideSteppers
+                  size="md"
+                  allowEmpty
+                  label=""
                   invalid={!!errors.expiryNotice}
                   invalidText={errors.expiryNotice && errors?.expiryNotice?.message}
                 />

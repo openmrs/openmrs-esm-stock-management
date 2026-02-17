@@ -219,14 +219,14 @@ export function getParties(): Promise<FetchResponse<PageableResult<Party>>> {
 }
 
 // getDrugs
-export function useDrugs(filter: DrugFilterCriteria) {
+export function useDrugs(filter: DrugFilterCriteria, enabled = true) {
   const apiUrl = `${restBaseUrl}/drug${toQueryParams(filter)}`;
   const { data, error, isLoading } = useSWR<
     {
       data: PageableResult<Drug>;
     },
     Error
-  >(apiUrl, openmrsFetch);
+  >(enabled ? apiUrl : null, openmrsFetch);
   return {
     items: data?.data || <PageableResult<Drug>>{},
     isLoading,

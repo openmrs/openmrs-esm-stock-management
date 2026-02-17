@@ -49,7 +49,7 @@ const ConceptsSelector = <T,>(props: ConceptsSelectorProps<T>) => {
           items={filteredConcepts}
           itemToString={(item?: Concept) => item?.display ?? ''}
           name={props.name}
-          onChange={(data: { selectedItem: Concept | null }) => {
+          onChange={(data: { selectedItem: Concept | null | undefined }) => {
             if (data.selectedItem) {
               props.onConceptUuidChange?.(data.selectedItem);
               onChange(data.selectedItem.uuid);

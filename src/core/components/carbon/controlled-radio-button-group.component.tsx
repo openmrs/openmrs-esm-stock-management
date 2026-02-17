@@ -26,7 +26,8 @@ const ControlledRadioButtonGroup = <T,>(props: ControlledRadioButtonGroupProps<T
           {...radioGroupProps}
           name={name}
           onChange={(selectedValue: string, name: string, event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(selectedValue);
+            const matchedOption = options.find((option) => String(option.value) === selectedValue);
+            onChange(matchedOption ? matchedOption.value : selectedValue);
 
             // Fire prop change
             if (onChangeProp) {
@@ -36,7 +37,7 @@ const ControlledRadioButtonGroup = <T,>(props: ControlledRadioButtonGroupProps<T
           id={name}
           ref={ref}
           defaultSelected={propsId}
-          valueSelected={value}
+          valueSelected={value != null ? String(value) : value}
         >
           {options.map((option, index) => (
             <RadioButton
@@ -44,8 +45,6 @@ const ControlledRadioButtonGroup = <T,>(props: ControlledRadioButtonGroupProps<T
               id={`${name}-${option.value}`}
               labelText={option.label}
               value={String(option.value)}
-              checked={value === option.value}
-              onChange={() => onChange(option.value)}
             />
           ))}
         </RadioButtonGroup>

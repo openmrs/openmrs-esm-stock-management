@@ -1,7 +1,7 @@
 import { ResourceRepresentation } from '../../../core/api/api';
 import { type DrugFilterCriteria, useDrugs } from '../../../stock-lookups/stock-lookups.resource';
 
-export function useDrugsHook(searchTerm?: string, filter?: DrugFilterCriteria) {
+export function useDrugsHook(searchTerm?: string, filter?: DrugFilterCriteria, enabled = true) {
   const defaultFilters: DrugFilterCriteria = {
     v: ResourceRepresentation.Default,
     q: searchTerm,
@@ -12,7 +12,7 @@ export function useDrugsHook(searchTerm?: string, filter?: DrugFilterCriteria) {
   const {
     items: { results: drugList },
     isLoading,
-  } = useDrugs(drugsFilter);
+  } = useDrugs(drugsFilter, enabled);
 
   return {
     drugList,

@@ -9,22 +9,21 @@ interface ControlledNumberInputProps<T> extends NumberInputProps {
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
-  hideSteppers?: boolean;
 }
 
 const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
+  const { controllerName, name, control, row, onChange: onChangeProp, id, ...numberInputProps } = props;
+
   return (
     <Controller
-      name={props.controllerName}
-      control={props.control}
+      name={controllerName}
+      control={control}
       render={({ field: { onChange, value, ref } }) => (
         <NumberInput
           disableWheel
-          label={props.label}
-          id={`${props.name}-${props.id}-${props.row?.uuid}`}
-          value={props.row?.factor ?? value}
-          min={props.min}
-          hideSteppers={props.hideSteppers || false}
+          {...numberInputProps}
+          id={`${name}-${id}-${row?.uuid}`}
+          value={row?.factor ?? value}
           ref={ref}
           onChange={(
             event: React.MouseEvent<HTMLButtonElement>,
@@ -33,11 +32,10 @@ const ControlledNumberInput = <T,>(props: ControlledNumberInputProps<T>) => {
               direction: string;
             },
           ) => {
-            onChange(event, state);
+            onChange(state.value);
 
-            // Fire prop change if props.onChange is defined
-            if (props.onChange) {
-              props.onChange(event, state);
+            if (onChangeProp) {
+              onChangeProp(event, state);
             }
           }}
         />
