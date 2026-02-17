@@ -112,7 +112,8 @@ const StockItemDetails = forwardRef<never, StockItemDetailsProps>(
               control={control}
               title={t('pleaseSpecify', 'Please specify')}
               placeholder={t('chooseADrug', 'Choose a drug')}
-              drugUuid={stockItem?.drugUuid}
+              initialDrugName={stockItem?.drugName ?? stockItem?.conceptName ?? undefined}
+              readOnly={!!stockItem}
               invalid={!!errors.drugUuid}
               invalidText={errors.drugUuid && errors?.drugUuid?.message}
             />

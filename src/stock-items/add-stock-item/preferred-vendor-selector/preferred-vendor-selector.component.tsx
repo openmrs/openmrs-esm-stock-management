@@ -1,5 +1,4 @@
 import React, { type ReactNode } from 'react';
-import { type Concept } from '../../../core/api/types/concept/Concept';
 import { type Control, Controller, type FieldValues } from 'react-hook-form';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
 import { useStockSources } from '../../../stock-sources/stock-sources.resource';
@@ -7,8 +6,7 @@ import { ResourceRepresentation } from '../../../core/api/api';
 import { type StockSource } from '../../../core/api/types/stockOperation/StockSource';
 
 interface PreferredVendorSelectorProps<T> {
-  preferredVendorUuid?: string;
-  onPreferredVendorChange?: (unit: StockSource) => void;
+  onPreferredVendorChange?: (unit: StockSource | null | undefined) => void;
   title?: string;
   placeholder?: string;
   invalid?: boolean;
@@ -28,7 +26,9 @@ const PreferredVendorSelector = <T,>(props: PreferredVendorSelectorProps<T>) => 
     v: ResourceRepresentation.Default,
   });
 
-  if (isLoading) return <TextInputSkeleton />;
+  if (isLoading) {
+    return <TextInputSkeleton />;
+  }
 
   return (
     <Controller
@@ -40,14 +40,13 @@ const PreferredVendorSelector = <T,>(props: PreferredVendorSelectorProps<T>) => 
           id={props.name}
           size={'md'}
           items={sourcesList || []}
-          onChange={(data: { selectedItem: StockSource }) => {
+          onChange={(data: { selectedItem: StockSource | null | undefined }) => {
             props.onPreferredVendorChange?.(data.selectedItem);
             onChange(data.selectedItem?.uuid);
           }}
-          initialSelectedItem={sourcesList?.find((p) => p.uuid === props.preferredVendorUuid) || {}}
-          itemToString={(item?: Concept) => (item && item?.name ? `${item?.name}` : '')}
+          selectedItem={sourcesList?.find((p) => p.uuid === value) ?? null}
+          itemToString={(item?: StockSource) => (item?.name ? item.name : '')}
           shouldFilterItem={() => true}
-          value={sourcesList?.find((p) => p.uuid === value)?.name ?? ''}
           placeholder={props.placeholder}
           ref={ref}
           invalid={props.invalid}

@@ -1,6 +1,6 @@
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type Control, Controller, type FieldValues } from 'react-hook-form';
+import { type Control, type FieldValues, useController } from 'react-hook-form';
 import { type Concept } from '../../../core/api/types/concept/Concept';
 import { ComboBox, TextInputSkeleton } from '@carbon/react';
 import { useConfig } from '@openmrs/esm-framework';
@@ -8,8 +8,7 @@ import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 import { type ConfigObject } from '../../../config-schema';
 
 interface StockItemCategorySelectorProps<T> {
-  categoryUuid?: string;
-  onCategoryUuidChange?: (unit: Concept) => void;
+  onCategoryUuidChange?: (unit: Concept | null | undefined) => void;
   title?: string;
   placeholder?: string;
   invalid?: boolean;
@@ -33,32 +32,45 @@ const StockItemCategorySelector = <T,>(props: StockItemCategorySelectorProps<T>)
 
   const filteredCategories = props.itemType ? categories?.filter((c) => c.display === props?.itemType) : categories;
 
-  if (isLoading) return <TextInputSkeleton />;
+  const {
+    field: { onChange, value, ref },
+  } = useController({
+    name: props.controllerName,
+    control: props.control,
+  });
+
+  const prevItemTypeRef = useRef(props.itemType);
+
+  useEffect(() => {
+    if (prevItemTypeRef.current !== props.itemType && filteredCategories) {
+      prevItemTypeRef.current = props.itemType;
+      if (value && !filteredCategories.some((c) => c.uuid === value)) {
+        onChange('');
+      }
+    }
+  }, [props.itemType, filteredCategories, value, onChange]);
+
+  if (isLoading) {
+    return <TextInputSkeleton />;
+  }
 
   return (
-    <Controller
-      name={props.controllerName}
-      control={props.control}
-      render={({ field: { onChange, value, ref } }) => (
-        <ComboBox
-          titleText={props.title}
-          id={props.name}
-          size={'md'}
-          items={filteredCategories || []}
-          onChange={(data: { selectedItem: Concept }) => {
-            props.onCategoryUuidChange?.(data.selectedItem);
-            onChange(data.selectedItem?.uuid);
-          }}
-          initialSelectedItem={categories?.find((p) => p.uuid === props.categoryUuid) || {}}
-          itemToString={(item?: Concept) => (item && item?.display ? `${t(item?.display)}` : '')}
-          shouldFilterItem={() => true}
-          value={t(categories?.find((p) => p.uuid === value)?.display) ?? ''}
-          placeholder={props.placeholder}
-          ref={ref}
-          invalid={props.invalid}
-          invalidText={props.invalidText}
-        />
-      )}
+    <ComboBox
+      titleText={props.title}
+      id={props.name}
+      size={'md'}
+      items={filteredCategories || []}
+      onChange={(data: { selectedItem: Concept | null | undefined }) => {
+        props.onCategoryUuidChange?.(data.selectedItem);
+        onChange(data.selectedItem?.uuid);
+      }}
+      selectedItem={filteredCategories?.find((p) => p.uuid === value) ?? null}
+      itemToString={(item?: Concept) => (item && item?.display ? `${t(item?.display)}` : '')}
+      shouldFilterItem={() => true}
+      placeholder={props.placeholder}
+      ref={ref}
+      invalid={props.invalid}
+      invalidText={props.invalidText}
     />
   );
 };

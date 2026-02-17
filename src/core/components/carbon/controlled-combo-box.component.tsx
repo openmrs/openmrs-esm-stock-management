@@ -7,7 +7,7 @@ interface ControlledComboBoxProps<T, ItemType>
   controllerName: string;
   name: string;
   control: Control<FieldValues, T>;
-  onChange?: (e: { selectedItem: never }) => void;
+  onChange?: (e: { selectedItem: ItemType | null | undefined }) => void;
 }
 
 const ControlledComboBox = <T, ItemType = unknown>(props: ControlledComboBoxProps<T, ItemType>) => {
@@ -20,7 +20,7 @@ const ControlledComboBox = <T, ItemType = unknown>(props: ControlledComboBoxProp
       render={({ field: { onChange, value, ref } }) => (
         <ComboBox
           {...comboBoxProps}
-          onChange={(e: { selectedItem: never }) => {
+          onChange={(e: { selectedItem: ItemType | null | undefined }) => {
             onChange(e.selectedItem);
 
             // Fire prop change
