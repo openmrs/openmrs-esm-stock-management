@@ -137,7 +137,6 @@
   "expires": "ვადა",
   "expiringStock": "მარაგი, რომლის ვადაც მალე იწურება",
   "expiry": "ვადა",
-  "expiryNoticeDays": "ვადის ამოწურვის გაფრთხილება (დღე)",
   "filter": "ფილტრი...",
   "filterBy": "Filter by {{filterName}}",
   "filterByLocation": "გაფილტვრა მდებარეობით",
