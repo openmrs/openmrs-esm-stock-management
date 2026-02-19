@@ -33,12 +33,16 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   const [formModel, setFormModel] = useState<StockSource>({ ...model });
 
   const onNameChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.name = evt.target.value) : '';
+    if (model) {
+      model.name = evt.target.value;
+    }
     setFormModel({ ...formModel, name: evt.target.value });
   };
 
   const onAcronymChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.acronym = evt.target.value) : '';
+    if (model) {
+      model.acronym = evt.target.value;
+    }
     setFormModel({ ...formModel, acronym: evt.target.value });
   };
 

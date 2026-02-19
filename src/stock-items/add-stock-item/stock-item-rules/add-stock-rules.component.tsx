@@ -66,17 +66,23 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
   }, [model]);
 
   const onNameChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.name = evt.target.value) : '';
+    if (model) {
+      model.name = evt.target.value;
+    }
     setFormModel({ ...formModel, name: evt.target.value });
   };
 
   const onQuantityChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.quantity = Number(evt.target.value)) : '';
+    if (model) {
+      model.quantity = Number(evt.target.value);
+    }
     setFormModel({ ...formModel, quantity: Number(evt.target.value) });
   };
 
   const onEvaluationFrequencyChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.evaluationFrequency = Number(evt.target.value)) : '';
+    if (model) {
+      model.evaluationFrequency = Number(evt.target.value);
+    }
     setFormModel({
       ...formModel,
       evaluationFrequency: Number(evt.target.value),
@@ -84,7 +90,9 @@ const StockRulesAddOrUpdate: React.FC<AddStockRuleProps> = ({ model, stockItemUu
   };
 
   const onActionFrequencyChanged = (evt: React.ChangeEvent<HTMLInputElement>): void => {
-    model ? (model.actionFrequency = Number(evt.target.value)) : '';
+    if (model) {
+      model.actionFrequency = Number(evt.target.value);
+    }
     setFormModel({ ...formModel, actionFrequency: Number(evt.target.value) });
   };
 
