@@ -137,7 +137,6 @@
   "expires": "到期",
   "expiringStock": "即将过期的库存",
   "expiry": "过期",
-  "expiryNoticeDays": "到期通知（天）",
   "filter": "过滤器 ...",
   "filterBy": "Filter by {{filterName}}",
   "filterByLocation": "按位置过滤",

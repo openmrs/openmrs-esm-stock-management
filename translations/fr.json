@@ -137,7 +137,6 @@
   "expires": "Expire",
   "expiringStock": "Stock Expirant",
   "expiry": "Expiration",
-  "expiryNoticeDays": "Avis d'Expiration (jours)",
   "filter": "Filtrer ...",
   "filterBy": "Filter by {{filterName}}",
   "filterByLocation": "Filtrer par Emplacement",

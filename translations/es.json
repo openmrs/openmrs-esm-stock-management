@@ -137,7 +137,6 @@
   "expires": "Vence",
   "expiringStock": "Inventario por Vencer",
   "expiry": "Vencimiento",
-  "expiryNoticeDays": "Aviso de Vencimiento (días)",
   "filter": "Filtrar ...",
   "filterBy": "Filter by {{filterName}}",
   "filterByLocation": "Filtrar por Ubicación",
