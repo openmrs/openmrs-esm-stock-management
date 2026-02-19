@@ -82,8 +82,8 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
             title,
           }),
           kind: 'success',
-        }),
-          closeModal();
+        });
+        closeModal();
         handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);
       },
       (err) => {
@@ -96,8 +96,8 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
             message,
           }),
           kind: 'error',
-        }),
-          closeModal();
+        });
+        closeModal();
       },
     );
   };
