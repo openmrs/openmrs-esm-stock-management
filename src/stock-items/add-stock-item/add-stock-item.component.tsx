@@ -29,7 +29,12 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({ stockItem, closeWorkspa
     {
       name: t('stockItemDetails', 'Stock Item Details'),
       component: (
-        <StockItemDetails handleTabChange={handleTabChange} stockItem={stockItem} onCloseWorkspace={closeWorkspace} />
+        <StockItemDetails
+          key={stockItem?.uuid}
+          handleTabChange={handleTabChange}
+          stockItem={stockItem}
+          onCloseWorkspace={closeWorkspace}
+        />
       ),
     },
     {
