@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "outputs": ["dist"]
+    },
+    "extract-translations": {
+      "outputs": ["./translations"]
+    },
+    "lint": {},
+    "test": {},
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "coverage": {
+      "outputs": ["coverage/**"]
+    },
+    "typescript": {},
+    "verify": {}
+  }
+}
