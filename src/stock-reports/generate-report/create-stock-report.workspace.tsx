@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
+import { debounce } from 'lodash-es';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -22,6 +23,7 @@ import {
   type ConfigObject,
   type DefaultWorkspaceProps,
   getCoreTranslation,
+  openmrsFetch,
   restBaseUrl,
   showSnackbar,
   useConfig,
@@ -42,8 +44,11 @@ import { createBatchJob } from '../../stock-batch/stock-batch.resource';
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
 import { handleMutate } from '../../utils';
 import { type Concept } from '../../core/api/types/concept/Concept';
+import { type Patient } from '../../core/api/types/identity/Patient';
+import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { type StockReportSchema, reportSchema } from '../report-validation-schema';
-import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
+import { useConcept, usePatients, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
+import { type ResourceFilterCriteria, ResourceRepresentation } from '../../core/api/api';
 import { useReportTypes } from '../stock-reports.resource';
 import styles from './create-stock-report.scss';
 
@@ -105,6 +110,12 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   const [displayFulfillment, setDisplayFulfillment] = useState<boolean>(false);
   const [selectedReportName, setSelectedReportName] = useState<string>('');
 
+  // Stock item and patient search states
+  const [stockItemSearchResults, setStockItemSearchResults] = useState<StockItemDTO[]>([]);
+  const [patientSearchResults, setPatientSearchResults] = useState<Patient[]>([]);
+  const [isSearchingStockItems, setIsSearchingStockItems] = useState(false);
+  const [isSearchingPatients, setIsSearchingPatients] = useState(false);
+
   const handleReportNameChange = (name: string) => {
     setSelectedReportName(name);
   };
@@ -165,6 +176,79 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
       ...((items && items?.answers?.length > 0 ? items?.answers : items?.setMembers) ?? []),
     ];
   }, [items]);
+
+  // Debounced stock item search
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const searchStockItems = useCallback(
+    debounce(async (searchTerm: string) => {
+      if (!searchTerm || searchTerm.trim().length === 0) {
+        setStockItemSearchResults([]);
+        setIsSearchingStockItems(false);
+        return;
+      }
+
+      setIsSearchingStockItems(true);
+      try {
+        const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?q=${encodeURIComponent(searchTerm.trim())}&v=${
+          ResourceRepresentation.Default
+        }&limit=10&totalCount=true`;
+        const response = await openmrsFetch<{ data: { results: StockItemDTO[] } }>(apiUrl);
+
+        if (response.data?.data?.results) {
+          setStockItemSearchResults(response.data.data.results);
+        } else {
+          setStockItemSearchResults([]);
+        }
+      } catch (error) {
+        showSnackbar({
+          title: t('error', 'Error'),
+          kind: 'error',
+          subtitle: t('searchFailed', 'Stock item search failed'),
+        });
+        setStockItemSearchResults([]);
+      } finally {
+        setIsSearchingStockItems(false);
+      }
+    }, 300),
+    [],
+  );
+
+  // Debounced patient search
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const searchPatients = useCallback(
+    debounce(async (searchTerm: string) => {
+      if (!searchTerm || searchTerm.trim().length === 0) {
+        setPatientSearchResults([]);
+        setIsSearchingPatients(false);
+        return;
+      }
+
+      setIsSearchingPatients(true);
+      try {
+        const apiUrl = `${restBaseUrl}/patient?q=${encodeURIComponent(searchTerm.trim())}&v=${
+          ResourceRepresentation.Default
+        }&limit=10&totalCount=true`;
+        const response = await openmrsFetch<{ data: { results: Patient[] } }>(apiUrl);
+
+        if (response.data?.data?.results) {
+          setPatientSearchResults(response.data.data.results);
+        } else {
+          setPatientSearchResults([]);
+        }
+      } catch (error) {
+        showSnackbar({
+          title: t('error', 'Error'),
+          kind: 'error',
+          subtitle: t('searchFailed', 'Patient search failed'),
+        });
+        setPatientSearchResults([]);
+      } finally {
+        setIsSearchingPatients(false);
+      }
+    }, 300),
+    [],
+  );
+
   const {
     handleSubmit,
     control,
@@ -180,9 +264,32 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   }
 
   const handleSave = async (report: StockReportSchema) => {
+    // Find the report system name
     const reportSystemName = Array.isArray(reportTypes)
       ? reportTypes.find((reportType) => reportType.name === report.reportName)?.systemName
       : undefined;
+
+    // Validate that we found a valid report
+    if (!reportSystemName) {
+      showSnackbar({
+        title: t('error', 'Error'),
+        kind: 'error',
+        subtitle: t('reportTypeNotFound', 'Report type not found. Please select a valid report.'),
+      });
+      return;
+    }
+
+    // Validate required fields based on report parameters
+    const reportType = Array.isArray(reportTypes) ? reportTypes.find((p) => p.systemName === reportSystemName) : null;
+
+    if (reportType?.parameters?.includes(ReportParameter.Location) && !report.locationUuid) {
+      showSnackbar({
+        title: t('error', 'Error'),
+        kind: 'error',
+        subtitle: t('locationRequired', 'Location is required for this report type.'),
+      });
+      return;
+    }
 
     let hideSplash = true;
     try {
@@ -233,7 +340,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           newLine,
         );
       }
-      if (displayLocation) {
+      if (displayLocation && report.locationUuid) {
         parameters += getReportParameter(
           ReportParameter.Location,
           report.locationUuid,
@@ -290,9 +397,9 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
       if (displayLimit) {
         parameters += getReportParameter(
           ReportParameter.Limit,
-          (report.limit ?? getParamDefaultLimit(report.reportSystemName) ?? 20).toString(),
-          (report.limit ?? getParamDefaultLimit(report.reportSystemName) ?? 20).toString(),
-          t(getReportLimitLabel(report.reportSystemName)),
+          (report.limit ?? getParamDefaultLimit(reportSystemName) ?? 20).toString(),
+          (report.limit ?? getParamDefaultLimit(reportSystemName) ?? 20).toString(),
+          t(getReportLimitLabel(reportSystemName)),
           newLine,
         );
       }
@@ -310,7 +417,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           ReportParameter.StartDate,
           report.startDate ? JSON.stringify(report.startDate).replaceAll('"', '') : '',
           formatDisplayDate(report.startDate) ?? '',
-          t(getReportStartDateLabel(report.reportSystemName)),
+          t(getReportStartDateLabel(reportSystemName)),
           newLine,
         );
       }
@@ -319,15 +426,40 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           ReportParameter.EndDate,
           report.endDate ? JSON.stringify(report.endDate).replaceAll('"', '') : '',
           formatDisplayDate(report.endDate) ?? '',
-          t(getReportEndDateLabel(report.reportSystemName)),
+          t(getReportEndDateLabel(reportSystemName)),
           newLine,
         );
       }
+      // Debug logging: Report info (no PII)
+      console.log('Creating batch job with:', {
+        reportName: report.reportName,
+        reportSystemName: reportSystemName,
+        parameterCount: parameters.split('param.').length - 1,
+        parametersLength: parameters.length,
+      });
+
+      // Debug logging: Show parameter structure (no values/PII)
+      const paramLines = parameters.split('\r\n').filter((line) => line.startsWith('param.'));
+      console.log(
+        'Parameter structure:',
+        paramLines.map((line) => {
+          const parts = line.split('=');
+          return parts[0]; // Only show parameter names, not values
+        }),
+      );
+
       const newItem = {
         batchJobType: BatchJobTypeReport,
         description: report.reportName,
         parameters: parameters,
       };
+
+      console.log('Sending to backend:', {
+        batchJobType: newItem.batchJobType,
+        description: newItem.description,
+        hasParameters: !!newItem.parameters,
+      });
+
       await createBatchJob(newItem)
         .then((response) => {
           if (response.status === 201) {
@@ -374,7 +506,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   };
 
   return (
-    <Form className={styles.container}>
+    <Form className={styles.container} onSubmit={handleSubmit(handleSave)}>
       <Stack className={styles.form} gap={5}>
         <>
           <FormGroup legendText={t('reportName', 'Report name')}>
@@ -483,6 +615,67 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
             <SelectItem value="LocationStockItem" text={t('locationAndStockItem', 'Location and stock item')} />
             <SelectItem value="LocationStockItemBatchNo" text={t('locationAndBatchNo', 'Location and batch')} />
           </Select>
+        )}
+        {displayPatient && (
+          <Controller
+            control={control}
+            name="patientUuid"
+            render={({ field: { onChange } }) => (
+              <ComboBox
+                id="patient"
+                titleText={t('patient', 'Patient')}
+                items={patientSearchResults}
+                onChange={(data) => {
+                  onChange(data.selectedItem?.uuid);
+                  setValue('patientName', data.selectedItem?.display || '');
+                }}
+                onInputChange={(searchTerm) => {
+                  searchPatients(searchTerm);
+                }}
+                itemToString={(item) => item?.display ?? ''}
+                placeholder={t('filter', 'Filter...')}
+                shouldFilterItem={() => true}
+              />
+            )}
+          />
+        )}
+        {displayStockItem && (
+          <Controller
+            control={control}
+            name="stockItemUuid"
+            render={({ field: { onChange } }) => (
+              <ComboBox
+                id="stockItem"
+                titleText={t('stockItem', 'Stock Item')}
+                items={stockItemSearchResults}
+                onChange={(data) => {
+                  onChange(data.selectedItem?.uuid);
+                  setValue(
+                    'stockItemName',
+                    data.selectedItem
+                      ? `${data.selectedItem.drugName || ''}${
+                          data.selectedItem.commonName || data.selectedItem.conceptName
+                            ? ` (${data.selectedItem.commonName || data.selectedItem.conceptName})`
+                            : ''
+                        }`
+                      : '',
+                  );
+                }}
+                onInputChange={(searchTerm) => {
+                  searchStockItems(searchTerm);
+                }}
+                itemToString={(item) =>
+                  item
+                    ? `${item?.drugName || ''}${
+                        item?.commonName || item?.conceptName ? ` (${item?.commonName || item?.conceptName})` : ''
+                      }`
+                    : ''
+                }
+                placeholder={t('filter', 'Filter...')}
+                shouldFilterItem={() => true}
+              />
+            )}
+          />
         )}
         {displayLocation && (
           <Select
