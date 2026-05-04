@@ -221,8 +221,32 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   const addStockUserRole = async (e) => {
     e.preventDefault();
 
+    // Validation: ensure required fields are present
+    if (!formModel?.userUuid) {
+      showSnackbar({
+        title: t('errorSavingUserRoleScope', 'Error Saving user role scope'),
+        kind: 'error',
+        isLowContrast: true,
+        subtitle: t('userRequired', 'User is required'),
+      });
+      return;
+    }
+
+    if (!formModel?.role) {
+      showSnackbar({
+        title: t('errorSavingUserRoleScope', 'Error Saving user role scope'),
+        kind: 'error',
+        isLowContrast: true,
+        subtitle: t('roleRequired', 'Role is required'),
+      });
+      return;
+    }
+
+    console.log('Saving user role scope:', formModel);
+
     createOrUpdateUserRoleScope(formModel).then(
-      () => {
+      (response) => {
+        console.log('Save response:', response);
         handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
         showSnackbar({
           isLowContrast: true,
@@ -233,11 +257,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
         closeWorkspace();
       },
       (err) => {
+        console.error('Error saving user role scope:', err);
         showSnackbar({
           title: t('errorSavingUserRoleScope', 'Error Saving user role scope'),
           kind: 'error',
           isLowContrast: true,
-          subtitle: err?.message,
+          subtitle: err?.message ?? err?.cause ?? t('unknownError', 'An unknown error occurred'),
         });
 
         closeWorkspace();
@@ -252,7 +277,7 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
   }
 
   return (
-    <Form className={styles.container}>
+    <Form className={styles.container} onSubmit={addStockUserRole}>
       <Stack className={styles.form} gap={5}>
         <div>
           {users?.results?.length > 0 && (
