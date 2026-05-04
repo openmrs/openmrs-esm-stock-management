@@ -242,11 +242,8 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
       return;
     }
 
-    console.log('Saving user role scope:', formModel);
-
     createOrUpdateUserRoleScope(formModel).then(
       (response) => {
-        console.log('Save response:', response);
         handleMutate(`${restBaseUrl}/stockmanagement/userrolescope`);
         showSnackbar({
           isLowContrast: true,
@@ -257,15 +254,12 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
         closeWorkspace();
       },
       (err) => {
-        console.error('Error saving user role scope:', err);
         showSnackbar({
           title: t('errorSavingUserRoleScope', 'Error Saving user role scope'),
           kind: 'error',
           isLowContrast: true,
           subtitle: err?.message ?? err?.cause ?? t('unknownError', 'An unknown error occurred'),
         });
-
-        closeWorkspace();
       },
     );
   };
