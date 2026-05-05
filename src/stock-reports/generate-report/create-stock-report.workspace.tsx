@@ -430,35 +430,12 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           newLine,
         );
       }
-      // Debug logging: Report info (no PII)
-      console.log('Creating batch job with:', {
-        reportName: report.reportName,
-        reportSystemName: reportSystemName,
-        parameterCount: parameters.split('param.').length - 1,
-        parametersLength: parameters.length,
-      });
-
-      // Debug logging: Show parameter structure (no values/PII)
-      const paramLines = parameters.split('\r\n').filter((line) => line.startsWith('param.'));
-      console.log(
-        'Parameter structure:',
-        paramLines.map((line) => {
-          const parts = line.split('=');
-          return parts[0]; // Only show parameter names, not values
-        }),
-      );
 
       const newItem = {
         batchJobType: BatchJobTypeReport,
         description: report.reportName,
         parameters: parameters,
       };
-
-      console.log('Sending to backend:', {
-        batchJobType: newItem.batchJobType,
-        description: newItem.description,
-        hasParameters: !!newItem.parameters,
-      });
 
       await createBatchJob(newItem)
         .then((response) => {
