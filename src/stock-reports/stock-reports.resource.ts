@@ -16,7 +16,7 @@ export function useGetReports() {
   const apiUrl = `${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default&limit=10&totalCount=true`;
 
   const { data, error, isLoading, mutate } = useSWR<{ data: any }, Error>(apiUrl, openmrsFetch, {
-    refreshInterval: 15000, // Poll every 15 seconds instead of 1 second (was causing performance issues)
+    refreshInterval: 15000,
     dedupingInterval: 10000,
   });
 
