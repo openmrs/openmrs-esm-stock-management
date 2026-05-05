@@ -47,8 +47,8 @@ import { type Concept } from '../../core/api/types/concept/Concept';
 import { type Patient } from '../../core/api/types/identity/Patient';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { type StockReportSchema, reportSchema } from '../report-validation-schema';
-import { useConcept, usePatients, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
-import { type ResourceFilterCriteria, ResourceRepresentation } from '../../core/api/api';
+import { useConcept, useStockTagLocations } from '../../stock-lookups/stock-lookups.resource';
+import { ResourceRepresentation } from '../../core/api/api';
 import { useReportTypes } from '../stock-reports.resource';
 import styles from './create-stock-report.scss';
 
@@ -178,76 +178,86 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   }, [items]);
 
   // Debounced stock item search
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const searchStockItems = useCallback(
-    debounce(async (searchTerm: string) => {
-      if (!searchTerm || searchTerm.trim().length === 0) {
-        setStockItemSearchResults([]);
-        setIsSearchingStockItems(false);
-        return;
-      }
-
-      setIsSearchingStockItems(true);
-      try {
-        const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?q=${encodeURIComponent(searchTerm.trim())}&v=${
-          ResourceRepresentation.Default
-        }&limit=10&totalCount=true`;
-        const response = await openmrsFetch<{ data: { results: StockItemDTO[] } }>(apiUrl);
-
-        if (response.data?.data?.results) {
-          setStockItemSearchResults(response.data.data.results);
-        } else {
+  const searchStockItems = useMemo(
+    () =>
+      debounce(async (searchTerm: string) => {
+        if (!searchTerm || searchTerm.trim().length === 0) {
           setStockItemSearchResults([]);
+          setIsSearchingStockItems(false);
+          return;
         }
-      } catch (error) {
-        showSnackbar({
-          title: t('error', 'Error'),
-          kind: 'error',
-          subtitle: t('searchFailed', 'Stock item search failed'),
-        });
-        setStockItemSearchResults([]);
-      } finally {
-        setIsSearchingStockItems(false);
-      }
-    }, 300),
-    [],
+
+        setIsSearchingStockItems(true);
+        try {
+          const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?q=${encodeURIComponent(searchTerm.trim())}&v=${
+            ResourceRepresentation.Default
+          }&limit=10&totalCount=true`;
+          const response = await openmrsFetch<{ results: StockItemDTO[] }>(apiUrl);
+
+          if (response.data?.results) {
+            setStockItemSearchResults(response.data.results);
+          } else {
+            setStockItemSearchResults([]);
+          }
+        } catch (error) {
+          showSnackbar({
+            title: t('error', 'Error'),
+            kind: 'error',
+            subtitle: t('stockItemSearchFailed', 'Stock item search failed'),
+          });
+          setStockItemSearchResults([]);
+        } finally {
+          setIsSearchingStockItems(false);
+        }
+      }, 300),
+    [t],
   );
+
+  // Cleanup debounced search on unmount
+  useEffect(() => {
+    return () => searchStockItems.cancel();
+  }, [searchStockItems]);
 
   // Debounced patient search
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const searchPatients = useCallback(
-    debounce(async (searchTerm: string) => {
-      if (!searchTerm || searchTerm.trim().length === 0) {
-        setPatientSearchResults([]);
-        setIsSearchingPatients(false);
-        return;
-      }
-
-      setIsSearchingPatients(true);
-      try {
-        const apiUrl = `${restBaseUrl}/patient?q=${encodeURIComponent(searchTerm.trim())}&v=${
-          ResourceRepresentation.Default
-        }&limit=10&totalCount=true`;
-        const response = await openmrsFetch<{ data: { results: Patient[] } }>(apiUrl);
-
-        if (response.data?.data?.results) {
-          setPatientSearchResults(response.data.data.results);
-        } else {
+  const searchPatients = useMemo(
+    () =>
+      debounce(async (searchTerm: string) => {
+        if (!searchTerm || searchTerm.trim().length === 0) {
           setPatientSearchResults([]);
+          setIsSearchingPatients(false);
+          return;
         }
-      } catch (error) {
-        showSnackbar({
-          title: t('error', 'Error'),
-          kind: 'error',
-          subtitle: t('searchFailed', 'Patient search failed'),
-        });
-        setPatientSearchResults([]);
-      } finally {
-        setIsSearchingPatients(false);
-      }
-    }, 300),
-    [],
+
+        setIsSearchingPatients(true);
+        try {
+          const apiUrl = `${restBaseUrl}/patient?q=${encodeURIComponent(searchTerm.trim())}&v=${
+            ResourceRepresentation.Default
+          }&limit=10&totalCount=true`;
+          const response = await openmrsFetch<{ results: Patient[] }>(apiUrl);
+
+          if (response.data?.results) {
+            setPatientSearchResults(response.data.results);
+          } else {
+            setPatientSearchResults([]);
+          }
+        } catch (error) {
+          showSnackbar({
+            title: t('error', 'Error'),
+            kind: 'error',
+            subtitle: t('patientSearchFailed', 'Patient search failed'),
+          });
+          setPatientSearchResults([]);
+        } finally {
+          setIsSearchingPatients(false);
+        }
+      }, 300),
+    [t],
   );
+
+  // Cleanup debounced search on unmount
+  useEffect(() => {
+    return () => searchPatients.cancel();
+  }, [searchPatients]);
 
   const {
     handleSubmit,

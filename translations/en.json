@@ -305,6 +305,8 @@
   "saveStockItemReferenceMessage": "Stock item reference saved successfully",
   "scope": "Scope",
   "search": "Search",
+  "stockItemSearchFailed": "Stock item search failed",
+  "patientSearchFailed": "Patient search failed",
   "searchFailed": "Patient search failed",
   "searchStockItems": "Search stock items",
   "searchStockOperations": "Search stock operations",
