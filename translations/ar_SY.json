@@ -289,6 +289,7 @@
   "returned": "Returned",
   "role": "Role",
   "roleDescription": "The role will be applicable to only selected stock operations.",
+  "roleRequired": "Role is required",
   "ruleConfiguration": "Rule configuration",
   "ruleName": "Rule name",
   "rules": "Rules",
@@ -367,6 +368,7 @@
   "understockedItems": "Understocked items",
   "unit": "Unit",
   "unknown": "Unknown",
+  "unknownError": "An unknown error occurred",
   "uom": "UoM",
   "updatePackagingUnitErrorMessage": "Error updating package unit {{name}}",
   "updatePackagingUnitErrorTitle": "Package Unit",
@@ -374,6 +376,7 @@
   "updatePackingUnitTitle": "Package Unit",
   "uploadStockItems": "Upload stock items",
   "user": "User",
+  "userRequired": "User is required",
   "viewAll": "View All",
   "whoIsThePreferredVendor": "Who is the preferred vendor?",
   "yes": "Yes"

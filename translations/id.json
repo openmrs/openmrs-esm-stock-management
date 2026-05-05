@@ -289,6 +289,7 @@
   "returned": "Dikembalikan",
   "role": "Peran",
   "roleDescription": "Peran ini hanya akan berlaku untuk operasi stok yang dipilih.",
+  "roleRequired": "Role is required",
   "ruleConfiguration": "Rule configuration",
   "ruleName": "Rule name",
   "rules": "Rules",
@@ -367,6 +368,7 @@
   "understockedItems": "Understocked items",
   "unit": "Unit",
   "unknown": "Unknown",
+  "unknownError": "An unknown error occurred",
   "uom": "UoM",
   "updatePackagingUnitErrorMessage": "Gagal memperbarui satuan kemasan {{name}}",
   "updatePackagingUnitErrorTitle": "Satuan Kemasan",
@@ -374,6 +376,7 @@
   "updatePackingUnitTitle": "Satuan Kemasan",
   "uploadStockItems": "Unggah item stok",
   "user": "Pengguna",
+  "userRequired": "User is required",
   "viewAll": "Lihat Semua",
   "whoIsThePreferredVendor": "Siapa vendor yang dipilih?",
   "yes": "Ya"
