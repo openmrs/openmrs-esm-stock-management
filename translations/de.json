@@ -289,6 +289,7 @@
   "returned": "Zurückgegeben",
   "role": "Rolle",
   "roleDescription": "Diese Rolle gilt nur für ausgewählte Lagervorgänge.",
+  "roleRequired": "Role is required",
   "ruleConfiguration": "Regelkonfiguration",
   "ruleName": "Regelname",
   "rules": "Regeln",
@@ -367,6 +368,7 @@
   "understockedItems": "Artikel mit zu geringen Lagerbeständen",
   "unit": "Einheit",
   "unknown": "Unbekannt",
+  "unknownError": "An unknown error occurred",
   "uom": "ME",
   "updatePackagingUnitErrorMessage": "Fehler beim Aktualisieren der Packungseinheit {{name}}",
   "updatePackagingUnitErrorTitle": "Verpackungseinheit",
@@ -374,6 +376,7 @@
   "updatePackingUnitTitle": "Verpackungseinheit",
   "uploadStockItems": "Lagerartikel hochladen",
   "user": "Benutzer",
+  "userRequired": "User is required",
   "viewAll": "Alle anzeigen",
   "whoIsThePreferredVendor": "Wer ist der bevorzugte Anbieter?",
   "yes": "Ja"
