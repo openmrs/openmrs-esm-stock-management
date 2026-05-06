@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { debounce } from 'lodash-es';
 import { useTranslation } from 'react-i18next';
@@ -110,11 +110,8 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   const [displayFulfillment, setDisplayFulfillment] = useState<boolean>(false);
   const [selectedReportName, setSelectedReportName] = useState<string>('');
 
-  // Stock item and patient search states
   const [stockItemSearchResults, setStockItemSearchResults] = useState<StockItemDTO[]>([]);
   const [patientSearchResults, setPatientSearchResults] = useState<Patient[]>([]);
-  const [isSearchingStockItems, setIsSearchingStockItems] = useState(false);
-  const [isSearchingPatients, setIsSearchingPatients] = useState(false);
 
   const handleReportNameChange = (name: string) => {
     setSelectedReportName(name);
@@ -177,17 +174,14 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
     ];
   }, [items]);
 
-  // Debounced stock item search
   const searchStockItems = useMemo(
     () =>
       debounce(async (searchTerm: string) => {
         if (!searchTerm || searchTerm.trim().length === 0) {
           setStockItemSearchResults([]);
-          setIsSearchingStockItems(false);
           return;
         }
 
-        setIsSearchingStockItems(true);
         try {
           const apiUrl = `${restBaseUrl}/stockmanagement/stockitem?q=${encodeURIComponent(searchTerm.trim())}&v=${
             ResourceRepresentation.Default
@@ -206,29 +200,23 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
             subtitle: t('stockItemSearchFailed', 'Stock item search failed'),
           });
           setStockItemSearchResults([]);
-        } finally {
-          setIsSearchingStockItems(false);
         }
       }, 300),
     [t],
   );
 
-  // Cleanup debounced search on unmount
   useEffect(() => {
     return () => searchStockItems.cancel();
   }, [searchStockItems]);
 
-  // Debounced patient search
   const searchPatients = useMemo(
     () =>
       debounce(async (searchTerm: string) => {
         if (!searchTerm || searchTerm.trim().length === 0) {
           setPatientSearchResults([]);
-          setIsSearchingPatients(false);
           return;
         }
 
-        setIsSearchingPatients(true);
         try {
           const apiUrl = `${restBaseUrl}/patient?q=${encodeURIComponent(searchTerm.trim())}&v=${
             ResourceRepresentation.Default
@@ -247,14 +235,11 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
             subtitle: t('patientSearchFailed', 'Patient search failed'),
           });
           setPatientSearchResults([]);
-        } finally {
-          setIsSearchingPatients(false);
         }
       }, 300),
     [t],
   );
 
-  // Cleanup debounced search on unmount
   useEffect(() => {
     return () => searchPatients.cancel();
   }, [searchPatients]);
@@ -274,12 +259,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
   }
 
   const handleSave = async (report: StockReportSchema) => {
-    // Find the report system name
     const reportSystemName = Array.isArray(reportTypes)
       ? reportTypes.find((reportType) => reportType.name === report.reportName)?.systemName
       : undefined;
 
-    // Validate that we found a valid report
     if (!reportSystemName) {
       showSnackbar({
         title: t('error', 'Error'),
@@ -289,7 +272,6 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
       return;
     }
 
-    // Validate required fields based on report parameters
     const reportType = Array.isArray(reportTypes) ? reportTypes.find((p) => p.systemName === reportSystemName) : null;
 
     if (reportType?.parameters?.includes(ReportParameter.Location) && !report.locationUuid) {
