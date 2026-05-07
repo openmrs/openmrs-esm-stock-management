@@ -251,6 +251,7 @@
   "printStockCard": "Print Stock Card",
   "purchasePrice": "Purchase price",
   "purchasePricePackagingUnit": "Purchase price packaging unit",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "Quantities",
   "quantity": "Quantity",
   "quantityLabel": "Quantity:",
