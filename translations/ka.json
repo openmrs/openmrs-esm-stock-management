@@ -251,6 +251,7 @@
   "printStockCard": "მარაგის ბარათის დაბეჭდვა",
   "purchasePrice": "შეძენის ფასი",
   "purchasePricePackagingUnit": "შეძენის ფასის შეფუთვლის ერთეული",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "რაოდენობები",
   "quantity": "რაოდენობის ზღვარი",
   "quantityLabel": "Quantity:",

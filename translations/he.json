@@ -251,6 +251,7 @@
   "printStockCard": "Print Stock Card",
   "purchasePrice": "מחיר רכישה",
   "purchasePricePackagingUnit": "מחיר רכישה ליחידת אריזה:",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "כמויות",
   "quantity": "סף כמות",
   "quantityLabel": "Quantity:",

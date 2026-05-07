@@ -251,6 +251,7 @@
   "printStockCard": "Artikelkarte drucken",
   "purchasePrice": "Kaufpreis",
   "purchasePricePackagingUnit": "Verkaufspreis pro Verpackungseinheit",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "Mengen",
   "quantity": "Anzahl",
   "quantityLabel": "Anzahl:",

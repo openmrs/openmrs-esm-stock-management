@@ -251,6 +251,7 @@
   "printStockCard": "Print Stock Card",
   "purchasePrice": "តម្លៃទិញ",
   "purchasePricePackagingUnit": "តម្លៃទិញនៃឯកតាផលិត:",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "បរិមាណ",
   "quantity": "ចំនួនកម្រិត",
   "quantityLabel": "Quantity:",
