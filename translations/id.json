@@ -251,6 +251,7 @@
   "printStockCard": "Cetak Kartu Stok",
   "purchasePrice": "Harga Beli",
   "purchasePricePackagingUnit": "Satuan kemasan harga beli",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "Kuantitas",
   "quantity": "Ambang Kuantitas",
   "quantityLabel": "Quantity:",

@@ -251,6 +251,7 @@
   "printStockCard": "Imprimer la fiche produit",
   "purchasePrice": "Prix d'Achat",
   "purchasePricePackagingUnit": "Prix d'achat de l'unité d'emballage:",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "Quantités",
   "quantity": "Seuil de Quantité",
   "quantityLabel": "Quantity:",

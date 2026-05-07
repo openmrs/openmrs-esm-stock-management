@@ -251,6 +251,7 @@
   "printStockCard": "Print Stock Card",
   "purchasePrice": "የግዢ ዋጋ",
   "purchasePricePackagingUnit": "የግዢ ዋጋ የጥቅም እቃ:",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "ብዛቶች",
   "quantity": "ብዛት ድንጋይ",
   "quantityLabel": "Quantity:",

@@ -251,6 +251,7 @@
   "printStockCard": "Print Stock Card",
   "purchasePrice": "سعر الشراء",
   "purchasePricePackagingUnit": "سعر شراء وحدة التعبئة:",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "الكميات",
   "quantity": "حد الكمية",
   "quantityLabel": "Quantity:",
