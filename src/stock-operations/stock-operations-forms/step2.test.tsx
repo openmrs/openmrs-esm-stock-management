@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, test, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { useFormContext, type UseFormReturn } from 'react-hook-form';
@@ -14,25 +15,25 @@ import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resour
 import useParties from './hooks/useParties';
 import StockOperationForm from './stock-operation-form.component';
 
-const mockUseConfig = jest.mocked(useConfig);
-const mockUseFilterableStockItems = jest.mocked(useFilterableStockItems);
-const mockUseFormContext = jest.mocked(useFormContext);
-const mockUseParties = jest.mocked(useParties);
-const mockUseSession = jest.mocked(useSession);
-const mockUseStockItem = jest.mocked(useStockItem);
-const mockUseStockOperations = jest.mocked(useStockOperations);
-const mockUseStockOperationTypes = jest.mocked(useStockOperationTypes);
+const mockUseConfig = vi.mocked(useConfig);
+const mockUseFilterableStockItems = vi.mocked(useFilterableStockItems);
+const mockUseFormContext = vi.mocked(useFormContext);
+const mockUseParties = vi.mocked(useParties);
+const mockUseSession = vi.mocked(useSession);
+const mockUseStockItem = vi.mocked(useStockItem);
+const mockUseStockOperations = vi.mocked(useStockOperations);
+const mockUseStockOperationTypes = vi.mocked(useStockOperationTypes);
 
-jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
-  useStockOperationTypes: jest.fn(),
-  useUsers: jest.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
-  useUser: jest.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
+vi.mock('../../stock-lookups/stock-lookups.resource', () => ({
+  useStockOperationTypes: vi.fn(),
+  useUsers: vi.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
+  useUser: vi.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
 }));
 
-jest.mock('../stock-operations.resource', () => ({
-  operationStatusColor: jest.fn(() => 'some-color'),
-  getStockOperationLinks: jest.fn(),
-  useStockOperations: jest.fn().mockReturnValue({
+vi.mock('../stock-operations.resource', () => ({
+  operationStatusColor: vi.fn(() => 'some-color'),
+  getStockOperationLinks: vi.fn(),
+  useStockOperations: vi.fn().mockReturnValue({
     items: {
       results: [],
       links: [],
@@ -41,25 +42,25 @@ jest.mock('../stock-operations.resource', () => ({
     isLoading: false,
     error: null,
   }),
-  useStockOperationAndItems: jest.fn().mockReturnValue({
+  useStockOperationAndItems: vi.fn().mockReturnValue({
     items: { results: [] },
     isLoading: false,
     error: null,
   }),
 }));
 
-jest.mock('../../stock-items/stock-items.resource', () => ({
-  useStockItem: jest.fn().mockReturnValue({
+vi.mock('../../stock-items/stock-items.resource', () => ({
+  useStockItem: vi.fn().mockReturnValue({
     isLoading: false,
     item: {},
     error: null,
   }),
-  useStockItems: jest.fn().mockReturnValue({
+  useStockItems: vi.fn().mockReturnValue({
     isLoading: false,
     error: null,
     items: {},
   }),
-  useStockBatches: jest.fn().mockReturnValue({
+  useStockBatches: vi.fn().mockReturnValue({
     isLoading: false,
     error: null,
 
@@ -67,32 +68,32 @@ jest.mock('../../stock-items/stock-items.resource', () => ({
   }),
 }));
 
-jest.mock('./hooks/useFilterableStockItems', () => ({
-  useFilterableStockItems: jest.fn().mockReturnValue({
+vi.mock('./hooks/useFilterableStockItems', () => ({
+  useFilterableStockItems: vi.fn().mockReturnValue({
     stockItemsList: [],
-    setLimit: jest.fn(),
-    setRepresentation: jest.fn(),
-    setSearchString: jest.fn(),
+    setLimit: vi.fn(),
+    setRepresentation: vi.fn(),
+    setSearchString: vi.fn(),
     isLoading: false,
   }),
 }));
 
-jest.mock('./hooks/useParties', () => jest.fn());
+vi.mock('./hooks/useParties', () => ({ default: vi.fn() }));
 
-jest.mock('react-hook-form', () => ({
-  useForm: jest.fn().mockReturnValue({
-    watch: jest.fn(),
+vi.mock('react-hook-form', () => ({
+  useForm: vi.fn().mockReturnValue({
+    watch: vi.fn(),
     formState: {
       errors: {},
     },
-    resetField: jest.fn(),
-    getValues: jest.fn(),
-    setValue: jest.fn(),
-    handleSubmit: jest.fn(),
-    trigger: jest.fn().mockReturnValue(true),
+    resetField: vi.fn(),
+    getValues: vi.fn(),
+    setValue: vi.fn(),
+    handleSubmit: vi.fn(),
+    trigger: vi.fn().mockReturnValue(true),
   }),
-  useFormContext: jest.fn().mockReturnValue({
-    watch: jest.fn(),
+  useFormContext: vi.fn().mockReturnValue({
+    watch: vi.fn(),
     formState: {
       errors: {},
       isDirty: false,
@@ -107,32 +108,32 @@ jest.mock('react-hook-form', () => ({
       dirtyFields: {},
       disabled: false,
     },
-    resetField: jest.fn(),
-    getValues: jest.fn(),
-    setValue: jest.fn(),
-    handleSubmit: jest.fn(),
-    trigger: jest.fn().mockReturnValue(true),
+    resetField: vi.fn(),
+    getValues: vi.fn(),
+    setValue: vi.fn(),
+    handleSubmit: vi.fn(),
+    trigger: vi.fn().mockReturnValue(true),
   }),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
   FormProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-jest.mock('../../stock-items/add-stock-item/batch-information/batch-information.resource', () => ({
-  useStockItemBatchInformationHook: jest.fn().mockReturnValue({
+vi.mock('../../stock-items/add-stock-item/batch-information/batch-information.resource', () => ({
+  useStockItemBatchInformationHook: vi.fn().mockReturnValue({
     items: [],
     totalCount: 0,
     currentPage: 1,
     currentPageSize: 10,
-    setCurrentPage: jest.fn(),
-    setPageSize: jest.fn(),
+    setCurrentPage: vi.fn(),
+    setPageSize: vi.fn(),
     pageSizes: [],
     isLoading: false,
     error: undefined,
-    setSearchString: jest.fn(),
-    setStockItemUuid: jest.fn(),
-    setLocationUuid: jest.fn(),
-    setPartyUuid: jest.fn(),
-    setStockBatchUuid: jest.fn(),
+    setSearchString: vi.fn(),
+    setStockItemUuid: vi.fn(),
+    setLocationUuid: vi.fn(),
+    setPartyUuid: vi.fn(),
+    setStockBatchUuid: vi.fn(),
   }),
 }));
 
@@ -164,14 +165,14 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
 
     mockUseParties.mockReturnValue({
       destinationParties: [],
-      destinationPartiesFilter: jest.fn(),
+      destinationPartiesFilter: vi.fn(),
       destinationTags: [],
       error: undefined,
       isLoading: false,
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       parties: [],
       sourceParties: [],
-      sourcePartiesFilter: jest.fn(),
+      sourcePartiesFilter: vi.fn(),
       sourceTags: [],
     });
 
@@ -206,10 +207,10 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2
@@ -225,10 +226,10 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -248,13 +249,13 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   it('should search stock operation item and render results', async () => {
     const user = userEvent.setup();
 
-    const mocksetSearchString = jest.fn();
+    const mocksetSearchString = vi.fn();
     mockUseFilterableStockItems.mockReturnValue({
       stockItemsList: [
         { uuid: 'mock-uuid', commonName: 'mock-common-name', drugName: 'mock-common-name' },
       ] as Array<StockItemDTO>,
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
       isLoading: false,
       setSearchString: mocksetSearchString,
     });
@@ -262,10 +263,10 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -289,19 +290,19 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       stockItemsList: [
         { uuid: 'mock-uuid', commonName: 'mock-common-name', drugName: 'mock-common-name' },
       ] as Array<StockItemDTO>,
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
       isLoading: false,
-      setSearchString: jest.fn(),
+      setSearchString: vi.fn(),
     });
 
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
@@ -329,13 +330,13 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
     const mockQuantity = 99999;
     const mockExpiration = new Date();
     mockUseFormContext.mockReturnValue({
-      watch: jest.fn().mockReturnValue([
+      watch: vi.fn().mockReturnValue([
         {
           quantity: mockQuantity,
           expiration: mockExpiration,
         },
       ] as BaseStockOperationItemFormData),
-      resetField: jest.fn(),
+      resetField: vi.fn(),
       formState: {
         errors: {},
         isDirty: false,
@@ -350,19 +351,19 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
         dirtyFields: {},
         disabled: false,
       },
-      getValues: jest.fn(),
-      setValue: jest.fn(),
-      handleSubmit: jest.fn(),
-      trigger: jest.fn().mockReturnValue(true),
+      getValues: vi.fn(),
+      setValue: vi.fn(),
+      handleSubmit: vi.fn(),
+      trigger: vi.fn().mockReturnValue(true),
     } as unknown as UseFormReturn<BaseStockOperationItemFormData>);
 
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { type FieldValues, useFormContext, type UseFormReturn } from 'react-hook-form';
@@ -6,17 +7,17 @@ import { useConfig } from '@openmrs/esm-framework';
 import { useConcept } from '../../../stock-lookups/stock-lookups.resource';
 import StockOperationReasonSelector from './stock-operation-reason-selector.component';
 
-const mockUseConfig = jest.mocked(useConfig);
-const mockUseConcept = jest.mocked(useConcept);
-const mockUseFormContext = jest.mocked(useFormContext);
+const mockUseConfig = vi.mocked(useConfig);
+const mockUseConcept = vi.mocked(useConcept);
+const mockUseFormContext = vi.mocked(useFormContext);
 
-jest.mock('react-hook-form', () => ({
-  useFormContext: jest.fn(),
+vi.mock('react-hook-form', () => ({
+  useFormContext: vi.fn(),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
 }));
 
-jest.mock('../../../stock-lookups/stock-lookups.resource', () => ({
-  useConcept: jest.fn(),
+vi.mock('../../../stock-lookups/stock-lookups.resource', () => ({
+  useConcept: vi.fn(),
 }));
 
 describe('StockoperationReasonSelector', () => {

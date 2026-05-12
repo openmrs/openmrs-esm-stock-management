@@ -1,36 +1,45 @@
 import React from 'react';
+import { vi, describe, it, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import AddEditStockItem from './add-stock-item.component';
 
 // Mock the API-hitting child components so the integration test can focus on
 // the form-staleness behaviour without bringing in their dependencies.
-jest.mock('./drug-selector/drug-selector.component', () => () => <div data-testid="drug-selector" />);
-jest.mock('./concepts-selector/concepts-selector.component', () => () => <div data-testid="concepts-selector" />);
-jest.mock('./stock-item-category-selector/stock-item-category-selector.component', () => () => (
-  <div data-testid="stock-item-category-selector" />
-));
-jest.mock('./dispensing-unit-selector/dispensing-unit-selector.component', () => () => (
-  <div data-testid="dispensing-unit-selector" />
-));
-jest.mock('./preferred-vendor-selector/preferred-vendor-selector.component', () => () => (
-  <div data-testid="preferred-vendor-selector" />
-));
-jest.mock('./stock-item-units-edit/stock-item-units-edit.component', () => () => (
-  <div data-testid="stock-item-units-edit" />
-));
+vi.mock('./drug-selector/drug-selector.component', () => ({ default: () => <div data-testid="drug-selector" /> }));
+vi.mock('./concepts-selector/concepts-selector.component', () => ({
+  default: () => <div data-testid="concepts-selector" />,
+}));
+vi.mock('./stock-item-category-selector/stock-item-category-selector.component', () => ({
+  default: () => <div data-testid="stock-item-category-selector" />,
+}));
+vi.mock('./dispensing-unit-selector/dispensing-unit-selector.component', () => ({
+  default: () => <div data-testid="dispensing-unit-selector" />,
+}));
+vi.mock('./preferred-vendor-selector/preferred-vendor-selector.component', () => ({
+  default: () => <div data-testid="preferred-vendor-selector" />,
+}));
+vi.mock('./stock-item-units-edit/stock-item-units-edit.component', () => ({
+  default: () => <div data-testid="stock-item-units-edit" />,
+}));
 
 // Other tabs are only mounted if the user navigates to them; the default tab
 // is Stock Item Details, which is what this test exercises. Mock them to keep
 // the test surface small.
-jest.mock('./packaging-units/packaging-units.component', () => () => <div data-testid="packaging-units" />);
-jest.mock('./transactions/transactions.component', () => () => <div data-testid="transactions" />);
-jest.mock('./batch-information/batch-information.component', () => () => <div data-testid="batch-information" />);
-jest.mock('./quantities/quantities.component', () => () => <div data-testid="quantities" />);
-jest.mock('./stock-item-rules/stock-item-rules.component', () => () => <div data-testid="stock-item-rules" />);
-jest.mock('./stock-item-references/stock-item-references.component', () => () => (
-  <div data-testid="stock-item-references" />
-));
+vi.mock('./packaging-units/packaging-units.component', () => ({
+  default: () => <div data-testid="packaging-units" />,
+}));
+vi.mock('./transactions/transactions.component', () => ({ default: () => <div data-testid="transactions" /> }));
+vi.mock('./batch-information/batch-information.component', () => ({
+  default: () => <div data-testid="batch-information" />,
+}));
+vi.mock('./quantities/quantities.component', () => ({ default: () => <div data-testid="quantities" /> }));
+vi.mock('./stock-item-rules/stock-item-rules.component', () => ({
+  default: () => <div data-testid="stock-item-rules" />,
+}));
+vi.mock('./stock-item-references/stock-item-references.component', () => ({
+  default: () => <div data-testid="stock-item-references" />,
+}));
 
 const baseItem: Partial<StockItemDTO> = {
   isDrug: false,

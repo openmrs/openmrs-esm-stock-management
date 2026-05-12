@@ -1,53 +1,56 @@
 import React from 'react';
+import { vi, describe, it, expect, test } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import AddEditStockItem from './add-stock-item.component';
 
-jest.mock('@carbon/react/icons', () => ({
+vi.mock('@carbon/react/icons', () => ({
   Save: () => <div>Save Icon</div>,
 }));
 
-jest.mock('./stock-item-details/stock-item-details.component', () => ({ stockItem }) => (
-  <div data-testid="stock-item-details">Stock Item Details: {stockItem?.uuid}</div>
-));
+vi.mock('./stock-item-details/stock-item-details.component', () => ({
+  default: ({ stockItem }) => <div data-testid="stock-item-details">Stock Item Details: {stockItem?.uuid}</div>,
+}));
 
-jest.mock('./packaging-units/packaging-units.component', () => ({ stockItemUuid }) => (
-  <div data-testid="packaging-units">Packaging Units: {stockItemUuid || 'N/A'}</div>
-));
+vi.mock('./packaging-units/packaging-units.component', () => ({
+  default: ({ stockItemUuid }) => <div data-testid="packaging-units">Packaging Units: {stockItemUuid || 'N/A'}</div>,
+}));
 
-jest.mock('./transactions/transactions.component', () => ({ stockItemUuid }) => (
-  <div data-testid="transactions">Transactions: {stockItemUuid || 'N/A'}</div>
-));
+vi.mock('./transactions/transactions.component', () => ({
+  default: ({ stockItemUuid }) => <div data-testid="transactions">Transactions: {stockItemUuid || 'N/A'}</div>,
+}));
 
-jest.mock('./batch-information/batch-information.component', () => ({ stockItemUuid }) => (
-  <div data-testid="batch-information">Batch Information: {stockItemUuid || 'N/A'}</div>
-));
+vi.mock('./batch-information/batch-information.component', () => ({
+  default: ({ stockItemUuid }) => (
+    <div data-testid="batch-information">Batch Information: {stockItemUuid || 'N/A'}</div>
+  ),
+}));
 
-jest.mock('./quantities/quantities.component', () => ({ stockItemUuid }) => (
-  <div data-testid="quantities">Quantities: {stockItemUuid || 'N/A'}</div>
-));
+vi.mock('./quantities/quantities.component', () => ({
+  default: ({ stockItemUuid }) => <div data-testid="quantities">Quantities: {stockItemUuid || 'N/A'}</div>,
+}));
 
-jest.mock('./stock-item-rules/stock-item-rules.component', () => ({ stockItemUuid }) => (
-  <div data-testid="stock-rules">Rules: {stockItemUuid || 'N/A'}</div>
-));
+vi.mock('./stock-item-rules/stock-item-rules.component', () => ({
+  default: ({ stockItemUuid }) => <div data-testid="stock-rules">Rules: {stockItemUuid || 'N/A'}</div>,
+}));
 
-jest.mock('./stock-item-references/stock-item-references.component', () => ({ stockItemUuid }) => (
-  <div data-testid="stock-references">References: {stockItemUuid || 'N/A'}</div>
-));
+vi.mock('./stock-item-references/stock-item-references.component', () => ({
+  default: ({ stockItemUuid }) => <div data-testid="stock-references">References: {stockItemUuid || 'N/A'}</div>,
+}));
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 });
 
