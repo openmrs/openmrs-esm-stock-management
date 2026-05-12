@@ -1,5 +1,5 @@
 import React from 'react';
-import { vi, describe, it, expect, test, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { useFormContext, type Control, type FieldValues, type UseFormReturn } from 'react-hook-form';
@@ -9,7 +9,6 @@ import useSearchUser from '../hooks/useSearchUser';
 import UsersSelector from './users-selector.component';
 
 vi.mock('../hooks/useSearchUser', () => ({
-  __esModule: true,
   default: vi.fn(),
 }));
 

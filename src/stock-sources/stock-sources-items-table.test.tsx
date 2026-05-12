@@ -12,7 +12,6 @@ const mockUseStockSourcesPage = vi.mocked(useStockSourcesPage);
 const mockUseConcept = vi.mocked(useConcept);
 
 vi.mock('./stock-sources-items-table.resource', () => ({
-  __esModule: true,
   default: vi.fn(),
   useStockSourcesPage: vi.fn(),
 }));

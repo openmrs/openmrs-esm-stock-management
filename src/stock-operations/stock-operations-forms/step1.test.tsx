@@ -1,5 +1,5 @@
 import React from 'react';
-import { vi, describe, it, expect, test, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { useConfig, useSession } from '@openmrs/esm-framework';
 import {
@@ -56,7 +56,6 @@ vi.mock('../stock-operations.resource', () => ({
 }));
 
 vi.mock('./hooks/useParties', () => ({
-  __esModule: true,
   default: vi.fn(),
   useParties: vi.fn(),
 }));

@@ -3,10 +3,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: [{ find: /^.*\.s?css$/, replacement: 'identity-obj-proxy' }],
+    mainFields: ['module', 'main'],
   },
   test: {
     environment: 'jsdom',
-    globals: true,
     clearMocks: true,
     setupFiles: ['./tools/setup-tests.ts'],
     exclude: ['**/node_modules/**', '**/e2e/**', '**/dist/**'],
@@ -33,7 +33,6 @@ export default defineConfig({
       '@openmrs/esm-framework': '@openmrs/esm-framework/mock',
       'react-i18next': new URL('./__mocks__/react-i18next.js', import.meta.url).pathname,
       '@mocks': new URL('./__mocks__/index.ts', import.meta.url).pathname,
-      '@tools': new URL('./tools/', import.meta.url).pathname,
     },
   },
 });
