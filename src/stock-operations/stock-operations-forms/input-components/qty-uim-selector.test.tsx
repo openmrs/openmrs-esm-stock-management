@@ -1,31 +1,32 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { useStockItem } from '../../../stock-items/stock-items.resource';
 import QtyUomSelector from './quantity-uom-selector.component';
 
-jest.mock('../../../stock-items/stock-items.resource', () => ({
-  useStockItem: jest.fn().mockReturnValue({
+vi.mock('../../../stock-items/stock-items.resource', () => ({
+  useStockItem: vi.fn().mockReturnValue({
     isLoading: false,
     item: {},
     error: null,
   }),
-  useStockItems: jest.fn().mockReturnValue({
+  useStockItems: vi.fn().mockReturnValue({
     isLoading: false,
     error: null,
     items: {},
   }),
-  useStockBatches: jest.fn().mockReturnValue({
+  useStockBatches: vi.fn().mockReturnValue({
     isLoading: false,
     error: null,
     items: {},
   }),
 }));
 
-const mockUseStockItem = jest.mocked(useStockItem);
+const mockUseStockItem = vi.mocked(useStockItem);
 
 describe('QtyUOMSelector', () => {
-  const mockOnValueChange = jest.fn();
+  const mockOnValueChange = vi.fn();
   const mockStockItemUuid = 'test-uuid';
 
   const mockStockItem = {

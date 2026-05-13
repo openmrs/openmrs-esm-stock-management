@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { useConfig, useSession } from '@openmrs/esm-framework';
@@ -8,102 +9,102 @@ import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resour
 import useParties from './hooks/useParties';
 import StockOperationForm from './stock-operation-form.component';
 
-const mockUseParties = jest.mocked(useParties);
-const mockUseStockOperationTypes = jest.mocked(useStockOperationTypes);
-const mockUseStockOperations = jest.mocked(useStockOperations);
-const mockUseConfig = jest.mocked(useConfig);
-const mockUseSession = jest.mocked(useSession);
+const mockUseParties = vi.mocked(useParties);
+const mockUseStockOperationTypes = vi.mocked(useStockOperationTypes);
+const mockUseStockOperations = vi.mocked(useStockOperations);
+const mockUseConfig = vi.mocked(useConfig);
+const mockUseSession = vi.mocked(useSession);
 
-jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
-  useStockOperationTypes: jest.fn(),
-  useUsers: jest.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
-  useUser: jest.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
+vi.mock('../../stock-lookups/stock-lookups.resource', () => ({
+  useStockOperationTypes: vi.fn(),
+  useUsers: vi.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
+  useUser: vi.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
 }));
 
-jest.mock('../stock-operations.resource', () => ({
-  operationStatusColor: jest.fn(() => 'some-color'),
-  getStockOperationLinks: jest.fn(),
-  useStockOperations: jest.fn().mockReturnValue({
+vi.mock('../stock-operations.resource', () => ({
+  operationStatusColor: vi.fn(() => 'some-color'),
+  getStockOperationLinks: vi.fn(),
+  useStockOperations: vi.fn().mockReturnValue({
     items: { results: [] },
     isLoading: false,
     error: null,
   }),
-  useStockOperation: jest.fn().mockReturnValue({
+  useStockOperation: vi.fn().mockReturnValue({
     items: undefined,
     isLoading: false,
     error: null,
   }),
-  useStockOperationAndItems: jest.fn().mockReturnValue({
+  useStockOperationAndItems: vi.fn().mockReturnValue({
     items: undefined,
     isLoading: false,
     error: null,
   }),
 }));
 
-jest.mock('../../stock-items/stock-items.resource', () => ({
-  useStockItem: jest.fn(),
-  useStockItems: jest.fn().mockReturnValue({
+vi.mock('../../stock-items/stock-items.resource', () => ({
+  useStockItem: vi.fn(),
+  useStockItems: vi.fn().mockReturnValue({
     isLoading: false,
     error: null,
     items: {},
   }),
 }));
 
-jest.mock('./hooks/useFilterableStockItems', () => ({
-  useFilterableStockItems: jest.fn().mockReturnValue({
+vi.mock('./hooks/useFilterableStockItems', () => ({
+  useFilterableStockItems: vi.fn().mockReturnValue({
     stockItemsList: [],
-    setLimit: jest.fn(),
-    setRepresentation: jest.fn(),
-    setSearchString: jest.fn(),
+    setLimit: vi.fn(),
+    setRepresentation: vi.fn(),
+    setSearchString: vi.fn(),
     isLoading: false,
   }),
 }));
 
-jest.mock('./hooks/useParties', () => jest.fn());
+vi.mock('./hooks/useParties', () => ({ default: vi.fn() }));
 
-jest.mock('react-hook-form', () => ({
-  useForm: jest.fn().mockReturnValue({
-    watch: jest.fn(),
+vi.mock('react-hook-form', () => ({
+  useForm: vi.fn().mockReturnValue({
+    watch: vi.fn(),
     formState: {
       errors: {},
     },
-    resetField: jest.fn(),
-    getValues: jest.fn(),
-    setValue: jest.fn(),
-    handleSubmit: jest.fn(),
-    trigger: jest.fn().mockReturnValue(true),
+    resetField: vi.fn(),
+    getValues: vi.fn(),
+    setValue: vi.fn(),
+    handleSubmit: vi.fn(),
+    trigger: vi.fn().mockReturnValue(true),
   }),
-  useFormContext: jest.fn().mockReturnValue({
-    watch: jest.fn(),
+  useFormContext: vi.fn().mockReturnValue({
+    watch: vi.fn(),
     formState: {
       errors: {},
     },
-    resetField: jest.fn(),
-    getValues: jest.fn(),
-    setValue: jest.fn(),
-    handleSubmit: jest.fn(),
-    trigger: jest.fn().mockReturnValue(true),
+    resetField: vi.fn(),
+    getValues: vi.fn(),
+    setValue: vi.fn(),
+    handleSubmit: vi.fn(),
+    trigger: vi.fn().mockReturnValue(true),
   }),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
   FormProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-jest.mock('../../stock-items/add-stock-item/batch-information/batch-information.resource', () => ({
-  useStockItemBatchInformationHook: jest.fn().mockReturnValue({
+vi.mock('../../stock-items/add-stock-item/batch-information/batch-information.resource', () => ({
+  useStockItemBatchInformationHook: vi.fn().mockReturnValue({
     items: [],
     totalCount: 0,
     currentPage: 1,
     currentPageSize: 10,
-    setCurrentPage: jest.fn(),
-    setPageSize: jest.fn(),
+    setCurrentPage: vi.fn(),
+    setPageSize: vi.fn(),
     pageSizes: [],
     isLoading: false,
     error: undefined,
-    setSearchString: jest.fn(),
-    setStockItemUuid: jest.fn(),
-    setLocationUuid: jest.fn(),
-    setPartyUuid: jest.fn(),
-    setStockBatchUuid: jest.fn(),
+    setSearchString: vi.fn(),
+    setStockItemUuid: vi.fn(),
+    setLocationUuid: vi.fn(),
+    setPartyUuid: vi.fn(),
+    setStockBatchUuid: vi.fn(),
   }),
 }));
 
@@ -131,7 +132,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -165,10 +166,10 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2
@@ -184,10 +185,10 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2
@@ -204,10 +205,10 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2
@@ -228,10 +229,10 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2
@@ -250,10 +251,10 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     render(
       <StockOperationForm
         stockOperationType={returnOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2
@@ -272,10 +273,10 @@ describe('Stock Operation form step 3 (stock submision)', () => {
     render(
       <StockOperationForm
         stockOperationType={stockIssueOperationtypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     // MOVE TO STEP 2

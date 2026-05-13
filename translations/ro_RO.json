@@ -251,6 +251,7 @@
   "printStockCard": "Printează cardul de stoc",
   "purchasePrice": "Preț de achiziție",
   "purchasePricePackagingUnit": "Unitate de ambalare - preț de achiziție",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "Cantități",
   "quantity": "Prag cantitate",
   "quantityLabel": "Quantity:",

@@ -66,6 +66,15 @@ export const createStockItemDetailsSchema = (t: TFunction) =>
         message: t('expiryNoticeRequired', 'Expiry notice required'),
         path: ['expiryNotice'],
       },
+    )
+    .refine(
+      ({ purchasePrice, purchasePriceUoMUuid }) => {
+        return purchasePrice != null && purchasePrice > 0 ? !!purchasePriceUoMUuid : true;
+      },
+      {
+        message: t('purchasePriceUoMRequired', 'Purchase price packaging unit is required when purchase price is set'),
+        path: ['purchasePriceUoMUuid'],
+      },
     );
 
 export type StockItemFormData = z.infer<ReturnType<typeof createStockItemDetailsSchema>>;

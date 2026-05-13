@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type FieldValues, useForm } from 'react-hook-form';
@@ -7,16 +8,16 @@ import { fetchStockItem } from '../../stock-items.resource';
 import { useDrugsHook } from './drug-selector.resource';
 import DrugSelector from './drug-selector.component';
 
-jest.mock('../../stock-items.resource', () => ({
-  fetchStockItem: jest.fn(),
+vi.mock('../../stock-items.resource', () => ({
+  fetchStockItem: vi.fn(),
 }));
 
-jest.mock('./drug-selector.resource', () => ({
-  useDrugsHook: jest.fn(),
+vi.mock('./drug-selector.resource', () => ({
+  useDrugsHook: vi.fn(),
 }));
 
-const mockUseDrugsHook = jest.mocked(useDrugsHook);
-const mockFetchStockItem = jest.mocked(fetchStockItem);
+const mockUseDrugsHook = vi.mocked(useDrugsHook);
+const mockFetchStockItem = vi.mocked(fetchStockItem);
 
 const mockDrugs: Array<Partial<Drug>> = [
   { uuid: 'drug-1', name: 'Aspirin', concept: { display: 'ASA' } },
@@ -33,7 +34,7 @@ function DrugSelectorWrapper({
   defaultDrugUuid?: string;
   initialDrugName?: string;
   readOnly?: boolean;
-  onDrugChanged?: jest.Mock;
+  onDrugChanged?: Mock;
 }) {
   const methods = useForm<FieldValues>({ defaultValues: { drugUuid: defaultDrugUuid } });
   return (

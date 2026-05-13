@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { useConfig, useSession } from '@openmrs/esm-framework';
 import {
@@ -17,23 +18,23 @@ import { useStockOperations } from '../stock-operations.resource';
 import useParties from './hooks/useParties';
 import StockOperationForm from './stock-operation-form.component';
 
-const mockUseParties = jest.mocked(useParties);
-const mockUseStockOperationTypes = jest.mocked(useStockOperationTypes);
-const mockUseStockOperations = jest.mocked(useStockOperations);
-const mockUseConfig = jest.mocked(useConfig);
-const mockUseSession = jest.mocked(useSession);
+const mockUseParties = vi.mocked(useParties);
+const mockUseStockOperationTypes = vi.mocked(useStockOperationTypes);
+const mockUseStockOperations = vi.mocked(useStockOperations);
+const mockUseConfig = vi.mocked(useConfig);
+const mockUseSession = vi.mocked(useSession);
 
-jest.mock('../../stock-lookups/stock-lookups.resource', () => ({
-  useStockOperationTypes: jest.fn(),
-  useUsers: jest.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
-  useUser: jest.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
-  useConcept: jest.fn().mockReturnValue({ items: { answers: [] }, isLoading: false, error: null }),
+vi.mock('../../stock-lookups/stock-lookups.resource', () => ({
+  useStockOperationTypes: vi.fn(),
+  useUsers: vi.fn().mockReturnValue({ items: { results: [] }, isLoading: false }),
+  useUser: vi.fn().mockReturnValue({ data: { display: 'Test User' }, isLoading: false, error: null }),
+  useConcept: vi.fn().mockReturnValue({ items: { answers: [] }, isLoading: false, error: null }),
 }));
 
-jest.mock('../stock-operations.resource', () => ({
-  getStockOperationLinks: jest.fn(),
-  operationStatusColor: jest.fn(() => 'some-color'),
-  useStockOperations: jest.fn().mockReturnValue({
+vi.mock('../stock-operations.resource', () => ({
+  getStockOperationLinks: vi.fn(),
+  operationStatusColor: vi.fn(() => 'some-color'),
+  useStockOperations: vi.fn().mockReturnValue({
     items: {
       results: [],
       links: [],
@@ -42,22 +43,21 @@ jest.mock('../stock-operations.resource', () => ({
     isLoading: false,
     error: null,
   }),
-  useStockOperation: jest.fn().mockReturnValue({
+  useStockOperation: vi.fn().mockReturnValue({
     items: undefined,
     isLoading: false,
     error: null,
   }),
-  useStockOperationAndItems: jest.fn().mockReturnValue({
+  useStockOperationAndItems: vi.fn().mockReturnValue({
     items: undefined,
     isLoading: false,
     error: null,
   }),
 }));
 
-jest.mock('./hooks/useParties', () => ({
-  __esModule: true,
-  default: jest.fn(),
-  useParties: jest.fn(),
+vi.mock('./hooks/useParties', () => ({
+  default: vi.fn(),
+  useParties: vi.fn(),
 }));
 
 describe('Stock Operation step 1 (baseoperation details)', () => {
@@ -116,7 +116,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationTags: [],
       error: null,
       isLoading: true,
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       parties: [],
       sourceParties: [],
       sourcePartiesFilter: () => true,
@@ -126,10 +126,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -143,7 +143,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationTags: [],
       error: 'error',
       isLoading: false,
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       parties: [],
       sourceParties: [],
       sourcePartiesFilter: () => true,
@@ -153,10 +153,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -170,7 +170,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationTags: [],
       error: undefined,
       isLoading: false,
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       parties: [],
       sourceParties: [],
       sourcePartiesFilter: () => true,
@@ -180,10 +180,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -200,17 +200,17 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     expect(screen.getByRole('heading', { name: `${receiptOperationTypeMock.name} Details` })).toBeInTheDocument();
@@ -225,17 +225,17 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     const sourceInput = screen.getByRole('combobox', {
@@ -255,7 +255,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -263,10 +263,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -282,7 +282,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -290,10 +290,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -316,7 +316,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -324,10 +324,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={disposalOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -349,7 +349,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -357,10 +357,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
@@ -375,7 +375,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -383,10 +383,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={adjustmentOpeationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
@@ -401,7 +401,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -409,10 +409,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={openingStockOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
@@ -427,7 +427,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -435,10 +435,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={requisitionOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
@@ -453,7 +453,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -461,10 +461,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={returnOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -480,7 +480,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -488,10 +488,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={stockIssueOperationtypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -507,7 +507,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -515,10 +515,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={tranferOutOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 
@@ -534,7 +534,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -542,10 +542,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={disposalOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
     expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
@@ -560,7 +560,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
       destinationTags: [],
       parties: [],
-      mutate: jest.fn(),
+      mutate: vi.fn(),
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
@@ -568,10 +568,10 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     render(
       <StockOperationForm
         stockOperationType={stockTakeOperationTypeMock as any}
-        closeWorkspace={jest.fn()}
-        setTitle={jest.fn()}
-        closeWorkspaceWithSavedChanges={jest.fn()}
-        promptBeforeClosing={jest.fn()}
+        closeWorkspace={vi.fn()}
+        setTitle={vi.fn()}
+        closeWorkspaceWithSavedChanges={vi.fn()}
+        promptBeforeClosing={vi.fn()}
       />,
     );
 

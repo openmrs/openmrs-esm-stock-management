@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type FieldValues, useForm } from 'react-hook-form';
@@ -6,11 +7,11 @@ import { type Concept } from '../../../core/api/types/concept/Concept';
 import { useConcepts } from '../../../stock-lookups/stock-lookups.resource';
 import ConceptsSelector from './concepts-selector.component';
 
-jest.mock('../../../stock-lookups/stock-lookups.resource', () => ({
-  useConcepts: jest.fn(),
+vi.mock('../../../stock-lookups/stock-lookups.resource', () => ({
+  useConcepts: vi.fn(),
 }));
 
-const mockUseConcepts = jest.mocked(useConcepts);
+const mockUseConcepts = vi.mocked(useConcepts);
 
 const mockConcepts: Array<Partial<Concept>> = [
   { uuid: 'concept-1', display: 'Bandage' },
@@ -23,7 +24,7 @@ function ConceptsSelectorWrapper({
   onConceptUuidChange,
 }: {
   defaultConceptUuid?: string;
-  onConceptUuidChange?: jest.Mock;
+  onConceptUuidChange?: Mock;
 }) {
   const methods = useForm<FieldValues>({ defaultValues: { conceptUuid: defaultConceptUuid } });
   return (
@@ -78,7 +79,7 @@ describe('ConceptsSelector', () => {
 
   it('calls onConceptUuidChange when a concept is selected', async () => {
     const user = userEvent.setup();
-    const onConceptUuidChange = jest.fn();
+    const onConceptUuidChange = vi.fn();
 
     render(<ConceptsSelectorWrapper onConceptUuidChange={onConceptUuidChange} />);
 

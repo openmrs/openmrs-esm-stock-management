@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { useFormContext, type Control, type FieldValues, type UseFormReturn } from 'react-hook-form';
@@ -7,34 +8,33 @@ import { useUser } from '../../../stock-lookups/stock-lookups.resource';
 import useSearchUser from '../hooks/useSearchUser';
 import UsersSelector from './users-selector.component';
 
-jest.mock('../hooks/useSearchUser', () => ({
-  __esModule: true,
-  default: jest.fn(),
+vi.mock('../hooks/useSearchUser', () => ({
+  default: vi.fn(),
 }));
 
-jest.mock('../../../stock-lookups/stock-lookups.resource', () => ({
-  useUser: jest.fn(),
+vi.mock('../../../stock-lookups/stock-lookups.resource', () => ({
+  useUser: vi.fn(),
 }));
 
-jest.mock('react-hook-form', () => ({
-  useFormContext: jest.fn(),
+vi.mock('react-hook-form', () => ({
+  useFormContext: vi.fn(),
   Controller: ({ render }) => render({ field: {}, fieldState: {} }),
 }));
 
-const mockUseSearchUser = jest.mocked(useSearchUser);
-const mockUseUser = jest.mocked(useUser);
-const mockUseFormContext = jest.mocked(useFormContext);
+const mockUseSearchUser = vi.mocked(useSearchUser);
+const mockUseUser = vi.mocked(useUser);
+const mockUseFormContext = vi.mocked(useFormContext);
 
 describe('User Selector', () => {
   beforeEach(() => {
     mockUseFormContext.mockReturnValue({
       control: {} as Control<FieldValues>,
-      watch: jest.fn().mockImplementation((field) => {
+      watch: vi.fn().mockImplementation((field) => {
         if (field === 'responsiblePersonUuid') return 'responsibleperson.uuid';
         if (field === 'responsiblePersonOther') return 'responsiblepersonother.uuid';
         return '';
       }),
-      resetField: jest.fn(),
+      resetField: vi.fn(),
     } as Partial<UseFormReturn<FieldValues>> as UseFormReturn<FieldValues>);
   });
 
@@ -42,9 +42,9 @@ describe('User Selector', () => {
     mockUseSearchUser.mockReturnValue({
       isLoading: true,
       userList: [],
-      setSearchString: jest.fn(),
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setSearchString: vi.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
     });
     mockUseUser.mockReturnValue({ isLoading: true, data: null, error: null });
 
@@ -58,9 +58,9 @@ describe('User Selector', () => {
     mockUseSearchUser.mockReturnValue({
       isLoading: false,
       userList: [],
-      setSearchString: jest.fn(),
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setSearchString: vi.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
     });
     mockUseUser.mockReturnValue({ isLoading: false, data: null, error: new Error(errorMessage) });
 
@@ -97,9 +97,9 @@ describe('User Selector', () => {
           privileges: [],
         },
       ],
-      setSearchString: jest.fn(),
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setSearchString: vi.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
     });
 
     mockUseUser.mockReturnValue({ isLoading: false, data: null, error: null });
@@ -117,18 +117,18 @@ describe('User Selector', () => {
     mockUseSearchUser.mockReturnValue({
       isLoading: false,
       userList: [],
-      setSearchString: jest.fn(),
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setSearchString: vi.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
     });
     mockUseFormContext.mockReturnValue({
       control: {} as Control<FieldValues>,
-      watch: jest.fn().mockImplementation((field) => {
+      watch: vi.fn().mockImplementation((field) => {
         if (field === 'responsiblePersonUuid') return otherUser.uuid;
         if (field === 'responsiblePersonOther') return '';
         return '';
       }),
-      resetField: jest.fn(),
+      resetField: vi.fn(),
     } as Partial<UseFormReturn<FieldValues>> as UseFormReturn<FieldValues>);
     mockUseUser.mockReturnValue({ isLoading: false, data: null, error: null });
 
@@ -141,13 +141,13 @@ describe('User Selector', () => {
   it('calls setSearchString on input change after delay simulating debounce timout', async () => {
     const user = userEvent.setup();
 
-    const setSearchString = jest.fn();
+    const setSearchString = vi.fn();
     mockUseSearchUser.mockReturnValue({
       isLoading: false,
       userList: [],
       setSearchString,
-      setLimit: jest.fn(),
-      setRepresentation: jest.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
     });
 
     mockUseUser.mockReturnValue({ isLoading: false, data: null, error: null });

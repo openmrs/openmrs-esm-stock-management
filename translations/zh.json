@@ -251,6 +251,7 @@
   "printStockCard": "打印库存卡",
   "purchasePrice": "采购价格",
   "purchasePricePackagingUnit": "采购价格包装单位",
+  "purchasePriceUoMRequired": "Purchase price packaging unit is required when purchase price is set",
   "quantities": "数量",
   "quantity": "数量",
   "quantityLabel": "数量标签",
