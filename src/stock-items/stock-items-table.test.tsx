@@ -1,4 +1,5 @@
 import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/react';
 import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
@@ -7,18 +8,18 @@ import { launchAddOrEditStockItemWorkspace } from './stock-item.utils';
 import { useStockItemsPages } from './stock-items-table.resource';
 import StockItemsTableComponent from './stock-items-table.component';
 
-const mockUseStockItemsPages = jest.mocked(useStockItemsPages);
+const mockUseStockItemsPages = vi.mocked(useStockItemsPages);
 
-jest.mock('./stock-items-table.resource', () => ({
-  useStockItemsPages: jest.fn(),
+vi.mock('./stock-items-table.resource', () => ({
+  useStockItemsPages: vi.fn(),
 }));
 
-jest.mock('../utils', () => ({
-  handleMutate: jest.fn(),
+vi.mock('../utils', () => ({
+  handleMutate: vi.fn(),
 }));
 
-jest.mock('./stock-item.utils', () => ({
-  launchAddOrEditStockItemWorkspace: jest.fn(),
+vi.mock('./stock-item.utils', () => ({
+  launchAddOrEditStockItemWorkspace: vi.fn(),
 }));
 
 describe('StockItemsTableComponent', () => {
@@ -44,20 +45,20 @@ describe('StockItemsTableComponent', () => {
         paginated: true,
         showNextButton: true,
         showPreviousButton: false,
-        goTo: jest.fn(),
-        goToNext: jest.fn(),
-        goToPrevious: jest.fn(),
+        goTo: vi.fn(),
+        goToNext: vi.fn(),
+        goToPrevious: vi.fn(),
       },
       error: null,
       totalCount: 25,
       currentPageSize: 10,
-      setPageSize: jest.fn(),
+      setPageSize: vi.fn(),
       pageSizes: [10, 20, 30],
       currentPage: 1,
-      setCurrentPage: jest.fn(),
+      setCurrentPage: vi.fn(),
       isDrug: '',
-      setDrug: jest.fn(),
-      setSearchString: jest.fn(),
+      setDrug: vi.fn(),
+      setSearchString: vi.fn(),
     });
   });
 
