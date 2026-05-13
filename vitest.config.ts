@@ -1,4 +1,7 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+
+const r = (relativePath: string) => fileURLToPath(new URL(relativePath, import.meta.url));
 
 export default defineConfig({
   resolve: {
@@ -31,8 +34,8 @@ export default defineConfig({
     alias: {
       '@openmrs/esm-framework/src/internal': '@openmrs/esm-framework/mock',
       '@openmrs/esm-framework': '@openmrs/esm-framework/mock',
-      'react-i18next': new URL('./__mocks__/react-i18next.js', import.meta.url).pathname,
-      '@mocks': new URL('./__mocks__/index.ts', import.meta.url).pathname,
+      'react-i18next': r('./__mocks__/react-i18next.js'),
+      '@mocks': r('./__mocks__/index.ts'),
     },
   },
 });
