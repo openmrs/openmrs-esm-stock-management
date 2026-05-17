@@ -4,13 +4,10 @@ export const reportSchema = z
   .object({
     startDate: z.coerce.date().optional(),
     endDate: z.coerce.date().optional(),
-    location: z.string({ required_error: 'Location Required' }).min(1, {
-      message: 'Location Required',
-    }),
+    location: z.string().optional(),
     reportName: z.string({ required_error: 'Report Name Required' }).min(1, {
       message: 'Report Name Required',
     }),
-    stockReportItemCategory: z.string().optional(),
     mostLeastMoving: z.string().optional(),
     mostLeastMovingName: z.string().optional(),
     stockItemUuid: z.string().optional(),
