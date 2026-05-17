@@ -8,7 +8,6 @@ export const reportSchema = z
     reportName: z.string({ required_error: 'Report Name Required' }).min(1, {
       message: 'Report Name Required',
     }),
-    stockReportItemCategory: z.string().optional(),
     mostLeastMoving: z.string().optional(),
     mostLeastMovingName: z.string().optional(),
     stockItemUuid: z.string().optional(),

@@ -504,7 +504,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
             <FormGroup legendText={t('stockItemCategory', 'Stock Item Category')}>
               <Controller
                 control={control}
-                name="stockReportItemCategory"
+                name="stockItemCategoryConceptUuid"
                 render={({ field: { onChange } }) => (
                   <ComboBox
                     id="stockReportItem"
@@ -512,9 +512,10 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
                     titleText={t('stockItemCategory', 'Stock Item Category')}
                     items={stockItemCategories}
                     onChange={({ selectedItem }) => {
-                      onChange(selectedItem.uuid);
+                      onChange(selectedItem?.uuid ?? '');
+                      setValue('stockItemCategory', selectedItem?.display ?? '');
                     }}
-                    itemToString={(item) => (item && item?.display ? `${item?.display}` : '')}
+                    itemToString={(item) => item?.display ?? ''}
                     placeholder={t('filter', 'Filter...')}
                   />
                 )}

@@ -29,7 +29,7 @@ export function useGetReports() {
     isLoading,
     error,
     items: paginatedItems,
-    totalItems: data?.data?.totalCount ?? data?.data?.results?.length ?? 0,
+    totalItems: data?.data?.results?.length ?? 0,
     currentPage,
     currentPageSize,
     paginatedItems,
