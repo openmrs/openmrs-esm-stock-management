@@ -1,19 +1,20 @@
 import React from 'react';
+import { vi, describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { type FetchResponse, showSnackbar } from '@openmrs/esm-framework';
 import { uploadStockItems } from './stock-items-bulk-import.resource';
 import ImportBulkStockItemsModal from './stock-items-bulk-import.modal';
 
-const mockShowSnackbar = jest.mocked(showSnackbar);
-const mockUploadStockItems = jest.mocked(uploadStockItems);
+const mockShowSnackbar = vi.mocked(showSnackbar);
+const mockUploadStockItems = vi.mocked(uploadStockItems);
 
-jest.mock('./stock-items-bulk-import.resource', () => ({
-  uploadStockItems: jest.fn(),
+vi.mock('./stock-items-bulk-import.resource', () => ({
+  uploadStockItems: vi.fn(),
 }));
 
 describe('ImportBulkStockItemsModal', () => {
-  const mockCloseModal = jest.fn();
+  const mockCloseModal = vi.fn();
 
   it('renders with initial state and UI elements', () => {
     render(<ImportBulkStockItemsModal closeModal={mockCloseModal} />);

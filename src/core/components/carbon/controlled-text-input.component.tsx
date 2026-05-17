@@ -10,13 +10,15 @@ interface ControlledTextInputProps<T> extends TextInputProps {
 }
 
 const ControlledTextInput = <T,>(props: ControlledTextInputProps<T>) => {
+  const { controllerName, control, ...textInputProps } = props;
+
   return (
     <Controller
-      name={props.controllerName}
-      control={props.control}
+      name={controllerName}
+      control={control}
       render={({ field: { onChange, value, ref } }) => (
         <TextInput
-          {...props}
+          {...textInputProps}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             onChange(e.target.value);
 
