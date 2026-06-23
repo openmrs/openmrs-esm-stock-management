@@ -1,6 +1,6 @@
 {
   "name": "@openmrs/esm-stock-management-app",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "license": "MPL-2.0",
   "description": "Stock management microfrontend for OpenMRS 3.x",
   "browser": "dist/openmrs-esm-stock-management-app.js",
@@ -56,7 +56,7 @@
     "zod": "^3.22.2"
   },
   "peerDependencies": {
-    "@openmrs/esm-framework": "9.x",
+    "@openmrs/esm-framework": "10.x",
     "dayjs": "1.x",
     "react": "18.x",
     "react-i18next": "16.x",
@@ -100,7 +100,7 @@
     "react-i18next": "^16.0.0",
     "react-router-dom": "^6.14.1",
     "rxjs": "^6.6.7",
-    "swr": "^2.2.4",
+    "swr": "2.2.5",
     "turbo": "^2.5.2",
     "typescript": "^5.0.0",
     "vitest": "^4.1.2",
