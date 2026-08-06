@@ -4488,6 +4488,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openmrs/esm-stock-management-app@workspace:."
   dependencies:
+    "@carbon/icons-react": "npm:^11.68.0"
     "@carbon/react": "npm:^1.92.1"
     "@hookform/resolvers": "npm:^3.3.0"
     "@openmrs/esm-framework": "npm:next"
@@ -4539,6 +4540,8 @@ __metadata:
     yup: "npm:^1.2.0"
     zod: "npm:^3.22.2"
   peerDependencies:
+    "@carbon/icons-react": 11.x
+    "@carbon/react": 1.x
     "@openmrs/esm-framework": 10.x
     dayjs: 1.x
     react: 18.x
