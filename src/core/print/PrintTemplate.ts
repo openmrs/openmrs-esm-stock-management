@@ -33,7 +33,7 @@ export const GetLogoSection = async () => {
     try {
       printLogoData = await GetPrintLogo();
     } catch (e) {
-      console.info(e);
+      console.error(e);
     }
   }
   return printLogoData || logoText
