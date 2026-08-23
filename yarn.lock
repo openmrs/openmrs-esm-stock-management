@@ -4612,6 +4612,7 @@ __metadata:
     yup: "npm:^1.2.0"
     zod: "npm:^3.22.2"
   peerDependencies:
+    "@carbon/react": 1.x
     "@openmrs/esm-framework": 10.x
     dayjs: 1.x
     react: 18.x
