@@ -12,10 +12,10 @@ export function useReportTypes() {
     error,
   };
 }
-export function useGetReports() {
+export function useGetReports(enabled = true) {
   const apiUrl = `${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default&limit=10&totalCount=true`;
 
-  const { data, error, isLoading, mutate } = useSWR<{ data: any }, Error>(apiUrl, openmrsFetch, {
+  const { data, error, isLoading, mutate } = useSWR<{ data: any }, Error>(enabled ? apiUrl : null, openmrsFetch, {
     refreshInterval: 15000,
     dedupingInterval: 10000,
   });
