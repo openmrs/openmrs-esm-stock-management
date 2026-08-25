@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -32,12 +32,11 @@ import {
   View,
   WarningAltFilled,
 } from '@carbon/react/icons';
-import { isDesktop, restBaseUrl, useSession } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl, userHasAccess, useSession } from '@openmrs/esm-framework';
 import { useGetReports } from '../stock-reports.resource';
 import {
   URL_BATCH_JOB_ARTIFACT,
   APP_STOCKMANAGEMENT_REPORTS_VIEW,
-  INVENTORY_REPORTING_ROLE_UUID,
   TASK_STOCKMANAGEMENT_REPORTS_MUTATE,
 } from '../../constants';
 import { formatDisplayDateTime } from '../../core/utils/datetimeUtils';
@@ -64,17 +63,20 @@ const StockReports: React.FC = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
   };
   const { user } = useSession();
-  const hasInventoryReportingRole = user.roles.some((role) => role.uuid === INVENTORY_REPORTING_ROLE_UUID);
+  const canViewReports = userHasAccess(APP_STOCKMANAGEMENT_REPORTS_VIEW, user);
+  const canCreateReport = userHasAccess(TASK_STOCKMANAGEMENT_REPORTS_MUTATE, user);
   const { reports, isLoading, currentPage, pageSizes, totalItems, goTo, currentPageSize, setPageSize } =
-    useGetReports(hasInventoryReportingRole);
+    useGetReports(canViewReports);
+  const [now, setNow] = useState(() => Date.now());
 
-  const canViewReports =
-    hasInventoryReportingRole &&
-    user.privileges.some((privilege) => privilege.display === APP_STOCKMANAGEMENT_REPORTS_VIEW);
+  useEffect(() => {
+    if (!canViewReports) {
+      return;
+    }
 
-  const canCreateReport =
-    hasInventoryReportingRole &&
-    user.privileges.some((privilege) => privilege.display === TASK_STOCKMANAGEMENT_REPORTS_MUTATE);
+    const intervalId = window.setInterval(() => setNow(Date.now()), 15000);
+    return () => window.clearInterval(intervalId);
+  }, [canViewReports]);
 
   const tableHeaders = useMemo(
     () => [
@@ -126,7 +128,7 @@ const StockReports: React.FC = () => {
 
   const tableRows = useMemo(() => {
     return reports?.map((batchJob, index) => {
-      const isStale = isPendingReportStale(batchJob.status, batchJob.expiration);
+      const isStale = isPendingReportStale(batchJob.status, batchJob.expiration, now);
 
       return {
         ...batchJob,
@@ -146,44 +148,44 @@ const StockReports: React.FC = () => {
             {batchJob.status === BatchJobStatusPending && !isStale ? (
               <InlineLoading
                 status="active"
-                iconDescription={t('reportQueued', 'Report queued')}
+                iconDescription={t('loading', 'Loading')}
                 description={t('reportQueued', 'Report queued...')}
               />
             ) : null}
             {isStale && (
               <>
-                <WarningAltFilled className="report-stale" title={t('stale', 'Stale')} />
+                <WarningAltFilled className="report-stale" aria-hidden="true" />
                 <span>{t('reportQueuedStale', 'Queued report has not started')}</span>
               </>
             )}
             {batchJob.status === BatchJobStatusRunning && (
               <InlineLoading
                 status="active"
-                iconDescription={t('generatingReport', 'Generating report')}
+                iconDescription={t('loading', 'Loading')}
                 description={t('generatingReport', 'Generating report...')}
               />
             )}
             {batchJob.status === BatchJobStatusFailed && (
               <>
-                <WarningAltFilled className="report-failed" title={batchJob.status} />
+                <WarningAltFilled className="report-failed" aria-hidden="true" />
                 <span>{t('failed', 'Failed')}</span>
               </>
             )}
             {batchJob.status === BatchJobStatusCancelled && (
               <>
-                <MisuseOutline className="report-cancelled" title={batchJob.status} />
+                <MisuseOutline className="report-cancelled" aria-hidden="true" />
                 <span>{t('cancelled', 'Cancelled')}</span>
               </>
             )}
             {batchJob.status === BatchJobStatusCompleted && (
               <>
-                <CheckmarkOutline className="report-completed" title={batchJob.status} size={16} />
+                <CheckmarkOutline className="report-completed" aria-hidden="true" size={16} />
                 <span>{t('completed', 'Completed')}</span>
               </>
             )}
             {batchJob.status === BatchJobStatusExpired && (
               <>
-                <IncompleteCancel className="report-expired" title={batchJob.status} />
+                <IncompleteCancel className="report-expired" aria-hidden="true" />
                 <span>{t('expired', 'Expired')}</span>
               </>
             )}
@@ -228,7 +230,7 @@ const StockReports: React.FC = () => {
         ),
       };
     });
-  }, [reports, onDownloadReportClick, t]);
+  }, [reports, onDownloadReportClick, t, now]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;

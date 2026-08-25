@@ -1,17 +1,15 @@
 import React, { useMemo } from 'react';
-import { ConfigurableLink, useSession } from '@openmrs/esm-framework';
+import { ConfigurableLink } from '@openmrs/esm-framework';
 import { BrowserRouter, useLocation } from 'react-router-dom';
 
 export interface DashboardLinkConfig {
   name: string;
   title: string;
-  requiredRoleUuid?: string;
 }
 
 function DashboardExtension({ dashboardLinkConfig }: { dashboardLinkConfig: DashboardLinkConfig }) {
-  const { name, title, requiredRoleUuid } = dashboardLinkConfig;
+  const { name, title } = dashboardLinkConfig;
   const location = useLocation();
-  const { user } = useSession();
   const spaBasePath = `${window.spaBase}/stock-management`;
 
   const navLink = useMemo(() => {
@@ -19,10 +17,6 @@ function DashboardExtension({ dashboardLinkConfig }: { dashboardLinkConfig: Dash
     const lastElement = pathArray[pathArray.length - 1];
     return decodeURIComponent(lastElement);
   }, [location.pathname]);
-
-  if (requiredRoleUuid && !user?.roles.some((role) => role.uuid === requiredRoleUuid)) {
-    return null;
-  }
 
   return (
     <ConfigurableLink

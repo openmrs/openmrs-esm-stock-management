@@ -1,7 +1,6 @@
 import { defineConfigSchema, getAsyncLifecycle, getSyncLifecycle } from '@openmrs/esm-framework';
 import { configSchema } from './config-schema';
 import { createDashboardLink } from './createDashboardLink';
-import { INVENTORY_REPORTING_ROLE_UUID } from './constants';
 import appMenu from './stock-app-menu-item/item.component';
 import deletePackagingUnitModalButtonComponent from './stock-items/add-stock-item/packaging-units/delete-packaging-unit-action-button.component';
 import Root from './root.component';
@@ -122,14 +121,7 @@ export const stockLocationsLink = getSyncLifecycle(
 
 // t("reports","Reports")
 export const stockReports = getSyncLifecycle(StockReports, options);
-export const stockReportsLink = getSyncLifecycle(
-  createDashboardLink({
-    title: 'Reports',
-    name: 'reports',
-    requiredRoleUuid: INVENTORY_REPORTING_ROLE_UUID,
-  }),
-  options,
-);
+export const stockReportsLink = getSyncLifecycle(createDashboardLink({ title: 'Reports', name: 'reports' }), options);
 
 // t("settings","Settings")
 export const stockSettings = getSyncLifecycle(StockSettings, options);
