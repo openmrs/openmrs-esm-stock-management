@@ -15,8 +15,8 @@ export default function Dashboard() {
   const params = useParams();
   const extensionMetas = useExtensionSlotMeta('stock-page-dashboard-slot');
   const layout = useLayoutType();
-  const ungroupedDashboards = extensionMetas.values.filter((e) => Object.keys(e).length) || [];
-  const dashboards = ungroupedDashboards as Array<DashboardConfig>;
+  const dashboards = (Object.values(extensionMetas).filter((e) => Object.keys(e).length) ||
+    []) as Array<DashboardConfig>;
   const activeDashboard = dashboards.find((dashboard) => dashboard.name === params?.dashboard) || dashboards[0];
 
   return (
