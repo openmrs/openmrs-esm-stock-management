@@ -112,6 +112,7 @@
         "title": "Reports"
       },
       "order": 5,
+      "privileges": "App: stockmanagement.reports",
       "online": true,
       "offline": true
     },
