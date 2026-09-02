@@ -29,6 +29,7 @@ interface StockItemDetailsProps {
   onCloseWorkspace?: () => void;
 }
 
+// t('purchasePriceUoMRequired', 'Purchase price packaging unit is required when purchase price is set')
 const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: StockItemDetailsProps) => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === 'tablet';

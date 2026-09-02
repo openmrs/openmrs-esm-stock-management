@@ -71,6 +71,12 @@
   gap: 1rem;
 }
 
+.reportStatus {
+  display: flex;
+  align-items: center;
+  gap: layout.$spacing-02;
+}
+
 .textHeading {
   font-weight: bold;
 }
