@@ -20,7 +20,7 @@
     "verify": "turbo run lint typescript coverage",
     "coverage": "cross-env TZ=UTC vitest run --coverage --passWithNoTests",
     "prepare": "husky install",
-    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./tools/i18next-parser.config.js",
+    "extract-translations": "i18next  'src/**/*.{ts,tsx}' '!src/**/*.test.{ts,tsx}' --config ./tools/i18next-parser.config.js",
     "postinstall": "husky",
     "test-e2e": "playwright test"
   },
