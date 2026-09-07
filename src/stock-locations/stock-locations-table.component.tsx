@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   DataTableSkeleton,
@@ -10,12 +10,11 @@ import {
 import { Add } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
-import { restBaseUrl } from '@openmrs/esm-framework';
+import { restBaseUrl, showModal } from '@openmrs/esm-framework';
 import { handleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
 import { useStockLocationPages } from './stock-locations-table.resource';
 import DataList from '../core/components/table/table.component';
-import NewLocationForm from './add-locations-form.workspace';
 import styles from '../stock-items/stock-items-table.scss';
 
 interface StockLocationsTableProps {
@@ -25,7 +24,8 @@ interface StockLocationsTableProps {
 const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
   const { mutate } = useSWRConfig();
-  const [showLocationModal, setAddLocationModal] = useState(false);
+  const disposeModal = useRef<ReturnType<typeof showModal>>();
+  useEffect(() => () => disposeModal.current?.(), []);
 
   const { tableHeaders, tableRows, items, isLoading } = useStockLocationPages({
     v: ResourceRepresentation.Full,
@@ -50,13 +50,13 @@ const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
                 {t('refresh', 'Refresh')}
               </TableToolbarAction>
             </TableToolbarMenu>
-            {showLocationModal ? (
-              <NewLocationForm onModalChange={setAddLocationModal} showModal={showLocationModal} mutate={mutate} />
-            ) : null}
             <Button
               kind="ghost"
               renderIcon={(props) => <Add size={16} {...props} />}
-              onClick={() => setAddLocationModal(true)}
+              onClick={() => {
+                disposeModal.current?.();
+                disposeModal.current = showModal('stock-create-location-modal', { mutate });
+              }}
             >
               {t('createLocation', 'Create Location')}
             </Button>

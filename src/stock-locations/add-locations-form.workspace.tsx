@@ -1,72 +1,23 @@
-import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { showSnackbar } from '@openmrs/esm-framework';
-import { saveLocation } from './stock-locations-table.resource';
-import { type locationData, type LocationMutator } from '../stock-items/types';
-import { extractErrorMessagesFromResponse } from '../constants';
-import LocationAdministrationForm from './location-admin-form.component';
+import { useEffect, type FC } from 'react';
+import { showModal, type DefaultWorkspaceProps } from '@openmrs/esm-framework';
+import { useSWRConfig } from 'swr';
 
-interface LocationFormProps {
-  showModal: boolean;
-  onModalChange: (showModal: boolean) => void;
-  mutate: LocationMutator;
-}
-
-const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange, mutate }) => {
-  const { t } = useTranslation();
-  const headerTitle = t('addLocation', 'Create new Location');
-
-  const initialData: locationData = {
-    uuid: '',
-    name: '',
-    tags: [],
-  };
-
-  const handleCreateQuestion = useCallback(
-    (formData: locationData) => {
-      const { name, tags } = formData;
-
-      const locationbject = {
-        name,
-        tags,
-      };
-      saveLocation({ locationPayload: locationbject })
-        .then(() => {
-          showSnackbar({
-            title: t('locationCreatedTitle', 'Location created'),
-            kind: 'success',
-            isLowContrast: true,
-            subtitle: t('locationCreatedSuccessfully', 'Location {{locationName}} was created successfully.', {
-              locationName: name,
-            }),
-          });
-
-          mutate();
-          onModalChange(false);
-        })
-        .catch((error) => {
-          const errorMessages = extractErrorMessagesFromResponse(error);
-          showSnackbar({
-            title: t('errorCreatingForm', 'Error creating location'),
-            kind: 'error',
-            isLowContrast: true,
-            subtitle: errorMessages.join(', '),
-          });
-          onModalChange(false);
-        });
-      onModalChange(false);
-    },
-    [onModalChange, mutate, t],
-  );
-
-  return (
-    <LocationAdministrationForm
-      onModalChange={onModalChange}
-      showModal={showModal}
-      handleCreateQuestion={handleCreateQuestion}
-      headerTitle={headerTitle}
-      initialData={initialData}
-    />
-  );
+const NewLocationWorkspace: FC<DefaultWorkspaceProps> = ({ closeWorkspace }) => {
+  const { mutate } = useSWRConfig();
+  useEffect(() => {
+    let closed = false;
+    const dispose = showModal('stock-create-location-modal', { mutate }, () => {
+      closed = true;
+      closeWorkspace();
+    });
+    return () => {
+      if (!closed) {
+        closed = true;
+        dispose();
+      }
+    };
+  }, [closeWorkspace, mutate]);
+  return null;
 };
-export default NewLocationForm;
+
+export default NewLocationWorkspace;
