@@ -55,10 +55,11 @@ export function useStockLocations(filter: LocationFilterCriteria) {
 */
 export function useStockTagLocations() {
   const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary `;
-  const { data, error, isLoading } = useFhirFetchAll<fhir.Location>(apiUrl);
+  const { data, error, isLoading, mutate } = useFhirFetchAll<fhir.Location>(apiUrl);
 
   return {
     stockLocations: uniqBy(data, 'id') ?? [],
+    mutate,
     isLoading,
     error,
   };

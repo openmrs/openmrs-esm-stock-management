@@ -9,9 +9,7 @@ import {
 } from '@carbon/react';
 import { Add } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
-import { useSWRConfig } from 'swr';
-import { restBaseUrl, showModal } from '@openmrs/esm-framework';
-import { handleMutate } from '../utils';
+import { showModal } from '@openmrs/esm-framework';
 import { ResourceRepresentation } from '../core/api/api';
 import { useStockLocationPages } from './stock-locations-table.resource';
 import DataList from '../core/components/table/table.component';
@@ -23,16 +21,15 @@ interface StockLocationsTableProps {
 
 const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
-  const { mutate } = useSWRConfig();
   const disposeModal = useRef<ReturnType<typeof showModal>>();
   useEffect(() => () => disposeModal.current?.(), []);
 
-  const { tableHeaders, tableRows, items, isLoading } = useStockLocationPages({
+  const { tableHeaders, tableRows, items, isLoading, mutate } = useStockLocationPages({
     v: ResourceRepresentation.Full,
   });
 
   const handleRefresh = () => {
-    handleMutate(`${restBaseUrl}/Location?_summary=data`);
+    mutate();
   };
 
   if (isLoading) {

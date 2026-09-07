@@ -6,7 +6,7 @@ import { type StockOperationFilter } from '../stock-operations/stock-operations.
 import { useStockTagLocations } from '../stock-lookups/stock-lookups.resource';
 
 export function useStockLocationPages(filter: StockOperationFilter) {
-  const { stockLocations, error, isLoading } = useStockTagLocations();
+  const { stockLocations, error, isLoading, mutate } = useStockTagLocations();
 
   const pageSizes = [10, 20, 30, 40, 50];
   const [currentPageSize, setPageSize] = useState(10);
@@ -57,6 +57,7 @@ export function useStockLocationPages(filter: StockOperationFilter) {
   }, [stockLocations]);
   return {
     items: stockLocations,
+    mutate,
     currentPage,
     currentPageSize,
     paginatedQueueEntries,
