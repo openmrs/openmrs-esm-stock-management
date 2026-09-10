@@ -4,7 +4,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
-  ComposedModal,
   FilterableMultiSelect,
   FormGroup,
   InlineNotification,
@@ -25,8 +24,7 @@ const LocationAdministrationSchema = z.object({
 });
 
 interface LocationAdministrationFormProps {
-  showModal: boolean;
-  onModalChange: (showModal: boolean) => void;
+  close: () => void;
   handleCreateQuestion?: (formData: locationData) => void;
   handleDeleteBedTag?: () => void;
   headerTitle: string;
@@ -38,8 +36,7 @@ interface ErrorType {
 }
 
 const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
-  showModal,
-  onModalChange,
+  close,
   handleCreateQuestion,
   headerTitle,
   initialData,
@@ -87,10 +84,10 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
   };
 
   return (
-    <ComposedModal open={showModal} onClose={() => onModalChange(false)} preventCloseOnClickOutside size={'md'}>
-      <ModalHeader title={headerTitle} />
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
-        <ModalBody hasScrollingContent>
+    <>
+      <ModalHeader closeModal={close} title={headerTitle} />
+      <ModalBody hasScrollingContent>
+        <form id="stock-location-form" onSubmit={handleSubmit(onSubmit, onError)}>
           <Stack gap={3}>
             <FormGroup legendText={''}>
               <Controller
@@ -149,17 +146,17 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
               />
             )}
           </Stack>
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={() => onModalChange(false)} kind="secondary">
-            {getCoreTranslation('cancel')}
-          </Button>
-          <Button disabled={!isDirty} type="submit">
-            <span>{t('save', 'Save')}</span>
-          </Button>
-        </ModalFooter>
-      </form>
-    </ComposedModal>
+        </form>
+      </ModalBody>
+      <ModalFooter>
+        <Button onClick={close} kind="secondary">
+          {getCoreTranslation('cancel')}
+        </Button>
+        <Button disabled={!isDirty} type="submit" form="stock-location-form">
+          <span>{t('save', 'Save')}</span>
+        </Button>
+      </ModalFooter>
+    </>
   );
 };
 

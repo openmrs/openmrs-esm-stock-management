@@ -197,6 +197,10 @@
     {
       "name": "transactions-print-stockcard-preview-modal",
       "component": "transactionStockcardPrintPreviewModal"
+    },
+    {
+      "name": "stock-create-location-modal",
+      "component": "createLocationModal"
     }
   ],
   "workspaces": [
