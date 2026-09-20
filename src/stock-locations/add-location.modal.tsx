@@ -2,13 +2,13 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showSnackbar } from '@openmrs/esm-framework';
 import { saveLocation } from './stock-locations-table.resource';
-import { type locationData, type LocationMutator } from '../stock-items/types';
+import { type locationData } from '../stock-items/types';
 import { extractErrorMessagesFromResponse } from '../constants';
 import LocationAdministrationForm from './location-admin-form.component';
 
 interface LocationFormProps {
   close: () => void;
-  mutate: LocationMutator;
+  mutate: () => void;
 }
 
 const NewLocationForm: React.FC<LocationFormProps> = ({ close, mutate }) => {
@@ -29,7 +29,7 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ close, mutate }) => {
         name,
         tags,
       };
-      saveLocation({ locationPayload: locationbject })
+      return saveLocation({ locationPayload: locationbject })
         .then(() => {
           showSnackbar({
             title: t('locationCreatedTitle', 'Location created'),
@@ -41,6 +41,7 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ close, mutate }) => {
           });
 
           mutate();
+          close();
         })
         .catch((error) => {
           const errorMessages = extractErrorMessagesFromResponse(error);
@@ -51,7 +52,6 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ close, mutate }) => {
             subtitle: errorMessages.join(', '),
           });
         });
-      close();
     },
     [close, mutate, t],
   );

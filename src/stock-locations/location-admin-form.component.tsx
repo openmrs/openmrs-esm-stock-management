@@ -25,7 +25,7 @@ const LocationAdministrationSchema = z.object({
 
 interface LocationAdministrationFormProps {
   close: () => void;
-  handleCreateQuestion?: (formData: locationData) => void;
+  handleCreateQuestion: (formData: locationData) => Promise<void>;
   handleDeleteBedTag?: () => void;
   headerTitle: string;
   initialData: locationData;
@@ -53,7 +53,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
     handleSubmit,
     control,
     getValues,
-    formState: { isDirty },
+    formState: { isDirty, isSubmitting },
   } = useForm<locationData>({
     mode: 'all',
     resolver: zodResolver(LocationAdministrationSchema),
@@ -74,7 +74,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
     const result = LocationAdministrationSchema.safeParse(formData);
     if (result.success) {
       setShowErrorNotification(false);
-      handleCreateQuestion(payload);
+      return handleCreateQuestion(payload);
     }
   };
 
@@ -152,7 +152,7 @@ const LocationAdministrationForm: React.FC<LocationAdministrationFormProps> = ({
         <Button onClick={close} kind="secondary">
           {getCoreTranslation('cancel')}
         </Button>
-        <Button disabled={!isDirty} type="submit" form="stock-location-form">
+        <Button disabled={!isDirty || isSubmitting} type="submit" form="stock-location-form">
           <span>{t('save', 'Save')}</span>
         </Button>
       </ModalFooter>
