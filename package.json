@@ -52,7 +52,6 @@
     "lodash-es": "^4.17.21",
     "react-hook-form": "^7.45.4",
     "react-to-print": "^2.14.13",
-    "yup": "^1.2.0",
     "zod": "^3.22.2"
   },
   "peerDependencies": {
@@ -99,8 +98,7 @@
     "swr": "2.5.1",
     "turbo": "^2.5.2",
     "typescript": "^5.0.0",
-    "vitest": "^4.1.2",
-    "yup": "^1.2.0"
+    "vitest": "^4.1.2"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix --max-warnings 0",
