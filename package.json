@@ -10,6 +10,7 @@
     "start": "openmrs develop",
     "serve": "rspack serve --mode=development",
     "build": "rspack --mode production",
+    "clean": "git clean -fdX -- dist",
     "analyze": "rspack --mode=production --env analyze=true",
     "lint": "eslint src --fix --max-warnings=0",
     "prettier": "prettier --write \"src/**/*.{css,scss,ts,tsx}\" --list-different",
@@ -19,7 +20,7 @@
     "verify": "turbo run lint typescript coverage",
     "coverage": "cross-env TZ=UTC vitest run --coverage --passWithNoTests",
     "prepare": "husky install",
-    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/**/*.tsx' --config ./tools/i18next-parser.config.js",
+    "extract-translations": "i18next  'src/**/*.{ts,tsx}' '!src/**/*.test.{ts,tsx}' --config ./tools/i18next-parser.config.js",
     "postinstall": "husky",
     "test-e2e": "playwright test"
   },
@@ -49,9 +50,7 @@
     "file-saver": "^2.0.5",
     "lodash-es": "^4.17.21",
     "react-hook-form": "^7.45.4",
-    "react-image-annotate": "^1.8.0",
     "react-to-print": "^2.14.13",
-    "yup": "^1.2.0",
     "zod": "^3.22.2"
   },
   "peerDependencies": {
@@ -97,11 +96,10 @@
     "react-i18next": "^16.0.0",
     "react-router-dom": "^6.14.1",
     "rxjs": "^6.6.7",
-    "swr": "2.2.5",
+    "swr": "2.5.1",
     "turbo": "^2.5.2",
     "typescript": "^5.0.0",
-    "vitest": "^4.1.2",
-    "yup": "^1.2.0"
+    "vitest": "^4.1.2"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix --max-warnings 0",

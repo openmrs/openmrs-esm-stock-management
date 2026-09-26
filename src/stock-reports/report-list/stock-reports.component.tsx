@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -32,7 +32,7 @@ import {
   View,
   WarningAltFilled,
 } from '@carbon/react/icons';
-import { isDesktop, restBaseUrl, useSession } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl, userHasAccess, useSession } from '@openmrs/esm-framework';
 import { useGetReports } from '../stock-reports.resource';
 import {
   URL_BATCH_JOB_ARTIFACT,
@@ -46,12 +46,14 @@ import {
   BatchJobStatusExpired,
   BatchJobStatusFailed,
   BatchJobStatusPending,
+  BatchJobStatusRunning,
 } from '../../core/api/types/BatchJob';
 import { handleMutate } from '../../utils';
 import { PrivilegedView } from '../../core/components/privileged-view-component/privileged-view.component';
 import NewReportActionButton from './new-report-button.component';
 import StockReportStatus from './stock-report-status.component';
 import StockReportParameters from './stock-report-parameters.component';
+import { isPendingReportStale } from './stock-report-status.utils';
 import styles from './stock-reports.scss';
 
 const StockReports: React.FC = () => {
@@ -60,16 +62,21 @@ const StockReports: React.FC = () => {
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);
   };
-  const { reports, isLoading, currentPage, pageSizes, totalItems, goTo, currentPageSize, setPageSize } =
-    useGetReports();
-
   const { user } = useSession();
+  const canViewReports = userHasAccess(APP_STOCKMANAGEMENT_REPORTS_VIEW, user);
+  const canCreateReport = userHasAccess(TASK_STOCKMANAGEMENT_REPORTS_MUTATE, user);
+  const { reports, isLoading, currentPage, pageSizes, totalItems, goTo, currentPageSize, setPageSize } =
+    useGetReports(canViewReports);
+  const [now, setNow] = useState(() => Date.now());
 
-  const canViewReports =
-    user.privileges.filter((privilage) => privilage.display === APP_STOCKMANAGEMENT_REPORTS_VIEW).length > 0;
+  useEffect(() => {
+    if (!canViewReports) {
+      return;
+    }
 
-  const canCreateReport =
-    user.privileges.filter((privilage) => privilage.display === TASK_STOCKMANAGEMENT_REPORTS_MUTATE).length > 0;
+    const intervalId = window.setInterval(() => setNow(Date.now()), 15000);
+    return () => window.clearInterval(intervalId);
+  }, [canViewReports]);
 
   const tableHeaders = useMemo(
     () => [
@@ -120,81 +127,110 @@ const StockReports: React.FC = () => {
   }, []);
 
   const tableRows = useMemo(() => {
-    return reports?.map((batchJob, index) => ({
-      ...batchJob,
-      checkbox: 'isBatchJobActive',
-      id: batchJob?.uuid,
-      key: `key-${batchJob?.uuid}`,
-      uuid: `${batchJob?.uuid}`,
-      batchJobType: batchJob?.batchJobType,
-      dateRequested: formatDisplayDateTime(batchJob.dateCreated),
-      parameters: <StockReportParameters model={reports[index]} />,
-      report: batchJob?.description,
-      requestedBy: batchJob?.owners?.map((p, index) => (
-        <div key={`${batchJob.uuid}-owner-${index}`}>{`${p.ownerFamilyName} ${p.ownerGivenName}`}</div>
-      )),
-      status: (
-        <>
-          {batchJob.status === BatchJobStatusPending ? (
-            <InlineLoading
-              status={batchJob.status === BatchJobStatusPending ? 'active' : 'inactive'}
-              iconDescription="Loading"
-              description={batchJob.status === BatchJobStatusPending ? 'Generating report...' : ''}
-            />
-          ) : null}
-          {batchJob.status === BatchJobStatusFailed && (
-            <WarningAltFilled className="report-failed" title={batchJob.status} />
-          )}
-          {batchJob.status === BatchJobStatusCancelled && (
-            <MisuseOutline className="report-cancelled" title={batchJob.status} />
-          )}
-          {batchJob.status === BatchJobStatusCompleted && (
-            <CheckmarkOutline className="report-completed" title={batchJob.status} size={16} />
-          )}
-          {batchJob.status === BatchJobStatusExpired && (
-            <IncompleteCancel className="report-expired" title={batchJob.status} />
-          )}
-        </>
-      ),
-      timeTaken: formatDuration(batchJob.dateCreated, batchJob.endTime),
-      actions: (
-        <div key={`${batchJob?.uuid}-actions`} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-          {batchJob.outputArtifactViewable && batchJob.batchJobType === 'hide' && (
+    return reports?.map((batchJob, index) => {
+      const isStale = isPendingReportStale(batchJob.status, batchJob.expiration, now);
+
+      return {
+        ...batchJob,
+        checkbox: 'isBatchJobActive',
+        id: batchJob?.uuid,
+        key: `key-${batchJob?.uuid}`,
+        uuid: `${batchJob?.uuid}`,
+        batchJobType: batchJob?.batchJobType,
+        dateRequested: formatDisplayDateTime(batchJob.dateCreated),
+        parameters: <StockReportParameters model={reports[index]} />,
+        report: batchJob?.description,
+        requestedBy: batchJob?.owners?.map((p, index) => (
+          <div key={`${batchJob.uuid}-owner-${index}`}>{`${p.ownerFamilyName} ${p.ownerGivenName}`}</div>
+        )),
+        status: (
+          <div className={styles.reportStatus}>
+            {batchJob.status === BatchJobStatusPending && !isStale ? (
+              <InlineLoading
+                status="active"
+                iconDescription={t('loading', 'Loading')}
+                description={t('reportQueued', 'Report queued...')}
+              />
+            ) : null}
+            {isStale && (
+              <>
+                <WarningAltFilled className="report-stale" aria-hidden="true" />
+                <span>{t('reportQueuedStale', 'Queued report has not started')}</span>
+              </>
+            )}
+            {batchJob.status === BatchJobStatusRunning && (
+              <InlineLoading
+                status="active"
+                iconDescription={t('loading', 'Loading')}
+                description={t('generatingReport', 'Generating report...')}
+              />
+            )}
+            {batchJob.status === BatchJobStatusFailed && (
+              <>
+                <WarningAltFilled className="report-failed" aria-hidden="true" />
+                <span>{t('failed', 'Failed')}</span>
+              </>
+            )}
+            {batchJob.status === BatchJobStatusCancelled && (
+              <>
+                <MisuseOutline className="report-cancelled" aria-hidden="true" />
+                <span>{t('cancelled', 'Cancelled')}</span>
+              </>
+            )}
+            {batchJob.status === BatchJobStatusCompleted && (
+              <>
+                <CheckmarkOutline className="report-completed" aria-hidden="true" size={16} />
+                <span>{t('completed', 'Completed')}</span>
+              </>
+            )}
+            {batchJob.status === BatchJobStatusExpired && (
+              <>
+                <IncompleteCancel className="report-expired" aria-hidden="true" />
+                <span>{t('expired', 'Expired')}</span>
+              </>
+            )}
+          </div>
+        ),
+        timeTaken: formatDuration(batchJob.dateCreated, batchJob.endTime),
+        actions: (
+          <div key={`${batchJob?.uuid}-actions`} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+            {batchJob.outputArtifactViewable && batchJob.batchJobType === 'hide' && (
+              <Button
+                key={`${batchJob?.uuid}-actions-view`}
+                type="button"
+                size="sm"
+                className="submitButton clear-padding-margin"
+                iconDescription={t('edit', 'Edit')}
+                kind="ghost"
+                renderIcon={View}
+                // onClick={(e) => onViewItem(batchJob.uuid, e)}
+              />
+            )}
             <Button
-              key={`${batchJob?.uuid}-actions-view`}
               type="button"
               size="sm"
               className="submitButton clear-padding-margin"
-              iconDescription={t('edit', 'Edit')}
+              iconDescription={'Copy'}
               kind="ghost"
-              renderIcon={View}
-              // onClick={(e) => onViewItem(batchJob.uuid, e)}
+              renderIcon={Copy}
+              // onClick={() => onCloneReportClick(batchJob.uuid)}
             />
-          )}
-          <Button
-            type="button"
-            size="sm"
-            className="submitButton clear-padding-margin"
-            iconDescription={'Copy'}
-            kind="ghost"
-            renderIcon={Copy}
-            // onClick={() => onCloneReportClick(batchJob.uuid)}
-          />
-          {batchJob?.status === BatchJobStatusCompleted && (batchJob.outputArtifactSize ?? 0) > 0 && (
-            <Button
-              type="button"
-              size="sm"
-              className="submitButton clear-padding-margin"
-              iconDescription={'Download'}
-              kind="ghost"
-              renderIcon={Download}
-              onClick={() => onDownloadReportClick(batchJob.uuid, batchJob.outputArtifactFileExt)}
-            />
-          )}
-        </div>
-      ),
-    }));
-  }, [reports, onDownloadReportClick, t]);
+            {batchJob?.status === BatchJobStatusCompleted && (batchJob.outputArtifactSize ?? 0) > 0 && (
+              <Button
+                type="button"
+                size="sm"
+                className="submitButton clear-padding-margin"
+                iconDescription={'Download'}
+                kind="ghost"
+                renderIcon={Download}
+                onClick={() => onDownloadReportClick(batchJob.uuid, batchJob.outputArtifactFileExt)}
+              />
+            )}
+          </div>
+        ),
+      };
+    });
+  }, [reports, onDownloadReportClick, t, now]);
 
   if (isLoading) {
     return <DataTableSkeleton role="progressbar" />;

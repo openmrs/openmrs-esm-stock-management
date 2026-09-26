@@ -27,7 +27,7 @@ export function useStockOperationPages(filter: StockOperationFilter) {
       },
       {
         id: 2,
-        header: t('stockOperationItems', 'Items'),
+        header: t('stockOperationItemsTableHeader', 'Items'),
         key: 'stockOperationItems',
       },
       {

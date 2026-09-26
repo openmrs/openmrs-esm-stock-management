@@ -182,3 +182,5 @@ export const transactionStockcardPrintPreviewModal = getSyncLifecycle(Transactio
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }
+
+export const createLocationModal = getAsyncLifecycle(() => import('./stock-locations/add-location.modal'), options);

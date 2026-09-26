@@ -26,7 +26,7 @@ export default function useStockSourcesPage(filter: StockOperationFilter) {
       },
       {
         id: 3,
-        header: t('sourceType', 'Source Type'),
+        header: t('sourceType', 'Source type'),
         key: 'sourceType',
       },
       {

@@ -434,7 +434,7 @@ const CreateReport: React.FC<CreateReportProps> = ({ model, closeWorkspace }) =>
           if (response.status === 201) {
             showSnackbar({
               title: t('batchJob', 'Batch Job'),
-              subtitle: t('batchJobSuccess', 'Batch job created successfully'),
+              subtitle: t('reportQueuedSuccess', 'Report queued successfully'),
               kind: 'success',
             });
             handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);

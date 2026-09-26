@@ -215,7 +215,7 @@ describe('StockSourcesItems', () => {
       totalItems: 2,
       tableHeaders: [
         { id: 0, key: 'name', header: 'Name' },
-        { id: 1, key: 'sourceType', header: 'Source Type' },
+        { id: 1, key: 'sourceType', header: 'Source type' },
       ],
       currentPage: 1,
       pageSizes: [10, 20, 50],
