@@ -3,6 +3,7 @@ import { vi, describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { mockWorkspace2Props } from '@mocks';
 import AddEditStockItem from './add-stock-item.component';
 
 vi.mock('@carbon/react/icons', () => ({
@@ -109,14 +110,14 @@ describe('AddEditStockItem', () => {
   };
 
   it('renders correctly with initial state and default selected tab', () => {
-    render(<AddEditStockItem stockItem={mockModel} />);
+    render(<AddEditStockItem {...mockWorkspace2Props({ stockItem: mockModel })} />);
     expect(screen.getByTestId('stock-item-details')).toBeInTheDocument();
     expect(screen.getByText('Stock Item Details: test-uuid-123')).toBeInTheDocument();
   });
 
   it('changes selected tab when clicking on different tabs', async () => {
     const user = userEvent.setup();
-    render(<AddEditStockItem stockItem={mockModel} />);
+    render(<AddEditStockItem {...mockWorkspace2Props({ stockItem: mockModel })} />);
 
     await user.click(screen.getByText(/packaging units/i));
     expect(screen.getByTestId('packaging-units')).toBeInTheDocument();
@@ -128,7 +129,7 @@ describe('AddEditStockItem', () => {
   });
 
   it('disables tabs when isEditing is false', () => {
-    render(<AddEditStockItem />);
+    render(<AddEditStockItem {...mockWorkspace2Props({})} />);
 
     const disabledTabs = [
       /batch information/i,
@@ -145,7 +146,7 @@ describe('AddEditStockItem', () => {
   });
 
   it('enables tabs when isEditing is true', () => {
-    render(<AddEditStockItem stockItem={mockModel} />);
+    render(<AddEditStockItem {...mockWorkspace2Props({ stockItem: mockModel })} />);
 
     const enabledTabs = [
       /batch information/i,
@@ -163,7 +164,7 @@ describe('AddEditStockItem', () => {
 
   it('renders correct components based on model prop', async () => {
     const user = userEvent.setup();
-    render(<AddEditStockItem stockItem={mockModel} />);
+    render(<AddEditStockItem {...mockWorkspace2Props({ stockItem: mockModel })} />);
 
     expect(screen.getByText('Stock Item Details: test-uuid-123')).toBeInTheDocument();
 
@@ -187,7 +188,7 @@ describe('AddEditStockItem', () => {
   });
 
   it('translates tab names correctly', () => {
-    render(<AddEditStockItem stockItem={mockModel} />);
+    render(<AddEditStockItem {...mockWorkspace2Props({ stockItem: mockModel })} />);
 
     const tabNames = [
       /batch information/i,

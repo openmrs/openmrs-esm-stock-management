@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { useConfig, useSession } from '@openmrs/esm-framework';
 import {
   adjustmentOpeationTypeMock,
+  mockWorkspace2Props,
   disposalOperationTypeMock,
   openingStockOperationTypeMock,
   receiptOperationTypeMock,
@@ -123,15 +124,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
@@ -150,15 +143,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     expect(screen.getByText(/error state/i)).toBeInTheDocument();
   });
@@ -177,15 +162,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourceTags: [],
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /previous/i })).not.toBeInTheDocument();
@@ -204,15 +181,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     expect(screen.getByRole('heading', { name: `${receiptOperationTypeMock.name} Details` })).toBeInTheDocument();
   });
 
@@ -229,15 +198,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       sourcePartiesFilter: () => true,
       destinationPartiesFilter: () => true,
     });
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     const sourceInput = screen.getByRole('combobox', {
       name: (_, element) =>
         element.getAttribute('placeholder') === 'Choose a source' && element.getAttribute('name') === 'sourceUuid',
@@ -260,15 +221,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     expect(screen.getByRole('combobox', { name: /to/i })).toBeInTheDocument();
   });
@@ -287,15 +240,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     expect(
       screen.getByRole('combobox', {
@@ -321,15 +266,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={disposalOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: disposalOperationTypeMock as any })} />);
 
     expect(
       screen.getByRole('combobox', {
@@ -354,15 +291,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
 
@@ -380,15 +309,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={adjustmentOpeationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: adjustmentOpeationTypeMock as any })} />);
     expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
   });
 
@@ -407,13 +328,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     });
 
     render(
-      <StockOperationForm
-        stockOperationType={openingStockOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
+      <StockOperationForm {...mockWorkspace2Props({ stockOperationType: openingStockOperationTypeMock as any })} />,
     );
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
@@ -433,13 +348,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
     });
 
     render(
-      <StockOperationForm
-        stockOperationType={requisitionOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
+      <StockOperationForm {...mockWorkspace2Props({ stockOperationType: requisitionOperationTypeMock as any })} />,
     );
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
@@ -458,15 +367,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={returnOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: returnOperationTypeMock as any })} />);
 
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
@@ -485,15 +386,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={stockIssueOperationtypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: stockIssueOperationtypeMock as any })} />);
 
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
@@ -512,15 +405,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={tranferOutOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: tranferOutOperationTypeMock as any })} />);
 
     expect(screen.queryByRole('combobox', { name: /reason/i })).not.toBeInTheDocument();
   });
@@ -539,15 +424,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={disposalOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: disposalOperationTypeMock as any })} />);
     expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
   });
 
@@ -565,15 +442,7 @@ describe('Stock Operation step 1 (baseoperation details)', () => {
       destinationPartiesFilter: () => true,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={stockTakeOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: stockTakeOperationTypeMock as any })} />);
 
     expect(screen.getByRole('combobox', { name: /reason/i })).toBeInTheDocument();
   });

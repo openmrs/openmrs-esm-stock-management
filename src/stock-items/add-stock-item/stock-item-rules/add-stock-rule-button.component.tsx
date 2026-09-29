@@ -1,5 +1,5 @@
 import { Button } from '@carbon/react';
-import { launchWorkspace } from '@openmrs/esm-framework';
+import { useWorkspace2Context } from '@openmrs/esm-framework';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,13 +9,11 @@ interface AddStockRuleActionButtonProps {
 
 const AddStockRuleActionButton: React.FC<AddStockRuleActionButtonProps> = ({ stockItemUuid }) => {
   const { t } = useTranslation();
+  const { launchChildWorkspace } = useWorkspace2Context();
 
   const handleClick = useCallback(() => {
-    launchWorkspace('stock-item-rules-form-workspace', {
-      workspaceTitle: t('addStockRule', 'Add stock rule'),
-      stockItemUuid,
-    });
-  }, [stockItemUuid, t]);
+    launchChildWorkspace('stock-item-rules-form-workspace', { stockItemUuid });
+  }, [launchChildWorkspace, stockItemUuid]);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">

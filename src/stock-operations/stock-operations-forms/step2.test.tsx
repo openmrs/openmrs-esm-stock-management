@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { useFormContext, type UseFormReturn } from 'react-hook-form';
 import { useConfig, useSession } from '@openmrs/esm-framework';
 import { formatForDatePicker } from '../../constants';
-import { receiptOperationTypeMock } from '@mocks';
+import { mockWorkspace2Props, receiptOperationTypeMock } from '@mocks';
 import { type BaseStockOperationItemFormData } from '../validation-schema';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { useFilterableStockItems } from './hooks/useFilterableStockItems';
@@ -204,15 +204,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   it('should have both previous and next btns', async () => {
     const user = userEvent.setup();
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     // MOVE TO STEP 2
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
@@ -223,15 +215,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
   it('should render stock operation items table with item search component', async () => {
     const user = userEvent.setup();
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     const nextButton = screen.getByRole('button', { name: /Next/i });
     expect(nextButton).toBeInTheDocument();
@@ -260,15 +244,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       setSearchString: mocksetSearchString,
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await user.click(screen.getByRole('button', { name: /Next/i }));
@@ -296,15 +272,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       setSearchString: vi.fn(),
     });
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await user.click(screen.getByRole('button', { name: /Next/i }));
     // -------------------------------
@@ -357,15 +325,7 @@ describe('Stock Operation step 2 (stock operation items details)', () => {
       trigger: vi.fn().mockReturnValue(true),
     } as unknown as UseFormReturn<BaseStockOperationItemFormData>);
 
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
 
     // ----- CLICK NEXT TO MOVE TO STEP 2 ---------
     await user.click(screen.getByRole('button', { name: /Next/i }));

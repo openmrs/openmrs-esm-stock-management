@@ -173,9 +173,6 @@ describe('StockItemsTableComponent', () => {
     const editButtons = screen.getAllByLabelText(/edit stock item/i);
     await user.click(editButtons[0]);
 
-    expect(launchAddOrEditStockItemWorkspace).toHaveBeenCalledWith(
-      expect.any(Function),
-      expect.objectContaining({ uuid: 'item-0' }),
-    );
+    expect(launchAddOrEditStockItemWorkspace).toHaveBeenCalledWith(expect.objectContaining({ uuid: 'item-0' }));
   });
 });

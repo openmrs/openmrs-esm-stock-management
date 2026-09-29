@@ -11,14 +11,11 @@ const StockOperationTypesSelector = () => {
   const { t } = useTranslation();
   const { error, isLoading, operationTypes } = useFilteredOperationTypesByRoles();
 
-  const handleSelect = useCallback(
-    (stockOperationType: StockOperationType) => {
-      const isStockIssueOperation = stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
+  const handleSelect = useCallback((stockOperationType: StockOperationType) => {
+    const isStockIssueOperation = stockOperationType.operationType === OperationType.STOCK_ISSUE_OPERATION_TYPE;
 
-      launchStockoperationAddOrEditWorkSpace(t, stockOperationType, undefined);
-    },
-    [t],
-  );
+    launchStockoperationAddOrEditWorkSpace(stockOperationType, undefined);
+  }, []);
 
   useEffect(() => {
     if (error) {

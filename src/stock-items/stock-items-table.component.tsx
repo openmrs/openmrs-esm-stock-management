@@ -142,7 +142,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
           label={t('editStockItem', 'Edit stock item')}
           onClick={() => {
             stockItem.isDrug = !!stockItem.drugUuid;
-            launchAddOrEditStockItemWorkspace(t, stockItem);
+            launchAddOrEditStockItemWorkspace(stockItem);
           }}
         >
           <Edit size={16} />

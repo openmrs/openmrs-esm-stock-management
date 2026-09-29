@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type DefaultWorkspaceProps } from '@openmrs/esm-framework';
+import { Workspace2, type Workspace2DefinitionProps } from '@openmrs/esm-framework';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
 import { type TabItem } from '../../core/components/tabs/types';
 import BatchInformation from './batch-information/batch-information.component';
@@ -12,11 +12,15 @@ import StockQuantities from './quantities/quantities.component';
 import StockReferences from './stock-item-references/stock-item-references.component';
 import Transactions from './transactions/transactions.component';
 
-interface AddStockItemProps extends Partial<DefaultWorkspaceProps> {
+interface AddStockItemProps {
   stockItem?: StockItemDTO;
 }
 
-const AddEditStockItem: React.FC<AddStockItemProps> = ({ stockItem, closeWorkspace }) => {
+const AddEditStockItem: React.FC<Workspace2DefinitionProps<AddStockItemProps>> = ({
+  workspaceProps,
+  closeWorkspace,
+}) => {
+  const { stockItem } = workspaceProps ?? {};
   const { t } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
   const isEditing = Boolean(stockItem);
@@ -70,15 +74,23 @@ const AddEditStockItem: React.FC<AddStockItemProps> = ({ stockItem, closeWorkspa
   ];
 
   return (
-    <StockOperationStepper
-      steps={tabs.map((tab) => ({
-        title: tab.name,
-        component: tab.component,
-        disabled: tab.disabled,
-      }))}
-      selectedIndex={selectedTab}
-      onChange={handleTabChange}
-    />
+    <Workspace2
+      title={
+        stockItem
+          ? `Edit ${stockItem.drugName || stockItem.conceptName || ''} ${stockItem.isDrug ? '(Drug)' : '(Non Drug)'}`
+          : t('addItem', 'Add stock item')
+      }
+    >
+      <StockOperationStepper
+        steps={tabs.map((tab) => ({
+          title: tab.name,
+          component: tab.component,
+          disabled: tab.disabled,
+        }))}
+        selectedIndex={selectedTab}
+        onChange={handleTabChange}
+      />
+    </Workspace2>
   );
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { vi, describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
+import { mockWorkspace2Props } from '@mocks';
 import AddEditStockItem from './add-stock-item.component';
 
 // Mock the API-hitting child components so the integration test can focus on
@@ -66,12 +67,12 @@ describe('AddEditStockItem (integration)', () => {
       acronym: 'PCM',
     };
 
-    const { rerender } = render(<AddEditStockItem stockItem={itemA} />);
+    const { rerender } = render(<AddEditStockItem {...mockWorkspace2Props({ stockItem: itemA })} />);
 
     expect(screen.getByDisplayValue('Aspirin')).toBeInTheDocument();
     expect(screen.getByDisplayValue('ASP')).toBeInTheDocument();
 
-    rerender(<AddEditStockItem stockItem={itemB} />);
+    rerender(<AddEditStockItem {...mockWorkspace2Props({ stockItem: itemB })} />);
 
     expect(screen.getByDisplayValue('Paracetamol')).toBeInTheDocument();
     expect(screen.getByDisplayValue('PCM')).toBeInTheDocument();

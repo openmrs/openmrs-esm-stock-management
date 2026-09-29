@@ -19,12 +19,13 @@ import {
 import { Save } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import {
-  type DefaultWorkspaceProps,
   getCoreTranslation,
   restBaseUrl,
   showSnackbar,
   useLayoutType,
   useSession,
+  Workspace2,
+  type Workspace2DefinitionProps,
 } from '@openmrs/esm-framework';
 import {
   useRoles,
@@ -58,13 +59,20 @@ import styles from './add-stock-user-role-scope.scss';
 
 const MinDate: Date = today();
 
-type AddStockUserRoleScopeProps = DefaultWorkspaceProps & {
+interface AddStockUserRoleScopeProps {
   model?: UserRoleScope;
   editMode?: boolean;
-};
+}
 
-const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode, closeWorkspace }) => {
+const AddStockUserRoleScope: React.FC<Workspace2DefinitionProps<AddStockUserRoleScopeProps>> = ({
+  workspaceProps,
+  closeWorkspace,
+}) => {
+  const { model, editMode } = workspaceProps ?? {};
   const { t } = useTranslation();
+  const title = model
+    ? t('editUserRoleScope', 'Edit user role scope')
+    : t('addNewUserRoleScope', 'Add new user role scope');
   const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
   const isTablet = useLayoutType() === 'tablet';
@@ -263,166 +271,170 @@ const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, ed
 
   if (isLoading || loadingRoles || isLoadingStockLocations) {
     return (
-      <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
+      <Workspace2 title={title}>
+        <InlineLoading status="active" iconDescription="Loading" description={t('loadingData', 'Loading data...')} />
+      </Workspace2>
     );
   }
 
   return (
-    <Form className={styles.container} onSubmit={addStockUserRole}>
-      <Stack className={styles.form} gap={5}>
-        <div>
-          <FormGroup legendText={t('user', 'User')}>
-            <ComboBox
-              id="userName"
-              initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
-              items={usersResults}
-              itemToString={(item) => {
-                if (!item || typeof item !== 'object') return '';
-                const itemWithPerson = item as { person?: { display?: string }; display?: string };
-                return `${itemWithPerson?.person?.display ?? itemWithPerson?.display ?? ''}`;
-              }}
-              titleText={t('user', 'User')}
-              onChange={onUserChanged}
-              onInputChange={debouncedSearch}
-              placeholder={t('searchUsers', 'Search users')}
-              shouldFilterItem={() => true}
-              size="md"
+    <Workspace2 title={title}>
+      <Form className={styles.container} onSubmit={addStockUserRole}>
+        <Stack className={styles.form} gap={5}>
+          <div>
+            <FormGroup legendText={t('user', 'User')}>
+              <ComboBox
+                id="userName"
+                initialSelectedItem={usersResults.find((user) => user.uuid === model?.userUuid) ?? null}
+                items={usersResults}
+                itemToString={(item) => {
+                  if (!item || typeof item !== 'object') return '';
+                  const itemWithPerson = item as { person?: { display?: string }; display?: string };
+                  return `${itemWithPerson?.person?.display ?? itemWithPerson?.display ?? ''}`;
+                }}
+                titleText={t('user', 'User')}
+                onChange={onUserChanged}
+                onInputChange={debouncedSearch}
+                placeholder={t('searchUsers', 'Search users')}
+                shouldFilterItem={() => true}
+                size="md"
+              />
+            </FormGroup>
+          </div>
+          <Select
+            id="select-role"
+            labelText={t('role', 'Role')}
+            name="role"
+            onChange={onRoleChange}
+            value={formModel.role}
+          >
+            <SelectItem value={''} text={t('chooseARole', 'Choose a role')} />
+            {editMode ? (
+              <SelectItem key={formModel?.role} value={formModel?.role} text={formModel?.role} />
+            ) : (
+              (user?.roles ?? roles)?.map((role) => {
+                return <SelectItem key={role.display} value={role.display} text={role.display} />;
+              })
+            )}
+          </Select>
+          <CheckboxGroup className={styles.checkboxGrid} legendText="">
+            <Checkbox
+              checked={formModel?.enabled}
+              id="chk-userEnabled"
+              labelText={t('enabled', 'Enabled')}
+              onChange={onEnabledChanged}
+              value={model?.enabled ? 'true' : 'false'}
             />
+            <Checkbox
+              checked={formModel?.permanent}
+              id="chk-userPermanent"
+              labelText={t('permanent', 'Permanent')}
+              name="isPermanent"
+              onChange={onPermanentChanged}
+              value={model?.permanent ? 'true' : 'false'}
+            />
+
+            {!formModel?.permanent && (
+              <DatePicker
+                dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                datePickerType="range"
+                light
+                locale="en"
+                minDate={formatForDatePicker(MinDate)}
+                onChange={onActiveDatesChange}
+              >
+                <DatePickerInput
+                  id="date-picker-input-id-start"
+                  labelText={t('activeFrom', 'Active From')}
+                  placeholder={DATE_PICKER_FORMAT}
+                />
+                <DatePickerInput
+                  id="date-picker-input-id-finish"
+                  labelText={t('activeTo', 'Active To')}
+                  placeholder={DATE_PICKER_FORMAT}
+                />
+              </DatePicker>
+            )}
+          </CheckboxGroup>
+          <FormGroup legendText={t('stockOperations', 'Stock operations')}>
+            <span className={styles.subTitle}>
+              {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
+            </span>
           </FormGroup>
-        </div>
-        <Select
-          id="select-role"
-          labelText={t('role', 'Role')}
-          name="role"
-          onChange={onRoleChange}
-          value={formModel.role}
-        >
-          <SelectItem value={''} text={t('chooseARole', 'Choose a role')} />
-          {editMode ? (
-            <SelectItem key={formModel?.role} value={formModel?.role} text={formModel?.role} />
-          ) : (
-            (user?.roles ?? roles)?.map((role) => {
-              return <SelectItem key={role.display} value={role.display} text={role.display} />;
-            })
-          )}
-        </Select>
-        <CheckboxGroup className={styles.checkboxGrid} legendText="">
-          <Checkbox
-            checked={formModel?.enabled}
-            id="chk-userEnabled"
-            labelText={t('enabled', 'Enabled')}
-            onChange={onEnabledChanged}
-            value={model?.enabled ? 'true' : 'false'}
-          />
-          <Checkbox
-            checked={formModel?.permanent}
-            id="chk-userPermanent"
-            labelText={t('permanent', 'Permanent')}
-            name="isPermanent"
-            onChange={onPermanentChanged}
-            value={model?.permanent ? 'true' : 'false'}
-          />
-
-          {!formModel?.permanent && (
-            <DatePicker
-              dateFormat={DATE_PICKER_CONTROL_FORMAT}
-              datePickerType="range"
-              light
-              locale="en"
-              minDate={formatForDatePicker(MinDate)}
-              onChange={onActiveDatesChange}
-            >
-              <DatePickerInput
-                id="date-picker-input-id-start"
-                labelText={t('activeFrom', 'Active From')}
-                placeholder={DATE_PICKER_FORMAT}
-              />
-              <DatePickerInput
-                id="date-picker-input-id-finish"
-                labelText={t('activeTo', 'Active To')}
-                placeholder={DATE_PICKER_FORMAT}
-              />
-            </DatePicker>
-          )}
-        </CheckboxGroup>
-        <FormGroup legendText={t('stockOperations', 'Stock operations')}>
-          <span className={styles.subTitle}>
-            {t('roleDescription', 'The role will be applicable to only selected stock operations.')}
-          </span>
-        </FormGroup>
-        <CheckboxGroup className={styles.checkboxGrid} legendText="">
-          {stockOperations?.length > 0 &&
-            stockOperations.map((type) => {
-              return (
-                <div className={styles.flexRow}>
-                  <Checkbox
-                    checked={isOperationChecked(type)}
-                    className={styles.checkbox}
-                    id={type.uuid}
-                    labelText={type.name}
-                    onChange={(event) => onStockOperationTypeChanged(event)}
-                    value={type.uuid}
-                  />
-                </div>
-              );
-            })}
-        </CheckboxGroup>
-        <FormGroup legendText={t('locations', 'Locations')}>
-          <span className={styles.subTitle}>
-            {t('toggleMessage', 'Use the toggle to apply this scope to the locations under the selected location.')}
-          </span>
-        </FormGroup>
-        <CheckboxGroup className={styles.checkboxGrid} legendText="">
-          {stockLocations?.length > 0 &&
-            stockLocations.map((type) => {
-              const checkedLocation = findCheckedLocation(type);
-
-              const getToggledValue = (locationUuid) => {
-                const location = checkedLocation?.locationUuid === locationUuid ? checkedLocation : null;
-                return location?.enableDescendants === true;
-              };
-
-              return (
-                <div className={styles.flexRow}>
-                  <Checkbox
-                    checked={checkedLocation != null}
-                    className={styles.checkbox}
-                    id={`chk-loc-child-${type.id}`}
-                    key={`chk-loc-child-key-${type.id}`}
-                    labelText={type.name}
-                    name="location"
-                    onChange={(event) => onLocationCheckBoxChanged(event)}
-                    value={type.id}
-                  />
-                  {checkedLocation && (
-                    <Toggle
-                      className={styles.toggle}
-                      hideLabel
-                      id={`tg-loc-child-${type.id}`}
-                      key={`tg-loc-child-key-${type.id}`}
-                      toggled={getToggledValue(type.id)}
-                      size="sm"
+          <CheckboxGroup className={styles.checkboxGrid} legendText="">
+            {stockOperations?.length > 0 &&
+              stockOperations.map((type) => {
+                return (
+                  <div className={styles.flexRow}>
+                    <Checkbox
+                      checked={isOperationChecked(type)}
+                      className={styles.checkbox}
+                      id={type.uuid}
+                      labelText={type.name}
+                      onChange={(event) => onStockOperationTypeChanged(event)}
+                      value={type.uuid}
                     />
-                  )}
-                </div>
-              );
-            })}
-        </CheckboxGroup>
-      </Stack>
-      <ButtonSet
-        className={classNames(styles.buttonSet, {
-          [styles.tablet]: isTablet,
-          [styles.desktop]: !isTablet,
-        })}
-      >
-        <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
-          {getCoreTranslation('cancel')}
-        </Button>
-        <Button type="submit" className={styles.button} renderIcon={Save}>
-          {getCoreTranslation('save')}
-        </Button>
-      </ButtonSet>
-    </Form>
+                  </div>
+                );
+              })}
+          </CheckboxGroup>
+          <FormGroup legendText={t('locations', 'Locations')}>
+            <span className={styles.subTitle}>
+              {t('toggleMessage', 'Use the toggle to apply this scope to the locations under the selected location.')}
+            </span>
+          </FormGroup>
+          <CheckboxGroup className={styles.checkboxGrid} legendText="">
+            {stockLocations?.length > 0 &&
+              stockLocations.map((type) => {
+                const checkedLocation = findCheckedLocation(type);
+
+                const getToggledValue = (locationUuid) => {
+                  const location = checkedLocation?.locationUuid === locationUuid ? checkedLocation : null;
+                  return location?.enableDescendants === true;
+                };
+
+                return (
+                  <div className={styles.flexRow}>
+                    <Checkbox
+                      checked={checkedLocation != null}
+                      className={styles.checkbox}
+                      id={`chk-loc-child-${type.id}`}
+                      key={`chk-loc-child-key-${type.id}`}
+                      labelText={type.name}
+                      name="location"
+                      onChange={(event) => onLocationCheckBoxChanged(event)}
+                      value={type.id}
+                    />
+                    {checkedLocation && (
+                      <Toggle
+                        className={styles.toggle}
+                        hideLabel
+                        id={`tg-loc-child-${type.id}`}
+                        key={`tg-loc-child-key-${type.id}`}
+                        toggled={getToggledValue(type.id)}
+                        size="sm"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+          </CheckboxGroup>
+        </Stack>
+        <ButtonSet
+          className={classNames(styles.buttonSet, {
+            [styles.tablet]: isTablet,
+            [styles.desktop]: !isTablet,
+          })}
+        >
+          <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
+            {getCoreTranslation('cancel')}
+          </Button>
+          <Button type="submit" className={styles.button} renderIcon={Save}>
+            {getCoreTranslation('save')}
+          </Button>
+        </ButtonSet>
+      </Form>
+    </Workspace2>
   );
 };
 

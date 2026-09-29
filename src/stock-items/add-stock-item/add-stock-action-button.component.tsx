@@ -7,8 +7,8 @@ const AddStockItemActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleAddOrLaunchStockItemWorkspace = useCallback(() => {
-    launchAddOrEditStockItemWorkspace(t);
-  }, [t]);
+    launchAddOrEditStockItemWorkspace();
+  }, []);
 
   return (
     <Button onClick={handleAddOrLaunchStockItemWorkspace} size="md" kind="primary">

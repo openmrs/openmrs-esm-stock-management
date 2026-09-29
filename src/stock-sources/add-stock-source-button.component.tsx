@@ -1,16 +1,14 @@
 import { Button } from '@carbon/react';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { launchWorkspace } from '@openmrs/esm-framework';
+import { launchWorkspace2 } from '@openmrs/esm-framework';
 
 const AddStockSourceActionButton: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = useCallback(() => {
-    launchWorkspace('stock-sources-form-workspace', {
-      workspaceTitle: t('addNewStockSource', 'Add new source'),
-    });
-  }, [t]);
+    launchWorkspace2('stock-sources-form-workspace');
+  }, []);
 
   return (
     <Button onClick={handleClick} size="md" kind="primary">

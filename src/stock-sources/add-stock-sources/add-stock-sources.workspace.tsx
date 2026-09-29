@@ -9,7 +9,8 @@ import {
   showSnackbar,
   useConfig,
   useLayoutType,
-  type DefaultWorkspaceProps,
+  Workspace2,
+  type Workspace2DefinitionProps,
 } from '@openmrs/esm-framework';
 import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
@@ -18,11 +19,15 @@ import { type ConfigObject } from '../../config-schema';
 import { handleMutate } from '../../utils';
 import styles from './add-stock-sources.scss';
 
-type AddStockSourceProps = DefaultWorkspaceProps & {
+interface AddStockSourceProps {
   model?: StockSource;
-};
+}
 
-const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWorkspace }) => {
+const StockSourcesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockSourceProps>> = ({
+  workspaceProps,
+  closeWorkspace,
+}) => {
+  const { model } = workspaceProps ?? {};
   const { t } = useTranslation();
   const isTablet = useLayoutType() === 'tablet';
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
@@ -89,58 +94,60 @@ const StockSourcesAddOrUpdate: React.FC<AddStockSourceProps> = ({ model, closeWo
   );
 
   return (
-    <Form className={styles.container}>
-      <Stack className={styles.form} gap={5}>
-        <FormGroup legendText={''}>
-          <TextInput
-            id="fullname"
-            labelText={t('fullName', 'Full name')}
-            onChange={onNameChanged}
-            placeholder="e.g National Medical Stores"
-            size="md"
-            type="text"
-            value={model?.name}
-          />
-        </FormGroup>
-        <FormGroup legendText={''}>
-          <TextInput
-            id="acronym"
-            labelText={t('acronymOrCode', 'Acronym/Code')}
-            onChange={onAcronymChanged}
-            placeholder="e.g NMS"
-            size="md"
-            type="text"
-            value={model?.acronym}
-          />
-        </FormGroup>
-        <Select
-          name="sourceType"
-          className="select-field"
-          labelText={t('sourceType', 'Source type')}
-          id="sourceType"
-          value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
-          onChange={onSourceTypeChange}
+    <Workspace2 title={model ? t('editStockSource', 'Edit stock source') : t('addNewStockSource', 'Add new source')}>
+      <Form className={styles.container}>
+        <Stack className={styles.form} gap={5}>
+          <FormGroup legendText={''}>
+            <TextInput
+              id="fullname"
+              labelText={t('fullName', 'Full name')}
+              onChange={onNameChanged}
+              placeholder="e.g National Medical Stores"
+              size="md"
+              type="text"
+              value={model?.name}
+            />
+          </FormGroup>
+          <FormGroup legendText={''}>
+            <TextInput
+              id="acronym"
+              labelText={t('acronymOrCode', 'Acronym/Code')}
+              onChange={onAcronymChanged}
+              placeholder="e.g NMS"
+              size="md"
+              type="text"
+              value={model?.acronym}
+            />
+          </FormGroup>
+          <Select
+            name="sourceType"
+            className="select-field"
+            labelText={t('sourceType', 'Source type')}
+            id="sourceType"
+            value={formModel?.sourceType ? formModel.sourceType.uuid : ''}
+            onChange={onSourceTypeChange}
+          >
+            <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
+            {items?.answers?.map((sourceType) => (
+              <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
+            ))}
+          </Select>
+        </Stack>
+        <ButtonSet
+          className={classNames(styles.buttonSet, {
+            [styles.tablet]: isTablet,
+            [styles.desktop]: !isTablet,
+          })}
         >
-          <SelectItem disabled hidden value="" text={t('chooseSourceType', 'Choose a source type')} />
-          {items?.answers?.map((sourceType) => (
-            <SelectItem key={sourceType.uuid} value={sourceType.uuid} text={sourceType.display} />
-          ))}
-        </Select>
-      </Stack>
-      <ButtonSet
-        className={classNames(styles.buttonSet, {
-          [styles.tablet]: isTablet,
-          [styles.desktop]: !isTablet,
-        })}
-      >
-        <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
-          {getCoreTranslation('cancel')}
-        </Button>
-        <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>
-          {getCoreTranslation('save')}
-        </Button>
-      </ButtonSet>
-    </Form>
+          <Button kind="secondary" onClick={() => closeWorkspace()} className={styles.button}>
+            {getCoreTranslation('cancel')}
+          </Button>
+          <Button type="submit" className={styles.button} onClick={handleSave} kind="primary" renderIcon={Save}>
+            {getCoreTranslation('save')}
+          </Button>
+        </ButtonSet>
+      </Form>
+    </Workspace2>
   );
 };
 

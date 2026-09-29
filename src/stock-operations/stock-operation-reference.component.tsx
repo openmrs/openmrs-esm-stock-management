@@ -26,12 +26,11 @@ const StockOperationReference = ({ operationNumber, operationUuid }: StockOperat
       return;
     }
     launchStockoperationAddOrEditWorkSpace(
-      t,
       operationType,
       stockOperation,
       stockOperation?.requisitionStockOperationUuid,
     );
-  }, [stockOperation, t, types.results]);
+  }, [stockOperation, types.results]);
 
   useEffect(() => {
     if (stockOperationError) {

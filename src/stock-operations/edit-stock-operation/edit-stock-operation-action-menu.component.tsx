@@ -40,12 +40,11 @@ const EditStockOperationActionMenu: React.FC<EditStockOperationActionMenuProps> 
 
   const handleLaunchWorkspace = useCallback(() => {
     launchStockoperationAddOrEditWorkSpace(
-      t,
       activeOperationType,
       fetchedStockOperation,
       fetchedStockOperation?.requisitionStockOperationUuid,
     );
-  }, [t, activeOperationType, fetchedStockOperation]);
+  }, [activeOperationType, fetchedStockOperation]);
 
   useEffect(() => {
     if (operationTypesError || stockOperationError) {

@@ -56,11 +56,10 @@ const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: Stoc
             : `${t('stockItemAdded', 'Stock item added successfully')}`,
         });
         if (!stockItem) {
-          onCloseWorkspace?.();
-          // launch edit stock item workspace
+          // Relaunching with the saved item replaces this workspace with the edit workspace
           const item = response.data;
           item.isDrug = !!item.drugUuid;
-          launchAddOrEditStockItemWorkspace(t, item);
+          launchAddOrEditStockItemWorkspace(item);
         }
       }
 
