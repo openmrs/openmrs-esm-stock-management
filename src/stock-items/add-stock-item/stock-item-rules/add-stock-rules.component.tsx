@@ -1,6 +1,7 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
+import { useSWRConfig } from 'swr';
 import {
   Button,
   ButtonSet,
@@ -14,6 +15,7 @@ import {
 } from '@carbon/react';
 import {
   getCoreTranslation,
+  restBaseUrl,
   showSnackbar,
   useLayoutType,
   Workspace2,
@@ -37,6 +39,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
 }) => {
   const { model, stockItemUuid } = workspaceProps ?? {};
   const { t } = useTranslation();
+  const { mutate } = useSWRConfig();
   const isTablet = useLayoutType() === 'tablet';
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
     startIndex: 0,
@@ -158,6 +161,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
               kind: 'success',
               subtitle: t('stockRuleAddedSuccessfully', 'Stock rule added successfully'),
             });
+            mutate((key) => typeof key === 'string' && key.startsWith(`${restBaseUrl}/stockmanagement/stockrule`));
             closeWorkspace();
           },
           (error) => {
@@ -171,7 +175,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
         )
         .catch();
     },
-    [formModel, model, t, stockItemUuid, closeWorkspace],
+    [formModel, model, t, stockItemUuid, closeWorkspace, mutate],
   );
 
   return (
