@@ -1,7 +1,6 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useSWRConfig } from 'swr';
 import {
   Button,
   ButtonSet,
@@ -26,6 +25,7 @@ import { ResourceRepresentation } from '../../../core/api/api';
 import { type StockItemInventoryFilter, useStockItemPackagingUOMs } from '../../stock-items.resource';
 import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { useRoles, useStockTagLocations } from '../../../stock-lookups/stock-lookups.resource';
+import { useHandleMutate } from '../../../utils';
 import styles from './add-stock-rules.scss';
 
 interface AddStockRuleProps {
@@ -39,7 +39,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
 }) => {
   const { model, stockItemUuid } = workspaceProps ?? {};
   const { t } = useTranslation();
-  const { mutate } = useSWRConfig();
+  const handleMutate = useHandleMutate();
   const isTablet = useLayoutType() === 'tablet';
   const [stockItemFilter, setStockItemFilter] = useState<StockItemInventoryFilter>({
     startIndex: 0,
@@ -161,7 +161,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
               kind: 'success',
               subtitle: t('stockRuleAddedSuccessfully', 'Stock rule added successfully'),
             });
-            mutate((key) => typeof key === 'string' && key.startsWith(`${restBaseUrl}/stockmanagement/stockrule`));
+            handleMutate(`${restBaseUrl}/stockmanagement/stockrule`);
             closeWorkspace();
           },
           (error) => {
@@ -175,7 +175,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
         )
         .catch();
     },
-    [formModel, model, t, stockItemUuid, closeWorkspace, mutate],
+    [formModel, model, t, stockItemUuid, closeWorkspace, handleMutate],
   );
 
   return (
