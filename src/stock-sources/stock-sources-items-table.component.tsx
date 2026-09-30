@@ -19,7 +19,7 @@ import {
 } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
-import { handleMutate } from '../utils';
+import { useHandleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
 import { type CustomTableHeader } from '../core/components/table/types';
 import AddStockSourceActionButton from './add-stock-source-button.component';
@@ -31,6 +31,7 @@ import styles from './stock-sources.scss';
 
 const StockSourcesItems: React.FC = () => {
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const [selectedSourceType, setSelectedSourceType] = React.useState('');
 
   const handleRefresh = () => {

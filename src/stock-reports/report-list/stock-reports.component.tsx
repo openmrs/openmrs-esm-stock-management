@@ -48,7 +48,7 @@ import {
   BatchJobStatusPending,
   BatchJobStatusRunning,
 } from '../../core/api/types/BatchJob';
-import { handleMutate } from '../../utils';
+import { useHandleMutate } from '../../utils';
 import { PrivilegedView } from '../../core/components/privileged-view-component/privileged-view.component';
 import NewReportActionButton from './new-report-button.component';
 import StockReportStatus from './stock-report-status.component';
@@ -58,6 +58,7 @@ import styles from './stock-reports.scss';
 
 const StockReports: React.FC = () => {
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
 
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/batchjob?batchJobType=Report&v=default`);

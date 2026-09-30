@@ -1,15 +1,14 @@
 import React from 'react';
 import { vi, describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { type FetchResponse, showModal, showSnackbar } from '@openmrs/esm-framework';
 import { deleteStockSource } from '../stock-sources.resource';
-import { handleMutate } from '../../utils';
 import DeleteConfirmation from '../../stock-user-role-scopes/delete-stock-user-scope.modal';
 import StockSourcesDeleteActionMenu from './stock-sources-delete.component';
 
 const mockDeleteStockSource = vi.mocked(deleteStockSource);
-const mockHandleMutate = vi.mocked(handleMutate);
+const mockHandleMutate = vi.fn();
 const mockShowModal = vi.mocked(showModal);
 const mockShowSnackbar = vi.mocked(showSnackbar);
 
@@ -18,7 +17,7 @@ vi.mock('../stock-sources.resource', () => ({
 }));
 
 vi.mock('../../utils', () => ({
-  handleMutate: vi.fn(),
+  useHandleMutate: () => mockHandleMutate,
 }));
 
 describe('StockSourcesDeleteActionMenu', () => {
@@ -87,28 +86,21 @@ describe('StockSourcesDeleteActionMenu', () => {
     expect(deleteStockSource).toHaveBeenCalledWith([uuid]);
   });
 
-  it('calls handleMutate with the correct URL on successful deletion', async () => {
+  it('revalidates stock sources after a successful deletion', async () => {
     const user = userEvent.setup();
     mockDeleteStockSource.mockResolvedValueOnce({} as FetchResponse<any>);
+    mockShowModal.mockReturnValueOnce(vi.fn());
 
-    const mockOnConfirmation = vi.fn();
-    const mockClose = vi.fn();
+    render(<StockSourcesDeleteActionMenu uuid={uuid} />);
 
-    render(
-      <DeleteConfirmation
-        close={mockClose}
-        onConfirmation={async () => {
-          await deleteStockSource([uuid]);
-          handleMutate('/openmrs/ws/rest/v1/stocksource');
-        }}
-      />,
-    );
+    await user.click(screen.getByRole('button', { name: /delete source/i }));
+    const { onConfirmation } = mockShowModal.mock.calls[0][1] as { onConfirmation: () => void };
+    onConfirmation();
 
-    const deleteButton = screen.getByRole('button', { name: /danger\s*delete/i });
-    await user.click(deleteButton);
-
+    await waitFor(() => {
+      expect(mockHandleMutate).toHaveBeenCalledWith(expect.stringContaining('/stockmanagement/stocksource'));
+    });
     expect(mockDeleteStockSource).toHaveBeenCalledWith([uuid]);
-    expect(mockHandleMutate).toHaveBeenCalledWith('/openmrs/ws/rest/v1/stocksource');
   });
 
   it('calls showSnackbar with the correct parameters on deletion error', async () => {

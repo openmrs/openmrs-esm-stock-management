@@ -52,7 +52,7 @@ import {
 import { type Role } from '../../core/api/types/identity/Role';
 import { type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { type User } from '../../core/api/types/identity/User';
-import { handleMutate } from '../../utils';
+import { useHandleMutate } from '../../utils';
 import useSearchUser from '../../stock-operations/stock-operations-forms/hooks/useSearchUser';
 import { useDebounce } from '../../core/hooks/debounce-hook';
 import styles from './add-stock-user-role-scope.scss';
@@ -70,6 +70,7 @@ const AddStockUserRoleScope: React.FC<Workspace2DefinitionProps<AddStockUserRole
 }) => {
   const { model, editMode } = workspaceProps ?? {};
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const title = model
     ? t('editUserRoleScope', 'Edit user role scope')
     : t('addNewUserRoleScope', 'Add new user role scope');

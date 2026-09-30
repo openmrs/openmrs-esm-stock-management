@@ -43,7 +43,7 @@ import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, to
 import { BatchJobTypeReport } from '../../core/api/types/BatchJob';
 import { createBatchJob } from '../../stock-batch/stock-batch.resource';
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
-import { handleMutate } from '../../utils';
+import { useHandleMutate } from '../../utils';
 import { type Concept } from '../../core/api/types/concept/Concept';
 import { type Patient } from '../../core/api/types/identity/Patient';
 import { type StockItemDTO } from '../../core/api/types/stockItem/StockItem';
@@ -89,6 +89,7 @@ export interface ReportModel {
 const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ workspaceProps, closeWorkspace }) => {
   const { model } = workspaceProps ?? {};
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const { stockItemCategoryUUID } = useConfig<ConfigObject>();
   const isTablet = useLayoutType() === 'tablet';
 

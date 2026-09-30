@@ -16,7 +16,7 @@ import { useConcept } from '../../stock-lookups/stock-lookups.resource';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
 import { type ConfigObject } from '../../config-schema';
-import { handleMutate } from '../../utils';
+import { useHandleMutate } from '../../utils';
 import styles from './add-stock-sources.scss';
 
 interface AddStockSourceProps {
@@ -29,6 +29,7 @@ const StockSourcesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockSource
 }) => {
   const { model } = workspaceProps ?? {};
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const isTablet = useLayoutType() === 'tablet';
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
@@ -90,7 +91,7 @@ const StockSourcesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockSource
         )
         .catch();
     },
-    [formModel, model, t, closeWorkspace],
+    [formModel, model, t, closeWorkspace, handleMutate],
   );
 
   return (
