@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { type FetchResponse, useConfig } from '@openmrs/esm-framework';
 import { type StockSource } from '../../core/api/types/stockOperation/StockSource';
 import { createOrUpdateStockSource } from '../stock-sources.resource';
+import { mockWorkspace2Props } from '@mocks';
 import StockSourcesAddOrUpdate from './add-stock-sources.workspace';
 
 const mockCreateOrUpdateStockSource = vi.mocked(createOrUpdateStockSource);
@@ -31,14 +32,7 @@ describe('StockSourcesAddOrUpdate', () => {
   });
 
   it('renders correctly without model prop', () => {
-    render(
-      <StockSourcesAddOrUpdate
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({})} />);
     expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/acronym\/code/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/source type/i)).toBeInTheDocument();
@@ -94,15 +88,7 @@ describe('StockSourcesAddOrUpdate', () => {
       dateVoided: null,
       voidReason: null,
     };
-    render(
-      <StockSourcesAddOrUpdate
-        model={model}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({ model })} />);
     expect(screen.getByLabelText(/full name/i)).toHaveValue('Test Source');
     expect(screen.getByLabelText(/acronym\/code/i)).toHaveValue('TS');
     expect(screen.getByLabelText(/source type/i)).toHaveValue('type1');
@@ -110,14 +96,7 @@ describe('StockSourcesAddOrUpdate', () => {
 
   it('updates form fields correctly on user input', async () => {
     const user = userEvent.setup();
-    render(
-      <StockSourcesAddOrUpdate
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({})} />);
 
     await user.type(screen.getByLabelText(/full name/i), 'New Source');
     await user.type(screen.getByLabelText(/acronym\/code/i), 'NS');
@@ -135,14 +114,7 @@ describe('StockSourcesAddOrUpdate', () => {
       statusText: 'OK',
     } as unknown as FetchResponse);
 
-    render(
-      <StockSourcesAddOrUpdate
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({})} />);
 
     await user.type(screen.getByLabelText(/full name/i), 'New Source');
     await user.type(screen.getByLabelText(/acronym\/code/i), 'NS');
@@ -159,14 +131,7 @@ describe('StockSourcesAddOrUpdate', () => {
       statusText: 'OK',
     } as unknown as FetchResponse);
 
-    render(
-      <StockSourcesAddOrUpdate
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({})} />);
 
     await user.click(screen.getByText(/save/i));
   });
@@ -175,28 +140,14 @@ describe('StockSourcesAddOrUpdate', () => {
     const user = userEvent.setup();
     mockCreateOrUpdateStockSource.mockRejectedValue(new Error('API Error'));
 
-    render(
-      <StockSourcesAddOrUpdate
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({})} />);
 
     await user.click(screen.getByText(/save/i));
   });
 
   it('closes workspace when cancel button is clicked', async () => {
     const user = userEvent.setup();
-    render(
-      <StockSourcesAddOrUpdate
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockSourcesAddOrUpdate {...mockWorkspace2Props({})} />);
 
     await user.click(screen.getByText(/cancel/i));
   });

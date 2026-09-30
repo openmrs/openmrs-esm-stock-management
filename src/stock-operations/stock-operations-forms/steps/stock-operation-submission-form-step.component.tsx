@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { createStockOperation, deleteStockOperationItem, updateStockOperation } from '../../stock-operations.resource';
 import { extractErrorMessagesFromResponse } from '../../../constants';
-import { handleMutate } from '../../../utils';
+import { useHandleMutate } from '../../../utils';
 import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { otherUser } from '../../../core/utils/utils';
 import { launchStockOperationsModal } from '../../stock-operation.utils';
@@ -32,6 +32,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
   dismissWorkspace,
 }) => {
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
   const editable = useMemo(() => !stockOperation || stockOperation.status === 'NEW', [stockOperation]);
   const form = useFormContext<StockOperationItemDtoSchema>();
@@ -121,7 +122,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
       }
     })(); // Call handleSubmit to trigger validation and submission
     return result; // Return the result after handleSubmit completes
-  }, [form, stockOperation, t, approvalRequired, isStockIssueOperation, dismissWorkspace]);
+  }, [form, stockOperation, t, approvalRequired, isStockIssueOperation, dismissWorkspace, handleMutate]);
 
   const handleComplete = useCallback(() => {
     handleSave().then((operation) => {

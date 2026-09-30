@@ -1,6 +1,13 @@
 import { CircleDash } from '@carbon/react/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type DefaultWorkspaceProps, parseDate, showSnackbar, useConfig, useSession } from '@openmrs/esm-framework';
+import {
+  parseDate,
+  showSnackbar,
+  useConfig,
+  useSession,
+  Workspace2,
+  type Workspace2DefinitionProps,
+} from '@openmrs/esm-framework';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { type FieldError, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -38,18 +45,17 @@ import { useStockOperationAndItems } from '../stock-operations.resource';
  * @property {string} [stockRequisitionUuid] - Requisition operation uuid used in stock issue stockOperation type
  * When undefined or null, the form will be in creation mode.
  */
-type StockOperationFormProps = DefaultWorkspaceProps & {
+interface StockOperationFormProps {
   stockOperation?: StockOperationDTO;
   stockOperationType: StockOperationType;
   stockRequisitionUuid?: string;
-};
+}
 
-const StockOperationForm: React.FC<StockOperationFormProps> = ({
-  stockOperation,
-  stockOperationType,
-  stockRequisitionUuid,
+const StockOperationForm: React.FC<Workspace2DefinitionProps<StockOperationFormProps>> = ({
+  workspaceProps,
   closeWorkspace,
 }) => {
+  const { stockOperation, stockOperationType, stockRequisitionUuid } = workspaceProps ?? {};
   const { t } = useTranslation();
   const operationType = useMemo(() => {
     return operationFromString(stockOperationType.operationType);
@@ -260,22 +266,30 @@ const StockOperationForm: React.FC<StockOperationFormProps> = ({
   }, [stockRequisitionUuid, error, t, operationType]);
 
   return (
-    <FormProvider {...form}>
-      {renderItemForm ? (
-        <StockItemForm {...itemsFormProps} />
-      ) : (
-        <StockOperationStepper
-          steps={steps.map((tab, index) => ({
-            title: tab.name,
-            component: tab.component,
-            disabled: tab.disabled,
-            icon: <CircleDash />,
-          }))}
-          selectedIndex={selectedIndex}
-          onChange={setSelectedIndex}
-        />
-      )}
-    </FormProvider>
+    <Workspace2
+      title={
+        stockOperation
+          ? t('editOperationTitle', 'Edit {{operationType}}', { operationType: stockOperation.operationTypeName })
+          : t('newOperationTitle', 'New: {{operationName}}', { operationName: stockOperationType?.name })
+      }
+    >
+      <FormProvider {...form}>
+        {renderItemForm ? (
+          <StockItemForm {...itemsFormProps} />
+        ) : (
+          <StockOperationStepper
+            steps={steps.map((tab, index) => ({
+              title: tab.name,
+              component: tab.component,
+              disabled: tab.disabled,
+              icon: <CircleDash />,
+            }))}
+            selectedIndex={selectedIndex}
+            onChange={setSelectedIndex}
+          />
+        )}
+      </FormProvider>
+    </Workspace2>
   );
 };
 

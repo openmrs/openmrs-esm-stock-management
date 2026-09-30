@@ -22,7 +22,7 @@ const StockOperationIssueStockButton: React.FC<StockOperationIssueStockButtonPro
   );
 
   const handleButtonClick = () => {
-    launchStockoperationAddOrEditWorkSpace(t, stockIssueOperationType, undefined, operation.uuid);
+    launchStockoperationAddOrEditWorkSpace(stockIssueOperationType, undefined, operation.uuid);
   };
 
   useEffect(() => {

@@ -1,23 +1,14 @@
-import { launchWorkspace, showModal } from '@openmrs/esm-framework';
-import { type TFunction } from 'i18next';
+import { launchWorkspace2, showModal } from '@openmrs/esm-framework';
 import { useLocation } from 'react-router-dom';
 import { type StockOperationDTO } from '../core/api/types/stockOperation/StockOperationDTO';
 import { type StockOperationType } from '../core/api/types/stockOperation/StockOperationType';
 
 export const launchStockoperationAddOrEditWorkSpace = (
-  t: TFunction,
   operationType: StockOperationType,
   stockOperation?: StockOperationDTO,
   stockRequisitionUuid?: string, // Only supplied on stock issue (when workspace is launched for stock issue)
 ) => {
-  launchWorkspace('stock-operation-form-workspace', {
-    workspaceTitle: stockOperation
-      ? t('editOperationTitle', 'Edit {{operationType}}', {
-          operationType: stockOperation?.operationTypeName,
-        })
-      : t('newOperationTitle', 'New: {{operationName}}', {
-          operationName: operationType?.name,
-        }),
+  launchWorkspace2('stock-operation-form-workspace', {
     stockOperationType: operationType,
     stockOperation: stockOperation,
     stockRequisitionUuid: stockRequisitionUuid,
