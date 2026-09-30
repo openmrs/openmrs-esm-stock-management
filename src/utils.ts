@@ -10,10 +10,7 @@ export const useHandleMutate = () => {
   const { mutate } = useSWRConfig();
 
   return useCallback(
-    (url: string) =>
-      mutate((key) => typeof key === 'string' && key.startsWith(url), undefined, {
-        revalidate: true,
-      }),
+    (url: string) => mutate((key) => typeof key === 'string' && key.startsWith(url), undefined),
     [mutate],
   );
 };
