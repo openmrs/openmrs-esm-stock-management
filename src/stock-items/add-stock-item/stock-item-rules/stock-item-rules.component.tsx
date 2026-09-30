@@ -21,7 +21,7 @@ import {
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import { formatDisplayDate } from '../../../core/utils/datetimeUtils';
 import { ResourceRepresentation } from '../../../core/api/api';
-import { handleMutate } from '../../../utils';
+import { useHandleMutate } from '../../../utils';
 import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { useStockItemRules } from './stock-item-rules.resource';
 import AddStockRuleActionButton from './add-stock-rule-button.component';
@@ -39,6 +39,7 @@ interface StockItemRulesProps {
 
 const StockItemRules: React.FC<StockItemRulesProps> = ({ stockItemUuid, model, canEdit = true }) => {
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const { isLoading, items, tableHeaders, currentPage, currentPageSize, pageSizes, totalItems, setPageSize, goTo } =
     useStockItemRules({
       v: ResourceRepresentation.Default,

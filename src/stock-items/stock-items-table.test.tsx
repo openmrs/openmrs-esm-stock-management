@@ -3,19 +3,19 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/react';
 import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
-import { handleMutate } from '../utils';
 import { launchAddOrEditStockItemWorkspace } from './stock-item.utils';
 import { useStockItemsPages } from './stock-items-table.resource';
 import StockItemsTableComponent from './stock-items-table.component';
 
 const mockUseStockItemsPages = vi.mocked(useStockItemsPages);
+const mockHandleMutate = vi.fn();
 
 vi.mock('./stock-items-table.resource', () => ({
   useStockItemsPages: vi.fn(),
 }));
 
 vi.mock('../utils', () => ({
-  handleMutate: vi.fn(),
+  useHandleMutate: () => mockHandleMutate,
 }));
 
 vi.mock('./stock-item.utils', () => ({
@@ -162,7 +162,7 @@ describe('StockItemsTableComponent', () => {
     expect(refreshButton).toBeInTheDocument();
     await user.click(refreshButton);
     await waitFor(() => {
-      expect(handleMutate).toHaveBeenCalledWith(expect.stringContaining('/stockmanagement/stockitem'));
+      expect(mockHandleMutate).toHaveBeenCalledWith(expect.stringContaining('/stockmanagement/stockitem'));
     });
   });
 

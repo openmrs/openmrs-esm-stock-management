@@ -9,7 +9,7 @@ import {
 } from '../../core/api/types/stockOperation/StockOperationAction';
 import { executeStockOperationAction } from '../stock-operations.resource';
 import { extractErrorMessagesFromResponse } from '../../constants';
-import { handleMutate } from '../../utils';
+import { useHandleMutate } from '../../utils';
 import styles from './stock-operations.scss';
 
 interface StockOperationsModalProps {
@@ -22,6 +22,7 @@ interface StockOperationsModalProps {
 const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requireReason, operation, closeModal }) => {
   const confirmType = title.toLocaleLowerCase().trim();
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const [notes, setNotes] = useState('');
   const [isApproving, setIsApproving] = useState(false);
 
