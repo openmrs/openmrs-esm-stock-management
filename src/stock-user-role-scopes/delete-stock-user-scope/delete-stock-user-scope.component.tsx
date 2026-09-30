@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { TrashCan } from '@carbon/react/icons';
 import { restBaseUrl, showModal, showSnackbar } from '@openmrs/esm-framework';
 import { deleteUserRoleScopes } from '../stock-user-role-scopes.resource';
-import { handleMutate } from '../../utils';
+import { useMutateByPrefix } from '../../utils';
 
 interface StockUserScopDeleteActionMenuProps {
   uuid: string;
@@ -12,6 +12,7 @@ interface StockUserScopDeleteActionMenuProps {
 
 const StockUserScopeDeleteActionMenu: React.FC<StockUserScopDeleteActionMenuProps> = ({ uuid }) => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
 
   const [deletingUserScope, setDeletingUserScope] = useState(false);
 
@@ -48,7 +49,7 @@ const StockUserScopeDeleteActionMenu: React.FC<StockUserScopDeleteActionMenuProp
         close();
       },
     });
-  }, [t, uuid]);
+  }, [t, uuid, handleMutate]);
 
   const deleteButton = (
     <IconButton

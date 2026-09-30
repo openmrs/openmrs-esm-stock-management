@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { getCoreTranslation, restBaseUrl, showSnackbar, useLayoutType } from '@openmrs/esm-framework';
 import { createStockItem, updateStockItem } from '../../stock-items.resource';
 import { expirationOptions, radioOptions, StockItemType } from './stock-item-details.resource';
-import { handleMutate } from '../../../utils';
+import { useMutateByPrefix } from '../../../utils';
 import { launchAddOrEditStockItemWorkspace } from '../../stock-item.utils';
 import { createStockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
 import { type StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
@@ -31,6 +31,7 @@ interface StockItemDetailsProps {
 
 const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: StockItemDetailsProps) => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
   const isTablet = useLayoutType() === 'tablet';
 
   const { handleSubmit, control, formState, watch } = useForm<StockItemFormData>({

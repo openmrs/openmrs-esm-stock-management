@@ -11,7 +11,7 @@ import { Add } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 import { restBaseUrl } from '@openmrs/esm-framework';
-import { handleMutate } from '../utils';
+import { useMutateByPrefix } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
 import { useStockLocationPages } from './stock-locations-table.resource';
 import DataList from '../core/components/table/table.component';
@@ -24,6 +24,7 @@ interface StockLocationsTableProps {
 
 const StockLocationsItems: React.FC<StockLocationsTableProps> = () => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
   const { mutate } = useSWRConfig();
   const [showLocationModal, setAddLocationModal] = useState(false);
 

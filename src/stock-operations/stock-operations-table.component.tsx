@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
-import { handleMutate } from '../utils';
+import { useMutateByPrefix } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
 import { useStockOperationPages } from './stock-operations-table.resource';
 import EditStockOperationActionMenu from './edit-stock-operation/edit-stock-operation-action-menu.component';
@@ -44,6 +44,7 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
 
   const handleRefresh = () => {
     handleMutate(`${restBaseUrl}/stockmanagement/stockoperation`);

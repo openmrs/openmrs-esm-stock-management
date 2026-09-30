@@ -22,7 +22,7 @@ import { type StockItemReferenceDTO } from '../../../core/api/types/stockItem/St
 import { createStockItemReference, deleteStockItemReference } from '../../stock-items.resource';
 import { restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { extractErrorMessagesFromResponse } from '../../../constants';
-import { handleMutate } from '../../../utils';
+import { useMutateByPrefix } from '../../../utils';
 import ControlledTextInput from '../../../core/components/carbon/controlled-text-input.component';
 import StockSourceSelector from './stock-references-selector.component';
 import { type CustomTableHeader, type CustomTableRow } from '../../../core/components/table/types';
@@ -36,6 +36,7 @@ interface StockReferencesProps {
 
 const StockReferences: React.FC<StockReferencesProps> = ({ stockItemUuid }) => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
 
   // get stock item references
   const { items, isLoading, setStockItemUuid } = useStockItemReferencesHook();

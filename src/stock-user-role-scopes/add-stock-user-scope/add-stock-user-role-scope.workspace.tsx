@@ -52,7 +52,7 @@ import {
 import { type Role } from '../../core/api/types/identity/Role';
 import { type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { type User } from '../../core/api/types/identity/User';
-import { handleMutate } from '../../utils';
+import { useMutateByPrefix } from '../../utils';
 import styles from './add-stock-user-role-scope.scss';
 
 const MinDate: Date = today();
@@ -64,6 +64,7 @@ type AddStockUserRoleScopeProps = DefaultWorkspaceProps & {
 
 const AddStockUserRoleScope: React.FC<AddStockUserRoleScopeProps> = ({ model, editMode, closeWorkspace }) => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
   const currentUser = useSession();
   const [formModel, setFormModel] = useState<UserRoleScope>({ ...model });
   const isTablet = useLayoutType() === 'tablet';

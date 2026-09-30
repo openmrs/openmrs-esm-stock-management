@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { TrashCan } from '@carbon/react/icons';
 import { deleteStockSource } from '../stock-sources.resource';
 import { restBaseUrl, showModal, showSnackbar } from '@openmrs/esm-framework';
-import { handleMutate } from '../../utils';
+import { useMutateByPrefix } from '../../utils';
 
 interface StockSourcesDeleteActionMenuProps {
   uuid: string;
@@ -12,6 +12,7 @@ interface StockSourcesDeleteActionMenuProps {
 
 const StockSourcesDeleteActionMenu: React.FC<StockSourcesDeleteActionMenuProps> = ({ uuid }) => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
 
   const [deletingSource, setDeletingSource] = useState(false);
 
@@ -49,7 +50,7 @@ const StockSourcesDeleteActionMenu: React.FC<StockSourcesDeleteActionMenuProps> 
         close();
       },
     });
-  }, [t, uuid]);
+  }, [t, uuid, handleMutate]);
 
   const deleteButton = (
     <Button kind="ghost" size="md" onClick={handleDeleteStockSource} aria-label={t('deleteSource', 'Delete Source')}>

@@ -22,7 +22,7 @@ import {
 } from '@carbon/react';
 import { Edit } from '@carbon/react/icons';
 import { isDesktop, restBaseUrl } from '@openmrs/esm-framework';
-import { handleMutate } from '../utils';
+import { useMutateByPrefix } from '../utils';
 import { launchAddOrEditStockItemWorkspace } from './stock-item.utils';
 import { ResourceRepresentation } from '../core/api/api';
 import { useDebounce } from '../core/hooks/debounce-hook';
@@ -40,6 +40,7 @@ interface StockItemsTableProps {
 
 const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
   const { t } = useTranslation();
+  const handleMutate = useMutateByPrefix();
   const [searchInput, setSearchInput] = useState('');
 
   const handleRefresh = () => {
