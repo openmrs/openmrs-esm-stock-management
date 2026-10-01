@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { getCoreTranslation, restBaseUrl, showSnackbar, useLayoutType } from '@openmrs/esm-framework';
 import { createStockItem, updateStockItem } from '../../stock-items.resource';
 import { expirationOptions, radioOptions, StockItemType } from './stock-item-details.resource';
-import { handleMutate } from '../../../utils';
+import { useHandleMutate } from '../../../utils';
 import { launchAddOrEditStockItemWorkspace } from '../../stock-item.utils';
 import { createStockItemDetailsSchema, type StockItemFormData } from '../../validationSchema';
 import { type StockItemDTO } from '../../../core/api/types/stockItem/StockItem';
@@ -32,6 +32,7 @@ interface StockItemDetailsProps {
 // t('purchasePriceUoMRequired', 'Purchase price packaging unit is required when purchase price is set')
 const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: StockItemDetailsProps) => {
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const isTablet = useLayoutType() === 'tablet';
 
   const { handleSubmit, control, formState, watch } = useForm<StockItemFormData>({
@@ -56,11 +57,10 @@ const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: Stoc
             : `${t('stockItemAdded', 'Stock item added successfully')}`,
         });
         if (!stockItem) {
-          onCloseWorkspace?.();
-          // launch edit stock item workspace
+          // Relaunching with the saved item replaces this workspace with the edit workspace
           const item = response.data;
           item.isDrug = !!item.drugUuid;
-          launchAddOrEditStockItemWorkspace(t, item);
+          launchAddOrEditStockItemWorkspace(item);
         }
       }
 

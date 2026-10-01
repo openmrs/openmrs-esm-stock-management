@@ -2,17 +2,16 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showSnackbar } from '@openmrs/esm-framework';
 import { saveLocation } from './stock-locations-table.resource';
-import { type locationData, type LocationMutator } from '../stock-items/types';
+import { type locationData } from '../stock-items/types';
 import { extractErrorMessagesFromResponse } from '../constants';
 import LocationAdministrationForm from './location-admin-form.component';
 
 interface LocationFormProps {
-  showModal: boolean;
-  onModalChange: (showModal: boolean) => void;
-  mutate: LocationMutator;
+  close: () => void;
+  mutate: () => void;
 }
 
-const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange, mutate }) => {
+const NewLocationForm: React.FC<LocationFormProps> = ({ close, mutate }) => {
   const { t } = useTranslation();
   const headerTitle = t('addLocation', 'Create new Location');
 
@@ -30,7 +29,7 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange
         name,
         tags,
       };
-      saveLocation({ locationPayload: locationbject })
+      return saveLocation({ locationPayload: locationbject })
         .then(() => {
           showSnackbar({
             title: t('locationCreatedTitle', 'Location created'),
@@ -42,7 +41,7 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange
           });
 
           mutate();
-          onModalChange(false);
+          close();
         })
         .catch((error) => {
           const errorMessages = extractErrorMessagesFromResponse(error);
@@ -52,17 +51,14 @@ const NewLocationForm: React.FC<LocationFormProps> = ({ showModal, onModalChange
             isLowContrast: true,
             subtitle: errorMessages.join(', '),
           });
-          onModalChange(false);
         });
-      onModalChange(false);
     },
-    [onModalChange, mutate, t],
+    [close, mutate, t],
   );
 
   return (
     <LocationAdministrationForm
-      onModalChange={onModalChange}
-      showModal={showModal}
+      close={close}
       handleCreateQuestion={handleCreateQuestion}
       headerTitle={headerTitle}
       initialData={initialData}

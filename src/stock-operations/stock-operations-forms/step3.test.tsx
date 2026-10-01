@@ -3,7 +3,12 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { useConfig, useSession } from '@openmrs/esm-framework';
-import { receiptOperationTypeMock, returnOperationTypeMock, stockIssueOperationtypeMock } from '@mocks';
+import {
+  mockWorkspace2Props,
+  receiptOperationTypeMock,
+  returnOperationTypeMock,
+  stockIssueOperationtypeMock,
+} from '@mocks';
 import { useStockOperations } from '../stock-operations.resource';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import useParties from './hooks/useParties';
@@ -163,15 +168,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should have previous btn and not next btn', async () => {
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
     // MOVE TO STEP3
@@ -182,15 +179,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should render require approval radio button and save button', async () => {
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
     // MOVE TO STEP3
@@ -202,15 +191,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should render submitForReview button when require aprroval radion button is checked yes', async () => {
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
     // MOVE TO STEP3
@@ -226,15 +207,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should render complete button when require aprroval radion button is checked no', async () => {
-    render(
-      <StockOperationForm
-        stockOperationType={receiptOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: receiptOperationTypeMock as any })} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
     // MOVE TO STEP3
@@ -248,15 +221,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should render dispatch btn for stock return operation and dont require aproval', async () => {
-    render(
-      <StockOperationForm
-        stockOperationType={returnOperationTypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: returnOperationTypeMock as any })} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
     // MOVE TO STEP3
@@ -270,15 +235,7 @@ describe('Stock Operation form step 3 (stock submision)', () => {
   });
 
   it('should render dispatch btn for stock issue operation and dont require aproval', async () => {
-    render(
-      <StockOperationForm
-        stockOperationType={stockIssueOperationtypeMock as any}
-        closeWorkspace={vi.fn()}
-        setTitle={vi.fn()}
-        closeWorkspaceWithSavedChanges={vi.fn()}
-        promptBeforeClosing={vi.fn()}
-      />,
-    );
+    render(<StockOperationForm {...mockWorkspace2Props({ stockOperationType: stockIssueOperationtypeMock as any })} />);
     // MOVE TO STEP 2
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
     // MOVE TO STEP3

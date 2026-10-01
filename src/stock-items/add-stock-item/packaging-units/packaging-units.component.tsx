@@ -17,7 +17,7 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { getCoreTranslation, restBaseUrl, showSnackbar } from '@openmrs/esm-framework';
 import { createStockItemPackagingUnit, updateStockItemPackagingUnit } from '../../stock-items.resource';
-import { handleMutate } from '../../../utils';
+import { useHandleMutate } from '../../../utils';
 import { type PackageUnitFormData, packageUnitSchema } from './validationSchema';
 import { type StockItemPackagingUOMDTO } from '../../../core/api/types/stockItem/StockItemPackagingUOM';
 import { useStockItemPackageUnitsHook } from './packaging-units.resource';
@@ -58,6 +58,7 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid, handleTa
   }, [items]);
 
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const tableHeaders = useMemo<CustomTableHeader[]>(
     () => [
       {

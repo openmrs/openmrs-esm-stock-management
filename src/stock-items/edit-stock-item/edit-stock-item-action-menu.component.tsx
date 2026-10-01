@@ -17,7 +17,7 @@ const EditStockItemActionsMenu: React.FC<EditStockItemActionsMenuProps> = ({ dat
       size="md"
       onClick={() => {
         data.isDrug = !!data.drugUuid;
-        launchAddOrEditStockItemWorkspace(t, data);
+        launchAddOrEditStockItemWorkspace(data);
       }}
       iconDescription={t('editStockItem', 'Edit stock item')}
     >

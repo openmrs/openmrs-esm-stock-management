@@ -22,7 +22,7 @@ import {
 import { ArrowDownLeft, ArrowLeft } from '@carbon/react/icons';
 import { isDesktop, restBaseUrl, useSession } from '@openmrs/esm-framework';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
-import { handleMutate } from '../utils';
+import { useHandleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
 import { URL_USER_ROLE_SCOPE } from '../constants';
 import AddStockUserRoleScopeActionButton from './add-stock-user-role-scope-button.component';
@@ -33,6 +33,7 @@ import styles from './stock-user-role-scopes.scss';
 
 function StockUserRoleScopesItems() {
   const { t } = useTranslation();
+  const handleMutate = useHandleMutate();
   const currentUser = useSession();
 
   const handleRefresh = () => {

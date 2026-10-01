@@ -197,62 +197,80 @@
     {
       "name": "transactions-print-stockcard-preview-modal",
       "component": "transactionStockcardPrintPreviewModal"
+    },
+    {
+      "name": "stock-create-location-modal",
+      "component": "createLocationModal"
     }
   ],
-  "workspaces": [
+  "workspaceGroups2": [
     {
-      "name": "stock-operation-form-workspace",
-      "component": "stockOperationFormWorkspace",
-      "title": "Stock Operation",
-      "type": "form",
+      "name": "stock-management-group",
+      "overlay": true
+    }
+  ],
+  "workspaceWindows2": [
+    {
+      "name": "stock-operation-form-window",
+      "group": "stock-management-group",
       "canMaximize": true,
       "width": "extra-wide"
     },
     {
-      "name": "stock-item-rules-form-workspace",
-      "component": "stockItemRulesFormWorkspace",
-      "title": "Stock Item Rules",
-      "type": "form"
+      "name": "stock-item-form-window",
+      "group": "stock-management-group",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-sources-form-window",
+      "group": "stock-management-group",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-user-role-scopes-form-window",
+      "group": "stock-management-group",
+      "canMaximize": true,
+      "width": "extra-wide"
+    },
+    {
+      "name": "stock-reports-form-window",
+      "group": "stock-management-group",
+      "canMaximize": true,
+      "width": "extra-wide"
+    }
+  ],
+  "workspaces2": [
+    {
+      "name": "stock-operation-form-workspace",
+      "component": "stockOperationFormWorkspace",
+      "window": "stock-operation-form-window"
     },
     {
       "name": "stock-item-form-workspace",
       "component": "stockItemFormWorkspace",
-      "title": "Stock Items",
-      "type": "form",
-      "canMaximize": true,
-      "width": "extra-wide"
+      "window": "stock-item-form-window"
+    },
+    {
+      "name": "stock-item-rules-form-workspace",
+      "component": "stockItemRulesFormWorkspace",
+      "window": "stock-item-form-window"
     },
     {
       "name": "stock-sources-form-workspace",
       "component": "stockSourcesFormWorkspace",
-      "title": "Stock Sources",
-      "type": "form",
-      "canMaximize": true,
-      "width": "extra-wide"
-    },
-    {
-      "name": "stock-location-form-workspace",
-      "component": "stockLocationsFormWorkspace",
-      "title": "Stock Locations",
-      "type": "form",
-      "canMaximize": true,
-      "width": "extra-wide"
+      "window": "stock-sources-form-window"
     },
     {
       "name": "stock-user-role-scopes-form-workspace",
       "component": "stockUserScopesFormWorkspace",
-      "title": "User Role Scopes",
-      "type": "form",
-      "canMaximize": true,
-      "width": "extra-wide"
+      "window": "stock-user-role-scopes-form-window"
     },
     {
       "name": "stock-reports-form-workspace",
       "component": "stockReportsFormWorkspace",
-      "title": "Reports",
-      "type": "form",
-      "canMaximize": true,
-      "width": "extra-wide"
+      "window": "stock-reports-form-window"
     }
   ],
   "pages": [

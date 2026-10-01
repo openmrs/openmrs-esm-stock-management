@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useStockOperationTypes } from '../../stock-lookups/stock-lookups.resource';
 import { launchStockoperationAddOrEditWorkSpace } from '../stock-operation.utils';
 import { useStockOperationAndItems } from '../stock-operations.resource';
@@ -19,7 +18,6 @@ const StockOperationRelatedLink: React.FC<StockOperationRelatedLinkProps> = ({
     isLoading: isStockOperationLoading,
     items: stockOperation,
   } = useStockOperationAndItems(stockOperationUuid);
-  const { t } = useTranslation();
 
   const handleEdit = useCallback(() => {
     const operationType = types?.results?.find((op) => op?.uuid === stockOperation?.operationTypeUuid);
@@ -27,12 +25,11 @@ const StockOperationRelatedLink: React.FC<StockOperationRelatedLinkProps> = ({
       return;
     }
     launchStockoperationAddOrEditWorkSpace(
-      t,
       operationType,
       stockOperation,
       stockOperation?.requisitionStockOperationUuid,
     );
-  }, [types, stockOperation, t]);
+  }, [types, stockOperation]);
 
   if (isLoading || error || stockOperationError || isStockOperationLoading) return null;
   return (

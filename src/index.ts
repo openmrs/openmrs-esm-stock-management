@@ -160,11 +160,6 @@ export const stockSourcesFormWorkspace = getAsyncLifecycle(
   options,
 );
 
-export const stockLocationsFormWorkspace = getAsyncLifecycle(
-  () => import('./stock-locations/add-locations-form.workspace'),
-  options,
-);
-
 export const stockReportsFormWorkspace = getAsyncLifecycle(
   () => import('./stock-reports/generate-report/create-stock-report.workspace'),
   options,
@@ -182,3 +177,5 @@ export const transactionStockcardPrintPreviewModal = getSyncLifecycle(Transactio
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
 }
+
+export const createLocationModal = getAsyncLifecycle(() => import('./stock-locations/add-location.modal'), options);
