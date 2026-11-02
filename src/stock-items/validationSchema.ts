@@ -75,6 +75,15 @@ export const createStockItemDetailsSchema = (t: TFunction) =>
         message: t('purchasePriceUoMRequired', 'Purchase price packaging unit is required when purchase price is set'),
         path: ['purchasePriceUoMUuid'],
       },
+    )
+    .refine(
+      ({ reorderLevel, reorderLevelUoMUuid }) => {
+        return reorderLevel != null && reorderLevel > 0 ? !!reorderLevelUoMUuid : true;
+      },
+      {
+        message: t('reorderLevelUoMRequired', 'Reorder level packaging unit is required when reorder level is set'),
+        path: ['reorderLevelUoMUuid'],
+      },
     );
 
 export type StockItemFormData = z.infer<ReturnType<typeof createStockItemDetailsSchema>>;
