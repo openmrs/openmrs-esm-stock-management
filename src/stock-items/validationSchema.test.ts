@@ -1,0 +1,43 @@
+import { createStockItemDetailsSchema } from './validationSchema';
+
+const mockT = ((key: string, defaultValue?: string) => defaultValue || key) as any;
+
+describe('createStockItemDetailsSchema', () => {
+  const base = {
+    isDrug: false,
+    hasExpiration: false,
+  };
+
+  it('allows reorder level without unit when reorder level is null or undefined', () => {
+    const schema = createStockItemDetailsSchema(mockT);
+    const result = schema.safeParse({ ...base, reorderLevel: null, reorderLevelUoMUuid: null });
+    expect(result.success).toBe(true);
+  });
+
+  it('allows reorder level with unit when set', () => {
+    const schema = createStockItemDetailsSchema(mockT);
+    const result = schema.safeParse({ ...base, reorderLevel: 10, reorderLevelUoMUuid: 'abc-123' });
+    expect(result.success).toBe(true);
+  });
+
+  it('requires reorder level unit when reorder level is set (> 0)', () => {
+    const schema = createStockItemDetailsSchema(mockT);
+    const result = schema.safeParse({ ...base, reorderLevel: 10, reorderLevelUoMUuid: null });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path.includes('reorderLevelUoMUuid'))).toBe(true);
+    }
+  });
+
+  it('requires reorder level unit when reorder level is greater than 0', () => {
+    const schema = createStockItemDetailsSchema(mockT);
+    const result = schema.safeParse({ ...base, reorderLevel: 5, reorderLevelUoMUuid: undefined });
+    expect(result.success).toBe(false);
+  });
+
+  it('allows reorder level of 0 without unit', () => {
+    const schema = createStockItemDetailsSchema(mockT);
+    const result = schema.safeParse({ ...base, reorderLevel: 0, reorderLevelUoMUuid: null });
+    expect(result.success).toBe(true);
+  });
+});
