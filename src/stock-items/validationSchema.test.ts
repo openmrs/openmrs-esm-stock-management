@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createStockItemDetailsSchema } from './validationSchema';
 
 const mockT = ((key: string, defaultValue?: string) => defaultValue || key) as any;
@@ -10,8 +11,8 @@ describe('createStockItemDetailsSchema', () => {
 
   it('allows reorder level without unit when reorder level is null or undefined', () => {
     const schema = createStockItemDetailsSchema(mockT);
-    const result = schema.safeParse({ ...base, reorderLevel: null, reorderLevelUoMUuid: null });
-    expect(result.success).toBe(true);
+    expect(schema.safeParse({ ...base, reorderLevel: null, reorderLevelUoMUuid: null }).success).toBe(true);
+    expect(schema.safeParse({ ...base }).success).toBe(true);
   });
 
   it('allows reorder level with unit when set', () => {
@@ -24,7 +25,7 @@ describe('createStockItemDetailsSchema', () => {
     const schema = createStockItemDetailsSchema(mockT);
     const result = schema.safeParse({ ...base, reorderLevel: 10, reorderLevelUoMUuid: null });
     expect(result.success).toBe(false);
-    if (!result.success) {
+    if (result.success === false) {
       expect(result.error.issues.some((issue) => issue.path.includes('reorderLevelUoMUuid'))).toBe(true);
     }
   });
