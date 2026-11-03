@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
+import { formatDate as formatDisplayDate } from '@openmrs/esm-framework';
 
 interface ExpiredStockModalProps {
   closeModal: () => void;
@@ -30,12 +31,7 @@ const ExpiredStockModal = ({ closeModal, expiredStock }: ExpiredStockModalProps)
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-GB', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-    }).format(date);
+    return formatDisplayDate(new Date(dateString), { time: false, noToday: true });
   };
 
   return (
