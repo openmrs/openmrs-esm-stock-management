@@ -36,9 +36,16 @@ describe('createStockItemDetailsSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it('allows reorder level of 0 without unit', () => {
+  it('requires reorder level unit when reorder level is 0', () => {
     const schema = createStockItemDetailsSchema(mockT);
     const result = schema.safeParse({ ...base, reorderLevel: 0, reorderLevelUoMUuid: null });
+    expect(result.success).toBe(false);
+  });
+
+  it('treats a cleared reorder level as unset rather than 0', () => {
+    const schema = createStockItemDetailsSchema(mockT);
+    const result = schema.safeParse({ ...base, reorderLevel: '', reorderLevelUoMUuid: null });
     expect(result.success).toBe(true);
+    expect(result.success && result.data.reorderLevel).toBeNull();
   });
 });

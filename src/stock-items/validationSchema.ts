@@ -32,7 +32,7 @@ export const createStockItemDetailsSchema = (t: TFunction) =>
       dispensingUnitPackagingUoMName: z.string().nullish(),
       defaultStockOperationsUoMUuid: z.string().nullish(),
       defaultStockOperationsUoMName: z.string().nullish(),
-      reorderLevel: z.coerce.number().nullish(),
+      reorderLevel: z.preprocess((value) => (value === '' ? null : value), z.coerce.number().nullish()),
       reorderLevelUoMUuid: z.string().nullish(),
       reorderLevelUoMName: z.string().nullish(),
       dateCreated: z.coerce.date().nullish(),
@@ -78,7 +78,7 @@ export const createStockItemDetailsSchema = (t: TFunction) =>
     )
     .refine(
       ({ reorderLevel, reorderLevelUoMUuid }) => {
-        return reorderLevel != null && reorderLevel > 0 ? !!reorderLevelUoMUuid : true;
+        return reorderLevel != null ? !!reorderLevelUoMUuid : true;
       },
       {
         message: t('reorderLevelUoMRequired', 'Reorder level packaging unit is required when reorder level is set'),
