@@ -3,22 +3,26 @@ import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import PackagingUnits from './packaging-units.component';
 
-vi.mock('./packaging-units.resource', () => ({
-  useStockItemPackageUnitsHook: () => ({
-    items: [
-      {
-        uuid: 'saved-unit',
-        packagingUomName: 'Box',
-        packagingUomUuid: 'uom-1',
-        factor: 10,
-        stockItemUuid: 'stock-item-uuid',
-      },
-    ],
-    isLoading: false,
-    setStockItemUuid: vi.fn(),
-    mutate: vi.fn(),
-  }),
-}));
+vi.mock('./packaging-units.resource', () => {
+  const items = [
+    {
+      uuid: 'saved-unit',
+      packagingUomName: 'Box',
+      packagingUomUuid: 'uom-1',
+      factor: 10,
+      stockItemUuid: 'stock-item-uuid',
+    },
+  ];
+
+  return {
+    useStockItemPackageUnitsHook: () => ({
+      items,
+      isLoading: false,
+      setStockItemUuid: vi.fn(),
+      mutate: vi.fn(),
+    }),
+  };
+});
 
 vi.mock('../../stock-items.resource', () => ({
   createStockItemPackagingUnit: vi.fn(),
