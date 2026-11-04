@@ -138,6 +138,40 @@ describe('CreateReport', () => {
     });
   });
 
+  describe('typed dates', () => {
+    it('keeps a typed date without needing Enter or a click away', async () => {
+      const user = userEvent.setup();
+      renderForm();
+      await selectReport(user, 'Stock Expiry Report');
+      await user.selectOptions(screen.getByRole('combobox', { name: 'Location' }), 'Main Store');
+
+      fireEvent.change(screen.getByRole('textbox', { name: 'Start date' }), { target: { value: '01/01/2026' } });
+      fireEvent.change(screen.getByRole('textbox', { name: 'End date' }), { target: { value: '31/01/2026' } });
+      await save(user);
+
+      await waitFor(() => expect(createBatchJob).toHaveBeenCalledTimes(1));
+      expect(getParameters()).toContain('param.StartDate.value.desc=01-Jan-2026');
+      expect(getParameters()).toContain('param.EndDate.value.desc=31-Jan-2026');
+    });
+
+    it.each(['31/12/2999', '31/02/2026'])('marks %s as invalid and does not save it', async (typedDate) => {
+      const user = userEvent.setup();
+      renderForm();
+      await selectReport(user, 'Stock Expiry Report');
+      await user.selectOptions(screen.getByRole('combobox', { name: 'Location' }), 'Main Store');
+      fireEvent.change(screen.getByRole('textbox', { name: 'Start date' }), { target: { value: '01/01/2026' } });
+
+      fireEvent.change(screen.getByRole('textbox', { name: 'End date' }), { target: { value: typedDate } });
+
+      expect(
+        await screen.findByText('Enter a valid date in the format DD/MM/YYYY that is not in the future'),
+      ).toBeInTheDocument();
+
+      await save(user);
+      expect(createBatchJob).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Limit', () => {
     const fillRequiredFields = async (user: ReturnType<typeof userEvent.setup>, reportName: string) => {
       await selectReport(user, reportName);

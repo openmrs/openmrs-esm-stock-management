@@ -43,6 +43,7 @@ import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, to
 import { BatchJobTypeReport } from '../../core/api/types/BatchJob';
 import { createBatchJob } from '../../stock-batch/stock-batch.resource';
 import { formatDisplayDate } from '../../core/utils/datetimeUtils';
+import { commitTypedDate } from '../../core/utils/typed-date';
 import { useHandleMutate } from '../../utils';
 import { type Concept } from '../../core/api/types/concept/Concept';
 import { type Patient } from '../../core/api/types/identity/Patient';
@@ -570,6 +571,7 @@ const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ 
                 >
                   <DatePickerInput
                     id="startDate"
+                    onChange={commitTypedDate(onChange, { maxDate: today() })}
                     placeholder={DATE_PICKER_FORMAT}
                     labelText={t('startDate', 'Start date')}
                     invalidText={errors?.startDate?.message}
@@ -594,6 +596,7 @@ const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ 
                 >
                   <DatePickerInput
                     id="endDate"
+                    onChange={commitTypedDate(onChange, { maxDate: today() })}
                     placeholder={DATE_PICKER_FORMAT}
                     labelText={t('endDate', 'End date')}
                     invalidText={errors?.endDate?.message}
@@ -831,6 +834,7 @@ const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ 
                 >
                   <DatePickerInput
                     id="date"
+                    onChange={commitTypedDate(onChange, { maxDate: today() })}
                     placeholder={DATE_PICKER_FORMAT}
                     labelText={t('date', 'Date')}
                     invalidText={errors?.date?.message}
