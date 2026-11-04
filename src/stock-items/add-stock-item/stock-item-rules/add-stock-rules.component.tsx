@@ -194,6 +194,7 @@ const StockRulesAddOrUpdate: React.FC<Workspace2DefinitionProps<AddStockRuleProp
                   className="select-field"
                   labelText={t('location', 'Location')}
                   id="location"
+                  disabled={Boolean(model)}
                   value={formModel?.locationUuid ? formModel.locationUuid : ''}
                   onChange={onLocationChange}
                 >
