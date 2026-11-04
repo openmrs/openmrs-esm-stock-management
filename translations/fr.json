@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "Êtes-vous sûr de vouloir supprimer cette unité d'emballage?",
   "reorderLevel": "Niveau de Réapprovisionnement",
   "reorderLevelPackagingUnit": "Unité d'emballage au niveau de la commande",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "Rapport",
   "reportName": "Report name",
   "reportQueued": "Report queued...",

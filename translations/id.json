@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "Apakah Anda benar-benar ingin menghapus satuan kemasan {{name}} dari item stok?",
   "reorderLevel": "Tingkat Pemesanan Ulang",
   "reorderLevelPackagingUnit": "Satuan kemasan tingkat pemesanan ulang",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "Laporan",
   "reportName": "Report name",
   "reportQueued": "Report queued...",
