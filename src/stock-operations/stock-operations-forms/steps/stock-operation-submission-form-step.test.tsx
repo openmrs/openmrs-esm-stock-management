@@ -86,5 +86,6 @@ describe('operation identity after validation and save', () => {
     await userEvent.click(screen.getByRole('button', { name: label }));
     await waitFor(() => expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({ kind: 'error' })));
     expect(launchStockOperationsModal).not.toHaveBeenCalled();
+    expect(await screen.findByRole('button', { name: 'Save' })).toBeEnabled();
   });
 });
