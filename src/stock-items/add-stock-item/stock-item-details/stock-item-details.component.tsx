@@ -43,10 +43,10 @@ const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: Stoc
 
   const { errors } = formState;
   const handleSave: SubmitHandler<StockItemFormData> = async (formValues) => {
+    // The backend rejects a reorder level unit without a reorder level, so clear both together
+    const payload = formValues.reorderLevel == null ? { ...formValues, reorderLevelUoMUuid: null } : formValues;
     try {
-      const response = stockItem
-        ? await updateStockItem(stockItem?.uuid, formValues)
-        : await createStockItem(formValues);
+      const response = stockItem ? await updateStockItem(stockItem?.uuid, payload) : await createStockItem(payload);
       if (response?.data) {
         showSnackbar({
           isLowContrast: true,
