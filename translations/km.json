@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "ការបញ្ជាក់ការដកឯកតាផលិតចេញ",
   "reorderLevel": "កម្រិតបញ្ជាទិញឡើងវិញ",
   "reorderLevelPackagingUnit": "តម្រៀបកម្រិតនៃការវេចខ្ចប់ឡើងវិញ",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "របាយការណ៍",
   "reportName": "Report name",
   "reportQueued": "Report queued...",

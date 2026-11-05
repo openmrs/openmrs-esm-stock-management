@@ -19,6 +19,37 @@ vi.mock('../../stock-operations/stock-operations-forms/hooks/useSearchUser', () 
 vi.mock('../stock-user-role-scopes.resource', () => ({ createOrUpdateUserRoleScope: vi.fn() }));
 vi.mock('../../utils', () => ({ useHandleMutate: vi.fn(() => vi.fn()) }));
 
+describe('AddStockUserRoleScope stock roles', () => {
+  beforeEach(() => {
+    vi.mocked(useConfig).mockReturnValue({ stockRoleUUIDs: ['configured-role-uuid'] });
+    vi.mocked(useSearchUser).mockReturnValue({
+      userList: [
+        {
+          uuid: 'user-uuid',
+          display: 'Jane Doe',
+          roles: [
+            { uuid: 'configured-role-uuid', display: 'Central Store Clerk' },
+            { uuid: 'other-role-uuid', display: 'Provider' },
+          ],
+        },
+      ],
+      setSearchString: vi.fn(),
+      isLoading: false,
+    } as never);
+  });
+
+  it('identifies stock roles by the configured role UUIDs', async () => {
+    const user = userEvent.setup();
+    render(<AddStockUserRoleScope {...mockWorkspace2Props({})} />);
+
+    await user.click(screen.getByRole('combobox', { name: 'User' }));
+    await user.click(screen.getByRole('option', { name: 'Jane Doe' }));
+
+    expect(screen.getByRole('option', { name: 'Central Store Clerk' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Provider' })).not.toBeInTheDocument();
+  });
+});
+
 const invalidMessage = 'Enter a valid date in the format DD/MM/YYYY that is not in the past';
 const model = { uuid: 'scope-uuid', userUuid: 'user-uuid', role: 'Inventory Clerk' } as unknown as UserRoleScope;
 

@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "تأكيد إزالة وحدة التعبئة",
   "reorderLevel": "مستوى إعادة الطلب",
   "reorderLevelPackagingUnit": "إعادة طلب وحدة التعبئة والتغليف على مستوى",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "تقرير",
   "reportName": "Report name",
   "reportQueued": "Report queued...",
