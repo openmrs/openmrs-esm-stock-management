@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "移除包装单位确认",
   "reorderLevel": "重订水平",
   "reorderLevelPackagingUnit": "重订水平包装单位",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "报告",
   "reportName": "Report name",
   "reportQueued": "Report queued...",

@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "Would you really like to remove the packaging unit {{name}} from the stock item?",
   "reorderLevel": "Reorder Level",
   "reorderLevelPackagingUnit": "Reorder level packaging unit",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "Report",
   "reportName": "Наименование отчета",
   "reportQueued": "Отчет в очереди...",

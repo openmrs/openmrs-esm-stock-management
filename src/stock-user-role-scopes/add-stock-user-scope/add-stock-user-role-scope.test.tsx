@@ -236,3 +236,38 @@ describe('AddStockUserRoleScope', () => {
     });
   });
 });
+
+describe('AddStockUserRoleScope stock roles', () => {
+  beforeEach(() => {
+    vi.mocked(useConfig).mockReturnValue({ stockRoleUUIDs: ['configured-role-uuid'] });
+    // The user's full roles haven't loaded yet, so the roles come from the search result
+    vi.mocked(useUser).mockReturnValue({ data: {} } as never);
+    vi.mocked(useStockOperationTypes).mockReturnValue({ types: { results: [] }, isLoading: false } as never);
+    vi.mocked(useStockTagLocations).mockReturnValue({ stockLocations: [], isLoading: false } as never);
+    vi.mocked(useSearchUser).mockReturnValue({
+      userList: [
+        {
+          uuid: 'user-uuid',
+          display: 'Jane Doe',
+          roles: [
+            { uuid: 'configured-role-uuid', display: 'Central Store Clerk' },
+            { uuid: 'other-role-uuid', display: 'Provider' },
+          ],
+        },
+      ],
+      setSearchString: vi.fn(),
+      isLoading: false,
+    } as never);
+  });
+
+  it('identifies stock roles by the configured role UUIDs', async () => {
+    const user = userEvent.setup();
+    render(<AddStockUserRoleScope {...mockWorkspace2Props({})} />);
+
+    await user.click(screen.getByRole('combobox', { name: 'User' }));
+    await user.click(screen.getByRole('option', { name: 'Jane Doe' }));
+
+    expect(screen.getByRole('option', { name: 'Central Store Clerk' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Provider' })).not.toBeInTheDocument();
+  });
+});

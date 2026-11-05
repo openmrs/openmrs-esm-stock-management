@@ -41,7 +41,7 @@ export const configSchema = {
     _type: Type.String,
     _default: 'Main Store',
     _description:
-      'The name of the location tag for the main store. The source or destination of a new stock operation is prefilled when this is the only tag it allows',
+      "The name of the location tag for the main store. The source or destination of a new stock operation is prefilled when this is the only tag the operation type allows on that side. It needs to match a tag in the backend's operation type location scopes",
   },
   packingUnitsUUID: {
     _type: Type.ConceptUuid,
@@ -75,7 +75,7 @@ export const configSchema = {
     },
     _default: ['Main Store', 'Main Pharmacy', 'Dispensary'],
     _description:
-      'The names of the location tags for stock locations. Locations without one of these tags are not listed',
+      "The names of the location tags for stock locations. Locations without one of these tags don't appear in the stock locations table, the user role scope form, stock rules, reports or the location filters. This doesn't change which locations stock operations accept. That comes from each operation type's location scopes in the backend, which default to Main Store, Main Pharmacy and Dispensary",
   },
   stockRoleUUIDs: {
     _type: Type.Array,
