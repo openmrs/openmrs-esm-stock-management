@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "Sigur dorești să elimini unitatea de ambalare {{name}} din articolul de stoc?",
   "reorderLevel": "Nivel de reaprovizionare",
   "reorderLevelPackagingUnit": "Unitate de ambalare - nivel de reaprovizionare",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "Raport",
   "reportName": "Report name",
   "reportQueued": "Report queued...",

@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "Möchten Sie die Verpackungseinheit {{name}} wirklich aus dem Artikel entfernen?",
   "reorderLevel": "Nachbestellmenge",
   "reorderLevelPackagingUnit": "Nachbestellmenge der Verpackungseinheit",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "Bericht",
   "reportName": "Report name",
   "reportQueued": "Report queued...",
