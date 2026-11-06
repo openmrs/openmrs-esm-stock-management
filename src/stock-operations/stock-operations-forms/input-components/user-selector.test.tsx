@@ -212,4 +212,38 @@ describe('User Selector', () => {
 
     expect(screen.getByText(/type a name or username to search/i)).toBeInTheDocument();
   });
+
+  it('keeps the server-matched user visible when the typed text is their username', async () => {
+    const user = userEvent.setup();
+
+    mockUseSearchUser.mockReturnValue({
+      isLoading: false,
+      hasSearchTerm: true,
+      userList: [
+        {
+          uuid: '3',
+          username: 'bokonkwo',
+          person: { display: 'Betty Okonkwo', uuid: '3' },
+          display: 'bokonkwo',
+          givenName: 'Betty',
+          familyName: 'Okonkwo',
+          firstName: 'Betty',
+          lastName: 'Okonkwo',
+          privileges: [],
+        },
+      ],
+      setSearchString: vi.fn(),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
+    });
+    mockUseUser.mockReturnValue({ isLoading: false, data: null, error: null });
+
+    render(<UsersSelector />);
+
+    const combobox = screen.getByRole('combobox');
+    await user.click(combobox);
+    await user.type(combobox, 'bokonkwo');
+
+    expect(screen.getByText('Betty Okonkwo (bokonkwo)')).toBeInTheDocument();
+  });
 });

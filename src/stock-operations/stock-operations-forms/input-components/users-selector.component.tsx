@@ -80,6 +80,7 @@ const UsersSelector = () => {
               }
               itemToString={(item) => (typeof item === 'string' ? item : getUserName(item))}
               itemToElement={UserOption}
+              shouldFilterItem={() => true}
               helperText={searchHelperText}
               onInputChange={debouncedSearch}
               placeholder={t('filter', 'Filter...')}
