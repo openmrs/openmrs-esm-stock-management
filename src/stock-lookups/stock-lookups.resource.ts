@@ -8,8 +8,10 @@ import {
   openmrsFetch,
   useSession,
   restBaseUrl,
+  useConfig,
   useFhirFetchAll,
 } from '@openmrs/esm-framework';
+import { type ConfigObject } from '../config-schema';
 import { type Concept } from '../core/api/types/concept/Concept';
 import { type Drug } from '../core/api/types/concept/Drug';
 import { type OpenMRSLocation, type OpenMRSLocationTag } from '../core/api/types/Location';
@@ -51,10 +53,12 @@ export function useStockLocations(filter: LocationFilterCriteria) {
   };
 }
 /* Get locations tagged to perform stock related activities.
-   Unless a location is tag as main store, main pharmacy or dispensing, it will not be fetched.
+   Unless a location has one of the tags configured in `stockLocationTags`, it will not be fetched.
 */
 export function useStockTagLocations() {
-  const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=main store,main pharmacy,dispensary `;
+  const { stockLocationTags } = useConfig<ConfigObject>();
+  const tags = stockLocationTags.map((tag) => encodeURIComponent(tag)).join(',');
+  const apiUrl = `${fhirBaseUrl}/Location?_summary=data&_tag=${tags}`;
   const { data, error, isLoading, mutate } = useFhirFetchAll<fhir.Location>(apiUrl);
 
   return {
