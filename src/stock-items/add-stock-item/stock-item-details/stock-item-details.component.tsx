@@ -57,14 +57,15 @@ const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: Stoc
             : `${t('stockItemAdded', 'Stock item added successfully')}`,
         });
         if (!stockItem) {
-          // Relaunching with the saved item replaces this workspace with the edit workspace
+          // Relaunching with the saved item replaces this workspace with the edit workspace, which opens on Packaging
+          // Units because adding units is the next step for a new item. An existing item stays on Details.
           const item = response.data;
           item.isDrug = !!item.drugUuid;
           launchAddOrEditStockItemWorkspace(item);
+          handleTabChange(1);
         }
       }
 
-      handleTabChange(1);
       handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
     } catch (e) {
       // Show notification
