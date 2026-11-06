@@ -75,10 +75,10 @@
   align-items: center;
 }
 
-.tableOverride :global(th.locationsColumn),
-.tableOverride :global(td.locationsColumn),
-.tableOverride :global(th.operationsColumn),
-.tableOverride :global(td.operationsColumn) {
+.tableOverride :global(th).locationsColumn,
+.tableOverride :global(td).locationsColumn,
+.tableOverride :global(th).operationsColumn,
+.tableOverride :global(td).operationsColumn {
   width: 12rem;
   max-width: 12rem;
   white-space: normal;
@@ -86,8 +86,8 @@
   vertical-align: top;
 }
 
-.tableOverride :global(th.actionsColumn),
-.tableOverride :global(td.actionsColumn) {
+.tableOverride :global(th).actionsColumn,
+.tableOverride :global(td).actionsColumn {
   width: 6.5rem;
   white-space: nowrap;
 }
