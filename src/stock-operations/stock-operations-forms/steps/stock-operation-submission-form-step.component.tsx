@@ -8,6 +8,10 @@ import { createStockOperation, deleteStockOperationItem, updateStockOperation } 
 import { extractErrorMessagesFromResponse } from '../../../constants';
 import { useHandleMutate } from '../../../utils';
 import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import {
+  StockOperationStatusNew,
+  StockOperationStatusReturned,
+} from '../../../core/api/types/stockOperation/StockOperationStatus';
 import { otherUser } from '../../../core/utils/utils';
 import { launchStockOperationsModal } from '../../stock-operation.utils';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
@@ -34,7 +38,13 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
   const { t } = useTranslation();
   const handleMutate = useHandleMutate();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
-  const editable = useMemo(() => !stockOperation || stockOperation.status === 'NEW', [stockOperation]);
+  const editable = useMemo(
+    () =>
+      !stockOperation ||
+      stockOperation.status === StockOperationStatusNew ||
+      stockOperation.status === StockOperationStatusReturned,
+    [stockOperation],
+  );
   const form = useFormContext<StockOperationItemDtoSchema>();
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(stockOperation?.approvalRequired);
   const isStockIssueOperation = useMemo(
