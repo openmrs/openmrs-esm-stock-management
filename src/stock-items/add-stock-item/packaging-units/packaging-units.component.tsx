@@ -157,7 +157,6 @@ const PackagingUnits: React.FC<PackagingUnitsProps> = ({ stockItemUuid, handleTa
       mutate();
       handleMutate(`${restBaseUrl}/stockmanagement/stockitem`);
       reset();
-      handleTabChange(0);
     });
   };
   const handleCancelPackagingUnits = () => {
