@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "אישור הסרת יחידת אריזה",
   "reorderLevel": "רמת הזמנה מחדש",
   "reorderLevelPackagingUnit": "סדר מחדש יחידת אריזה ברמה",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "דוח",
   "reportName": "Report name",
   "reportQueued": "Report queued...",

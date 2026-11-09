@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "እቅድ አስወግድ",
   "reorderLevel": "እንደ ተደርጓል",
   "reorderLevelPackagingUnit": "የማሸጊያ ክፍልን እንደገና ይዘዙ",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "ሪፖርት",
   "reportName": "Report name",
   "reportQueued": "Report queued...",
