@@ -25,7 +25,17 @@ const schema = z.object({
   stockOperationItems: z.array(z.object({ uuid: z.string() })),
 });
 
-function Operation({ type, approval, valid }: { type: string; approval: boolean; valid: boolean }) {
+function Operation({
+  type,
+  approval,
+  valid,
+  status = 'NEW',
+}: {
+  type: string;
+  approval: boolean;
+  valid: boolean;
+  status?: StockOperationDTO['status'];
+}) {
   const form = useForm({
     defaultValues: { responsiblePersonUuid: valid ? 'responsible-person' : '', stockOperationItems: [] },
     resolver: zodResolver(schema),
@@ -33,9 +43,7 @@ function Operation({ type, approval, valid }: { type: string; approval: boolean;
   return (
     <FormProvider {...form}>
       <StockOperationSubmissionFormStep
-        stockOperation={
-          { uuid: 'operation-being-edited', status: 'NEW', approvalRequired: approval } as StockOperationDTO
-        }
+        stockOperation={{ uuid: 'operation-being-edited', status, approvalRequired: approval } as StockOperationDTO}
         stockOperationType={{ operationType: type } as StockOperationType}
       />
     </FormProvider>
@@ -87,5 +95,32 @@ describe('operation identity after validation and save', () => {
     await waitFor(() => expect(showSnackbar).toHaveBeenCalledWith(expect.objectContaining({ kind: 'error' })));
     expect(launchStockOperationsModal).not.toHaveBeenCalled();
     expect(await screen.findByRole('button', { name: 'Save' })).toBeEnabled();
+  });
+});
+
+describe('editing by operation status', () => {
+  it.each(['NEW', 'RETURNED'] as const)('shows the save and submit buttons for a %s operation', (status) => {
+    render(<Operation type="receipt" approval valid status={status} />);
+    expect(screen.getByRole('button', { name: 'Submit For Review' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+  });
+
+  it.each(['SUBMITTED', 'DISPATCHED', 'COMPLETED', 'CANCELLED', 'REJECTED'] as const)(
+    'keeps a %s operation locked',
+    (status) => {
+      render(<Operation type="receipt" approval valid status={status} />);
+      expect(screen.queryByRole('button', { name: 'Submit For Review' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
+    },
+  );
+
+  it('resubmits a RETURNED operation for review', async () => {
+    const saved = { uuid: 'saved-operation', status: 'RETURNED' };
+    vi.mocked(updateStockOperation).mockResolvedValue({ data: saved } as never);
+    render(<Operation type="receipt" approval valid status="RETURNED" />);
+    await userEvent.click(screen.getByRole('button', { name: 'Submit For Review' }));
+    await waitFor(() =>
+      expect(launchStockOperationsModal).toHaveBeenCalledWith('Submit', false, { ...saved, status: 'SUBMITTED' }),
+    );
   });
 });
