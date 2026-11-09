@@ -159,6 +159,8 @@
   "generatingReport": "Generating report...",
   "genericName": "Generic name",
   "hasExpiration": "Does the item expire?",
+  "historicalEndDate": "Historical end date",
+  "historicalStartDate": "Historical start date",
   "import": "Import",
   "importStockItems": "Import stock items",
   "in6Months": "In 6 months",
@@ -198,6 +200,7 @@
   "mailRole": "Mail role",
   "manageStock": "Manage Stock",
   "maxReorderLevelRatio": "Max reorder level ratio",
+  "months": "Months",
   "mostMoving": "Most moving",
   "name": "Name",
   "newOperationTitle": "New: {{operationName}}",
@@ -354,16 +357,6 @@
   "stockItemSearchFailed": "Stock item search failed",
   "stockItemsTableHeader": "Drugs and other stock items managed by the system.",
   "stockItemsUploadedSuccessfully": "Stock items uploaded successfully",
-  "stockmanagement": {
-    "report": {
-      "edit": {
-        "historicalenddate": "Historical end date",
-        "historicalstartdate": "Historical start date",
-        "limit": "Limit",
-        "months": "Months"
-      }
-    }
-  },
   "stockManagement": "Stock management",
   "stockOperationAdded": "Stock operation added successfully",
   "stockOperationEdited": "Stock operation edited successfully",
