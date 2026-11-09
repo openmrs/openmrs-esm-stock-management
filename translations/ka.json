@@ -293,6 +293,7 @@
   "removePackagingUnitConfirmation": "Would you really like to remove the packaging unit {{name}} from the stock item?",
   "reorderLevel": "Reorder Level",
   "reorderLevelPackagingUnit": "დონის შეფუთვის ერთეულის გადალაგება",
+  "reorderLevelUoMRequired": "Reorder level packaging unit is required when reorder level is set",
   "report": "ანგარიში",
   "reportName": "Report name",
   "reportQueued": "Report queued...",

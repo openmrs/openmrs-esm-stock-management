@@ -8,6 +8,10 @@ import { createStockOperation, deleteStockOperationItem, updateStockOperation } 
 import { extractErrorMessagesFromResponse } from '../../../constants';
 import { useHandleMutate } from '../../../utils';
 import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import {
+  StockOperationStatusNew,
+  StockOperationStatusReturned,
+} from '../../../core/api/types/stockOperation/StockOperationStatus';
 import { otherUser } from '../../../core/utils/utils';
 import { launchStockOperationsModal } from '../../stock-operation.utils';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
@@ -34,7 +38,13 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
   const { t } = useTranslation();
   const handleMutate = useHandleMutate();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
-  const editable = useMemo(() => !stockOperation || stockOperation.status === 'NEW', [stockOperation]);
+  const editable = useMemo(
+    () =>
+      !stockOperation ||
+      stockOperation.status === StockOperationStatusNew ||
+      stockOperation.status === StockOperationStatusReturned,
+    [stockOperation],
+  );
   const form = useFormContext<StockOperationItemDtoSchema>();
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(stockOperation?.approvalRequired);
   const isStockIssueOperation = useMemo(
@@ -46,7 +56,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
   };
 
   const handleSave = useCallback(async () => {
-    let result: StockOperationDTO; // To store the result for returning
+    let result: StockOperationDTO | undefined;
     await form.handleSubmit(async (formData) => {
       try {
         // Get deleted items (items in stock operation bt not i form data)
@@ -118,7 +128,6 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
           kind: 'error',
           isLowContrast: true,
         });
-        throw error;
       }
     })(); // Call handleSubmit to trigger validation and submission
     return result; // Return the result after handleSubmit completes
@@ -126,16 +135,25 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
 
   const handleComplete = useCallback(() => {
     handleSave().then((operation) => {
+      if (!operation?.uuid?.trim()) {
+        return;
+      }
       launchStockOperationsModal('Complete', false, { ...operation, status: 'COMPLETED' });
     });
   }, [handleSave]);
   const handleSubmitForReview = useCallback(() => {
     handleSave().then((operation) => {
+      if (!operation?.uuid?.trim()) {
+        return;
+      }
       launchStockOperationsModal('Submit', false, { ...operation, status: 'SUBMITTED' });
     });
   }, [handleSave]);
   const handleDispatch = useCallback(() => {
     handleSave().then((operation) => {
+      if (!operation?.uuid?.trim()) {
+        return;
+      }
       launchStockOperationsModal('Dispatch', false, { ...operation, status: 'DISPATCHED' });
     });
   }, [handleSave]);
