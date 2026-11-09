@@ -76,7 +76,6 @@ export interface ReportModel {
   patientName?: string;
   limit?: number | null;
   mostLeastMoving?: string;
-  mostLeastMovingName?: string;
   fullFillment?: string[];
 }
 
