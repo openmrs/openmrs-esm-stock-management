@@ -4,15 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import StockOperationsModal from './stock-operations.modal';
 import { executeStockOperationAction } from '../stock-operations.resource';
+import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 
 vi.mock('../stock-operations.resource', () => ({
   executeStockOperationAction: vi.fn(),
-}));
-
-vi.mock('@openmrs/esm-framework', () => ({
-  getCoreTranslation: () => 'Cancel',
-  restBaseUrl: '/ws/rest/v1',
-  showSnackbar: vi.fn(),
 }));
 
 vi.mock('../../utils', () => ({
@@ -26,7 +21,7 @@ describe('StockOperationsModal', () => {
       <StockOperationsModal
         title="Cancel"
         requireReason
-        operation={{ uuid: 'operation-uuid' } as any}
+        operation={{ uuid: 'operation-uuid' } as StockOperationDTO}
         closeModal={vi.fn()}
       />,
     );

@@ -76,7 +76,7 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
     const payload: StopOperationAction = {
       name: actionName,
       uuid: operation?.uuid,
-      reason: notes,
+      reason: notes.trim(),
     };
 
     // submit action
