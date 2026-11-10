@@ -30,6 +30,7 @@
   "batchNo": "Batch number",
   "batchNumber": "Batch number",
   "batchNumberLabel": "Batch number:",
+  "batchQuantitiesLoadError": "Couldn't load the stock held at this location",
   "binCard": "Bin card",
   "by": "By",
   "cancel": "Cancel ",

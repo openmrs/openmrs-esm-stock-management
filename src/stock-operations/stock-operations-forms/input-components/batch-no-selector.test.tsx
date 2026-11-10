@@ -241,6 +241,39 @@ describe('BatchNoSelector', () => {
     expect(mockUseStockItemBatchNumbers).toHaveBeenLastCalledWith(mockStockItemUuid, false);
   });
 
+  it('offers no batches and shows an error when the inventory fails to load', async () => {
+    const user = userEvent.setup();
+    mockUseStockItemBatchInformationHook.mockReturnValue({
+      items: [],
+      totalCount: 0,
+      currentPage: 1,
+      currentPageSize: 10,
+      setCurrentPage: vi.fn(),
+      setStockBatchUuid: vi.fn(),
+      setStockItemUuid: vi.fn(),
+      setPageSize: vi.fn(),
+      pageSizes: [10, 20, 50],
+      isLoading: false,
+      error: new Error('Forbidden'),
+      setLocationUuid: vi.fn(),
+      setPartyUuid: vi.fn(),
+      setSearchString: vi.fn(),
+    });
+
+    render(
+      <BatchNoSelector
+        stockItemUuid={mockStockItemUuid}
+        partyUuid="main-store"
+        includeEmptyBatches
+        onValueChange={mockOnValueChange}
+      />,
+    );
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.queryAllByRole('option')).toHaveLength(0);
+    expect(screen.getByText("Couldn't load the stock held at this location")).toBeInTheDocument();
+  });
+
   it('matches each batch to its own inventory row when two batches share a number', async () => {
     const user = userEvent.setup();
     const laterExpiration = new Date(mockExpiration.getTime() + 365 * 24 * 60 * 60 * 1000);

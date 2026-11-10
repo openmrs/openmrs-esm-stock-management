@@ -33,6 +33,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
     setStockItemUuid,
     setPartyUuid,
     isLoading: isLoadingBatchinfo,
+    error: inventoryError,
   } = useStockItemBatchInformationHook({ partyUuid });
 
   useEffect(() => {
@@ -44,7 +45,8 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
   }, [partyUuid, setPartyUuid]);
 
   const stockItemBatchesInfo = useMemo(() => {
-    if (!stockItemBatchNos) return [];
+    // Without the inventory every quantity is unknown, so list no batches rather than show them as empty.
+    if (!stockItemBatchNos || inventoryError) return [];
 
     return stockItemBatchNos.map((item) => {
       const matchingBatch = items?.find((batch) => batch.stockBatchUuid === item.uuid);
@@ -59,7 +61,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
 
       return (includeEmptyBatches ? { ...item, quantity: '0' } : item) as StockBatchWithUoM;
     });
-  }, [stockItemBatchNos, items, includeEmptyBatches]);
+  }, [stockItemBatchNos, items, includeEmptyBatches, inventoryError]);
 
   const filteredBatches = useMemo(() => {
     if (!stockItemBatchesInfo) return [];
@@ -125,8 +127,8 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
   return (
     <ComboBox
       id="stockBatchUuid"
-      invalid={!!error}
-      invalidText={error}
+      invalid={!!error || !!inventoryError}
+      invalidText={error || t('batchQuantitiesLoadError', "Couldn't load the stock held at this location")}
       items={filteredBatches}
       itemToString={itemToString}
       name="stockBatchUuid"
