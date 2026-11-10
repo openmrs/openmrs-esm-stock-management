@@ -8,19 +8,36 @@ import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 
 interface BatchNoSelectorProps {
   stockItemUuid: string;
+  /** The party the stock is drawn from. Only batches with stock there are listed. */
+  partyUuid?: string;
   initialValue?: string;
   onValueChange?: (value: string) => void;
   error?: string;
 }
 
-const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({ stockItemUuid, error, initialValue, onValueChange }) => {
+const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
+  stockItemUuid,
+  partyUuid,
+  error,
+  initialValue,
+  onValueChange,
+}) => {
   const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid);
   const { t } = useTranslation();
-  const { items, setStockItemUuid, isLoading: isLoadingBatchinfo } = useStockItemBatchInformationHook();
+  const {
+    items,
+    setStockItemUuid,
+    setPartyUuid,
+    isLoading: isLoadingBatchinfo,
+  } = useStockItemBatchInformationHook({ partyUuid });
 
   useEffect(() => {
     setStockItemUuid(stockItemUuid);
   }, [stockItemUuid, setStockItemUuid]);
+
+  useEffect(() => {
+    setPartyUuid(partyUuid);
+  }, [partyUuid, setPartyUuid]);
 
   const stockItemBatchesInfo = useMemo(() => {
     if (!stockItemBatchNos) return [];

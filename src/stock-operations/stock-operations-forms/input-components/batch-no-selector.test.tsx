@@ -134,6 +134,39 @@ describe('BatchNoSelector', () => {
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
 
+  it("shows the quantity at the operation's source when another location holds the same batch", async () => {
+    const user = userEvent.setup();
+    mockUseStockItemBatchInformationHook.mockImplementation((filter) => ({
+      items: [
+        ...(filter?.partyUuid ? [] : [{ partyUuid: 'main-pharmacy', batchNumber: 'BATCH-001', quantity: 20 }]),
+        { partyUuid: 'main-store', batchNumber: 'BATCH-001', quantity: 500 },
+      ] as StockItemInventory[],
+      totalCount: 1,
+      currentPage: 1,
+      currentPageSize: 10,
+      setCurrentPage: vi.fn(),
+      setStockBatchUuid: vi.fn(),
+      setStockItemUuid: vi.fn(),
+      setPageSize: vi.fn(),
+      pageSizes: [10, 20, 50],
+      isLoading: false,
+      error: null,
+      setLocationUuid: vi.fn(),
+      setPartyUuid: vi.fn(),
+      setSearchString: vi.fn(),
+    }));
+
+    render(
+      <BatchNoSelector stockItemUuid={mockStockItemUuid} partyUuid="main-store" onValueChange={mockOnValueChange} />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(
+      screen.getByText(`BATCH-001 | Qty: 500 | Expiry: ${formatForDatePicker(mockExpiration)}`),
+    ).toBeInTheDocument();
+  });
+
   it('should filter out batches with zero or undefined quantity', async () => {
     const user = userEvent.setup();
 

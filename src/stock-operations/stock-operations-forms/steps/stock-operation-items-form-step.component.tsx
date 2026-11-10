@@ -14,8 +14,13 @@ import {
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { showSnackbar } from '@openmrs/esm-framework';
+import { LocationTypeLocation } from '../../../core/api/types/stockOperation/LocationType';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import { type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import {
+  OperationType,
+  operationFromString,
+  type StockOperationType,
+} from '../../../core/api/types/stockOperation/StockOperationType';
 import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import { type BaseStockOperationItemFormData, type StockOperationItemDtoSchema } from '../../validation-schema';
 import useOperationTypePermisions from '../hooks/useOperationTypePermisions';
@@ -48,6 +53,12 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
 
   const form = useFormContext<StockOperationItemDtoSchema>();
   const observableOperationItems = form.watch('stockOperationItems');
+  // Show stock where it's drawn from. A receipt's source is a supplier, so use where it's received.
+  // A requisition's source is the location asking for stock, so use the store it's requested from.
+  const drawsFromSource =
+    stockOperationType?.sourceType === LocationTypeLocation &&
+    operationFromString(stockOperationType.operationType) !== OperationType.REQUISITION_OPERATION_TYPE;
+  const availabilityPartyUuid = form.watch(drawsFromSource ? 'sourceUuid' : 'destinationUuid');
   const headers = useMemo(() => {
     return [
       {
@@ -122,7 +133,11 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
       return {
         id: uuid || `${uniqueId}-${index}`,
         item: stockItemUuid ? <StockOperationItemCell stockItemUuid={stockItemUuid} /> : '--',
-        itemDetails: stockItemUuid ? <StockAvailability stockItemUuid={stockItemUuid} /> : '--',
+        itemDetails: stockItemUuid ? (
+          <StockAvailability stockItemUuid={stockItemUuid} partyUuid={availabilityPartyUuid} />
+        ) : (
+          '--'
+        ),
         batch: (
           <StockOperationItemBatchNoCell
             operation={stockOperationType}
@@ -174,7 +189,7 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
         ),
       };
     });
-  }, [observableOperationItems, onLaunchItemsForm, stockOperationType, t, uniqueId]);
+  }, [availabilityPartyUuid, observableOperationItems, onLaunchItemsForm, stockOperationType, t, uniqueId]);
 
   const handleNext = async () => {
     const valid = await form.trigger(['stockOperationItems']);
