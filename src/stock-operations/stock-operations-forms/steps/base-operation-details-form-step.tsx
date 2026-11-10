@@ -15,7 +15,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorState, useConfig } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../../../config-schema';
-import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT } from '../../../constants';
+import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
 import { type Party } from '../../../core/api/types/Party';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
 import { OperationType, type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
@@ -127,6 +127,7 @@ const BaseOperationDetailsFormStep: FC<BaseOperationDetailsFormStepProps> = ({
             <DatePicker
               readOnly={field.disabled}
               datePickerType="single"
+              maxDate={formatForDatePicker(today())}
               locale="en"
               className={styles.datePickerInput}
               {...field}

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { StockOperationStatusTypes } from '../core/api/types/stockOperation/StockOperationStatus';
 import { OperationType } from '../core/api/types/stockOperation/StockOperationType';
+import { today } from '../core/utils/datetimeUtils';
 
 export const stockItemPackagingUOMDTOSchema = z.object({
   id: z.string().nullish(),
@@ -169,8 +170,15 @@ export const getStockOperationItemFormSchema = (operationType: OperationType) =>
       return baseStockOperationItemSchema;
   }
 };
+// The server rejects an operation date after today, so reject it in the form too
+const isNotInTheFuture = (date: Date) => {
+  const startOfTomorrow = today();
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+  return date < startOfTomorrow;
+};
+
 export const stockOperationItemDtoSchema = z.object({
-  operationDate: z.coerce.date(),
+  operationDate: z.coerce.date().refine(isNotInTheFuture, { message: 'Operation date must not be in the future' }),
   sourceUuid: z.string({ required_error: 'Location Required' }).min(1, {
     message: 'Location Required',
   }),
