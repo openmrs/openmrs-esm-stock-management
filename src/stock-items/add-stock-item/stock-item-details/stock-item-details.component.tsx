@@ -205,13 +205,6 @@ const StockItemDetails = ({ stockItem, handleTabChange, onCloseWorkspace }: Stoc
           name="categoryUuid"
           controllerName="categoryUuid"
           control={control}
-          itemType={
-            selectedItemType === StockItemType.PHARMACEUTICALS
-              ? 'Drugs'
-              : selectedItemType === StockItemType.NONE_PHARMACEUTICALS
-              ? 'Non Drugs'
-              : undefined
-          }
           title={t('category', 'Category') + ':'}
           placeholder={t('chooseACategory', 'Choose a category')}
           invalid={!!errors.categoryUuid}
