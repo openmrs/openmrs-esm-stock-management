@@ -25,7 +25,8 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
   initialValue,
   onValueChange,
 }) => {
-  const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid);
+  // Inventory leaves out expired batches, so an expired batch would show here with no stock at all.
+  const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid, includeEmptyBatches);
   const { t } = useTranslation();
   const {
     items,
@@ -46,7 +47,7 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
     if (!stockItemBatchNos) return [];
 
     return stockItemBatchNos.map((item) => {
-      const matchingBatch = items?.find((batch) => batch.batchNumber === item.batchNo);
+      const matchingBatch = items?.find((batch) => batch.stockBatchUuid === item.uuid);
 
       if (matchingBatch) {
         return {

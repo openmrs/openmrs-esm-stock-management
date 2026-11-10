@@ -53,8 +53,8 @@ describe('BatchNoSelector', () => {
 
     mockUseStockItemBatchInformationHook.mockReturnValue({
       items: [
-        { batchNumber: 'BATCH-001', quantity: 10 },
-        { batchNumber: 'BATCH-002', quantity: 20 },
+        { stockBatchUuid: '1', batchNumber: 'BATCH-001', quantity: 10 },
+        { stockBatchUuid: '2', batchNumber: 'BATCH-002', quantity: 20 },
       ] as StockItemInventory[],
       totalCount: 2,
       currentPage: 1,
@@ -137,8 +137,8 @@ describe('BatchNoSelector', () => {
   it("shows the quantity at the operation's source when another location holds the same batch", async () => {
     const user = userEvent.setup();
     const inventory = [
-      { partyUuid: 'main-pharmacy', batchNumber: 'BATCH-001', quantity: 20 },
-      { partyUuid: 'main-store', batchNumber: 'BATCH-001', quantity: 500 },
+      { partyUuid: 'main-pharmacy', stockBatchUuid: '1', batchNumber: 'BATCH-001', quantity: 20 },
+      { partyUuid: 'main-store', stockBatchUuid: '1', batchNumber: 'BATCH-001', quantity: 500 },
     ] as StockItemInventory[];
     mockUseStockItemBatchInformationHook.mockImplementation((filter) => ({
       items: inventory.filter((row) => !filter?.partyUuid || row.partyUuid === filter.partyUuid),
@@ -195,7 +195,9 @@ describe('BatchNoSelector', () => {
       setSearchString: vi.fn(),
     });
     mockUseStockItemBatchInformationHook.mockReturnValue({
-      items: [{ partyUuid: 'main-store', batchNumber: 'BATCH-001', quantity: 500 }] as StockItemInventory[],
+      items: [
+        { partyUuid: 'main-store', stockBatchUuid: '1', batchNumber: 'BATCH-001', quantity: 500 },
+      ] as StockItemInventory[],
       totalCount: 1,
       currentPage: 1,
       currentPageSize: 10,
@@ -229,6 +231,72 @@ describe('BatchNoSelector', () => {
     );
     await user.click(screen.getByRole('combobox'));
     expect(screen.getByText(emptyBatchOption)).toBeInTheDocument();
+    // Expired batches have no inventory row, so the batch list must leave them out instead of showing them empty.
+    expect(mockUseStockItemBatchNumbers).toHaveBeenLastCalledWith(mockStockItemUuid, true);
+  });
+
+  it('keeps the batch list unfiltered by expiry when empty batches are hidden', () => {
+    render(<BatchNoSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
+
+    expect(mockUseStockItemBatchNumbers).toHaveBeenLastCalledWith(mockStockItemUuid, false);
+  });
+
+  it('matches each batch to its own inventory row when two batches share a number', async () => {
+    const user = userEvent.setup();
+    const laterExpiration = new Date(mockExpiration.getTime() + 365 * 24 * 60 * 60 * 1000);
+    mockUseStockItemBatchNumbers.mockReturnValue({
+      isLoading: false,
+      stockItemBatchNos: [
+        {
+          uuid: '1',
+          batchNo: 'BATCH-001',
+          quantity: undefined,
+          expiration: mockExpiration,
+          stockItemUuid: 'item1',
+          voided: false,
+        },
+        {
+          uuid: '2',
+          batchNo: 'BATCH-001',
+          quantity: undefined,
+          expiration: laterExpiration,
+          stockItemUuid: 'item1',
+          voided: false,
+        },
+      ],
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
+      setSearchString: vi.fn(),
+    });
+    mockUseStockItemBatchInformationHook.mockReturnValue({
+      items: [
+        { stockBatchUuid: '1', batchNumber: 'BATCH-001', quantity: 10, expiration: mockExpiration },
+        { stockBatchUuid: '2', batchNumber: 'BATCH-001', quantity: 5, expiration: laterExpiration },
+      ] as StockItemInventory[],
+      totalCount: 2,
+      currentPage: 1,
+      currentPageSize: 10,
+      setCurrentPage: vi.fn(),
+      setStockBatchUuid: vi.fn(),
+      setStockItemUuid: vi.fn(),
+      setPageSize: vi.fn(),
+      pageSizes: [10, 20, 50],
+      isLoading: false,
+      error: null,
+      setLocationUuid: vi.fn(),
+      setPartyUuid: vi.fn(),
+      setSearchString: vi.fn(),
+    });
+
+    render(<BatchNoSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
+    await user.click(screen.getByRole('combobox'));
+
+    expect(
+      screen.getByText(`BATCH-001 | Qty: 10 | Expiry: ${formatForDatePicker(mockExpiration)}`),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(`BATCH-001 | Qty: 5 | Expiry: ${formatForDatePicker(laterExpiration)}`),
+    ).toBeInTheDocument();
   });
 
   it('should filter out batches with zero or undefined quantity', async () => {
