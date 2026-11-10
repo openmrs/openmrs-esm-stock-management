@@ -372,17 +372,9 @@ function StockUserRoleScopesItems() {
                           );
                         })}
                       </TableExpandRow>
-                      {row.isExpanded && scope ? (
-                        <TableExpandedRow {...expandedRowProps} colSpan={headers.length + 1}>
-                          <ScopeDetails scope={scope} />
-                        </TableExpandedRow>
-                      ) : (
-                        <TableExpandedRow
-                          {...expandedRowProps}
-                          className={styles.hiddenRow}
-                          colSpan={headers.length + 1}
-                        />
-                      )}
+                      <TableExpandedRow {...expandedRowProps} colSpan={headers.length + 1}>
+                        {row.isExpanded && scope ? <ScopeDetails scope={scope} /> : null}
+                      </TableExpandedRow>
                     </React.Fragment>
                   );
                 })}
