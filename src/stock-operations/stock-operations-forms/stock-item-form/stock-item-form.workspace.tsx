@@ -19,6 +19,7 @@ import { type z } from 'zod';
 import { type ConfigObject } from '../../../config-schema';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, formatForDatePicker, today } from '../../../constants';
 import {
+  OperationType,
   operationFromString,
   type StockOperationType,
 } from '../../../core/api/types/stockOperation/StockOperationType';
@@ -119,6 +120,10 @@ const StockItemForm: React.FC<StockItemFormProps> = ({
                   onValueChange={field.onChange}
                   stockItemUuid={stockOperationItem.stockItemUuid}
                   partyUuid={sourcePartyUuid}
+                  includeEmptyBatches={
+                    operationType === OperationType.STOCK_TAKE_OPERATION_TYPE ||
+                    operationType === OperationType.ADJUSTMENT_OPERATION_TYPE
+                  }
                   error={error?.message}
                 />
               )}

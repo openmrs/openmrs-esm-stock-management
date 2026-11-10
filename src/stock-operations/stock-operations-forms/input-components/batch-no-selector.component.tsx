@@ -10,6 +10,8 @@ interface BatchNoSelectorProps {
   stockItemUuid: string;
   /** The party the stock is drawn from. Only batches with stock there are listed. */
   partyUuid?: string;
+  /** Also list batches with no stock at the party, for operations that correct a recorded balance. */
+  includeEmptyBatches?: boolean;
   initialValue?: string;
   onValueChange?: (value: string) => void;
   error?: string;
@@ -18,6 +20,7 @@ interface BatchNoSelectorProps {
 const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
   stockItemUuid,
   partyUuid,
+  includeEmptyBatches = false,
   error,
   initialValue,
   onValueChange,
@@ -45,25 +48,28 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
     return stockItemBatchNos.map((item) => {
       const matchingBatch = items?.find((batch) => batch.batchNumber === item.batchNo);
 
-      return matchingBatch
-        ? ({
-            ...item,
-            ...matchingBatch,
-            quantity: String(matchingBatch.quantity),
-          } as StockBatchWithUoM)
-        : (item as StockBatchWithUoM);
+      if (matchingBatch) {
+        return {
+          ...item,
+          ...matchingBatch,
+          quantity: String(matchingBatch.quantity),
+        } as StockBatchWithUoM;
+      }
+
+      return (includeEmptyBatches ? { ...item, quantity: '0' } : item) as StockBatchWithUoM;
     });
-  }, [stockItemBatchNos, items]);
+  }, [stockItemBatchNos, items, includeEmptyBatches]);
 
   const filteredBatches = useMemo(() => {
     if (!stockItemBatchesInfo) return [];
+    if (includeEmptyBatches) return stockItemBatchesInfo;
 
     return stockItemBatchesInfo.filter((batch) => {
       const quantity = typeof batch.quantity === 'string' ? parseFloat(batch.quantity) : batch.quantity;
 
       return !isNaN(quantity) && quantity > 0;
     });
-  }, [stockItemBatchesInfo]);
+  }, [stockItemBatchesInfo, includeEmptyBatches]);
 
   const initialSelectedItem = useMemo(
     () => filteredBatches.find((batch) => batch.uuid === initialValue) ?? null,
