@@ -1,8 +1,10 @@
 import React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { useConfig, useSession } from '@openmrs/esm-framework';
 import { mockWorkspace2Props, stockIssueOperationtypeMock } from '@mocks';
+import { type Party } from '../../core/api/types/Party';
 import { type StockOperationDTO } from '../../core/api/types/stockOperation/StockOperationDTO';
 import { type StockOperationType } from '../../core/api/types/stockOperation/StockOperationType';
 import { useStockOperationAndItems } from '../stock-operations.resource';
@@ -37,12 +39,19 @@ vi.mock('./hooks/useParties', () => ({
 const requisitionUuid = 'requisition-uuid';
 const stockIssueType = stockIssueOperationtypeMock as unknown as StockOperationType;
 
+const parties = [
+  { uuid: 'issue-source-uuid', name: 'Issue Source Store' },
+  { uuid: 'issue-destination-uuid', name: 'Issue Destination Ward' },
+  { uuid: 'requisition-source-uuid', name: 'Requisition Pharmacy' },
+  { uuid: 'requisition-destination-uuid', name: 'Requisition Store' },
+] as Party[];
+
 const requisition = {
   uuid: requisitionUuid,
-  sourceUuid: 'main-pharmacy-uuid',
-  destinationUuid: 'main-store-uuid',
+  sourceUuid: 'requisition-source-uuid',
+  destinationUuid: 'requisition-destination-uuid',
   responsiblePersonUuid: 'requisition-person-uuid',
-  stockOperationItems: [],
+  stockOperationItems: [{ uuid: 'requisition-line', stockItemUuid: 'item-uuid', quantity: 30 }],
 } as StockOperationDTO;
 
 const savedIssue = {
@@ -50,12 +59,15 @@ const savedIssue = {
   operationTypeUuid: stockIssueOperationtypeMock.uuid,
   operationType: 'stockissue',
   status: 'NEW',
-  sourceUuid: 'main-store-uuid',
-  destinationUuid: 'main-pharmacy-uuid',
+  sourceUuid: 'issue-source-uuid',
+  destinationUuid: 'issue-destination-uuid',
   responsiblePersonUuid: 'issuer-person-uuid',
   remarks: 'Issue remarks',
   requisitionStockOperationUuid: requisitionUuid,
-  stockOperationItems: [],
+  stockOperationItems: [
+    { uuid: 'issue-line-1', stockItemUuid: 'item-uuid', stockBatchUuid: 'batch-b2', quantity: 12 },
+    { uuid: 'issue-line-2', stockItemUuid: 'item-uuid', stockBatchUuid: 'batch-bulk', quantity: 4 },
+  ],
 } as StockOperationDTO;
 
 describe('StockOperationForm with a linked requisition', () => {
@@ -66,14 +78,14 @@ describe('StockOperationForm with a linked requisition', () => {
       error: null,
     }));
     mockUseParties.mockReturnValue({
-      destinationParties: [],
+      destinationParties: parties,
       destinationPartiesFilter: () => true,
       destinationTags: [],
       error: undefined,
       isLoading: false,
       mutate: vi.fn(),
-      parties: [],
-      sourceParties: [],
+      parties,
+      sourceParties: parties,
       sourcePartiesFilter: () => true,
       sourceTags: [],
     });
@@ -85,7 +97,8 @@ describe('StockOperationForm with a linked requisition', () => {
     } as ReturnType<typeof useSession>);
   });
 
-  it("shows a saved issue's own details instead of the requisition's", () => {
+  it("shows a saved issue's own details and lines instead of the requisition's", async () => {
+    const user = userEvent.setup();
     render(
       <StockOperationForm
         {...mockWorkspace2Props({
@@ -96,7 +109,14 @@ describe('StockOperationForm with a linked requisition', () => {
       />,
     );
 
+    expect(screen.getByRole('combobox', { name: /source/i })).toHaveValue('Issue Source Store');
+    expect(screen.getByRole('combobox', { name: /destination/i })).toHaveValue('Issue Destination Ward');
     expect(mockUseStockOperationAndItems).not.toHaveBeenCalledWith(requisitionUuid);
+
+    await user.click(screen.getByText(/stock items/i));
+
+    const lines = screen.getAllByRole('row').slice(1);
+    expect(lines).toHaveLength(2);
   });
 
   it('prefills a new issue from the requisition', () => {
@@ -109,6 +129,7 @@ describe('StockOperationForm with a linked requisition', () => {
       />,
     );
 
-    expect(mockUseStockOperationAndItems).toHaveBeenCalledWith(requisitionUuid);
+    expect(screen.getByRole('combobox', { name: /source/i })).toHaveValue('Requisition Store');
+    expect(screen.getByRole('combobox', { name: /destination/i })).toHaveValue('Requisition Pharmacy');
   });
 });
