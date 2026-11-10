@@ -136,11 +136,12 @@ describe('BatchNoSelector', () => {
 
   it("shows the quantity at the operation's source when another location holds the same batch", async () => {
     const user = userEvent.setup();
+    const inventory = [
+      { partyUuid: 'main-pharmacy', batchNumber: 'BATCH-001', quantity: 20 },
+      { partyUuid: 'main-store', batchNumber: 'BATCH-001', quantity: 500 },
+    ] as StockItemInventory[];
     mockUseStockItemBatchInformationHook.mockImplementation((filter) => ({
-      items: [
-        ...(filter?.partyUuid ? [] : [{ partyUuid: 'main-pharmacy', batchNumber: 'BATCH-001', quantity: 20 }]),
-        { partyUuid: 'main-store', batchNumber: 'BATCH-001', quantity: 500 },
-      ] as StockItemInventory[],
+      items: inventory.filter((row) => !filter?.partyUuid || row.partyUuid === filter.partyUuid),
       totalCount: 1,
       currentPage: 1,
       currentPageSize: 10,

@@ -13,12 +13,13 @@ const mockUseStockItemBatchInformationHook = vi.mocked(useStockItemBatchInformat
 
 describe('StockAvailability', () => {
   it("counts only the stock held by the operation's party", () => {
+    const inventory = [
+      { partyUuid: 'main-pharmacy', batchNumber: 'B1', quantity: 20, quantityUoM: 'Tablet' },
+      { partyUuid: 'main-store', batchNumber: 'B1', quantity: 500, quantityUoM: 'Tablet' },
+      { partyUuid: 'main-store', batchNumber: 'B2', quantity: 295, quantityUoM: 'Tablet' },
+    ] as StockItemInventory[];
     mockUseStockItemBatchInformationHook.mockImplementation((filter) => ({
-      items: [
-        ...(filter?.partyUuid ? [] : [{ partyUuid: 'main-pharmacy', batchNumber: 'B1', quantity: 20 }]),
-        { partyUuid: 'main-store', batchNumber: 'B1', quantity: 500, quantityUoM: 'Tablet' },
-        { partyUuid: 'main-store', batchNumber: 'B2', quantity: 295, quantityUoM: 'Tablet' },
-      ] as StockItemInventory[],
+      items: inventory.filter((row) => !filter?.partyUuid || row.partyUuid === filter.partyUuid),
       totalCount: 3,
       currentPage: 1,
       currentPageSize: 10,
