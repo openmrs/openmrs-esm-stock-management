@@ -91,9 +91,9 @@ function LocationsSummary({ locations, onShowMore }: LocationsSummaryProps) {
   return (
     <LocationChips locations={visible}>
       {hiddenCount > 0 && (
-        <Link className={styles.moreLink} onClick={onShowMore}>
+        <Button kind="ghost" size="sm" className={styles.moreLink} onClick={onShowMore}>
           {t('moreLocations', '+{{count}} more', { count: hiddenCount })}
-        </Link>
+        </Button>
       )}
     </LocationChips>
   );
