@@ -481,7 +481,7 @@ const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ 
   };
 
   // Enter in a date field commits the typed date, it shouldn't also submit the form. This has to run in the
-  // capture phase because flatpickr stops the keydown from bubbling.
+  // capture phase because Carbon's DatePicker stops the keydown from bubbling.
   const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     const isDateField = ['date', 'startDate', 'endDate'].includes((event.target as HTMLElement).id);
     if (event.key === 'Enter' && isDateField) {
