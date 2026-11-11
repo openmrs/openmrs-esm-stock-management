@@ -215,7 +215,7 @@ const AddStockUserRoleScope: React.FC<Workspace2DefinitionProps<AddStockUserRole
     const filteredStockRoles = data.selectedItem?.roles
       .filter((role) => stockRoleUUIDs.includes(role.uuid))
       .filter((role) => role.uuid !== loggedInUserUuid);
-    setFormModel({ ...formModel, userUuid: data.selectedItem?.uuid, role: undefined });
+    setFormModel({ ...formModel, userUuid: data.selectedItem?.uuid, role: '' });
     setRoles(filteredStockRoles ?? []);
     setSelectedUserUuid(data?.selectedItem?.uuid);
   };

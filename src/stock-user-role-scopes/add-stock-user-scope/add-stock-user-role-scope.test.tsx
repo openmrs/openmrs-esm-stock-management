@@ -159,6 +159,27 @@ describe('AddStockUserRoleScope', () => {
 
       await expectValidationError('Role is required');
     });
+
+    it('shows no role after switching straight to another user who has the same role', async () => {
+      const user = userEvent.setup();
+      const john = { uuid: 'john-uuid', display: 'John Roe', roles: [stockRole] };
+      vi.mocked(useSearchUser).mockReturnValue({
+        userList: [jane, john],
+        setSearchString: vi.fn(),
+        isLoading: false,
+      } as never);
+      renderForm();
+
+      await selectUser(user);
+      await user.selectOptions(screen.getByRole('combobox', { name: 'Role' }), 'Inventory Clerk');
+
+      await user.click(screen.getByRole('combobox', { name: 'User' }));
+      await user.click(screen.getByRole('option', { name: 'John Roe' }));
+
+      expect(screen.getByRole('combobox', { name: 'Role' })).toHaveValue('');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+      await expectValidationError('Role is required');
+    });
   });
 
   describe('saving', () => {
