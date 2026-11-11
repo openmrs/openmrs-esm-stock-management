@@ -27,6 +27,20 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
   const [reasonIsInvalid, setReasonIsInvalid] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
 
+  const isDestructive = confirmType === 'cancel' || confirmType === 'reject';
+  const confirmLabels: Record<string, string> = {
+    submit: t('submit', 'Submit'),
+    dispatch: t('dispatch', 'Dispatch'),
+    dispatchapproval: t('dispatch', 'Dispatch'),
+    complete: t('complete', 'Complete'),
+    'complete dispatch': t('completeDispatch', 'Complete dispatch'),
+    cancel: t('cancelOperation', 'Cancel operation'),
+    reject: t('reject', 'Reject'),
+    return: t('return', 'Return'),
+    approve: t('approve', 'Approve'),
+  };
+  const confirmLabel = confirmLabels[confirmType] ?? t('submit', 'Submit');
+
   const handleClick = async (event) => {
     event.preventDefault();
 
@@ -104,7 +118,6 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
           }),
           kind: 'error',
         });
-        closeModal();
       },
     );
   };
@@ -144,7 +157,13 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
           <Button kind="secondary" onClick={closeModal}>
             {getCoreTranslation('cancel')}
           </Button>
-          {isApproving ? <InlineLoading /> : <Button type="submit">{t('submit', 'Submit')}</Button>}
+          {isApproving ? (
+            <InlineLoading />
+          ) : (
+            <Button kind={isDestructive ? 'danger' : 'primary'} type="submit">
+              {confirmLabel}
+            </Button>
+          )}
         </ModalFooter>
       </Form>
     </div>
