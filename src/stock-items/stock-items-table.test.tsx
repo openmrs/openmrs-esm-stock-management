@@ -85,6 +85,13 @@ describe('StockItemsTableComponent', () => {
     expect(screen.getByRole('button', { name: /reorder level/i })).toBeInTheDocument();
   });
 
+  it('does not offer sorting on the actions column', () => {
+    render(<StockItemsTableComponent />);
+
+    expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /actions/i })).not.toBeInTheDocument();
+  });
+
   it('displays skeleton loader when isLoading is true', () => {
     mockUseStockItemsPages.mockReturnValue({
       ...mockUseStockItemsPages,
