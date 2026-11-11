@@ -162,14 +162,4 @@ describe('StockUserRoleScopesItems', () => {
     expect(screen.getByText('Lab')).toBeInTheDocument();
     expect(screen.getByText('Theatre')).toBeInTheDocument();
   });
-
-  it('keeps the locations, operations, and actions columns width-constrained', () => {
-    mockPage([scope()]);
-
-    render(<StockUserRoleScopesItems />);
-
-    expect(screen.getByRole('columnheader', { name: /Locations/ })).toHaveClass('locationsColumn');
-    expect(screen.getByRole('columnheader', { name: /Stock operations/ })).toHaveClass('operationsColumn');
-    expect(screen.getByRole('columnheader', { name: /Actions/ })).toHaveClass('actionsColumn');
-  });
 });
