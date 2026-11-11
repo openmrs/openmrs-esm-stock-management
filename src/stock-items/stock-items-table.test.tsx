@@ -69,7 +69,7 @@ describe('StockItemsTableComponent', () => {
 
     expect(screen.getByRole('radio', { name: /all/i })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /^pharmaceuticals$/i })).toBeInTheDocument();
-    expect(screen.getByRole('radio', { name: /non pharmaceuticals/i })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /non-pharmaceuticals/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /import/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /settings/i })).toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: /filter table/i })).toBeInTheDocument();
