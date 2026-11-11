@@ -127,9 +127,9 @@ function OperationsSummary({ names, totalOperationTypes, onShowMore }: Operation
   }
 
   return (
-    <Link className={styles.moreLink} onClick={onShowMore}>
+    <Button kind="ghost" size="sm" className={styles.moreLink} onClick={onShowMore}>
       {label}
-    </Link>
+    </Button>
   );
 }
 
