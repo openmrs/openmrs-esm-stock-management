@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Button,
   DataTable,
   DataTableSkeleton,
   Link,
@@ -40,12 +41,6 @@ import styles from './stock-user-role-scopes.scss';
 const INLINE_OPERATION_NAME_LIMIT = 3;
 const VISIBLE_LOCATION_COUNT = 3;
 const LOCATION_OVERFLOW_AFTER = 4;
-
-const columnClassName: Record<string, string> = {
-  locations: styles.locationsColumn,
-  stockOperations: styles.operationsColumn,
-  actions: styles.actionsColumn,
-};
 
 function operationNames(scope: UserRoleScope) {
   return scope.operationTypes?.map((operation) => operation?.operationTypeName).filter(Boolean) ?? [];
@@ -137,10 +132,15 @@ interface ScopeDetailsProps {
   scope: UserRoleScope;
 }
 
+function displayDate(date: UserRoleScope['activeFrom']) {
+  return formatDisplayDate(date) || undefined;
+}
+
 function ScopeDetails({ scope }: ScopeDetailsProps) {
   const { t } = useTranslation();
   const names = operationNames(scope);
   const locations = scope.locations ?? [];
+  const notSet = t('notSet', 'Not Set');
 
   return (
     <div className={styles.expandedDetails}>
@@ -151,6 +151,20 @@ function ScopeDetails({ scope }: ScopeDetailsProps) {
       <div>
         <p className={styles.expandedHeading}>{t('locations', 'Locations')}</p>
         {locations.length ? <LocationChips locations={locations} /> : <p>{t('none', 'None')}</p>}
+      </div>
+      <div className={styles.expandedMeta}>
+        <div>
+          <p className={styles.expandedHeading}>{t('permanent', 'Permanent')}</p>
+          <p>{scope.permanent ? t('yes', 'Yes') : t('no', 'No')}</p>
+        </div>
+        <div>
+          <p className={styles.expandedHeading}>{t('activeFrom', 'Active From')}</p>
+          <p>{displayDate(scope.activeFrom) ?? notSet}</p>
+        </div>
+        <div>
+          <p className={styles.expandedHeading}>{t('activeTo', 'Active To')}</p>
+          <p>{displayDate(scope.activeTo) ?? notSet}</p>
+        </div>
       </div>
     </div>
   );
@@ -198,26 +212,11 @@ function StockUserRoleScopesItems() {
       },
       {
         id: 4,
-        header: t('permanent', 'Permanent'),
-        key: 'permanent',
-      },
-      {
-        id: 5,
-        header: t('activeFrom', 'Active From'),
-        key: 'activeFrom',
-      },
-      {
-        id: 6,
-        header: t('activeTo', 'Active To'),
-        key: 'activeTo',
-      },
-      {
-        id: 7,
         header: t('enabled', 'Enabled'),
         key: 'enabled',
       },
       {
-        id: 8,
+        id: 5,
         header: t('actions', 'Actions'),
         key: 'actions',
       },
@@ -249,12 +248,9 @@ function StockUserRoleScopesItems() {
         roleName: userRoleScope?.role,
         locations: (userRoleScope?.locations ?? []).map((location) => location.locationName).join(', '),
         stockOperations: names.join(', '),
-        permanent: userRoleScope?.permanent ? t('yes', 'Yes') : t('no', 'No'),
-        activeFrom: formatDisplayDate(userRoleScope?.activeFrom) ?? 'Not Set',
-        activeTo: formatDisplayDate(userRoleScope?.activeTo) ?? 'Not Set',
         enabled: userRoleScope?.enabled ? t('yes', 'Yes') : t('no', 'No'),
         actions: (
-          <div style={{ display: 'flex' }}>
+          <div className={styles.actions}>
             {!isCurrentUser && (
               <>
                 <EditStockUserRoleActionsMenu data={items[index]} />
@@ -308,78 +304,70 @@ function StockUserRoleScopesItems() {
                 <AddStockUserRoleScopeActionButton />
               </TableToolbarContent>
             </TableToolbar>
-            <Table {...getTableProps()}>
-              <TableHead>
-                <TableRow>
-                  <TableExpandHeader />
-                  {headers.map(
-                    (header: any) =>
-                      header.key !== 'details' && (
-                        <TableHeader
-                          {...getHeaderProps({
-                            header,
-                            isSortable: header.isSortable,
+            <div className={styles.tableScroll}>
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    <TableExpandHeader />
+                    {headers.map(
+                      (header: any) =>
+                        header.key !== 'details' && (
+                          <TableHeader
+                            {...getHeaderProps({
+                              header,
+                              isSortable: header.isSortable,
+                            })}
+                            className={isDesktop(layout) ? styles.desktopHeader : styles.tabletHeader}
+                            key={`${header.key}`}
+                          >
+                            {header.header?.content ?? header.header}
+                          </TableHeader>
+                        ),
+                    )}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row: any) => {
+                    const scope = scopesById.get(row.id);
+                    const props = getRowProps({ row });
+                    const expandedRowProps = getExpandedRowProps({ row });
+                    return (
+                      <React.Fragment key={row.id}>
+                        <TableExpandRow className={isDesktop(layout) ? styles.desktopRow : styles.tabletRow} {...props}>
+                          {row.cells.map((cell: any) => {
+                            if (cell?.info?.header === 'locations' && scope) {
+                              return (
+                                <TableCell key={cell.id}>
+                                  <LocationsSummary
+                                    locations={scope.locations ?? []}
+                                    onShowMore={() => expandRow(row.id)}
+                                  />
+                                </TableCell>
+                              );
+                            }
+                            if (cell?.info?.header === 'stockOperations' && scope) {
+                              return (
+                                <TableCell key={cell.id}>
+                                  <OperationsSummary
+                                    names={operationNames(scope)}
+                                    onShowMore={() => expandRow(row.id)}
+                                    totalOperationTypes={totalOperationTypes}
+                                  />
+                                </TableCell>
+                              );
+                            }
+                            return <TableCell key={cell.id}>{cell.value}</TableCell>;
                           })}
-                          className={[
-                            isDesktop(layout) ? styles.desktopHeader : styles.tabletHeader,
-                            columnClassName[header.key],
-                          ]
-                            .filter(Boolean)
-                            .join(' ')}
-                          key={`${header.key}`}
-                        >
-                          {header.header?.content ?? header.header}
-                        </TableHeader>
-                      ),
-                  )}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row: any) => {
-                  const scope = scopesById.get(row.id);
-                  const props = getRowProps({ row });
-                  const expandedRowProps = getExpandedRowProps({ row });
-                  return (
-                    <React.Fragment key={row.id}>
-                      <TableExpandRow className={isDesktop(layout) ? styles.desktopRow : styles.tabletRow} {...props}>
-                        {row.cells.map((cell: any) => {
-                          const columnClass = columnClassName[cell?.info?.header];
-                          if (cell?.info?.header === 'locations' && scope) {
-                            return (
-                              <TableCell className={columnClass} key={cell.id}>
-                                <LocationsSummary
-                                  locations={scope.locations ?? []}
-                                  onShowMore={() => expandRow(row.id)}
-                                />
-                              </TableCell>
-                            );
-                          }
-                          if (cell?.info?.header === 'stockOperations' && scope) {
-                            return (
-                              <TableCell className={columnClass} key={cell.id}>
-                                <OperationsSummary
-                                  names={operationNames(scope)}
-                                  onShowMore={() => expandRow(row.id)}
-                                  totalOperationTypes={totalOperationTypes}
-                                />
-                              </TableCell>
-                            );
-                          }
-                          return (
-                            <TableCell className={columnClass} key={cell.id}>
-                              {cell.value}
-                            </TableCell>
-                          );
-                        })}
-                      </TableExpandRow>
-                      <TableExpandedRow {...expandedRowProps} colSpan={headers.length + 1}>
-                        {row.isExpanded && scope ? <ScopeDetails scope={scope} /> : null}
-                      </TableExpandedRow>
-                    </React.Fragment>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                        </TableExpandRow>
+                        <TableExpandedRow {...expandedRowProps} colSpan={headers.length + 1}>
+                          {row.isExpanded && scope ? <ScopeDetails scope={scope} /> : null}
+                        </TableExpandedRow>
+                      </React.Fragment>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
             {rows.length === 0 ? (
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>

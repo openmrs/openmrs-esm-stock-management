@@ -75,23 +75,21 @@
   align-items: center;
 }
 
-.tableOverride :global(th).locationsColumn,
-.tableOverride :global(td).locationsColumn,
-.tableOverride :global(th).operationsColumn,
-.tableOverride :global(td).operationsColumn {
-  width: 12rem;
-  max-width: 12rem;
-  white-space: normal;
+.tableOverride {
+  max-width: 100%;
+  min-width: 0;
 }
 
-.tableOverride :global(th).actionsColumn,
-.tableOverride :global(td).actionsColumn {
-  width: 6.5rem;
-  white-space: nowrap;
+.tableScroll {
+  overflow-x: auto;
+  max-width: 100%;
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
-.tableOverride :global(tr.cds--parent-row.cds--expandable-row + tr[data-child-row] td .cds--child-row-inner-container) {
-  max-block-size: none;
+.actions {
+  display: flex;
+  align-items: center;
 }
 
 .locationChips {
@@ -99,20 +97,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: layout.$spacing-02;
-  max-width: 12rem;
-}
-
-.locationChips :global(.cds--tag) {
-  max-width: 100%;
-  height: auto;
-  margin: 0;
-  white-space: normal;
-}
-
-.locationChips :global(.cds--tag__label) {
-  overflow: visible;
-  white-space: normal;
-  text-overflow: unset;
 }
 
 .moreLink {
@@ -134,6 +118,8 @@
   margin-bottom: layout.$spacing-02;
 }
 
-.expandedDetails .locationChips {
-  max-width: none;
+.expandedMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: layout.$spacing-05 layout.$spacing-07;
 }

@@ -162,4 +162,28 @@ describe('StockUserRoleScopesItems', () => {
     expect(screen.getByText('Lab')).toBeInTheDocument();
     expect(screen.getByText('Theatre')).toBeInTheDocument();
   });
+
+  it('shows permanent and active dates in the expanded row', async () => {
+    const user = userEvent.setup();
+    mockPage([
+      scope({
+        permanent: false,
+        activeFrom: new Date('2024-01-15T00:00:00.000Z'),
+        activeTo: new Date('2024-06-01T00:00:00.000Z'),
+      }),
+    ]);
+
+    render(<StockUserRoleScopesItems />);
+
+    expect(screen.queryByRole('columnheader', { name: 'Permanent' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'Active From' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'Active To' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Expand current row' }));
+
+    expect(screen.getByText('Permanent')).toBeInTheDocument();
+    expect(screen.getByText('No')).toBeInTheDocument();
+    expect(screen.getByText('15-Jan-2024')).toBeInTheDocument();
+    expect(screen.getByText('01-Jun-2024')).toBeInTheDocument();
+  });
 });
