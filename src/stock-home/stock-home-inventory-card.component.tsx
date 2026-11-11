@@ -1,19 +1,43 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@carbon/react';
+import { ActionableNotification, Button } from '@carbon/react';
 import { WarningHex } from '@carbon/react/icons';
-import { showModal } from '@openmrs/esm-framework';
+import { restBaseUrl, showModal } from '@openmrs/esm-framework';
+import { useHandleMutate } from '../utils';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
 import styles from './stock-home-detail-card.scss';
 
 const StockHomeInventoryCard = () => {
   const { t } = useTranslation();
-  const { items: expiryItems, isLoading: inventoryLoading } = useStockInventory();
-  const { items: stockItems, isLoading } = useStockInventoryItems();
+  const handleMutate = useHandleMutate();
+  const { items: expiryItems, isLoading: inventoryLoading, error: batchesError } = useStockInventory();
+  const { items: stockItems, isLoading, error: stockItemsError } = useStockInventoryItems();
 
   if (isLoading || inventoryLoading) {
     return null;
+  }
+
+  // Checked before the data, which SWR keeps from an earlier load when a reload fails.
+  if (batchesError || stockItemsError) {
+    const retry = () => {
+      if (batchesError) handleMutate(`${restBaseUrl}/stockmanagement/stockbatch?`);
+      if (stockItemsError) handleMutate(`${restBaseUrl}/stockmanagement/stockitem?`);
+    };
+
+    return (
+      <ActionableNotification
+        actionButtonLabel={t('tryAgain', 'Try again')}
+        hasFocus={false}
+        hideCloseButton
+        inline
+        kind="error"
+        lowContrast
+        onActionButtonClick={retry}
+        role="alert"
+        title={t('inventoryAlertsLoadError', "Couldn't load inventory alerts")}
+      />
+    );
   }
 
   if (stockItems?.length === 0) {
