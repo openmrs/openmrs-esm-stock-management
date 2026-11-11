@@ -3,21 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { mockWorkspace2Props } from '@mocks';
 
-vi.hoisted(() => {
-  if (typeof globalThis.localStorage === 'undefined') {
-    Object.defineProperty(globalThis, 'localStorage', {
-      value: {
-        length: 0,
-        key: () => null,
-        getItem: () => null,
-        setItem: () => {},
-        removeItem: () => {},
-        clear: () => {},
-      },
-    });
-  }
-});
-
 vi.mock('./stock-rules.resource', () => ({ createOrUpdateStockRule: vi.fn() }));
 vi.mock('../../stock-items.resource', () => ({
   useStockItemPackagingUOMs: () => ({ items: { results: [] } }),

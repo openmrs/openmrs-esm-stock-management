@@ -1,16 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { openmrsFetch } from '@openmrs/esm-framework';
+import { type FetchResponse, openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import { type StockRule } from '../../../core/api/types/stockItem/StockRule';
 import { createOrUpdateStockRule } from './stock-rules.resource';
 
-vi.mock('@openmrs/esm-framework', () => ({
-  openmrsFetch: vi.fn(),
-  restBaseUrl: '/ws/rest/v1',
-}));
-
 describe('createOrUpdateStockRule', () => {
   beforeEach(() => {
-    vi.mocked(openmrsFetch).mockResolvedValue({} as any);
+    vi.mocked(openmrsFetch).mockResolvedValue({} as FetchResponse);
   });
 
   it('sends only updatable properties when editing a stock rule', async () => {
@@ -41,7 +36,7 @@ describe('createOrUpdateStockRule', () => {
     await createOrUpdateStockRule(rule);
 
     expect(openmrsFetch).toHaveBeenCalledWith(
-      '/ws/rest/v1/stockmanagement/stockrule/rule-uuid',
+      `${restBaseUrl}/stockmanagement/stockrule/rule-uuid`,
       expect.objectContaining({
         method: 'POST',
         body: {
