@@ -33,6 +33,11 @@ const reportTypes = [
     systemName: 'MOST_LEAST_MOVING_STOCK_REPORT',
     parameters: ['StartDate', 'EndDate', 'Location', 'Limit'],
   },
+  {
+    name: 'Stock Status Report',
+    systemName: 'STOCK_STATUS_REPORT',
+    parameters: ['Date', 'Location', 'InventoryGroupBy'],
+  },
 ];
 
 const renderForm = () => {
@@ -169,6 +174,26 @@ describe('CreateReport', () => {
 
       await save(user);
       expect(createBatchJob).not.toHaveBeenCalled();
+    });
+
+    it('drops a date typed for the previous report when the report changes', async () => {
+      const user = userEvent.setup();
+      renderForm();
+      await selectReport(user, 'Stock Expiry Report');
+      fireEvent.change(screen.getByRole('textbox', { name: 'Start date' }), { target: { value: '31/02/2026' } });
+      expect(
+        await screen.findByText('Enter a valid date in the format DD/MM/YYYY that is not in the future'),
+      ).toBeInTheDocument();
+
+      await selectReport(user, 'Stock Status Report');
+      expect(screen.queryByRole('textbox', { name: 'Start date' })).not.toBeInTheDocument();
+      await user.selectOptions(screen.getByRole('combobox', { name: 'Location' }), 'Main Store');
+      fireEvent.change(screen.getByRole('textbox', { name: 'Date' }), { target: { value: '01/01/2026' } });
+      await user.selectOptions(screen.getByRole('combobox', { name: 'Inventory by' }), 'Stock Item');
+      await save(user);
+
+      await waitFor(() => expect(createBatchJob).toHaveBeenCalledTimes(1));
+      expect(getParameters()).toContain('param.report=STOCK_STATUS_REPORT');
     });
   });
 

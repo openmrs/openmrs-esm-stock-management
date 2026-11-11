@@ -122,6 +122,8 @@ const AddStockUserRoleScope: React.FC<Workspace2DefinitionProps<AddStockUserRole
 
   const onPermanentChanged = (): void => {
     const isPermanent = !formModel?.permanent;
+    // The dates are cleared below, so an error left by an invalid one no longer applies.
+    setInvalidActiveDates({});
     setFormModel({
       ...formModel,
       permanent: isPermanent,
@@ -191,7 +193,9 @@ const AddStockUserRoleScope: React.FC<Workspace2DefinitionProps<AddStockUserRole
       const date = parseTypedDate(event.target.value, { minDate: MinDate });
       const invalid = isInvalidDate(date);
       setInvalidActiveDates((current) => ({ ...current, [field]: invalid }));
-      if (date && !invalid) {
+      if (!event.target.value.trim()) {
+        setFormModel((current) => ({ ...current, [field]: undefined }));
+      } else if (date && !invalid) {
         setFormModel((current) => ({ ...current, [field]: date }));
       }
     };

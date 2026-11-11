@@ -252,6 +252,7 @@ const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ 
     handleSubmit,
     control,
     formState: { errors, defaultValues, isDirty },
+    resetField,
     setValue,
   } = useForm<StockReportSchema>({
     mode: 'all',
@@ -524,6 +525,11 @@ const CreateReport: React.FC<Workspace2DefinitionProps<CreateReportProps>> = ({ 
                     onChange={({ selectedItem }) => {
                       onChange(selectedItem.name);
                       handleReportNameChange(selectedItem.name);
+                      // A date typed for the previous report, valid or not, could otherwise block Save
+                      // from a field the new report doesn't show.
+                      resetField('startDate');
+                      resetField('endDate');
+                      resetField('date');
                     }}
                   />
                 )}

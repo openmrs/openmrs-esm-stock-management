@@ -93,4 +93,32 @@ describe('AddStockUserRoleScope typed active dates', () => {
       ),
     );
   });
+
+  it('saves no Active To once a typed date is cleared from the box', async () => {
+    const user = userEvent.setup();
+    render(<AddStockUserRoleScope {...mockWorkspace2Props({ model })} />);
+
+    fireEvent.change(screen.getByLabelText('Active To'), { target: { value: '31/12/2999' } });
+    fireEvent.change(screen.getByLabelText('Active To'), { target: { value: '' } });
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(createOrUpdateUserRoleScope).toHaveBeenCalled());
+    expect(vi.mocked(createOrUpdateUserRoleScope).mock.lastCall[0].activeTo).toBeUndefined();
+  });
+
+  it('drops an invalid date error when Permanent is turned on and off', async () => {
+    const user = userEvent.setup();
+    render(<AddStockUserRoleScope {...mockWorkspace2Props({ model })} />);
+
+    fireEvent.change(screen.getByLabelText('Active To'), { target: { value: '01/01/2020' } });
+    expect(await screen.findByText(invalidMessage)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('checkbox', { name: 'Permanent' }));
+    await user.click(screen.getByRole('checkbox', { name: 'Permanent' }));
+
+    expect(screen.getByLabelText('Active To')).toHaveValue('');
+    expect(screen.queryByText(invalidMessage)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /save/i }));
+    expect(showSnackbar).not.toHaveBeenCalledWith(expect.objectContaining({ subtitle: invalidMessage }));
+  });
 });
