@@ -34,7 +34,7 @@ const StockOperationSubmissionFormStep: React.FC<StockOperationSubmissionFormSte
   const { t } = useTranslation();
   const handleMutate = useHandleMutate();
   const operationTypePermision = useOperationTypePermisions(stockOperationType);
-  const editable = useMemo(() => !stockOperation || stockOperation.status === 'NEW', [stockOperation]);
+  const editable = !stockOperation || stockOperation.permission?.canEdit === true;
   const form = useFormContext<StockOperationItemDtoSchema>();
   const [approvalRequired, setApprovalRequired] = useState<boolean | null>(stockOperation?.approvalRequired);
   const isStockIssueOperation = useMemo(
