@@ -4,24 +4,17 @@ import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { getDefaultsFromConfigSchema, showModal, useConfig } from '@openmrs/esm-framework';
 import { configSchema, type ConfigObject } from '../../../../config-schema';
-import {
-  type StockInventoryResult,
-  useStockItem,
-  useStockItemInventory,
-  useStockItemTransactions,
-} from '../../../stock-items.resource';
+import { useStockItem, useStockItemTransactions } from '../../../stock-items.resource';
 import TransactionsPrintAction from './transactions-print-action.component';
 
 vi.mock('../../../stock-items.resource', () => ({
   useStockItem: vi.fn(),
-  useStockItemInventory: vi.fn(),
   useStockItemTransactions: vi.fn(),
 }));
 
 const mockUseConfig = vi.mocked(useConfig<ConfigObject>);
 const mockShowModal = vi.mocked(showModal);
 const mockUseStockItem = vi.mocked(useStockItem);
-const mockUseStockItemInventory = vi.mocked(useStockItemInventory);
 const mockUseStockItemTransactions = vi.mocked(useStockItemTransactions);
 
 const itemUuid = 'stock-item-uuid';
@@ -30,13 +23,6 @@ const patientTransactions = [
   { uuid: 'transaction-1', stockItemUuid: itemUuid, packagingUomName: 'Tablet', quantity: -2 },
   { uuid: 'transaction-2', stockItemUuid: itemUuid, packagingUomName: 'Tablet', quantity: -5 },
 ];
-
-const mockInventoryTotal = (total: number) =>
-  mockUseStockItemInventory.mockReturnValue({
-    items: { total } as unknown as StockInventoryResult,
-    isLoading: false,
-    error: null,
-  } as ReturnType<typeof useStockItemInventory>);
 
 const clickPrintMenuItem = async (user: ReturnType<typeof userEvent.setup>, name: RegExp) => {
   await user.click(screen.getByRole('button', { name: /additional actions/i }));
@@ -56,31 +42,17 @@ describe('TransactionsPrintAction', () => {
       isLoading: false,
       error: null,
     } as ReturnType<typeof useStockItemTransactions>);
-    mockInventoryTotal(80);
   });
 
-  it('requests patient transactions and the balance for the current item only', () => {
+  it('requests patient transactions for the current item only', () => {
     render(<TransactionsPrintAction itemUuid={itemUuid} columns={[]} data={[]} />);
 
     expect(mockUseStockItemTransactions).toHaveBeenCalledWith(
       expect.objectContaining({ isPatientTransaction: 'true', stockItemUuid: itemUuid }),
     );
-    expect(mockUseStockItemInventory).toHaveBeenCalledWith(expect.objectContaining({ stockItemUuid: itemUuid }));
   });
 
-  it('applies the location selected on the Transactions tab', () => {
-    const locationUuid = 'main-pharmacy-uuid';
-    render(<TransactionsPrintAction itemUuid={itemUuid} columns={[]} data={[]} filter={{ locationUuid }} />);
-
-    expect(mockUseStockItemTransactions).toHaveBeenCalledWith(
-      expect.objectContaining({ stockItemUuid: itemUuid, locationUuid }),
-    );
-    expect(mockUseStockItemInventory).toHaveBeenCalledWith(
-      expect.objectContaining({ stockItemUuid: itemUuid, locationUuid }),
-    );
-  });
-
-  it('passes the item balance to the Stock Card preview', async () => {
+  it('passes the patient transactions to the Stock Card preview without a balance column', async () => {
     const user = userEvent.setup();
     render(<TransactionsPrintAction itemUuid={itemUuid} columns={[]} data={[]} />);
 
@@ -88,29 +60,10 @@ describe('TransactionsPrintAction', () => {
 
     expect(mockShowModal).toHaveBeenCalledWith(
       'transactions-print-stockcard-preview-modal',
-      expect.objectContaining({
-        title: 'Amoxicillin 500mg',
-        data: [
-          expect.objectContaining({ uuid: 'transaction-1', balance: '80 Tablet' }),
-          expect.objectContaining({ uuid: 'transaction-2', balance: '80 Tablet' }),
-        ],
-      }),
+      expect.objectContaining({ title: 'Amoxicillin 500mg', data: patientTransactions }),
     );
-  });
-
-  it('prints a zero balance as zero', async () => {
-    const user = userEvent.setup();
-    mockInventoryTotal(0);
-    render(<TransactionsPrintAction itemUuid={itemUuid} columns={[]} data={[]} />);
-
-    await clickPrintMenuItem(user, /print stock card/i);
-
-    expect(mockShowModal).toHaveBeenCalledWith(
-      'transactions-print-stockcard-preview-modal',
-      expect.objectContaining({
-        data: expect.arrayContaining([expect.objectContaining({ balance: '0 Tablet' })]),
-      }),
-    );
+    const { columns } = mockShowModal.mock.calls[0][1] as { columns: Array<{ key: string }> };
+    expect(columns.map((column) => column.key)).not.toContain('balance');
   });
 
   it('passes the Transactions tab rows to the Bin Card preview', async () => {

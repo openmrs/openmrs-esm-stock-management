@@ -22,7 +22,6 @@ const columns = [
   { key: 'date', header: 'Date' },
   { key: 'location', header: 'Location' },
   { key: 'transaction', header: 'Transaction' },
-  { key: 'balance', header: 'Balance' },
   { key: 'totalout', header: 'OUT' },
   { key: 'batch', header: 'Batch' },
 ];
@@ -38,7 +37,6 @@ const transactions = [
     packagingUomFactor: 10,
     stockBatchNo: 'BATCH-001',
     patientUuid: 'patient-1',
-    balance: '80 Tablet',
   },
 ];
 
@@ -73,7 +71,7 @@ describe('TransactionsStockcardPrintPreviewModal', () => {
     expect(screen.getByText('Amoxicillin 500 Mg')).toBeInTheDocument();
     columns.forEach(({ header }) => expect(screen.getByRole('columnheader', { name: header })).toBeInTheDocument());
     expect(
-      await screen.findByRole('row', { name: /john doe .* main pharmacy patient dispense 80 tablet 20 batch-001/i }),
+      await screen.findByRole('row', { name: /john doe .* main pharmacy patient dispense 20 batch-001/i }),
     ).toBeInTheDocument();
   });
 
