@@ -14,6 +14,7 @@ export function useStockItemBatchNumbers(stockItemUuid: string, excludeExpired =
   const {
     items: { results: stockItemBatchNos },
     isLoading,
+    error,
   } = useStockBatches(conceptFilter);
 
   const [searchString, setSearchString] = useState(null);
@@ -39,5 +40,6 @@ export function useStockItemBatchNumbers(stockItemUuid: string, excludeExpired =
     setRepresentation,
     setSearchString,
     isLoading,
+    error,
   };
 }

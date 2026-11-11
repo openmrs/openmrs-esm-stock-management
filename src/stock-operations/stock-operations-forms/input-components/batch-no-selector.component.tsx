@@ -26,7 +26,11 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
   onValueChange,
 }) => {
   // Inventory leaves out expired batches, so an expired batch would show here with no stock at all.
-  const { isLoading, stockItemBatchNos } = useStockItemBatchNumbers(stockItemUuid, includeEmptyBatches);
+  const {
+    isLoading,
+    stockItemBatchNos,
+    error: batchesError,
+  } = useStockItemBatchNumbers(stockItemUuid, includeEmptyBatches);
   const { t } = useTranslation();
   const {
     items,
@@ -127,8 +131,13 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
   return (
     <ComboBox
       id="stockBatchUuid"
-      invalid={!!error || !!inventoryError}
-      invalidText={error || t('batchQuantitiesLoadError', "Couldn't load the stock held at this location")}
+      invalid={!!error || !!batchesError || !!inventoryError}
+      invalidText={
+        error ||
+        (batchesError
+          ? t('batchesLoadError', "Couldn't load this item's batches")
+          : t('batchQuantitiesLoadError', "Couldn't load the stock held at this location"))
+      }
       items={filteredBatches}
       itemToString={itemToString}
       name="stockBatchUuid"

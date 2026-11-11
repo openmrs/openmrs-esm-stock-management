@@ -23,6 +23,7 @@
   "all": "All",
   "approve": "Approve",
   "batch": "Batch No",
+  "batchesLoadError": "Couldn't load this item's batches",
   "batchInformation": "Batch Information",
   "batchJob": "Batch Job",
   "batchJobErrorMessage": "Error creating batch job",

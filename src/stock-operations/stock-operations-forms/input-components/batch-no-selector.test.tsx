@@ -49,6 +49,7 @@ describe('BatchNoSelector', () => {
       setLimit: vi.fn(),
       setRepresentation: vi.fn(),
       setSearchString: vi.fn(),
+      error: null,
     });
 
     mockUseStockItemBatchInformationHook.mockReturnValue({
@@ -79,6 +80,7 @@ describe('BatchNoSelector', () => {
       setLimit: vi.fn(),
       setRepresentation: vi.fn(),
       setSearchString: vi.fn(),
+      error: null,
     });
 
     mockUseStockItemBatchInformationHook.mockReturnValue({
@@ -193,6 +195,7 @@ describe('BatchNoSelector', () => {
       setLimit: vi.fn(),
       setRepresentation: vi.fn(),
       setSearchString: vi.fn(),
+      error: null,
     });
     mockUseStockItemBatchInformationHook.mockReturnValue({
       items: [
@@ -274,6 +277,24 @@ describe('BatchNoSelector', () => {
     expect(screen.getByText("Couldn't load the stock held at this location")).toBeInTheDocument();
   });
 
+  it('offers no batches and shows an error when the batch list fails to load', async () => {
+    const user = userEvent.setup();
+    mockUseStockItemBatchNumbers.mockReturnValue({
+      isLoading: false,
+      stockItemBatchNos: undefined,
+      error: new Error('Forbidden'),
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
+      setSearchString: vi.fn(),
+    });
+
+    render(<BatchNoSelector stockItemUuid={mockStockItemUuid} partyUuid="main-store" onValueChange={mockOnValueChange} />);
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.queryAllByRole('option')).toHaveLength(0);
+    expect(screen.getByText("Couldn't load this item's batches")).toBeInTheDocument();
+  });
+
   it('matches each batch to its own inventory row when two batches share a number', async () => {
     const user = userEvent.setup();
     const laterExpiration = new Date(mockExpiration.getTime() + 365 * 24 * 60 * 60 * 1000);
@@ -300,6 +321,7 @@ describe('BatchNoSelector', () => {
       setLimit: vi.fn(),
       setRepresentation: vi.fn(),
       setSearchString: vi.fn(),
+      error: null,
     });
     mockUseStockItemBatchInformationHook.mockReturnValue({
       items: [
@@ -366,6 +388,7 @@ describe('BatchNoSelector', () => {
       setLimit: vi.fn(),
       setRepresentation: vi.fn(),
       setSearchString: vi.fn(),
+      error: null,
     });
 
     render(<BatchNoSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
