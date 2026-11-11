@@ -209,7 +209,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                           })}
                           className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
-                          isSortable={header.key !== 'name'}
+                          isSortable={header.key !== 'actions'}
                         >
                           {(() => {
                             const customHeader = header as CustomTableHeader;
