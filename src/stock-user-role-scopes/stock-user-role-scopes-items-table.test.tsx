@@ -1,43 +1,54 @@
 import React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { useSession, userHasAccess } from '@openmrs/esm-framework';
+import { type Session, useSession, userHasAccess } from '@openmrs/esm-framework';
 import { type UserRoleScope } from '../core/api/types/identity/UserRoleScope';
 import useStockUserRoleScopesPage from './stock-user-role-scopes-items-table.resource';
 import StockUserRoleScopesItems from './stock-user-role-scopes-items-table.component';
-
-vi.mock('./stock-user-role-scopes-items-table.resource', () => ({
-  default: vi.fn(),
-}));
 
 const mockUseStockUserRoleScopesPage = vi.mocked(useStockUserRoleScopesPage);
 const mockUseSession = vi.mocked(useSession);
 const mockUserHasAccess = vi.mocked(userHasAccess);
 
-const userRoleScope = {
-  uuid: 'scope-1',
-  userUuid: 'other-user-uuid',
-  userFamilyName: 'Doe',
-  userGivenName: 'Jane',
-  role: 'Inventory Clerk',
-  locations: [],
-  operationTypes: [],
-  permanent: false,
-  activeFrom: new Date('2026-01-01'),
-  activeTo: new Date('2026-12-31'),
-  enabled: true,
-} as unknown as UserRoleScope;
+vi.mock('./stock-user-role-scopes-items-table.resource', () => ({
+  default: vi.fn(),
+}));
+
+vi.mock('../utils', () => ({
+  useHandleMutate: () => vi.fn(),
+}));
+
+vi.mock('./edit-stock-user-scope/edit-stock-user-scope-action-menu.component', () => ({
+  default: () => <button>Edit user role scope</button>,
+}));
+
+vi.mock('./delete-stock-user-scope/delete-stock-user-scope.component', () => ({
+  default: () => <button>Delete user role scope</button>,
+}));
+
+const scope = (uuid: string, userUuid: string, familyName: string, givenName: string) =>
+  ({
+    uuid,
+    userUuid,
+    userFamilyName: familyName,
+    userGivenName: givenName,
+    role: 'Inventory Clerk',
+    locations: [],
+    operationTypes: [],
+    permanent: true,
+    enabled: true,
+  } as UserRoleScope);
 
 const buildPageResult = (overrides: Partial<ReturnType<typeof useStockUserRoleScopesPage>> = {}) =>
   ({
-    items: [userRoleScope],
+    items: [scope('scope-1', 'other-user', 'Doe', 'Jane')],
     totalItems: 1,
     currentPage: 1,
     currentPageSize: 10,
     pageSizes: [10, 20, 50],
     goTo: vi.fn(),
     setPageSize: vi.fn(),
-    paginatedItems: [userRoleScope],
+    paginatedItems: [],
     isLoading: false,
     error: undefined,
     ...overrides,
@@ -45,29 +56,23 @@ const buildPageResult = (overrides: Partial<ReturnType<typeof useStockUserRoleSc
 
 describe('StockUserRoleScopesItems', () => {
   beforeEach(() => {
-    mockUseSession.mockReturnValue({
-      authenticated: true,
-      sessionId: 'test-session-id',
-      user: {
-        uuid: 'current-user-uuid',
-        display: 'Current User',
-        username: 'currentuser',
-        systemId: 'test-system-id',
-        userProperties: {},
-        person: { uuid: 'test-person-uuid' },
-        privileges: [],
-        roles: [],
-        retired: false,
-        links: [],
-        locale: 'en',
-        allowedLocales: ['en'],
-      },
-      sessionLocation: {
-        uuid: 'test-location-uuid',
-        display: 'Test Location',
-        links: [],
-      },
-    });
+    mockUseSession.mockReturnValue({ user: { uuid: 'current-user' } } as Session);
+    mockUserHasAccess.mockReturnValue(true);
+    mockUseStockUserRoleScopesPage.mockReturnValue(
+      buildPageResult({
+        items: [scope('scope-1', 'current-user', 'Admin', 'Super'), scope('scope-2', 'other-user', 'Doe', 'Jane')],
+        totalItems: 2,
+        pageSizes: [10, 20],
+      }),
+    );
+  });
+
+  it('shows user names as plain text, without links to routes the app does not serve', () => {
+    render(<StockUserRoleScopesItems />);
+
+    expect(screen.getByText('Admin Super')).toBeInTheDocument();
+    expect(screen.getByText('Doe Jane')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Doe Jane' })).not.toBeInTheDocument();
   });
 
   it('renders an error state instead of the empty list when loading fails', () => {
@@ -103,5 +108,7 @@ describe('StockUserRoleScopesItems', () => {
     render(<StockUserRoleScopesItems />);
 
     expect(screen.queryByRole('button', { name: /add new user role scope/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /edit user role scope/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /delete user role scope/i })).not.toBeInTheDocument();
   });
 });

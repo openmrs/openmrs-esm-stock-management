@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import {
   DataTable,
   DataTableSkeleton,
-  Link,
   Pagination,
   Table,
   TableBody,
@@ -24,7 +23,7 @@ import { ErrorState, isDesktop, restBaseUrl, userHasAccess, useSession } from '@
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import { useHandleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
-import { TASK_STOCKMANAGEMENT_USERROLESCOPES_MUTATE, URL_USER_ROLE_SCOPE } from '../constants';
+import { TASK_STOCKMANAGEMENT_USERROLESCOPES_MUTATE } from '../constants';
 import AddStockUserRoleScopeActionButton from './add-stock-user-role-scope-button.component';
 import EditStockUserRoleActionsMenu from './edit-stock-user-scope/edit-stock-user-scope-action-menu.component';
 import StockUserScopeDeleteActionMenu from './delete-stock-user-scope/delete-stock-user-scope.component';
@@ -108,14 +107,7 @@ function StockUserRoleScopesItems() {
         id: userRoleScope?.uuid,
         key: `key-${userRoleScope?.uuid}`,
         uuid: `${userRoleScope?.uuid}`,
-        user:
-          currentUser.user.uuid === userRoleScope.userUuid ? (
-            `${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`
-          ) : (
-            <Link
-              href={URL_USER_ROLE_SCOPE(userRoleScope?.uuid)}
-            >{`${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`}</Link>
-          ),
+        user: `${userRoleScope?.userFamilyName} ${userRoleScope.userGivenName}`,
 
         roleName: userRoleScope?.role,
         locations: userRoleScope?.locations?.map((location) => {
