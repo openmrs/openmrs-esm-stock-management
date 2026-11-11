@@ -140,6 +140,7 @@ const Transactions: React.FC<TransactionsProps> = ({ stockItemUuid }) => {
               setLocationUuid(q);
               setStockItemFilter({ ...stockItemFilter, locationUuid: q });
             }}
+            title={t('location', 'Location')}
             name={'TransactionLocationUuid'}
             placeholder={t('filterByLocation', 'Filter by Location')}
             control={control}

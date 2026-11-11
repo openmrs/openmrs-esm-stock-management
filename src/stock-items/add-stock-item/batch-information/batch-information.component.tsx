@@ -82,6 +82,7 @@ const BatchInformation: React.FC<BatchInformationProps> = ({ stockItemUuid }) =>
               });
             }}
             placeholder={t('filterByLocation', 'Filter by Location')}
+            title={t('location', 'Location')}
             name="BatchLocationUuid"
             controllerName="BatchLocationUuid"
           />
