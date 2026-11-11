@@ -79,27 +79,14 @@ export const TASK_STOCKMANAGEMENT_REPORTS_MUTATE = 'Task: stockmanagement.report
 
 /** @type {string}: Task: stockmanagement.reports.mutate, Able to create stock reports*/
 
-export const INVENTORY_CLERK_ROLE_UUID = 'd210eb66-2188-11ed-9dff-507b9dea1806';
-export const INVENTORY_MANAGER_ROLE_UUID = 'cca4be4b-2188-11ed-9dff-507b9dea1806';
-export const INVENTORY_DISPENSING_ROLE_UUID = '84bdd876-4694-11ed-8109-00155dcc3fc0';
-export const INVENTORY_REPORTING_ROLE_UUID = 'a49be648-6b0a-11ed-93a2-806d973f13a9';
-export const INVENTORY_ADMINISTRATOR_ROLE_UUID = '2083fd40-3391-11ed-a667-507b9dea1806';
-
 export const STOCK_OPERATION_PRINT_DISABLE_BALANCE_ON_HAND = true;
 export const STOCK_OPERATION_PRINT_DISABLE_COSTS = true;
-export const HEALTH_CENTER_NAME = 'Health Center';
 export const PRINT_LOGO = 'moduleResources/stockmanagement/assets/print-logo.svg';
-export const PRINT_LOGO_TEXT = 'Ministry of Health';
 
-export const MAIN_STORE_LOCATION_TAG = 'Main Store';
 export const BASE_OPENMRS_APP_URL = '/openmrs/';
 
 export const STOCKMGMT_RESOURCE_URL = '/openmrs/stockmanagement/spa.page/';
 export const STOCKMGMT_SPA_PAGE_URL = '/openmrs/stockmanagement/spa.page';
-export const URL_PRINT_LOGO = () =>
-  PRINT_LOGO
-    ? `${BASE_OPENMRS_APP_URL}${PRINT_LOGO}`
-    : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 export const CLOSE_PRINT_AFTER_PRINT = true;
 export const ALLOW_STOCK_ISSUE_WITHOUT_REQUISITION = false;
 
