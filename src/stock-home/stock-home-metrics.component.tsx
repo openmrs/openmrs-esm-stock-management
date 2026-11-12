@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ErrorState } from '@openmrs/esm-framework';
+import { restBaseUrl } from '@openmrs/esm-framework';
 import { ResourceRepresentation } from '../core/api/api';
+import { useHandleMutate } from '../utils';
 import { useDisposalList } from './useDisposalList';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
@@ -12,9 +13,10 @@ import styles from './stock-home.scss';
 
 const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
   const { t } = useTranslation();
-  const { stockList: allStocks, error } = useStockList();
-  const { items: expiryItems } = useStockInventory();
-  const { items: stockItems } = useStockInventoryItems();
+  const handleMutate = useHandleMutate();
+  const { stockList: allStocks, error: stockListError } = useStockList();
+  const { items: expiryItems, error: batchesError } = useStockInventory();
+  const { items: stockItems, error: stockItemsError } = useStockInventoryItems();
 
   const currentDate = new Date();
 
@@ -34,14 +36,17 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
 
   const sixMonthsExpiryStocks = filteredData.filter((stock) => stock.hasExpiration && stock.expiryNotice <= 180);
 
-  const { items } = useDisposalList({
+  const { items, error: disposalsError } = useDisposalList({
     v: ResourceRepresentation.Full,
     totalCount: true,
   });
 
-  if (error) {
-    return <ErrorState headerTitle={t('errorStockMetric', 'Error fetching stock metrics')} error={error} />;
-  }
+  // The trailing "?" keeps each retry to its own endpoint (stockitem, not stockiteminventory).
+  const retry = (resource: string) => () => handleMutate(`${restBaseUrl}/stockmanagement/${resource}?`);
+  const retryExpiring = () => {
+    if (batchesError) retry('stockbatch')();
+    if (stockItemsError) retry('stockitem')();
+  };
 
   const filteredItems =
     items && items.filter((item) => item.reasonName === 'Drug not available due to expired medication');
@@ -53,11 +58,15 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
         count={{
           expiry6months: sixMonthsExpiryStocks,
         }}
+        error={batchesError ?? stockItemsError}
         headerLabel={t('expiringStock', 'Expiring stock')}
         label={t('expiringStock', 'Expiring stock')}
+        onRetry={retryExpiring}
         value={filteredData?.length || 0}
       />
       <MetricsCard
+        error={stockListError}
+        onRetry={retry('stockitem')}
         label={t('outOfStock', 'Out of stock')}
         headerLabel={t('outOfStock', 'Out of stock')}
         outOfStockCount={{
@@ -71,8 +80,10 @@ const StockManagementMetrics: React.FC = (filter: StockOperationFilter) => {
           expired: filteredItems,
           poorQuality: poorQualityItems,
         }}
+        error={disposalsError}
         headerLabel={t('disposedStock', 'Disposed stock')}
         label={t('disposedStock', 'Disposed stock')}
+        onRetry={retry('stockoperation')}
         value={items?.length || 0}
       />
     </div>
