@@ -44,6 +44,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
       {error ? (
         <ActionableNotification
           actionButtonLabel={t('tryAgain', 'Try again')}
+          closeOnEscape={false}
           hasFocus={false}
           hideCloseButton
           inline

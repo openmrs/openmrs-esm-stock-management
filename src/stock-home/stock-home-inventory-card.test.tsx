@@ -70,4 +70,14 @@ describe('StockHomeInventoryCard', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(mutate).toHaveBeenCalledWith(`${restBaseUrl}/stockmanagement/stockitem?`);
   });
+
+  it('keeps the error and Try again when Escape is pressed', async () => {
+    setup({ batchesError: failure });
+
+    screen.getByRole('button', { name: 'Try again' }).focus();
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.getByText("Couldn't load inventory alerts")).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
+  });
 });

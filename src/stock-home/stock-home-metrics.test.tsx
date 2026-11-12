@@ -126,4 +126,14 @@ describe('StockManagementMetrics', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(mutate).toHaveBeenCalledWith(`${restBaseUrl}/stockmanagement/stockoperation?`);
   });
+
+  it('keeps the error and Try again on a tile when Escape is pressed', async () => {
+    setup({ disposals: failure });
+
+    screen.getByRole('button', { name: 'Try again' }).focus();
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.getAllByText("Couldn't load")).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
+  });
 });
