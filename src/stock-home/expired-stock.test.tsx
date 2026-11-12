@@ -34,4 +34,16 @@ describe('ExpiredStockModal', () => {
     expect(screen.getByRole('row', { name: /Paracetamol B1/ })).toBeInTheDocument();
     expect(screen.getByRole('row', { name: /Surgical gloves G1/ })).toBeInTheDocument();
   });
+
+  it('labels every column with a translated header', () => {
+    render(<ExpiredStockModal closeModal={vi.fn()} expiredStock={expiredStock} />);
+
+    expect(screen.getAllByRole('columnheader').map((header) => header.textContent)).toEqual([
+      'Item',
+      'Batch number',
+      'Quantity',
+      'Unit',
+      'Expiration date',
+    ]);
+  });
 });
