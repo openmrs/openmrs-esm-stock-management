@@ -163,7 +163,8 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       <h2 className={styles.tableHeader}>
         {t('stockItemsTableHeader', 'Drugs and other stock items managed by the system.')}
       </h2>
-      <DataTable rows={tableRows} headers={tableHeaders} isSortable useZebraStyles>
+      {/* The list is paged on the server, which can't sort it, so sorting a column would only sort one page */}
+      <DataTable rows={tableRows} headers={tableHeaders} useZebraStyles>
         {({ rows, headers, getHeaderProps, getTableProps, getRowProps, getBatchActionProps }) => (
           <TableContainer>
             <TableToolbar
@@ -205,13 +206,9 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                     (header) =>
                       header.key !== 'details' && (
                         <TableHeader
-                          {...getHeaderProps({
-                            header,
-                            isSortable: (header as CustomTableHeader).isSortable,
-                          })}
+                          {...getHeaderProps({ header })}
                           className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
-                          isSortable={header.key !== 'name'}
                         >
                           {(() => {
                             const customHeader = header as CustomTableHeader;

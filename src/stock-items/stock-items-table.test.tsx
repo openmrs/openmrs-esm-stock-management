@@ -79,12 +79,12 @@ describe('StockItemsTableComponent', () => {
     await screen.findByText(/refresh/i);
 
     expect(screen.getByRole('columnheader', { name: /^name$/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /generic name/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /common name/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /generic name/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /common name/i })).toBeInTheDocument();
     expect(screen.queryByRole('columnheader', { name: /trade name/i })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /dispensing uom/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /bulk packaging/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /reorder level/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /dispensing uom/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /bulk packaging/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /reorder level/i })).toBeInTheDocument();
   });
 
   it('displays skeleton loader when isLoading is true', () => {
@@ -141,10 +141,7 @@ describe('StockItemsTableComponent', () => {
     });
     render(<StockItemsTableComponent />);
 
-    // A sortable header's text starts with Carbon's hidden sort description
-    const columns = screen
-      .getAllByRole('columnheader')
-      .map((header) => header.textContent.replace(/^Click to sort rows by .* order/, ''));
+    const columns = screen.getAllByRole('columnheader').map((header) => header.textContent);
     const cellsUnder = (column: string, rowIndex: number) =>
       within(screen.getAllByRole('row')[rowIndex + 1]).getAllByRole('cell')[columns.indexOf(column)].textContent;
 
@@ -152,6 +149,21 @@ describe('StockItemsTableComponent', () => {
     expect(cellsUnder('Generic name', 0)).toBe('Acetaminophen');
     expect(cellsUnder('Name', 1)).toBe('Gauze roll');
     expect(cellsUnder('Generic name', 1)).toBe('');
+  });
+
+  it("doesn't offer column sorting, as only the page on screen could be sorted", async () => {
+    const user = userEvent.setup();
+    render(<StockItemsTableComponent />);
+
+    const rowsAsLoaded = screen.getAllByRole('row').map((row) => row.textContent);
+    for (const header of screen.getAllByRole('columnheader')) {
+      expect(within(header).queryByRole('button')).not.toBeInTheDocument();
+      expect(header).not.toHaveAttribute('aria-sort');
+    }
+
+    await user.click(screen.getByRole('columnheader', { name: /common name/i }));
+
+    expect(screen.getAllByRole('row').map((row) => row.textContent)).toEqual(rowsAsLoaded);
   });
 
   it('updates search input and triggers search function', async () => {
