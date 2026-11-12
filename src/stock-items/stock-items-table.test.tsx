@@ -1,7 +1,7 @@
 import React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
 import { launchAddOrEditStockItemWorkspace } from './stock-item.utils';
 import { useStockItemsPages } from './stock-items-table.resource';
@@ -78,8 +78,10 @@ describe('StockItemsTableComponent', () => {
     await user.click(settingsMenuButton);
     await screen.findByText(/refresh/i);
 
+    expect(screen.getByRole('columnheader', { name: /^name$/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /generic name/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /common name/i })).toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: /trade name/i })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /dispensing uom/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /bulk packaging/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /reorder level/i })).toBeInTheDocument();
@@ -120,6 +122,36 @@ describe('StockItemsTableComponent', () => {
     expect(screen.getByRole('cell', { name: /test item 0/i })).toBeInTheDocument();
     expect(screen.getAllByRole('cell', { name: /drug/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('cell', { name: /other/i }).length).toBeGreaterThan(0);
+  });
+
+  it("shows a drug's name under Name and its concept under Generic name", () => {
+    mockUseStockItemsPages.mockReturnValue({
+      ...mockUseStockItemsPages(),
+      items: [
+        {
+          uuid: 'drug-item',
+          drugUuid: 'drug-uuid',
+          drugName: 'Paracetamol 500mg',
+          conceptName: 'Acetaminophen',
+          commonName: 'Panadol',
+        },
+        { uuid: 'other-item', drugUuid: null, conceptName: 'Gauze roll', commonName: 'Gauze' },
+      ] as StockItemDTO[],
+      totalCount: 2,
+    });
+    render(<StockItemsTableComponent />);
+
+    // A sortable header's text starts with Carbon's hidden sort description
+    const columns = screen
+      .getAllByRole('columnheader')
+      .map((header) => header.textContent.replace(/^Click to sort rows by .* order/, ''));
+    const cellsUnder = (column: string, rowIndex: number) =>
+      within(screen.getAllByRole('row')[rowIndex + 1]).getAllByRole('cell')[columns.indexOf(column)].textContent;
+
+    expect(cellsUnder('Name', 0)).toBe('Paracetamol 500mg');
+    expect(cellsUnder('Generic name', 0)).toBe('Acetaminophen');
+    expect(cellsUnder('Name', 1)).toBe('Gauze roll');
+    expect(cellsUnder('Generic name', 1)).toBe('');
   });
 
   it('updates search input and triggers search function', async () => {
