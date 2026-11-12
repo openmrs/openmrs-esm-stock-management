@@ -18,7 +18,8 @@ vi.mock('../utils', () => ({
   useHandleMutate: () => mockHandleMutate,
 }));
 
-vi.mock('./stock-item.utils', () => ({
+vi.mock('./stock-item.utils', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
   launchAddOrEditStockItemWorkspace: vi.fn(),
 }));
 
