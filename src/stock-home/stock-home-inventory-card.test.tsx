@@ -1,6 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
@@ -35,10 +35,6 @@ const setup = ({ items = [paracetamol], batches = [] }: { items?: Array<unknown>
 };
 
 describe('StockHomeInventoryCard', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('says there are no alerts, without View All, when no batch expires within 6 months', () => {
     setup({ batches: [batch('LATER', 400)] });
 
