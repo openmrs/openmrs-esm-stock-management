@@ -3,7 +3,25 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ExpiredStockModal from './expired-stock.modal';
 
-const expiredStock = [{ drugName: 'Paracetamol', batchNo: 'B1', quantity: 5, expiration: '2026-01-15T12:00:00.000Z' }];
+const expiredStock = [
+  {
+    stockItemUuid: 'stock-item-uuid',
+    stockBatchUuid: 'stock-batch-uuid',
+    partyUuid: 'party-uuid',
+    partyName: 'Main Pharmacy',
+    batchNumber: 'B1',
+    quantity: 5,
+    quantityUoM: 'Tablet',
+    quantityFactor: 1,
+    itemName: 'Paracetamol',
+    hasExpiration: true,
+    expiryNotice: 30,
+    reorderLevel: 10,
+    reorderLevelUoMFactor: 1,
+    dispensingUnitName: 'Tablet',
+    expiration: new Date('2026-01-15T12:00:00.000Z'),
+  },
+];
 
 describe('ExpiredStockModal', () => {
   afterEach(() => {

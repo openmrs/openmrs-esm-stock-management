@@ -12,18 +12,19 @@ import {
 } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import { formatDate as formatDisplayDate } from '@openmrs/esm-framework';
+import { type StockInventoryRow } from './stock-home.utils';
 
 interface ExpiredStockModalProps {
   closeModal: () => void;
-  expiredStock: any[];
+  expiredStock: StockInventoryRow[];
 }
 
 const ExpiredStockModal = ({ closeModal, expiredStock }: ExpiredStockModalProps) => {
   const { t } = useTranslation();
 
   const headers = [
-    { key: 'drugName', header: 'Drug Name' },
-    { key: 'batchNo', header: 'Batch No' },
+    { key: 'itemName', header: 'Drug Name' },
+    { key: 'batchNumber', header: 'Batch No' },
     { key: 'quantity', header: 'Quantity' },
     { key: 'dispensingUnitName', header: 'Unit' },
     { key: 'expiration', header: 'Expiration Date' },
@@ -36,7 +37,7 @@ const ExpiredStockModal = ({ closeModal, expiredStock }: ExpiredStockModalProps)
 
   return (
     <>
-      <ModalHeader closeModal={closeModal} title={t('expiredStock', 'Expired stock')} />
+      <ModalHeader closeModal={closeModal} title={t('expiringStock', 'Expiring stock')} />
       <ModalBody>
         {expiredStock.length > 0 ? (
           <TableContainer>
@@ -50,12 +51,12 @@ const ExpiredStockModal = ({ closeModal, expiredStock }: ExpiredStockModalProps)
               </TableHead>
               <TableBody>
                 {expiredStock.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{item?.drugName || 'N/A'}</TableCell>
-                    <TableCell>{item?.batchNo || 'N/A'}</TableCell>
-                    <TableCell>{item?.quantity || 'N/A'}</TableCell>
-                    <TableCell>{item?.dispensingUnitName || 'N/A'}</TableCell>
-                    <TableCell>{formatDate(item?.expiration)}</TableCell>
+                  <TableRow key={`${item.stockItemUuid}-${item.stockBatchUuid}-${index}`}>
+                    <TableCell>{item.itemName || 'N/A'}</TableCell>
+                    <TableCell>{item.batchNumber || 'N/A'}</TableCell>
+                    <TableCell>{item.quantity ?? 'N/A'}</TableCell>
+                    <TableCell>{item.dispensingUnitName || item.quantityUoM || 'N/A'}</TableCell>
+                    <TableCell>{formatDate(item.expiration)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
