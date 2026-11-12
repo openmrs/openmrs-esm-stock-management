@@ -29,8 +29,9 @@ async function fetchAllStockItems(v: ResourceRepresentation) {
 
 export function useStockInventoryItems(v?: ResourceRepresentation) {
   const representation = v ?? ResourceRepresentation.Default;
-  const { data, isLoading, error } = useSWR(['stockItemsForInventory', representation], () =>
-    fetchAllStockItems(representation),
+  const { data, isLoading, error } = useSWR(
+    [`${restBaseUrl}/stockmanagement/stockitem`, 'inventory', representation],
+    () => fetchAllStockItems(representation),
   );
 
   return {

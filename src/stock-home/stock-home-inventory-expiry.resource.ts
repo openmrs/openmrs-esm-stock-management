@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import useSWR from 'swr';
 import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import { type PageableResult } from '../core/api/types/PageableResult';
@@ -8,20 +9,20 @@ import { useStockInventoryItems } from './stock-home-inventory-items.resource';
 
 const INVENTORY_BATCH_SIZE = 10;
 
-async function fetchStockItemInventory(stockItem: StockItemDTO) {
+async function fetchStockItemInventory(stockItemUuid: string) {
   const response = await openmrsFetch<PageableResult<StockItemInventory>>(
-    `${restBaseUrl}/stockmanagement/stockiteminventory?stockItemUuid=${stockItem.uuid}&v=default&includeBatchNo=true&includeStockItemName=true&groupBy=${LocationStockItemBatchNo}&excludeExpired=false`,
+    `${restBaseUrl}/stockmanagement/stockiteminventory?stockItemUuid=${stockItemUuid}&v=default&includeBatchNo=true&includeStockItemName=true&groupBy=${LocationStockItemBatchNo}&excludeExpired=false`,
   );
 
-  return (response.data?.results ?? []).map((inventory) => buildStockInventoryRow(stockItem, inventory));
+  return response.data?.results ?? [];
 }
 
-async function fetchInventoryForStockItems(stockItems: StockItemDTO[]) {
-  const inventoryRows: StockInventoryRow[] = [];
+async function fetchInventoryForStockItems(stockItemUuids: string[]) {
+  const inventoryRows: StockItemInventory[] = [];
 
-  for (let index = 0; index < stockItems.length; index += INVENTORY_BATCH_SIZE) {
+  for (let index = 0; index < stockItemUuids.length; index += INVENTORY_BATCH_SIZE) {
     const batches = await Promise.all(
-      stockItems.slice(index, index + INVENTORY_BATCH_SIZE).map(fetchStockItemInventory),
+      stockItemUuids.slice(index, index + INVENTORY_BATCH_SIZE).map(fetchStockItemInventory),
     );
     inventoryRows.push(...batches.flat());
   }
@@ -31,14 +32,33 @@ async function fetchInventoryForStockItems(stockItems: StockItemDTO[]) {
 
 export function useStockInventory() {
   const { items: stockItems, isLoading: stockItemsLoading, error: stockItemsError } = useStockInventoryItems();
-  const stockItemUuids = stockItems.map((stockItem) => stockItem.uuid).filter(Boolean);
+  const stockItemUuids = stockItems.map((stockItem) => stockItem.uuid).filter((uuid): uuid is string => Boolean(uuid));
   const { data, isLoading, error } = useSWR(
-    stockItemUuids.length ? ['stockInventory', stockItemUuids.join(',')] : null,
-    () => fetchInventoryForStockItems(stockItems),
+    stockItemUuids.length
+      ? [`${restBaseUrl}/stockmanagement/stockitem`, 'inventoryRows', stockItemUuids.join(',')]
+      : null,
+    () => fetchInventoryForStockItems(stockItemUuids),
   );
 
+  const items = useMemo(() => {
+    const stockItemsByUuid = new Map<string, StockItemDTO>();
+    stockItems.forEach((stockItem) => {
+      if (stockItem.uuid) {
+        stockItemsByUuid.set(stockItem.uuid, stockItem);
+      }
+    });
+
+    return (data ?? []).reduce<StockInventoryRow[]>((rows, inventory) => {
+      const stockItem = inventory.stockItemUuid ? stockItemsByUuid.get(inventory.stockItemUuid) : undefined;
+      if (stockItem) {
+        rows.push(buildStockInventoryRow(stockItem, inventory));
+      }
+      return rows;
+    }, []);
+  }, [data, stockItems]);
+
   return {
-    items: data ?? [],
+    items,
     isLoading: stockItemsLoading || isLoading,
     error: stockItemsError || error,
   };

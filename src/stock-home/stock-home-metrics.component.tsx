@@ -24,7 +24,7 @@ const StockManagementMetrics: React.FC = () => {
   });
   const now = new Date();
   const expiringItems = inventoryItems.filter((item) => isExpiringStock(item, now));
-  const sixMonthsExpiryStocks = expiringItems.filter((item) => isExpiringWithinSixMonths(item, now));
+  const sixMonthsExpiryStocks = inventoryItems.filter((item) => isExpiringWithinSixMonths(item, now));
   const { outOfStock, understocked } = getStockLevels(stockItems, inventoryItems, now);
   const expiredItems = disposedItems.filter((item) => getDisposalReasonCategory(item.reasonName) === 'expired');
   const poorQualityItems = disposedItems.filter((item) => getDisposalReasonCategory(item.reasonName) === 'poorQuality');

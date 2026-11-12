@@ -19,6 +19,16 @@ describe('useStockInventoryItems', () => {
     } as never);
   });
 
+  it('keys the cache on the stock item URL so saves revalidate it', () => {
+    renderHook(() => useStockInventoryItems());
+
+    expect(mockedUseSWR.mock.calls.at(-1)?.[0]).toEqual([
+      expect.stringContaining('/stockmanagement/stockitem'),
+      'inventory',
+      'default',
+    ]);
+  });
+
   it('fetches every page of stock items', async () => {
     renderHook(() => useStockInventoryItems());
     const fetcher = mockedUseSWR.mock.calls.at(-1)?.[1] as () => Promise<unknown>;

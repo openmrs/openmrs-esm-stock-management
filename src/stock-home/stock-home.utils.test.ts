@@ -106,6 +106,24 @@ describe('expiry helpers', () => {
       ),
     ).toBe(false);
   });
+
+  it('counts stock expiring within six months regardless of the expiry notice', () => {
+    expect(
+      isExpiringWithinSixMonths(
+        makeInventoryRow({ quantity: 5, expiryNotice: 30, expiration: new Date('2026-03-01T00:00:00.000Z') }),
+        now,
+      ),
+    ).toBe(true);
+  });
+
+  it('excludes already-expired stock from the six-month count', () => {
+    expect(
+      isExpiringWithinSixMonths(
+        makeInventoryRow({ quantity: 5, expiration: new Date('2025-12-20T00:00:00.000Z') }),
+        now,
+      ),
+    ).toBe(false);
+  });
 });
 
 describe('getDisposalReasonCategory', () => {
