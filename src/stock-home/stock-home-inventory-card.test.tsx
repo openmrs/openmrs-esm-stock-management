@@ -63,4 +63,30 @@ describe('StockHomeInventoryCard', () => {
     expect(screen.queryByText('No inventory alerts to display')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'View All' })).toBeInTheDocument();
   });
+
+  it('names a non-drug item whose batch expires soon', () => {
+    const gloves = { uuid: 'item-2', drugName: null, conceptName: 'Surgical gloves', hasExpiration: true };
+    const batch = {
+      uuid: 'batch-1',
+      batchNo: 'G1',
+      stockItemUuid: gloves.uuid,
+      quantity: '40',
+      expiration: dayjs().add(30, 'day').toDate(),
+    };
+    vi.mocked(useStockInventoryItems).mockReturnValue({
+      items: [gloves],
+      isLoading: false,
+      error: undefined,
+    } as unknown as ReturnType<typeof useStockInventoryItems>);
+    vi.mocked(useStockInventory).mockReturnValue({
+      items: [batch],
+      isLoading: false,
+      error: undefined,
+    } as unknown as ReturnType<typeof useStockInventory>);
+
+    render(<StockHomeInventoryCard />);
+
+    expect(screen.getByText('Surgical gloves')).toBeInTheDocument();
+    expect(screen.getByText(/G1/)).toBeInTheDocument();
+  });
 });

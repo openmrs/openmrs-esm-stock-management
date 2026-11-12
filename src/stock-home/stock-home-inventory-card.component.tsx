@@ -5,6 +5,7 @@ import { WarningHex } from '@carbon/react/icons';
 import { showModal } from '@openmrs/esm-framework';
 import { useStockInventory } from './stock-home-inventory-expiry.resource';
 import { useStockInventoryItems } from './stock-home-inventory-items.resource';
+import { getStockItemName } from '../stock-items/stock-item.utils';
 import styles from './stock-home-detail-card.scss';
 
 const StockHomeInventoryCard = () => {
@@ -55,7 +56,7 @@ const StockHomeInventoryCard = () => {
           <div className={styles.cardText}>
             <p>{t('expiringStock', 'Expiring stock')}</p>
             <p>
-              <strong>{item?.drugName}</strong> {t('batchNumberLabel', 'Batch number:')} {item?.batchNo}{' '}
+              <strong>{getStockItemName(item)}</strong> {t('batchNumberLabel', 'Batch number:')} {item?.batchNo}{' '}
               {t('quantityLabel', 'Quantity:')} {item?.quantity} {item?.dispensingUnitName}
             </p>
           </div>
