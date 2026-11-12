@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -8,7 +8,10 @@ import {
   stockIssueOperationtypeMock,
   stockTakeOperationTypeMock,
 } from '@mocks';
+import { APP_STOCKMANAGEMENT_STOCKITEMS, TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE } from '../../../constants';
+import { type PrivilegeScope } from '../../../core/api/types/identity/PriviledgeScope';
 import { type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
+import { useStockManagementSession } from '../../../stock-lookups/stock-lookups.resource';
 import { type StockOperationItemDtoSchema } from '../../validation-schema';
 import StockOperationItemsFormStep from './stock-operation-items-form-step.component';
 
@@ -20,6 +23,17 @@ vi.mock('./stock-operation-item-batch-no-cell.component', () => ({ default: () =
 vi.mock('./stock-operation-item-expiry-cell.component', () => ({ default: () => <span>Expiry</span> }));
 vi.mock('./quantity-uom-cell.component', () => ({ default: () => <span>Unit</span> }));
 vi.mock('../input-components/stock-item-search.component', () => ({ default: () => null }));
+vi.mock('../../../stock-lookups/stock-lookups.resource', () => ({ useStockManagementSession: vi.fn() }));
+
+const mockUseStockManagementSession = vi.mocked(useStockManagementSession);
+
+function mockStockScopes(scopes: Array<Pick<PrivilegeScope, 'partyUuid' | 'privilege'>>) {
+  mockUseStockManagementSession.mockReturnValue({
+    privilegeScopes: scopes as Array<PrivilegeScope>,
+    isLoading: false,
+    error: undefined,
+  });
+}
 
 const ItemsStepWithForm = ({ stockOperationType }: { stockOperationType: StockOperationType }) => {
   const form = useForm<StockOperationItemDtoSchema>({
@@ -38,6 +52,13 @@ const ItemsStepWithForm = ({ stockOperationType }: { stockOperationType: StockOp
 };
 
 describe('StockOperationItemsFormStep', () => {
+  beforeEach(() => {
+    mockStockScopes([
+      { partyUuid: 'source-party-uuid', privilege: APP_STOCKMANAGEMENT_STOCKITEMS },
+      { partyUuid: 'destination-party-uuid', privilege: APP_STOCKMANAGEMENT_STOCKITEMS },
+    ]);
+  });
+
   it.each([
     { name: 'stock issue', type: stockIssueOperationtypeMock, party: 'source-party-uuid' },
     { name: 'stock take', type: stockTakeOperationTypeMock, party: 'source-party-uuid' },
@@ -48,5 +69,17 @@ describe('StockOperationItemsFormStep', () => {
     render(<ItemsStepWithForm stockOperationType={type as unknown as StockOperationType} />);
 
     expect(screen.getByText(`Available at ${party}`)).toBeInTheDocument();
+  });
+
+  it("shows no availability when the user can't see stock at that party", () => {
+    // A requester scoped only to their own pharmacy, raising a requisition from the store.
+    mockStockScopes([
+      { partyUuid: 'source-party-uuid', privilege: APP_STOCKMANAGEMENT_STOCKITEMS },
+      { partyUuid: 'destination-party-uuid', privilege: TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE },
+    ]);
+
+    render(<ItemsStepWithForm stockOperationType={requisitionOperationTypeMock as unknown as StockOperationType} />);
+
+    expect(screen.queryByText(/Available at/)).not.toBeInTheDocument();
   });
 });
