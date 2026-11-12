@@ -17,10 +17,6 @@ const StockHomeInventoryCard = () => {
     return null;
   }
 
-  if (stockItems?.length === 0) {
-    return <p className={styles.content}>{t('noInventoryAlerts', 'No inventory alerts to display')}</p>;
-  }
-
   const currentDate = new Date();
 
   let mergedArray = expiryItems.map((batch) => {
@@ -30,13 +26,17 @@ const StockHomeInventoryCard = () => {
 
   mergedArray = mergedArray.filter((item) => item.hasExpiration);
 
-  const filteredData = mergedArray
-    .filter((item) => {
-      const expirationDate = new Date(item.expiration);
-      const differenceInDays = Math.ceil((expirationDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-      return differenceInDays <= 180 && differenceInDays >= 0;
-    })
-    .slice(0, 5);
+  const alerts = mergedArray.filter((item) => {
+    const expirationDate = new Date(item.expiration);
+    const differenceInDays = Math.ceil((expirationDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+    return differenceInDays <= 180 && differenceInDays >= 0;
+  });
+
+  if (alerts.length === 0) {
+    return <p className={styles.content}>{t('noInventoryAlerts', 'No inventory alerts to display')}</p>;
+  }
+
+  const filteredData = alerts.slice(0, 5);
 
   const launchExpiredStockModal = () => {
     const dispose = showModal('expired-stock-modal', {
