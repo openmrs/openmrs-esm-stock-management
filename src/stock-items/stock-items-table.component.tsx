@@ -163,7 +163,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
       </h2>
       <DataTable rows={tableRows} headers={tableHeaders} isSortable useZebraStyles>
         {({ rows, headers, getHeaderProps, getTableProps, getRowProps, getBatchActionProps }) => (
-          <TableContainer>
+          <TableContainer className={styles.tableContainer}>
             <TableToolbar
               style={{
                 position: 'static',
@@ -172,12 +172,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
               }}
             >
               <TableBatchActions {...getBatchActionProps()} />
-              <TableToolbarContent
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
+              <TableToolbarContent className={styles.toolbarContent}>
                 <TableToolbarSearch
                   onChange={(e) =>
                     handleSearch(typeof e === 'string' ? e : (e as React.ChangeEvent<HTMLInputElement>).target.value)
@@ -209,7 +204,7 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                           })}
                           className={isDesktop ? styles.desktopHeader : styles.tabletHeader}
                           key={`${header.key}`}
-                          isSortable={header.key !== 'name'}
+                          isSortable={header.key !== 'actions'}
                         >
                           {(() => {
                             const customHeader = header as CustomTableHeader;
@@ -222,7 +217,6 @@ const StockItemsTableComponent: React.FC<StockItemsTableProps> = () => {
                         </TableHeader>
                       ),
                   )}
-                  <TableHeader />
                 </TableRow>
               </TableHead>
               <TableBody>
