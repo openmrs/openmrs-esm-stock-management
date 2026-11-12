@@ -252,6 +252,7 @@ const StockItemDetails = ({
         </Button>
         <Button
           className={styles.button}
+          disabled={formState.isSubmitting}
           kind="primary"
           name="save"
           onClick={handleSubmit(handleSave)}
