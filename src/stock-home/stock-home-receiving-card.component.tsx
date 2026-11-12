@@ -26,6 +26,7 @@ const StockHomeReceivingCard = () => {
     return (
       <ActionableNotification
         actionButtonLabel={t('tryAgain', 'Try again')}
+        closeOnEscape={false}
         hasFocus={false}
         hideCloseButton
         inline
