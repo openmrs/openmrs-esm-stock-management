@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { restBaseUrl } from '@openmrs/esm-framework';
 import { useHandleMutate } from '../utils';
@@ -74,10 +74,6 @@ const expectTiles = ({
 };
 
 describe('StockManagementMetrics', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("shows each tile's counts when everything loads", () => {
     setup();
 

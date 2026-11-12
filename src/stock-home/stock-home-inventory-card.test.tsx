@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { restBaseUrl } from '@openmrs/esm-framework';
 import { useHandleMutate } from '../utils';
@@ -40,10 +40,6 @@ const setup = ({ batchesError, itemsError }: { batchesError?: Error; itemsError?
 };
 
 describe('StockHomeInventoryCard', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('lists the expiring batches when everything loads', () => {
     setup();
 
