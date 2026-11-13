@@ -339,7 +339,7 @@ function StockUserRoleScopesItems() {
                                 <TableCell key={cell.id}>
                                   <OperationsSummary
                                     names={operationNames(scope)}
-                                    onShowMore={() => expandRow(row.id)}
+                                    onShowMore={() => !row.isExpanded && expandRow(row.id)}
                                     totalOperationTypes={totalOperationTypes}
                                   />
                                 </TableCell>
