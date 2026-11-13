@@ -38,4 +38,30 @@ describe('ExpiredStockModal', () => {
 
     expect(screen.getByRole('cell', { name: expected })).toBeInTheDocument();
   });
+
+  it('names drug and non-drug items under an Item column', () => {
+    const stock = [
+      { ...expiredStock[0], itemName: 'Paracetamol', batchNumber: 'B1', quantity: 5 },
+      { ...expiredStock[0], itemName: 'Surgical gloves', batchNumber: 'G1', quantity: 40 },
+    ];
+
+    render(<ExpiredStockModal closeModal={vi.fn()} expiredStock={stock} />);
+
+    expect(screen.getByRole('columnheader', { name: 'Item' })).toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'Drug Name' })).not.toBeInTheDocument();
+    expect(screen.getByRole('row', { name: /Paracetamol B1/ })).toBeInTheDocument();
+    expect(screen.getByRole('row', { name: /Surgical gloves G1/ })).toBeInTheDocument();
+  });
+
+  it('labels every column with a translated header', () => {
+    render(<ExpiredStockModal closeModal={vi.fn()} expiredStock={expiredStock} />);
+
+    expect(screen.getAllByRole('columnheader').map((header) => header.textContent)).toEqual([
+      'Item',
+      'Batch number',
+      'Quantity',
+      'Unit',
+      'Expiration date',
+    ]);
+  });
 });

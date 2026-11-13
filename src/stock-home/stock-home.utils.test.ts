@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { type StockItemDTO } from '../core/api/types/stockItem/StockItem';
 import {
+  buildStockInventoryRow,
   getDisposalReasonCategory,
   getStockLevels,
   isExpiringStock,
   isExpiringWithinSixMonths,
   type StockInventoryRow,
 } from './stock-home.utils';
+import { type StockItemInventory } from '../core/api/types/stockItem/StockItemInventory';
 
 const now = new Date('2026-01-01T00:00:00.000Z');
 
@@ -39,6 +41,32 @@ function makeInventoryRow(overrides: Partial<StockInventoryRow> = {}) {
     ...overrides,
   } as StockInventoryRow;
 }
+
+const inventoryRow: StockItemInventory = {
+  stockItemUuid: 'stock-item',
+  stockBatchUuid: 'stock-batch',
+  partyUuid: 'party',
+  partyName: 'Main Pharmacy',
+  batchNumber: 'B1',
+  quantity: 5,
+  quantityUoM: 'Tablet',
+  quantityFactor: '1',
+  expiration: new Date('2026-01-01T00:00:00.000Z'),
+};
+
+describe('buildStockInventoryRow', () => {
+  it('names a drug item from the drug name', () => {
+    const row = buildStockInventoryRow(makeStockItem({ drugName: 'Paracetamol' }), inventoryRow);
+
+    expect(row.itemName).toBe('Paracetamol');
+  });
+
+  it('names a non-drug item from the concept name', () => {
+    const row = buildStockInventoryRow(makeStockItem({ drugName: null, conceptName: 'Surgical gloves' }), inventoryRow);
+
+    expect(row.itemName).toBe('Surgical gloves');
+  });
+});
 
 describe('getStockLevels', () => {
   it('counts only non-expired inventory and applies unit factors to the reorder level', () => {
