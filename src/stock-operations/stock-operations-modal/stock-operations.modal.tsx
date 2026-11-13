@@ -19,6 +19,20 @@ interface StockOperationsModalProps {
   closeModal: () => void;
 }
 
+// Maps each confirmable action to its natural past-tense phrasing, e.g. "complete" -> "completed",
+// so the success message reads as "Operation completed" rather than "successfully Complete operation".
+const actionPastTense: Record<string, string> = {
+  submit: 'submitted',
+  dispatch: 'dispatched',
+  complete: 'completed',
+  'complete dispatch': 'completed',
+  cancel: 'cancelled',
+  reject: 'rejected',
+  return: 'returned',
+  approve: 'approved',
+  dispatchapproval: 'dispatched',
+};
+
 const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requireReason, operation, closeModal }) => {
   const confirmType = title.toLocaleLowerCase().trim();
   const { t } = useTranslation();
@@ -85,8 +99,8 @@ const StockOperationsModal: React.FC<StockOperationsModalProps> = ({ title, requ
         setIsApproving(false);
         showSnackbar({
           title: t('operationSuccessTitle', '{{title}} Operation', { title }),
-          subtitle: t('operationSuccessful', 'You have successfully {{title}} operation', {
-            title,
+          subtitle: t('operationSuccessful', 'Operation {{action}} successfully', {
+            action: actionPastTense[confirmType] ?? confirmType,
           }),
           kind: 'success',
         });
