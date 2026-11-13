@@ -27,14 +27,14 @@ describe('StockOperationsModal', () => {
     );
 
     await user.type(screen.getByRole('textbox'), '   ');
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.click(screen.getByRole('button', { name: /cancel operation/i }));
 
     expect(screen.getByText('Required')).toBeInTheDocument();
     expect(executeStockOperationAction).not.toHaveBeenCalled();
 
     await user.clear(screen.getByRole('textbox'));
     await user.type(screen.getByRole('textbox'), 'Duplicate request');
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.click(screen.getByRole('button', { name: /cancel operation/i }));
 
     await waitFor(() =>
       expect(executeStockOperationAction).toHaveBeenCalledWith({
@@ -56,7 +56,7 @@ describe('StockOperationsModal', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.click(screen.getByRole('button', { name: 'Approve' }));
 
     await waitFor(() =>
       expect(executeStockOperationAction).toHaveBeenCalledWith({
@@ -65,5 +65,53 @@ describe('StockOperationsModal', () => {
         reason: '',
       }),
     );
+  });
+
+  it('uses a danger button named after the action for destructive actions', () => {
+    render(
+      <StockOperationsModal
+        title="Reject"
+        requireReason
+        operation={{ uuid: 'operation-uuid' } as StockOperationDTO}
+        closeModal={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /reject/i })).toHaveClass('cds--btn--danger');
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
+  });
+
+  it('uses a primary button for non-destructive actions', () => {
+    render(
+      <StockOperationsModal
+        title="Approve"
+        requireReason={false}
+        operation={{ uuid: 'operation-uuid' } as StockOperationDTO}
+        closeModal={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Approve' })).toHaveClass('cds--btn--primary');
+  });
+
+  it('stays open when the action fails', async () => {
+    const user = userEvent.setup();
+    const closeModal = vi.fn();
+    vi.mocked(executeStockOperationAction).mockRejectedValueOnce({
+      responseBody: { error: { message: 'Not allowed' } },
+    });
+    render(
+      <StockOperationsModal
+        title="Approve"
+        requireReason={false}
+        operation={{ uuid: 'operation-uuid' } as StockOperationDTO}
+        closeModal={closeModal}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Approve' }));
+
+    expect(await screen.findByRole('button', { name: 'Approve' })).toBeInTheDocument();
+    expect(closeModal).not.toHaveBeenCalled();
   });
 });
