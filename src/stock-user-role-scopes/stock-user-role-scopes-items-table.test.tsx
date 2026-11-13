@@ -1,189 +1,65 @@
 import React from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { useSession } from '@openmrs/esm-framework';
+import { type Session, useSession } from '@openmrs/esm-framework';
 import { type UserRoleScope } from '../core/api/types/identity/UserRoleScope';
-import { useStockOperationTypes } from '../stock-lookups/stock-lookups.resource';
 import useStockUserRoleScopesPage from './stock-user-role-scopes-items-table.resource';
 import StockUserRoleScopesItems from './stock-user-role-scopes-items-table.component';
 
-vi.mock('./stock-user-role-scopes-items-table.resource', () => ({ default: vi.fn() }));
-vi.mock('../stock-lookups/stock-lookups.resource', () => ({ useStockOperationTypes: vi.fn() }));
-vi.mock('../utils', () => ({ useHandleMutate: vi.fn(() => vi.fn()) }));
+const mockUseStockUserRoleScopesPage = vi.mocked(useStockUserRoleScopesPage);
+const mockUseSession = vi.mocked(useSession);
 
-const operationTypeNames = [
-  'Receipt',
-  'Requisition',
-  'Stock Issue',
-  'Transfer Out',
-  'Return',
-  'Adjustment',
-  'Disposal',
-  'Stock Take',
-  'Opening Stock',
-];
+vi.mock('./stock-user-role-scopes-items-table.resource', () => ({
+  default: vi.fn(),
+}));
 
-function scope(overrides: object = {}): UserRoleScope {
-  return {
-    uuid: 'scope-1',
-    userUuid: 'other-user',
-    userFamilyName: 'Kamau',
-    userGivenName: 'Amina',
+vi.mock('../utils', () => ({
+  useHandleMutate: () => vi.fn(),
+}));
+
+vi.mock('./edit-stock-user-scope/edit-stock-user-scope-action-menu.component', () => ({
+  default: () => <button>Edit</button>,
+}));
+
+vi.mock('./delete-stock-user-scope/delete-stock-user-scope.component', () => ({
+  default: () => <button>Delete</button>,
+}));
+
+const scope = (uuid: string, userUuid: string, familyName: string, givenName: string) =>
+  ({
+    uuid,
+    userUuid,
+    userFamilyName: familyName,
+    userGivenName: givenName,
     role: 'Inventory Clerk',
+    locations: [],
+    operationTypes: [],
     permanent: true,
     enabled: true,
-    locations: [
-      { uuid: 'loc-1', locationUuid: 'loc-1', locationName: 'Main Store', enableDescendants: true },
-      { uuid: 'loc-2', locationUuid: 'loc-2', locationName: 'Pharmacy', enableDescendants: false },
-    ],
-    operationTypes: operationTypeNames.slice(0, 2).map((name, index) => ({
-      uuid: `op-${index}`,
-      operationTypeUuid: `op-${index}`,
-      operationTypeName: name,
-    })),
-    ...overrides,
-  } as UserRoleScope;
-}
-
-function mockPage(items: UserRoleScope[]) {
-  vi.mocked(useStockUserRoleScopesPage).mockReturnValue({
-    items,
-    totalItems: items.length,
-    currentPage: 1,
-    pageSizes: [10],
-    goTo: vi.fn(),
-    currentPageSize: 10,
-    setPageSize: vi.fn(),
-    isLoading: false,
-    paginatedItems: items,
-    error: null,
-  });
-}
+  } as UserRoleScope);
 
 describe('StockUserRoleScopesItems', () => {
   beforeEach(() => {
-    vi.mocked(useSession).mockReturnValue({
-      user: { uuid: 'current-user' },
-    } as ReturnType<typeof useSession>);
-    vi.mocked(useStockOperationTypes).mockReturnValue({
-      types: {
-        results: operationTypeNames.map((name, index) => ({ uuid: `type-${index}`, name })),
-        totalCount: operationTypeNames.length,
-      },
+    mockUseSession.mockReturnValue({ user: { uuid: 'current-user' } } as Session);
+    mockUseStockUserRoleScopesPage.mockReturnValue({
+      items: [scope('scope-1', 'current-user', 'Admin', 'Super'), scope('scope-2', 'other-user', 'Doe', 'Jane')],
+      totalItems: 2,
+      currentPage: 1,
+      currentPageSize: 10,
+      paginatedItems: [],
+      goTo: vi.fn(),
+      pageSizes: [10, 20],
       isLoading: false,
       error: null,
-    } as ReturnType<typeof useStockOperationTypes>);
+      setPageSize: vi.fn(),
+    });
   });
 
-  it('shows operation names when three or fewer are selected', () => {
-    mockPage([
-      scope({
-        operationTypes: operationTypeNames.slice(0, 3).map((name, index) => ({
-          uuid: `op-${index}`,
-          operationTypeUuid: `op-${index}`,
-          operationTypeName: name,
-        })),
-      }),
-    ]);
-
+  it('shows user names as plain text, without links to routes the app does not serve', () => {
     render(<StockUserRoleScopesItems />);
 
-    expect(screen.getByText('Receipt, Requisition, Stock Issue')).toBeInTheDocument();
-    expect(screen.queryByText('All operations')).not.toBeInTheDocument();
-  });
-
-  it('expands the row when a partial operation count is clicked', async () => {
-    const user = userEvent.setup();
-    mockPage([
-      scope({
-        operationTypes: operationTypeNames.slice(0, 4).map((name, index) => ({
-          uuid: `op-${index}`,
-          operationTypeUuid: `op-${index}`,
-          operationTypeName: name,
-        })),
-      }),
-    ]);
-
-    render(<StockUserRoleScopesItems />);
-
-    expect(screen.queryByText('Transfer Out')).not.toBeInTheDocument();
-    await user.click(screen.getByText('4 of 9'));
-    expect(screen.getByText('Receipt, Requisition, Stock Issue, Transfer Out')).toBeInTheDocument();
-  });
-
-  it('expands the row when All operations is clicked', async () => {
-    const user = userEvent.setup();
-    mockPage([
-      scope({
-        operationTypes: operationTypeNames.map((name, index) => ({
-          uuid: `op-${index}`,
-          operationTypeUuid: `op-${index}`,
-          operationTypeName: name,
-        })),
-      }),
-    ]);
-
-    render(<StockUserRoleScopesItems />);
-
-    expect(screen.queryByText(/Opening Stock/)).not.toBeInTheDocument();
-    await user.click(screen.getByText('All operations'));
-    expect(screen.getByText(/Opening Stock/)).toBeInTheDocument();
-  });
-
-  it('renders location chips with child inclusion in the label', () => {
-    mockPage([scope()]);
-
-    render(<StockUserRoleScopesItems />);
-
-    expect(screen.getByText('Main Store +children')).toBeInTheDocument();
-    expect(screen.getByText('Pharmacy')).toBeInTheDocument();
-  });
-
-  it('shows the first three locations and the rest in the expanded row', async () => {
-    const user = userEvent.setup();
-    const locations = ['Main Store', 'Pharmacy', 'Ward', 'Lab', 'Theatre'].map((locationName, index) => ({
-      uuid: `loc-${index}`,
-      locationUuid: `loc-${index}`,
-      locationName,
-      enableDescendants: index === 0,
-    }));
-    mockPage([scope({ locations })]);
-
-    render(<StockUserRoleScopesItems />);
-
-    expect(screen.getByText('Ward')).toBeInTheDocument();
-    expect(screen.getByText('+2 more')).toBeInTheDocument();
-    expect(screen.queryByText('Lab')).not.toBeInTheDocument();
-    expect(screen.queryByText('Theatre')).not.toBeInTheDocument();
-
-    await user.click(screen.getByText('+2 more'));
-
-    expect(screen.getByText('Lab')).toBeInTheDocument();
-    expect(screen.getByText('Theatre')).toBeInTheDocument();
-  });
-
-  it('shows permanent and active dates in the expanded row', async () => {
-    const user = userEvent.setup();
-    mockPage([
-      scope({
-        permanent: false,
-        activeFrom: new Date('2024-01-15T00:00:00.000Z'),
-        activeTo: new Date('2024-06-01T00:00:00.000Z'),
-      }),
-    ]);
-
-    render(<StockUserRoleScopesItems />);
-
-    expect(screen.queryByRole('columnheader', { name: 'Permanent' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('columnheader', { name: 'Active From' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('columnheader', { name: 'Active To' })).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Expand current row' }));
-
-    expect(screen.getByText('Permanent')).toBeInTheDocument();
-    expect(screen.getByText('No')).toBeInTheDocument();
-    expect(screen.getByText('15-Jan-2024')).toBeInTheDocument();
-    expect(screen.getByText('01-Jun-2024')).toBeInTheDocument();
+    expect(screen.getByText('Admin Super')).toBeInTheDocument();
+    expect(screen.getByText('Doe Jane')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Doe Jane' })).not.toBeInTheDocument();
   });
 });
