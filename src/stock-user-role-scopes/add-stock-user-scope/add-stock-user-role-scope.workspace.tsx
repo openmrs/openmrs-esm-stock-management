@@ -325,18 +325,18 @@ const AddStockUserRoleScope: React.FC<Workspace2DefinitionProps<AddStockUserRole
                 dateFormat={DATE_PICKER_CONTROL_FORMAT}
                 datePickerType="range"
                 light
-                locale="en"
+                locale={currentUser?.locale}
                 minDate={formatForDatePicker(MinDate)}
                 onChange={onActiveDatesChange}
               >
                 <DatePickerInput
                   id="date-picker-input-id-start"
-                  labelText={t('activeFrom', 'Active From')}
+                  labelText={`${t('activeFrom', 'Active From')} (${DATE_PICKER_FORMAT})`}
                   placeholder={DATE_PICKER_FORMAT}
                 />
                 <DatePickerInput
                   id="date-picker-input-id-finish"
-                  labelText={t('activeTo', 'Active To')}
+                  labelText={`${t('activeTo', 'Active To')} (${DATE_PICKER_FORMAT})`}
                   placeholder={DATE_PICKER_FORMAT}
                 />
               </DatePicker>
