@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ComboBox, SelectSkeleton } from '@carbon/react';
 import { type StockBatchWithUoM } from '../../../core/api/types/stockItem/StockBatchDTO';
-import { formatForDatePicker } from '../../../constants';
+import { APP_STOCKMANAGEMENT_STOCKITEMS, formatForDatePicker } from '../../../constants';
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
+import { useStockManagementSession } from '../../../stock-lookups/stock-lookups.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 
 interface BatchNoSelectorProps {
@@ -48,6 +49,12 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
     setPartyUuid(partyUuid);
   }, [partyUuid, setPartyUuid]);
 
+  // Inventory leaves out stock the user can't see, so only call a batch empty where they can see the stock.
+  const { privilegeScopes } = useStockManagementSession();
+  const canSeeStock = privilegeScopes?.some(
+    (scope) => scope.partyUuid === partyUuid && scope.privilege === APP_STOCKMANAGEMENT_STOCKITEMS,
+  );
+
   const stockItemBatchesInfo = useMemo(() => {
     // Without the inventory every quantity is unknown, so list no batches rather than show them as empty.
     if (!stockItemBatchNos || inventoryError) return [];
@@ -63,9 +70,9 @@ const BatchNoSelector: React.FC<BatchNoSelectorProps> = ({
         } as StockBatchWithUoM;
       }
 
-      return (includeEmptyBatches ? { ...item, quantity: '0' } : item) as StockBatchWithUoM;
+      return (includeEmptyBatches && canSeeStock ? { ...item, quantity: '0' } : item) as StockBatchWithUoM;
     });
-  }, [stockItemBatchNos, items, includeEmptyBatches, inventoryError]);
+  }, [stockItemBatchNos, items, includeEmptyBatches, inventoryError, canSeeStock]);
 
   const filteredBatches = useMemo(() => {
     if (!stockItemBatchesInfo) return [];

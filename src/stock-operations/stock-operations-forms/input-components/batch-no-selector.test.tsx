@@ -4,8 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { type StockBatchDTO } from '../../../core/api/types/stockItem/StockBatchDTO';
 import { type StockItemInventory } from '../../../core/api/types/stockItem/StockItemInventory';
-import { formatForDatePicker } from '../../../constants';
+import { APP_STOCKMANAGEMENT_STOCKITEMS, formatForDatePicker } from '../../../constants';
+import { type PrivilegeScope } from '../../../core/api/types/identity/PriviledgeScope';
 import { useStockItemBatchInformationHook } from '../../../stock-items/add-stock-item/batch-information/batch-information.resource';
+import { useStockManagementSession } from '../../../stock-lookups/stock-lookups.resource';
 import { useStockItemBatchNumbers } from '../hooks/useStockItemBatchNumbers';
 import BatchNoSelector from './batch-no-selector.component';
 
@@ -17,7 +19,12 @@ vi.mock('../../../stock-items/add-stock-item/batch-information/batch-information
   useStockItemBatchInformationHook: vi.fn(),
 }));
 
+vi.mock('../../../stock-lookups/stock-lookups.resource', () => ({
+  useStockManagementSession: vi.fn(),
+}));
+
 const mockUseStockItemBatchNumbers = vi.mocked(useStockItemBatchNumbers);
+const mockUseStockManagementSession = vi.mocked(useStockManagementSession);
 const mockUseStockItemBatchInformationHook = vi.mocked(useStockItemBatchInformationHook);
 
 describe('BatchNoSelector', () => {
@@ -26,6 +33,13 @@ describe('BatchNoSelector', () => {
   const mockExpiration = new Date();
 
   beforeEach(() => {
+    mockUseStockManagementSession.mockReturnValue({
+      privilegeScopes: [
+        { partyUuid: 'main-store', privilege: APP_STOCKMANAGEMENT_STOCKITEMS },
+      ] as Array<PrivilegeScope>,
+      isLoading: false,
+      error: undefined,
+    });
     mockUseStockItemBatchNumbers.mockReturnValue({
       isLoading: false,
       stockItemBatchNos: [
@@ -238,6 +252,60 @@ describe('BatchNoSelector', () => {
     expect(mockUseStockItemBatchNumbers).toHaveBeenLastCalledWith(mockStockItemUuid, true);
   });
 
+  it("doesn't call a batch empty where the user can't see the party's stock", async () => {
+    const user = userEvent.setup();
+    // Inventory comes back empty for a party outside the user's stock scopes.
+    mockUseStockManagementSession.mockReturnValue({ privilegeScopes: [], isLoading: false, error: undefined });
+    mockUseStockItemBatchNumbers.mockReturnValue({
+      isLoading: false,
+      stockItemBatchNos: [
+        {
+          uuid: '1',
+          batchNo: 'BATCH-001',
+          quantity: undefined,
+          expiration: mockExpiration,
+          stockItemUuid: 'item1',
+          voided: false,
+        },
+      ],
+      setLimit: vi.fn(),
+      setRepresentation: vi.fn(),
+      setSearchString: vi.fn(),
+      error: null,
+    });
+    mockUseStockItemBatchInformationHook.mockReturnValue({
+      items: [] as StockItemInventory[],
+      totalCount: 0,
+      currentPage: 1,
+      currentPageSize: 10,
+      setCurrentPage: vi.fn(),
+      setStockBatchUuid: vi.fn(),
+      setStockItemUuid: vi.fn(),
+      setPageSize: vi.fn(),
+      pageSizes: [10, 20, 50],
+      isLoading: false,
+      error: null,
+      setLocationUuid: vi.fn(),
+      setPartyUuid: vi.fn(),
+      setSearchString: vi.fn(),
+    });
+
+    render(
+      <BatchNoSelector
+        stockItemUuid={mockStockItemUuid}
+        partyUuid="main-store"
+        includeEmptyBatches
+        onValueChange={mockOnValueChange}
+      />,
+    );
+    await user.click(screen.getByRole('combobox'));
+
+    expect(
+      screen.getByText(`BATCH-001 | Qty: Unknown | Expiry: ${formatForDatePicker(mockExpiration)}`),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Qty: 0/)).not.toBeInTheDocument();
+  });
+
   it('keeps the batch list unfiltered by expiry when empty batches are hidden', () => {
     render(<BatchNoSelector stockItemUuid={mockStockItemUuid} onValueChange={mockOnValueChange} />);
 
@@ -288,7 +356,9 @@ describe('BatchNoSelector', () => {
       setSearchString: vi.fn(),
     });
 
-    render(<BatchNoSelector stockItemUuid={mockStockItemUuid} partyUuid="main-store" onValueChange={mockOnValueChange} />);
+    render(
+      <BatchNoSelector stockItemUuid={mockStockItemUuid} partyUuid="main-store" onValueChange={mockOnValueChange} />,
+    );
     await user.click(screen.getByRole('combobox'));
 
     expect(screen.queryAllByRole('option')).toHaveLength(0);
