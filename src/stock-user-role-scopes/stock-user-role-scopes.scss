@@ -99,6 +99,19 @@
   gap: layout.$spacing-02;
 }
 
+.locationChips :global(.cds--tag) {
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  white-space: normal;
+}
+
+.locationChips :global(.cds--tag__label) {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: unset;
+}
+
 .moreLink {
   white-space: nowrap;
   cursor: pointer;
