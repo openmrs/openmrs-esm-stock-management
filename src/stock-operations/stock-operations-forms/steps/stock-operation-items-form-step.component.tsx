@@ -17,11 +17,7 @@ import { showSnackbar } from '@openmrs/esm-framework';
 import { APP_STOCKMANAGEMENT_STOCKITEMS } from '../../../constants';
 import { LocationTypeLocation } from '../../../core/api/types/stockOperation/LocationType';
 import { type StockOperationDTO } from '../../../core/api/types/stockOperation/StockOperationDTO';
-import {
-  OperationType,
-  operationFromString,
-  type StockOperationType,
-} from '../../../core/api/types/stockOperation/StockOperationType';
+import { type StockOperationType } from '../../../core/api/types/stockOperation/StockOperationType';
 import { useStockManagementSession } from '../../../stock-lookups/stock-lookups.resource';
 import { getStockOperationUniqueId } from '../../stock-operation.utils';
 import { type BaseStockOperationItemFormData, type StockOperationItemDtoSchema } from '../../validation-schema';
@@ -55,11 +51,9 @@ const StockOperationItemsFormStep: React.FC<StockOperationItemsFormStepProps> = 
 
   const form = useFormContext<StockOperationItemDtoSchema>();
   const observableOperationItems = form.watch('stockOperationItems');
-  // Show stock where it's drawn from. A receipt's source is a supplier, so use where it's received.
-  // A requisition's source is the location asking for stock, so use the store it's requested from.
-  const drawsFromSource =
-    stockOperationType?.sourceType === LocationTypeLocation &&
-    operationFromString(stockOperationType.operationType) !== OperationType.REQUISITION_OPERATION_TYPE;
+  // Show stock at the source. A receipt's source is a supplier, so use where it's received.
+  // A requisition's source is the location asking for stock, so requesters see their own stock.
+  const drawsFromSource = stockOperationType?.sourceType === LocationTypeLocation;
   const drawnFromUuid = form.watch(drawsFromSource ? 'sourceUuid' : 'destinationUuid');
   // Inventory leaves out stock the user can't see, so only ask for a party whose stock they can see.
   const { privilegeScopes } = useStockManagementSession();

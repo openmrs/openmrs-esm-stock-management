@@ -62,9 +62,10 @@ describe('StockOperationItemsFormStep', () => {
   it.each([
     { name: 'stock issue', type: stockIssueOperationtypeMock, party: 'source-party-uuid' },
     { name: 'stock take', type: stockTakeOperationTypeMock, party: 'source-party-uuid' },
-    // A receipt's source is a supplier, and a requisition's source is the location asking for stock.
+    // A requisition's source is the location asking for stock.
+    { name: 'requisition', type: requisitionOperationTypeMock, party: 'source-party-uuid' },
+    // A receipt's source is a supplier.
     { name: 'receipt', type: receiptOperationTypeMock, party: 'destination-party-uuid' },
-    { name: 'requisition', type: requisitionOperationTypeMock, party: 'destination-party-uuid' },
   ])('shows stock availability for a $name at the party it draws from', ({ type, party }) => {
     render(<ItemsStepWithForm stockOperationType={type as unknown as StockOperationType} />);
 
@@ -72,13 +73,12 @@ describe('StockOperationItemsFormStep', () => {
   });
 
   it("shows no availability when the user can't see stock at that party", () => {
-    // A requester scoped only to their own pharmacy, raising a requisition from the store.
     mockStockScopes([
-      { partyUuid: 'source-party-uuid', privilege: APP_STOCKMANAGEMENT_STOCKITEMS },
-      { partyUuid: 'destination-party-uuid', privilege: TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE },
+      { partyUuid: 'source-party-uuid', privilege: TASK_STOCKMANAGEMENT_STOCKOPERATIONS_MUTATE },
+      { partyUuid: 'destination-party-uuid', privilege: APP_STOCKMANAGEMENT_STOCKITEMS },
     ]);
 
-    render(<ItemsStepWithForm stockOperationType={requisitionOperationTypeMock as unknown as StockOperationType} />);
+    render(<ItemsStepWithForm stockOperationType={stockIssueOperationtypeMock as unknown as StockOperationType} />);
 
     expect(screen.queryByText(/Available at/)).not.toBeInTheDocument();
   });
