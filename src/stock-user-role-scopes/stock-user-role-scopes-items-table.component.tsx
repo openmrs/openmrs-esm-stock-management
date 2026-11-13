@@ -329,7 +329,7 @@ function StockUserRoleScopesItems() {
                                 <TableCell key={cell.id}>
                                   <LocationsSummary
                                     locations={scope.locations ?? []}
-                                    onShowMore={() => expandRow(row.id)}
+                                    onShowMore={() => !row.isExpanded && expandRow(row.id)}
                                   />
                                 </TableCell>
                               );
