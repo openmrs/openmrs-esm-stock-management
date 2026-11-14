@@ -26,7 +26,7 @@ import {
 } from '@carbon/react';
 import { ArrowRight } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
-import { isDesktop, restBaseUrl, useConfig } from '@openmrs/esm-framework';
+import { isDesktop, restBaseUrl, useConfig, useSession } from '@openmrs/esm-framework';
 import { type ConfigObject } from '../config-schema';
 import { DATE_PICKER_CONTROL_FORMAT, DATE_PICKER_FORMAT, StockFilters } from '../constants';
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
@@ -45,6 +45,7 @@ interface StockOperationsTableProps {
 
 const StockOperations: React.FC<StockOperationsTableProps> = () => {
   const { t } = useTranslation();
+  const session = useSession();
   const handleMutate = useHandleMutate();
   const { stockSourceTypeUUID } = useConfig<ConfigObject>();
 
@@ -172,6 +173,8 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                 position: 'static',
                 overflow: 'visible',
                 backgroundColor: 'color',
+                height: 'auto',
+                minHeight: '3rem',
               }}
             >
               <TableToolbarContent className={styles.toolbarContent}>
@@ -186,20 +189,33 @@ const StockOperations: React.FC<StockOperationsTableProps> = () => {
                     className={styles.datePicker}
                     datePickerType="range"
                     dateFormat={DATE_PICKER_CONTROL_FORMAT}
+                    locale={session?.locale}
                     onChange={([startDate, endDate]) => handleDateFilterChange([startDate, endDate])}
                     value={[selectedFromDate, selectedToDate]}
                   >
                     <DatePickerInput
                       id="stock-operations-start-date"
-                      labelText={t('startDate', 'Start date')}
+                      labelText={
+                        <span>
+                          {t('startDate', 'Start date')}
+                          <br />({DATE_PICKER_FORMAT})
+                        </span>
+                      }
                       placeholder={DATE_PICKER_FORMAT}
                     />
+
                     <DatePickerInput
                       id="stock-operations-end-date"
-                      labelText={t('endDate', 'End date')}
+                      labelText={
+                        <span>
+                          {t('endDate', 'End date')}
+                          <br />({DATE_PICKER_FORMAT})
+                        </span>
+                      }
                       placeholder={DATE_PICKER_FORMAT}
                     />
                   </DatePicker>
+
                   <StockOperationsFilters
                     conceptUuid={stockSourceTypeUUID}
                     filterName={StockFilters.SOURCES}

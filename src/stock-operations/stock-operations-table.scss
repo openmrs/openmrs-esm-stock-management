@@ -33,15 +33,30 @@
 
 .toolbarContent {
   display: flex;
-  align-items: center;
-  height: layout.$spacing-09;
+  align-items: flex-end;
+  height: auto;
+  min-height: layout.$spacing-09;
   margin-top: layout.$spacing-05;
+  margin-bottom: layout.$spacing-03;
+
+  :global(.cds--toolbar-search-container-persistent),
+  :global(.cds--toolbar-action),
+  :global(.cds--overflow-menu) {
+    align-self: flex-end;
+    margin-bottom: 0;
+  }
 }
 
 .container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+
+  :global(.cds--form-item),
+  :global(.cds--list-box__wrapper) {
+    align-self: flex-end;
+    margin-bottom: 0;
+  }
 }
 
 .filterContainer {
@@ -103,7 +118,7 @@
 }
 
 .datePicker {
-  margin-bottom: layout.$spacing-05;
+  margin-bottom: 0;
 }
 
 .arrowIcon {
