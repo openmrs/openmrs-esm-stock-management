@@ -296,70 +296,68 @@ function StockUserRoleScopesItems() {
                 <AddStockUserRoleScopeActionButton />
               </TableToolbarContent>
             </TableToolbar>
-            <div className={styles.tableScroll}>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    <TableExpandHeader />
-                    {headers.map(
-                      (header: any) =>
-                        header.key !== 'details' && (
-                          <TableHeader
-                            {...getHeaderProps({
-                              header,
-                              isSortable: header.isSortable,
-                            })}
-                            className={isDesktop(layout) ? styles.desktopHeader : styles.tabletHeader}
-                            key={`${header.key}`}
-                          >
-                            {header.header?.content ?? header.header}
-                          </TableHeader>
-                        ),
-                    )}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row: any) => {
-                    const scope = scopesById.get(row.id);
-                    const props = getRowProps({ row });
-                    const expandedRowProps = getExpandedRowProps({ row });
-                    return (
-                      <React.Fragment key={row.id}>
-                        <TableExpandRow className={isDesktop(layout) ? styles.desktopRow : styles.tabletRow} {...props}>
-                          {row.cells.map((cell: any) => {
-                            if (cell?.info?.header === 'locations' && scope) {
-                              return (
-                                <TableCell key={cell.id}>
-                                  <LocationsSummary
-                                    locations={scope.locations ?? []}
-                                    onShowMore={() => !row.isExpanded && expandRow(row.id)}
-                                  />
-                                </TableCell>
-                              );
-                            }
-                            if (cell?.info?.header === 'stockOperations' && scope) {
-                              return (
-                                <TableCell key={cell.id}>
-                                  <OperationsSummary
-                                    names={operationNames(scope)}
-                                    onShowMore={() => !row.isExpanded && expandRow(row.id)}
-                                    totalOperationTypes={totalOperationTypes}
-                                  />
-                                </TableCell>
-                              );
-                            }
-                            return <TableCell key={cell.id}>{cell.value}</TableCell>;
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  <TableExpandHeader />
+                  {headers.map(
+                    (header: any) =>
+                      header.key !== 'details' && (
+                        <TableHeader
+                          {...getHeaderProps({
+                            header,
+                            isSortable: header.isSortable,
                           })}
-                        </TableExpandRow>
-                        <TableExpandedRow {...expandedRowProps} colSpan={headers.length + 1}>
-                          {row.isExpanded && scope ? <ScopeDetails scope={scope} /> : null}
-                        </TableExpandedRow>
-                      </React.Fragment>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
+                          className={isDesktop(layout) ? styles.desktopHeader : styles.tabletHeader}
+                          key={`${header.key}`}
+                        >
+                          {header.header?.content ?? header.header}
+                        </TableHeader>
+                      ),
+                  )}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row: any) => {
+                  const scope = scopesById.get(row.id);
+                  const props = getRowProps({ row });
+                  const expandedRowProps = getExpandedRowProps({ row });
+                  return (
+                    <React.Fragment key={row.id}>
+                      <TableExpandRow className={isDesktop(layout) ? styles.desktopRow : styles.tabletRow} {...props}>
+                        {row.cells.map((cell: any) => {
+                          if (cell?.info?.header === 'locations' && scope) {
+                            return (
+                              <TableCell key={cell.id}>
+                                <LocationsSummary
+                                  locations={scope.locations ?? []}
+                                  onShowMore={() => !row.isExpanded && expandRow(row.id)}
+                                />
+                              </TableCell>
+                            );
+                          }
+                          if (cell?.info?.header === 'stockOperations' && scope) {
+                            return (
+                              <TableCell key={cell.id}>
+                                <OperationsSummary
+                                  names={operationNames(scope)}
+                                  onShowMore={() => !row.isExpanded && expandRow(row.id)}
+                                  totalOperationTypes={totalOperationTypes}
+                                />
+                              </TableCell>
+                            );
+                          }
+                          return <TableCell key={cell.id}>{cell.value}</TableCell>;
+                        })}
+                      </TableExpandRow>
+                      <TableExpandedRow {...expandedRowProps} colSpan={headers.length + 1}>
+                        {row.isExpanded && scope ? <ScopeDetails scope={scope} /> : null}
+                      </TableExpandedRow>
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
             {rows.length === 0 ? (
               <div className={styles.tileContainer}>
                 <Tile className={styles.tile}>

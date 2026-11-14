@@ -204,6 +204,8 @@
   "manageStock": "Manage Stock",
   "maxReorderLevelRatio": "Max reorder level ratio",
   "months": "Months",
+  "moreLocations_one": "+{{count}} more",
+  "moreLocations_other": "+{{count}} more",
   "mostMoving": "Most moving",
   "name": "Name",
   "newOperationTitle": "New: {{operationName}}",
