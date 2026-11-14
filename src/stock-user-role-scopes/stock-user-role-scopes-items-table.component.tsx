@@ -27,6 +27,9 @@ import { isDesktop, restBaseUrl, useLayoutType, useSession } from '@openmrs/esm-
 import { formatDisplayDate } from '../core/utils/datetimeUtils';
 import { useHandleMutate } from '../utils';
 import { ResourceRepresentation } from '../core/api/api';
+import { type UserRoleScope } from '../core/api/types/identity/UserRoleScope';
+import { type UserRoleScopeLocation } from '../core/api/types/identity/UserRoleScopeLocation';
+import { useStockOperationTypes } from '../stock-lookups/stock-lookups.resource';
 import AddStockUserRoleScopeActionButton from './add-stock-user-role-scope-button.component';
 import EditStockUserRoleActionsMenu from './edit-stock-user-scope/edit-stock-user-scope-action-menu.component';
 import StockUserScopeDeleteActionMenu from './delete-stock-user-scope/delete-stock-user-scope.component';
